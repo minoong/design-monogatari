@@ -49,7 +49,7 @@ main.prepend(notification);
 **Good:**
 
 ```javascript
-const slot = document.querySelector("[data-notification-slot]");
+const slot = document.querySelector('[data-notification-slot]');
 slot.replaceChildren(notification);
 ```
 
@@ -61,8 +61,8 @@ Use a fallback with similar metrics and tune it with `size-adjust`, `ascent-over
 
 ```css
 @font-face {
-  font-family: "Brand Fallback";
-  src: local("Arial");
+  font-family: 'Brand Fallback';
+  src: local('Arial');
   size-adjust: 102%;
   ascent-override: 92%;
   descent-override: 24%;
@@ -98,15 +98,15 @@ This observer reports shifts seen during the current page session. It is not the
 new PerformanceObserver((list) => {
   for (const entry of list.getEntries()) {
     if (!entry.hadRecentInput) {
-      console.log("Layout shift", entry.value);
+      console.log('Layout shift', entry.value);
       entry.sources?.forEach((source) => {
-        console.log("Shifted node", source.node);
-        console.log("Previous rect", source.previousRect);
-        console.log("Current rect", source.currentRect);
+        console.log('Shifted node', source.node);
+        console.log('Previous rect', source.previousRect);
+        console.log('Current rect', source.currentRect);
       });
     }
   }
-}).observe({ type: "layout-shift", buffered: true });
+}).observe({ type: 'layout-shift', buffered: true });
 ```
 
 ## Verification checklist

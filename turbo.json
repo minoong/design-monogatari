@@ -10,7 +10,8 @@
     },
     "lint": {
       "description": "Run ESLint in each package",
-      "dependsOn": ["^lint"]
+      "dependsOn": [],
+      "inputs": ["$TURBO_DEFAULT$", "eslint.config.*", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs"]
     },
     "topo": {
       "description": "Transit node for parallel type-checking with correct cache invalidation",

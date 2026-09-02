@@ -4,10 +4,10 @@ description: Optimize Core Web Vitals (LCP, INP, CLS) for better page experience
 license: MIT
 metadata:
   author: web-quality-skills
-  version: "2.0"
+  version: '2.0'
 paths:
-  - "apps/**"
-  - "packages/ui/**"
+  - 'apps/**'
+  - 'packages/ui/**'
 ---
 
 # Core Web Vitals optimization
@@ -85,7 +85,7 @@ Prefer a discoverable `<img>` with `fetchpriority="high"`. Add the preload only 
 ```javascript
 // ❌ Content loads after JavaScript
 useEffect(() => {
-  fetch("/api/hero-text")
+  fetch('/api/hero-text')
     .then((r) => r.json())
     .then(setHeroText);
 }, []);
@@ -154,9 +154,9 @@ This snippet diagnoses the current page session. It is not field data.
 new PerformanceObserver((list) => {
   const entries = list.getEntries();
   const lastEntry = entries[entries.length - 1];
-  console.log("LCP element:", lastEntry.element);
-  console.log("LCP time:", lastEntry.startTime);
-}).observe({ type: "largest-contentful-paint", buffered: true });
+  console.log('LCP element:', lastEntry.element);
+  console.log('LCP time:', lastEntry.startTime);
+}).observe({ type: 'largest-contentful-paint', buffered: true });
 ```
 
 ---
@@ -199,11 +199,11 @@ When adding or reviewing production collection, read [the first-party RUM refere
 
 ```jsx
 // LCP: Use next/image with priority
-import Image from "next/image";
+import Image from 'next/image';
 <Image src="/hero.jpg" priority fill alt="Hero" />;
 
 // INP: Use dynamic imports
-const HeavyComponent = dynamic(() => import("./Heavy"), { ssr: false });
+const HeavyComponent = dynamic(() => import('./Heavy'), { ssr: false });
 
 // CLS: Image component handles dimensions automatically
 ```

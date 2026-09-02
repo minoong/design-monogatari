@@ -11,7 +11,7 @@ Add the `layout` prop to animate any layout change automatically:
 This animates previously unanimatable CSS changes like `justify-content`, `flex-direction`, `width`, `height`, grid columns, and reordering.
 
 ```tsx
-<motion.div layout style={{ justifyContent: isOn ? "flex-start" : "flex-end" }} />
+<motion.div layout style={{ justifyContent: isOn ? 'flex-start' : 'flex-end' }} />
 ```
 
 **Performance**: Layout animations use CSS `transform` internally for hardware acceleration.
@@ -93,8 +93,8 @@ Separate layout transition from other animations:
   layout
   animate={{ opacity: 0.5 }}
   transition={{
-    ease: "linear",
-    layout: { duration: 0.3, type: "spring" },
+    ease: 'linear',
+    layout: { duration: 0.3, type: 'spring' },
   }}
 />
 ```
@@ -130,7 +130,7 @@ Layout is only measured when `layoutDependency` changes, instead of every render
 Fix layout animations inside scrollable containers:
 
 ```tsx
-<motion.div layoutScroll style={{ overflow: "auto" }}>
+<motion.div layoutScroll style={{ overflow: 'auto' }}>
   {items.map((item) => (
     <motion.div key={item.id} layout />
   ))}
@@ -142,7 +142,7 @@ Fix layout animations inside scrollable containers:
 Fix layout animations inside fixed-position elements:
 
 ```tsx
-<motion.div layoutRoot style={{ position: "fixed" }}>
+<motion.div layoutRoot style={{ position: 'fixed' }}>
   <motion.div layout />
 </motion.div>
 ```
@@ -152,7 +152,7 @@ Fix layout animations inside fixed-position elements:
 Synchronize layout animations across components that don't share a parent:
 
 ```tsx
-import { LayoutGroup } from "motion/react";
+import { LayoutGroup } from 'motion/react';
 
 <LayoutGroup>
   <motion.ul layout>

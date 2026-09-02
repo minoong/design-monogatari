@@ -1,0 +1,43 @@
+---
+description: ESLint, Prettier, verify, CI, and git hooks for this monorepo
+alwaysApply: true
+---
+
+# Code quality (lint & format)
+
+## Shared config
+
+| Tool | Package | Notes |
+|------|---------|-------|
+| ESLint | `@repo/eslint-config` | `base`, `next-js`, `react-internal`, `tailwind` |
+| Prettier | `@repo/prettier-config` | single quotes, Tailwind class sort plugin |
+
+## Commands
+
+```bash
+pnpm format          # write Prettier (+ Tailwind class sort)
+pnpm format:check    # check only (turbo-cached)
+pnpm lint            # ESLint in each package
+pnpm verify          # format:check + lint + check-types + build
+```
+
+## Rules of thumb
+
+- **Prettier**: formatting + Tailwind class **order** (`cn`, `clsx`, `cva`)
+- **ESLint `eslint-plugin-tailwindcss`**: invalid / conflicting classes (not order)
+- **import order**: `eslint-plugin-simple-import-sort` — do not hand-sort
+- **a11y**: `eslint-plugin-jsx-a11y` on React/Next packages
+- Do not disable lint rules without a comment and reason
+
+## Hooks & CI
+
+- **pre-commit**: husky + lint-staged (staged files: Prettier + ESLint fix)
+- **CI**: GitHub Actions runs `pnpm verify` on PR/push to `main`
+
+## Registry exception
+
+`registry/design-monogatari/*` uses `@/lib/utils` for external shadcn consumers — **ESLint excluded**, **Prettier applied**. Validate with `pnpm dlx shadcn@latest registry validate minoong/design-monogatari`.
+
+## Definition of done
+
+Before marking UI work complete: `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`.

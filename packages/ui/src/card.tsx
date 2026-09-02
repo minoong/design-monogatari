@@ -1,6 +1,6 @@
-import { type JSX, type ReactNode } from "react";
+import { type JSX, type ReactNode } from 'react';
 
-import { cn } from "./lib/cn";
+import { cn } from './lib/cn';
 
 export function Card({
   className,
@@ -16,7 +16,7 @@ export function Card({
   return (
     <a
       className={cn(
-        "group block rounded-lg border border-muted-strong p-6 font-sans transition-colors hover:bg-secondary-hover",
+        'group border-muted-strong hover:bg-secondary-hover block rounded-lg border p-6 font-sans transition-colors',
         className,
       )}
       href={`${href}?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo`}
@@ -24,10 +24,10 @@ export function Card({
       target="_blank"
     >
       <h2 className="mb-2 text-xl font-semibold">
-        {title}{" "}
+        {title}{' '}
         <span className="inline-block transition-transform group-hover:translate-x-1">-&gt;</span>
       </h2>
-      <p className="text-sm leading-6 text-foreground/80">{children}</p>
+      <p className="text-foreground/80 text-sm leading-6">{children}</p>
     </a>
   );
 }

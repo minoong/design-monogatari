@@ -4,10 +4,10 @@ description: Audit and improve web accessibility following WCAG 2.2 guidelines. 
 license: MIT
 metadata:
   author: web-quality-skills
-  version: "2.0"
+  version: '2.0'
 paths:
-  - "**/*.tsx"
-  - "**/*.jsx"
+  - '**/*.tsx'
+  - '**/*.jsx'
 ---
 
 # Accessibility (a11y)
@@ -198,11 +198,11 @@ If the live tools are unavailable, use Lighthouse CLI or axe for automated cover
 // ✅ When you MUST use a non-interactive element (e.g. div with role="button"),
 // make it focusable AND handle keyboard activation. Do NOT add this to a native
 // <button> — Enter/Space already fire click, so you'd double-trigger.
-element.setAttribute("role", "button");
-element.setAttribute("tabindex", "0");
-element.addEventListener("click", handleAction);
-element.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") {
+element.setAttribute('role', 'button');
+element.setAttribute('tabindex', '0');
+element.addEventListener('click', handleAction);
+element.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
     e.preventDefault();
     handleAction();
   }
@@ -263,9 +263,9 @@ Interactive targets must be at least **24 × 24 CSS pixels** (AA). Exceptions: i
 ```css
 /* ✅ Minimum target size */
 button,
-[role="button"],
-input[type="checkbox"] + label,
-input[type="radio"] + label {
+[role='button'],
+input[type='checkbox'] + label,
+input[type='radio'] + label {
   min-width: 24px;
   min-height: 24px;
 }
@@ -290,11 +290,11 @@ Any action that requires dragging must have a single-pointer alternative (e.g., 
 // Allow users to extend time limits
 function showSessionWarning() {
   const modal = createModal({
-    title: "Session Expiring",
-    content: "Your session will expire in 2 minutes.",
+    title: 'Session Expiring',
+    content: 'Your session will expire in 2 minutes.',
     actions: [
-      { label: "Extend session", action: extendSession },
-      { label: "Log out", action: logout },
+      { label: 'Extend session', action: extendSession },
+      { label: 'Log out', action: logout },
     ],
     timeout: 120000,
   });

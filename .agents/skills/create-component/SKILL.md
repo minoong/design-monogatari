@@ -4,7 +4,7 @@ description: >-
   @repo/ui React 컴포넌트 생성. subpath export, named export, a11y·React best practices 적용.
   새 컴포넌트, UI 추가, generate component 요청 시 적용.
 paths:
-  - "packages/ui/**"
+  - 'packages/ui/**'
 ---
 
 # @repo/ui 컴포넌트 생성
@@ -51,4 +51,6 @@ pnpm --filter @repo/ui generate:component
 
 ## 완료
 
-`.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify` 실행
+1. `pnpm format` (또는 staged 파일은 pre-commit hook)
+2. `pnpm --filter @repo/ui lint` (해당 패키지 변경 시)
+3. `.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify`

@@ -14,6 +14,7 @@ Distribute components via [GitHub Registries](https://ui.shadcn.com/docs/registr
 2. Add `registry/design-monogatari/<name>.tsx` with `@/lib/utils` import (shadcn consumer paths)
 3. Register item in root `registry.json` with `registryDependencies` on `cn` and `theme` when using design tokens
 4. Validate: `pnpm dlx shadcn@latest registry validate minoong/design-monogatari`
+5. **Format/lint**: `registry/` gets Prettier only (not ESLint — `@/lib/utils` paths). Source of truth lint is `packages/ui`.
 
 Reference: @packages/ui/src/button.tsx
 

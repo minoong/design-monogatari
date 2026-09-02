@@ -2,8 +2,8 @@
 name: fixing-motion-performance
 description: Audit and fix animation performance issues including layout thrashing, compositor properties, scroll-linked motion, and blur effects. Use when animations stutter, transitions jank, or reviewing CSS/JS animation performance.
 paths:
-  - "apps/**"
-  - "packages/ui/**"
+  - 'apps/**'
+  - 'packages/ui/**'
 ---
 
 # fixing-motion-performance
@@ -148,15 +148,15 @@ window.addEventListener('scroll', () => el.style.opacity = scrollY / 500)
 ```js
 // measurement: batch reads before writes (FLIP)
 // before — layout thrash
-el.style.left = el.getBoundingClientRect().left + 10 + "px";
+el.style.left = el.getBoundingClientRect().left + 10 + 'px';
 // after — measure once, animate via transform
 const first = el.getBoundingClientRect();
-el.classList.add("moved");
+el.classList.add('moved');
 const last = el.getBoundingClientRect();
 el.style.transform = `translateX(${first.left - last.left}px)`;
 requestAnimationFrame(() => {
-  el.style.transition = "transform 0.3s";
-  el.style.transform = "";
+  el.style.transition = 'transform 0.3s';
+  el.style.transform = '';
 });
 ```
 

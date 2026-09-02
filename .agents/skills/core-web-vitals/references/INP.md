@@ -31,7 +31,7 @@ async function processLargeArray(items) {
   for (let i = 0; i < items.length; i += chunkSize) {
     items.slice(i, i + chunkSize).forEach(expensiveOperation);
 
-    if ("scheduler" in window && "yield" in scheduler) {
+    if ('scheduler' in window && 'yield' in scheduler) {
       await scheduler.yield();
     } else {
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -47,30 +47,30 @@ Choose chunk boundaries from trace evidence. A fixed item count does not guarant
 **Bad:**
 
 ```javascript
-button.addEventListener("click", () => {
+button.addEventListener('click', () => {
   const result = calculateComplexThing();
   updateUI(result);
-  trackEvent("click");
+  trackEvent('click');
 });
 ```
 
 **Good:**
 
 ```javascript
-button.addEventListener("click", async () => {
-  button.classList.add("loading");
+button.addEventListener('click', async () => {
+  button.classList.add('loading');
 
-  if ("scheduler" in window && "yield" in scheduler) {
+  if ('scheduler' in window && 'yield' in scheduler) {
     await scheduler.yield();
   }
 
   const result = calculateComplexThing();
   updateUI(result);
 
-  if ("requestIdleCallback" in window) {
-    requestIdleCallback(() => trackEvent("click"));
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => trackEvent('click'));
   } else {
-    setTimeout(() => trackEvent("click"), 0);
+    setTimeout(() => trackEvent('click'), 0);
   }
 });
 ```
@@ -92,7 +92,7 @@ This observer reports interactions seen in the current page session. It is not f
 new PerformanceObserver((list) => {
   for (const entry of list.getEntries()) {
     if (entry.duration > 200) {
-      console.warn("Slow interaction", {
+      console.warn('Slow interaction', {
         type: entry.name,
         duration: entry.duration,
         processingStart: entry.processingStart,
@@ -101,7 +101,7 @@ new PerformanceObserver((list) => {
       });
     }
   }
-}).observe({ type: "event", buffered: true, durationThreshold: 40 });
+}).observe({ type: 'event', buffered: true, durationThreshold: 40 });
 ```
 
 For production attribution, prefer the `web-vitals/attribution` build. Its `onINP()` attribution can identify the interaction target, event type, and Long Animation Frame or script evidence available for real visits.
