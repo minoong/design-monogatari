@@ -1,0 +1,12 @@
+---
+description: Git 커밋·PR — git-commit skill(브랜치, Conventional Commits, 한글) 적용
+alwaysApply: false
+---
+
+# Git 커밋 · PR
+
+1. `.agents/skills/git-commit/SKILL.md` — 브랜치 → 커밋 → (요청 시) push/PR
+2. feature 브랜치에서만 작업
+3. 사용자 명시 요청 전까지 commit / push / `gh pr create` 금지
+
+설치 참고: `npx skills add https://github.com/github/awesome-copilot --skill git-commit`
