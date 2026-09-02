@@ -42,6 +42,20 @@ turbo run lint check-types build --filter=@repo/ui --filter=web --filter=docs
 
 Do not commit or push unless the user asks.
 
+## Git 워크플로
+
+- Skill: `.agents/skills/git-commit/SKILL.md`
+- **작업 전**: `main`에서 feature 브랜치 생성 (`feat/`, `fix/`, `chore/` …)
+- **`main`에 직접 커밋하지 않음**
+- **커밋·push·PR**: 사용자 요청 시에만
+- PR: `gh pr create`, 제목·본문 **한글**, test plan에 `pnpm verify`
+
+## 커밋 메시지
+
+- Skill: `.agents/skills/git-commit/SKILL.md` ([awesome-copilot git-commit](https://www.skills.sh/github/awesome-copilot/git-commit) + 한글)
+- Conventional Commits + diff 분석 + Git 안전 프로토콜
+- **제목·본문은 한글**
+
 ## Scaffolding
 
 ```bash
