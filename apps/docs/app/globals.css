@@ -1,13 +1,11 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "@repo/ui/styles.css";
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@source "../**/*.{ts,tsx}";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
@@ -17,14 +15,10 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
+  color: var(--color-foreground);
+  background: var(--color-background);
   margin: 0;
+  padding: 0;
 }
 
 a {
@@ -44,6 +38,7 @@ a {
   .imgLight {
     display: none;
   }
+
   .imgDark {
     display: unset;
   }

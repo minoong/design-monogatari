@@ -9,7 +9,7 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 | Monorepo          | Turborepo + pnpm                               | active                     |
 | React             | 19                                             | active                     |
 | Design system     | `@repo/ui` (JIT)                               | active                     |
-| Styling           | Tailwind CSS                                   | planned                    |
+| Styling           | Tailwind CSS v4                                | active                     |
 | UI motion         | Framer Motion                                  | planned                    |
 | Scroll animation  | GSAP + ScrollTrigger                           | planned (skills installed) |
 | Docs              | Storybook                                      | planned                    |
@@ -46,6 +46,13 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 
 - Read `.agents/skills/motion-react/SKILL.md` before UI motion work
 - Doc index: `https://motion.dev/llms.txt` → `WebFetch` the matching page (start: `https://motion.dev/docs/react`)
+
+## Tailwind CSS
+
+- Shared theme: `@repo/ui/styles.css` — design tokens in `@theme`
+- Apps: `@import "@repo/ui/styles.css"` + `@source` for app TSX
+- Class merge: `@repo/ui/cn`
+- Rule: `.cursor/rules/styling.mdc`
 
 ## This repository
 

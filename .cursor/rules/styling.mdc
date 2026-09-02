@@ -1,0 +1,27 @@
+---
+description: Tailwind CSS styling for apps and @repo/ui
+alwaysApply: false
+---
+
+# Styling (Tailwind CSS v4)
+
+When styling UI in `apps/` or `packages/ui/`:
+
+1. Read `.cursor/rules/styling.mdc` (this file) and [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
+2. Use **Tailwind utility classes** — avoid new CSS Modules unless Tailwind cannot express the style
+3. Merge classes with `cn()` from `@repo/ui/cn` (apps) or `./lib/cn` (within `@repo/ui`)
+4. Use `@theme` tokens (`bg-background`, `text-foreground`, `bg-muted`, `rounded-pill`, etc.) — do not hardcode hex in components
+5. Motion + Tailwind: do not put `transition-*` on `motion.*` elements (see `.agents/skills/motion-react/SKILL.md`)
+
+## Monorepo CSS
+
+- Shared theme: `@import "@repo/ui/styles.css"` in app `globals.css`
+- App scan: `@source "../**/*.{ts,tsx}"` in app `globals.css` (paths relative to CSS file)
+- UI scan: `@source "../**/*.{ts,tsx}"` in [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
+- Do **not** import UI and app Tailwind CSS separately — one build per app
+
+## Docs
+
+- Tailwind: https://tailwindcss.com/docs
+- Theme: https://tailwindcss.com/docs/theme
+- Detecting classes / `@source`: https://tailwindcss.com/docs/detecting-classes-in-source-files

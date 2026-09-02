@@ -33,10 +33,12 @@ pnpm --filter @repo/ui generate:component
 | UI motion       | `.agents/skills/motion-react/SKILL.md`                |
 | motion 성능     | `.agents/skills/fixing-motion-performance/SKILL.md`   |
 
-## 스타일 (planned)
+## 스타일
 
-- Tailwind CSS (도입 전까지 CSS Module 허용)
-- UI motion: Motion (`motion/react`, planned) — 공식 문서: `https://motion.dev/llms.txt`
+- **Tailwind CSS v4** — utility classes, `@theme` 토큰 사용
+- `cn()` — 패키지 내부 `./lib/cn`, 앱에서 `@repo/ui/cn`
+- 새 CSS Module 금지 (Tailwind로 표현 불가한 경우만 예외)
+- UI motion: Motion (`motion/react`, planned) — `transition-*` 클래스와 Motion 동시 사용 금지
 - Scroll/timeline: GSAP + ScrollTrigger
 
 ## 완료
