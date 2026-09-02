@@ -1,5 +1,6 @@
 ---
 description: Tailwind CSS styling for apps and @repo/ui
+globs: packages/ui/**/*.tsx, apps/**/*.tsx
 alwaysApply: false
 ---
 

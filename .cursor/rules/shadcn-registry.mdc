@@ -1,0 +1,26 @@
+---
+description: shadcn GitHub Registry — distribute @repo/ui components to external Next.js apps
+globs: registry/**, registry.json, packages/ui/**
+alwaysApply: false
+---
+
+# shadcn Registry
+
+Distribute components via [GitHub Registries](https://ui.shadcn.com/docs/registry/github). Monorepo apps use `@repo/ui/*`; external apps use `shadcn add`.
+
+## When adding a component
+
+1. Implement in `packages/ui/src/<name>.tsx` (monorepo source)
+2. Add `registry/design-monogatari/<name>.tsx` with `@/lib/utils` import (shadcn consumer paths)
+3. Register item in root `registry.json` with `registryDependencies` on `cn` and `theme` when using design tokens
+4. Validate: `pnpm dlx shadcn@latest registry validate minoong/design-monogatari`
+
+Reference: @packages/ui/src/button.tsx
+
+## External install (after merge to public main)
+
+```bash
+pnpm dlx shadcn@latest add minoong/design-monogatari/badge
+```
+
+Consumer needs Tailwind v4 + `shadcn init`. Installs to `@/components/ui/*` and `@/lib/utils`.

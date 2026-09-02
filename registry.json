@@ -1,0 +1,65 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "design-monogatari",
+  "homepage": "https://github.com/minoong/design-monogatari",
+  "items": [
+    {
+      "name": "cn",
+      "type": "registry:lib",
+      "title": "cn utility",
+      "description": "Merge Tailwind classes with clsx and tailwind-merge.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "packages/ui/src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "theme",
+      "type": "registry:theme",
+      "title": "Design Monogatari theme",
+      "description": "Shared @theme color tokens for design-monogatari components.",
+      "cssVars": {
+        "theme": {
+          "font-sans": "var(--font-geist-sans)",
+          "font-mono": "var(--font-geist-mono)",
+          "radius-pill": "128px"
+        },
+        "light": {
+          "background": "#ffffff",
+          "foreground": "#171717",
+          "muted": "rgba(0, 0, 0, 0.05)",
+          "muted-strong": "rgba(0, 0, 0, 0.08)",
+          "primary-hover": "#383838",
+          "secondary-hover": "#f2f2f2"
+        },
+        "dark": {
+          "background": "#0a0a0a",
+          "foreground": "#ededed",
+          "muted": "rgba(255, 255, 255, 0.06)",
+          "muted-strong": "rgba(255, 255, 255, 0.145)",
+          "primary-hover": "#cccccc",
+          "secondary-hover": "#1a1a1a"
+        }
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Small label for status, tags, or metadata.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/badge.tsx",
+          "type": "registry:ui",
+          "target": "@ui/badge.tsx"
+        }
+      ]
+    }
+  ]
+}
