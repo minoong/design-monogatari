@@ -41,6 +41,14 @@ pnpm --filter @repo/ui generate:component
 - UI motion: Motion (`motion/react`, planned) — `transition-*` 클래스와 Motion 동시 사용 금지
 - Scroll/timeline: GSAP + ScrollTrigger
 
+## Registry (external apps)
+
+새 UI 컴포넌트를 외부 Next.js 앱에 배포할 때:
+
+1. `registry/design-monogatari/<kebab-name>.tsx` — `@/lib/utils` import
+2. `registry.json`에 item 추가 (`registryDependencies`: `minoong/design-monogatari/cn`, `minoong/design-monogatari/theme`)
+3. `pnpm dlx shadcn@latest registry validate minoong/design-monogatari`
+
 ## 완료
 
 `.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify` 실행

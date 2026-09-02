@@ -1,5 +1,6 @@
 import Image, { type ImageProps } from "next/image";
 
+import { Badge } from "@repo/ui/badge";
 import { Button } from "@repo/ui/button";
 import { cn } from "@repo/ui/cn";
 
@@ -35,6 +36,10 @@ export default function Home() {
           height={38}
           priority
         />
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <Badge>design-monogatari</Badge>
+          <Badge variant="secondary">Tailwind v4</Badge>
+        </div>
         <ol className="m-0 list-inside p-0 font-mono text-sm leading-6 tracking-tight max-[600px]:text-center">
           <li className="mb-2">
             Get started by editing{" "}

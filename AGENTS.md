@@ -17,6 +17,17 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 
 Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
 
+## Cursor context ([docs](https://cursor.com/docs/context/rules))
+
+| Layer            | Location              | Role                                                   |
+| ---------------- | --------------------- | ------------------------------------------------------ |
+| AGENTS.md        | repo root             | Short index — stack, skills, verify                    |
+| Project Rules    | `.cursor/rules/*.mdc` | Scoped prompts (`alwaysApply`, `globs`, `description`) |
+| Skills           | `.agents/skills/`     | Deep workflows; read on demand                         |
+| Nested AGENTS.md | e.g. `packages/ui/`   | Package-scoped instructions                            |
+
+Do not duplicate skill content in rules. Point to canonical files with `@path`.
+
 ## Skill catalog
 
 | Skill             | Path                                          | When                                 |
@@ -53,6 +64,12 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 - Apps: `@import "@repo/ui/styles.css"` + `@source` for app TSX
 - Class merge: `@repo/ui/cn`
 - Rule: `.cursor/rules/styling.mdc`
+
+## shadcn Registry (external install)
+
+- Root [registry.json](registry.json) — GitHub Registry for other Next.js apps
+- `pnpm dlx shadcn@latest add minoong/design-monogatari/badge` (after public merge)
+- Rule: `.cursor/rules/shadcn-registry.mdc`
 
 ## This repository
 
