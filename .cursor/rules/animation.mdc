@@ -1,0 +1,19 @@
+---
+description: Choose GSAP vs Framer Motion for animations in this design system
+alwaysApply: false
+---
+
+# Animation
+
+| Use case | Tool | Skill |
+|----------|------|-------|
+| Hover, enter/exit, layout UI motion | Motion (`motion/react`, planned) | `motion-react`, `fixing-motion-performance` |
+| Scroll-linked, pin, scrub, complex timeline | GSAP + ScrollTrigger | `gsap-scrolltrigger`, `gsap-timeline` |
+| React integration | GSAP in components | `gsap-react` |
+| Performance | transforms, avoid layout thrash | `gsap-performance` |
+
+Before implementing Motion APIs, read `.agents/skills/motion-react/SKILL.md` and fetch official docs via `https://motion.dev/llms.txt`.
+
+Do not mix GSAP and Motion on the same element without reason. If unclear, use AskQuestion.
+
+Register GSAP plugins before use; cleanup in `useEffect` / `useGSAP`.

@@ -1,0 +1,16 @@
+---
+globs: apps/**/*.tsx, packages/ui/**/*.tsx
+alwaysApply: false
+description: React 19 and Next.js component patterns for apps and UI package
+---
+
+# React / Next.js
+
+When writing or refactoring components in `apps/` or `packages/ui/`:
+
+1. Read `.agents/skills/vercel-react-best-practices/SKILL.md`
+2. React 19 functional components, named exports
+3. `@repo/ui` imports via subpath: `@repo/ui/button`
+4. No barrel files
+
+Reference: @packages/ui/src/button.tsx

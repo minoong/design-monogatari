@@ -1,0 +1,16 @@
+---
+globs: apps/**, packages/ui/**
+alwaysApply: false
+description: Web and React performance guidelines
+---
+
+# Web performance
+
+When optimizing or building features in apps or `@repo/ui`:
+
+1. `.agents/skills/vercel-react-best-practices/SKILL.md` — React/Next patterns
+2. `.agents/skills/performance/SKILL.md` — Lighthouse, loading strategy
+3. `.agents/skills/core-web-vitals/SKILL.md` — LCP, INP, CLS
+4. Motion: `.agents/skills/fixing-motion-performance/SKILL.md`
+
+After changes, run `pnpm verify`.

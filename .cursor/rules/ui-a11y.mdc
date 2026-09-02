@@ -1,0 +1,16 @@
+---
+globs: packages/ui/**/*.tsx, apps/**/*.tsx
+alwaysApply: false
+description: Web accessibility for UI components and pages
+---
+
+# Accessibility
+
+When creating or editing UI:
+
+1. Read `.agents/skills/accessibility/SKILL.md`
+2. For fixes: `.agents/skills/fixing-accessibility/SKILL.md`
+3. Semantic HTML, keyboard focus, labels for forms, alt text for images
+4. Review requests: `.agents/skills/web-design-guidelines/SKILL.md`
+
+Do not skip a11y for "quick" components in `@repo/ui`.
