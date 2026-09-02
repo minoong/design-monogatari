@@ -1,0 +1,34 @@
+---
+alwaysApply: true
+description: Default tech stack and approval flow before using alternative libraries
+---
+
+# Stack guardrails
+
+## Approved defaults
+
+- Package manager: **pnpm**
+- React **19** + TypeScript
+- Monorepo: **Turborepo** + workspace packages
+- Styling: **Tailwind CSS** (planned — not yet in repo)
+- UI motion: **Framer Motion** (planned)
+- Scroll/timeline animation: **GSAP** (+ ScrollTrigger)
+- Component docs: **Storybook** (planned)
+- Design system: `@repo/ui` internal package
+
+## Before using an alternative
+
+If the task suggests Vue, Svelte, styled-components, CSS-in-js only, npm/yarn, anime.js-only, etc.:
+
+1. **AskQuestion** — why the default is insufficient, scope, tradeoffs
+2. Read official docs before implementing
+3. **Do not add dependencies** to `package.json` without explicit user approval
+
+## Docs
+
+- React: https://react.dev
+- GSAP: https://gsap.com/docs/v3/
+- Framer Motion: https://motion.dev/docs
+- Tailwind: https://tailwindcss.com/docs
+- Storybook: https://storybook.js.org/docs
+- Turborepo: `turbo docs "<query>"` or `.agents/skills/turborepo/SKILL.md`

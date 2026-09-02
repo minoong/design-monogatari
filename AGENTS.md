@@ -1,60 +1,72 @@
 # Agent Instructions
 
-Project-specific notes for **design-monogatari**. Turborepo conventions are covered by the official skill — do not duplicate them here.
+Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agents/skills/` — do not duplicate in rules.
+
+## Default stack
+
+| Layer             | Choice                                         | Status                     |
+| ----------------- | ---------------------------------------------- | -------------------------- |
+| Monorepo          | Turborepo + pnpm                               | active                     |
+| React             | 19                                             | active                     |
+| Design system     | `@repo/ui` (JIT)                               | active                     |
+| Styling           | Tailwind CSS                                   | planned                    |
+| UI motion         | Framer Motion                                  | planned                    |
+| Scroll animation  | GSAP + ScrollTrigger                           | planned (skills installed) |
+| Docs              | Storybook                                      | planned                    |
+| ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active                     |
+
+Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
+
+## Skill catalog
+
+| Skill             | Path                                          | When                                 |
+| ----------------- | --------------------------------------------- | ------------------------------------ |
+| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages |
+| Git commit / PR   | `.agents/skills/git-commit/`                  | commit, branch, PR (한글)            |
+| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching     |
+| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                           |
+| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                 |
+| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                  |
+| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                        |
+| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                          |
+| Motion perf       | `.agents/skills/fixing-motion-performance/`   | Framer / motion                      |
+| GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP         |
+| Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component             |
+| Ship UI change    | `.agents/skills/ship-ui-change/`              | before marking work done             |
+
+Install updates: `npx skills add <owner/repo> --skill <name>`
 
 ## Turborepo (official)
 
-- **Skill**: `.agents/skills/turborepo/` (from `npx skills add vercel/turborepo`)
-  - Read `SKILL.md` before changing `turbo.json`, tasks, caching, or monorepo structure.
-- **Search docs** (version-matched to installed turbo):
-
-  ```bash
-  turbo docs "task descriptions"
-  turbo docs "internal packages"
-  ```
-
-- **Markdown docs**: append `.md` to any URL, e.g. `https://turborepo.dev/docs/guides/ai.md`
-- **Sitemap**: `https://turborepo.dev/sitemap.md`
+- Read `.agents/skills/turborepo/SKILL.md` before changing `turbo.json`
+- Search docs: `turbo docs "<query>"`
 
 ## This repository
 
 ```
 apps/web, apps/docs     Next.js apps (ports 3000, 3001)
-packages/ui             @repo/ui — JIT internal package (no build script)
-packages/*-config       eslint, typescript, prettier shared configs
+packages/ui             @repo/ui — JIT internal package
+packages/*-config       shared eslint / typescript / prettier
 ```
 
-- Package manager: **pnpm** (`workspace:*`)
 - `@repo/ui` imports: `@repo/ui/button` (subpath, no barrels)
 
 ## Verification (definition of done)
+
+Follow `.agents/skills/ship-ui-change/SKILL.md`:
 
 ```bash
 pnpm verify
 ```
 
-Equivalent:
-
-```bash
-pnpm format:check
-turbo run lint check-types build --filter=@repo/ui --filter=web --filter=docs
-```
-
 Do not commit or push unless the user asks.
 
-## Git 워크플로
+## Git workflow
 
 - Skill: `.agents/skills/git-commit/SKILL.md`
-- **작업 전**: `main`에서 feature 브랜치 생성 (`feat/`, `fix/`, `chore/` …)
+- **작업 전**: feature branch from `main` (`feat/`, `fix/`, `chore/` …)
 - **`main`에 직접 커밋하지 않음**
-- **커밋·push·PR**: 사용자 요청 시에만
-- PR: `gh pr create`, 제목·본문 **한글**, test plan에 `pnpm verify`
-
-## 커밋 메시지
-
-- Skill: `.agents/skills/git-commit/SKILL.md` ([awesome-copilot git-commit](https://www.skills.sh/github/awesome-copilot/git-commit) + 한글)
-- Conventional Commits + diff 분석 + Git 안전 프로토콜
-- **제목·본문은 한글**
+- **커밋·push·PR**: 사용자 요청 시에만, **한글** Conventional Commits
 
 ## Scaffolding
 
