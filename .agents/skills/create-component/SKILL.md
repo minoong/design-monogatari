@@ -30,12 +30,13 @@ pnpm --filter @repo/ui generate:component
 | React/Next 패턴 | `.agents/skills/vercel-react-best-practices/SKILL.md` |
 | 접근성          | `.agents/skills/accessibility/SKILL.md`               |
 | GSAP 애니메이션 | `.agents/skills/gsap-react/SKILL.md`                  |
+| UI motion       | `.agents/skills/motion-react/SKILL.md`                |
 | motion 성능     | `.agents/skills/fixing-motion-performance/SKILL.md`   |
 
 ## 스타일 (planned)
 
 - Tailwind CSS (도입 전까지 CSS Module 허용)
-- UI motion: Framer Motion (planned)
+- UI motion: Motion (`motion/react`, planned) — 공식 문서: `https://motion.dev/llms.txt`
 - Scroll/timeline: GSAP + ScrollTrigger
 
 ## 완료

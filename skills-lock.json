@@ -73,6 +73,12 @@
       "skillPath": "skills/gsap-utils/SKILL.md",
       "computedHash": "1ab2387f6e694718a4f1b5acf2a4ab16e1b884c3428adf5f6b26d830f00826cf"
     },
+    "motion-react": {
+      "source": "pedronauck/skills",
+      "sourceType": "github",
+      "skillPath": "skills/community/motion-react/SKILL.md",
+      "computedHash": "746e49d0f010a977f9216f9e14d94eb77b82c412a544c70096f13688ee7351f0"
+    },
     "performance": {
       "source": "addyosmani/web-quality-skills",
       "sourceType": "github",

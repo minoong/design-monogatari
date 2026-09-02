@@ -29,7 +29,8 @@ Alternative libraries require **AskQuestion** + user approval (see `.cursor/rule
 | Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                  |
 | Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                        |
 | UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                          |
-| Motion perf       | `.agents/skills/fixing-motion-performance/`   | Framer / motion                      |
+| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit    |
+| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning            |
 | GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP         |
 | Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component             |
 | Ship UI change    | `.agents/skills/ship-ui-change/`              | before marking work done             |
@@ -40,6 +41,11 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 
 - Read `.agents/skills/turborepo/SKILL.md` before changing `turbo.json`
 - Search docs: `turbo docs "<query>"`
+
+## Motion for React (official)
+
+- Read `.agents/skills/motion-react/SKILL.md` before UI motion work
+- Doc index: `https://motion.dev/llms.txt` → `WebFetch` the matching page (start: `https://motion.dev/docs/react`)
 
 ## This repository
 

@@ -28,7 +28,7 @@ If the task suggests Vue, Svelte, styled-components, CSS-in-js only, npm/yarn, a
 
 - React: https://react.dev
 - GSAP: https://gsap.com/docs/v3/
-- Framer Motion: https://motion.dev/docs
+- Motion (Framer Motion): https://motion.dev/docs/react — index: `https://motion.dev/llms.txt`, skill: `.agents/skills/motion-react/SKILL.md`
 - Tailwind: https://tailwindcss.com/docs
 - Storybook: https://storybook.js.org/docs
 - Turborepo: `turbo docs "<query>"` or `.agents/skills/turborepo/SKILL.md`
