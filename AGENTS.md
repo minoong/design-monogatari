@@ -80,6 +80,7 @@ Do not commit or push unless the user asks.
 - **작업 전**: feature branch from `main` (`feat/`, `fix/`, `chore/` …)
 - **`main`에 직접 커밋하지 않음**
 - **커밋·push·PR**: 사용자 요청 시에만, **한글** Conventional Commits
+- **PR 머지 후**: 사용자가 머지했다고 알리면 에이전트가 `main` 체크아웃 + `git pull origin main` 실행 (skill §7)
 
 ## Scaffolding
 

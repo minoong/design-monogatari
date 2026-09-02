@@ -162,6 +162,22 @@ EOF
 
 PR만 요청하고 push는 안 한 경우 → 먼저 push, 실패 시 사용자에게 알림.
 
+## 7. PR 머지 후 — 로컬 `main` 동기화 (에이전트 실행)
+
+사용자가 **「머지했어」**, **「PR 머지함」** 등 PR/브랜치 머지를 알리면, 안내 문구만 남기지 말고 **에이전트가 즉시** 아래를 실행한다.
+
+```bash
+git fetch origin
+git checkout main
+git pull origin main
+```
+
+그다음 `git status`와 `git log -1 --oneline`으로 동기화 결과를 짧게 확인·보고한다.
+
+- working tree가 깨끗하고 `origin/main`과 일치하면 OK
+- uncommitted 변경이 있으면 stash/커밋 여부를 사용자에게 확인
+- feature 브랜치 삭제는 **사용자 요청 시에만**
+
 ## Git 안전 프로토콜
 
 - git config 변경 금지
