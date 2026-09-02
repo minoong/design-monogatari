@@ -10,7 +10,7 @@ description: Default tech stack and approval flow before using alternative libra
 - Package manager: **pnpm**
 - React **19** + TypeScript
 - Monorepo: **Turborepo** + workspace packages
-- Styling: **Tailwind CSS** (planned — not yet in repo)
+- Styling: **Tailwind CSS v4** (active — `@repo/ui/styles.css`, `@source` monorepo)
 - UI motion: **Framer Motion** (planned)
 - Scroll/timeline animation: **GSAP** (+ ScrollTrigger)
 - Component docs: **Storybook** (planned)
@@ -29,6 +29,6 @@ If the task suggests Vue, Svelte, styled-components, CSS-in-js only, npm/yarn, a
 - React: https://react.dev
 - GSAP: https://gsap.com/docs/v3/
 - Motion (Framer Motion): https://motion.dev/docs/react — index: `https://motion.dev/llms.txt`, skill: `.agents/skills/motion-react/SKILL.md`
-- Tailwind: https://tailwindcss.com/docs
+- Tailwind: https://tailwindcss.com/docs — shared theme `@repo/ui/styles.css`, rule `.cursor/rules/styling.mdc`
 - Storybook: https://storybook.js.org/docs
 - Turborepo: `turbo docs "<query>"` or `.agents/skills/turborepo/SKILL.md`
