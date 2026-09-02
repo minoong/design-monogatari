@@ -7,13 +7,18 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,json,css,mjs,js}\"",
+    "//#format:check": "prettier --check \"**/*.{ts,tsx,md,json,css,mjs,js}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json,css,mjs,js}\"",
     "check-types": "turbo run check-types",
-    "verify": "pnpm format:check && turbo run lint check-types build"
+    "verify": "turbo run //#format:check lint check-types build",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@repo/prettier-config": "workspace:*",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "3.9.6",
+    "prettier-plugin-tailwindcss": "^0.7.4",
     "turbo": "^2.10.12",
     "typescript": "7.0.2"
   },

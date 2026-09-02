@@ -3,7 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "exports": {
-    ".": "./index.json"
+    ".": "./index.mjs"
+  },
+  "devDependencies": {
+    "prettier": "3.9.6",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }

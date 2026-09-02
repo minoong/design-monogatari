@@ -11,7 +11,7 @@ Prefer the `web-vitals` library over hand-written `PerformanceObserver` code. It
 ## Minimal collection pattern
 
 ```javascript
-import { onCLS, onINP, onLCP } from "web-vitals";
+import { onCLS, onINP, onLCP } from 'web-vitals';
 
 function sendToRum({ name, value, rating, id, navigationType }) {
   const body = JSON.stringify({
@@ -24,8 +24,8 @@ function sendToRum({ name, value, rating, id, navigationType }) {
     release: window.APP_RELEASE,
   });
 
-  if (!navigator.sendBeacon?.("/rum", body)) {
-    fetch("/rum", { method: "POST", body, keepalive: true });
+  if (!navigator.sendBeacon?.('/rum', body)) {
+    fetch('/rum', { method: 'POST', body, keepalive: true });
   }
 }
 

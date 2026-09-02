@@ -39,9 +39,9 @@ Set `transform` directly for GPU compositing (best performance):
 
 ```tsx
 <motion.li
-  initial={{ transform: "translateX(-100px)" }}
-  animate={{ transform: "translateX(0px)" }}
-  transition={{ type: "spring" }}
+  initial={{ transform: 'translateX(-100px)' }}
+  animate={{ transform: 'translateX(0px)' }}
+  transition={{ type: 'spring' }}
 />
 ```
 
@@ -58,13 +58,13 @@ Set `transform` directly for GPU compositing (best performance):
 `x`, `y`, `width`, `height`, `top`, `left`, `right`, `bottom` can animate between different units:
 
 ```tsx
-<motion.div initial={{ x: "100%" }} animate={{ x: "calc(100vw - 50%)" }} />
+<motion.div initial={{ x: '100%' }} animate={{ x: 'calc(100vw - 50%)' }} />
 ```
 
 **Animate to/from `"auto"`:**
 
 ```tsx
-<motion.div initial={{ height: 0 }} animate={{ height: "auto" }} />
+<motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} />
 ```
 
 If combining `height: "auto"` with `display: "none"`, use `visibility: "hidden"` instead — elements with `display: none` can't be measured.
@@ -77,12 +77,12 @@ Animate a CSS variable to affect many children:
 
 ```tsx
 <motion.ul
-  initial={{ "--rotate": "0deg" }}
-  animate={{ "--rotate": "360deg" }}
+  initial={{ '--rotate': '0deg' }}
+  animate={{ '--rotate': '360deg' }}
   transition={{ duration: 2, repeat: Infinity }}
 >
-  <li style={{ transform: "rotate(var(--rotate))" }} />
-  <li style={{ transform: "rotate(var(--rotate))" }} />
+  <li style={{ transform: 'rotate(var(--rotate))' }} />
+  <li style={{ transform: 'rotate(var(--rotate))' }} />
 </motion.ul>
 ```
 
@@ -91,7 +91,7 @@ Note: Animating CSS variables **always triggers paint**. For better performance,
 ### CSS Variables as Targets
 
 ```tsx
-<motion.li animate={{ backgroundColor: "var(--action-bg)" }} />
+<motion.li animate={{ backgroundColor: 'var(--action-bg)' }} />
 ```
 
 ## SVG Attributes
@@ -109,7 +109,7 @@ For SVG, use `attrX` and `attrY` for the `x` and `y` **attributes** (as opposed 
   d="M 0 0 L 100 100"
   initial={{ pathLength: 0, pathOffset: 0 }}
   animate={{ pathLength: 1 }}
-  transition={{ duration: 2, ease: "easeInOut" }}
+  transition={{ duration: 2, ease: 'easeInOut' }}
 />
 ```
 

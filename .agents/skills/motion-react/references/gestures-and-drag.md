@@ -4,10 +4,10 @@
 
 ```tsx
 <motion.button
-  whileHover={{ scale: 1.1, backgroundColor: "#f0f" }}
+  whileHover={{ scale: 1.1, backgroundColor: '#f0f' }}
   whileTap={{ scale: 0.95 }}
-  whileFocus={{ outline: "2px solid blue" }}
-  whileDrag={{ scale: 1.1, cursor: "grabbing" }}
+  whileFocus={{ outline: '2px solid blue' }}
+  whileDrag={{ scale: 1.1, cursor: 'grabbing' }}
 />
 ```
 
@@ -25,7 +25,7 @@
 
 ```tsx
 <motion.div whileHover="hover" propagate={false}>
-  <motion.span variants={{ hover: { color: "red" } }} />
+  <motion.span variants={{ hover: { color: 'red' } }} />
 </motion.div>
 ```
 
@@ -43,7 +43,7 @@
 ### Focus
 
 ```tsx
-<motion.input whileFocus={{ scale: 1.02, borderColor: "#00f" }} />
+<motion.input whileFocus={{ scale: 1.02, borderColor: '#00f' }} />
 ```
 
 ### Pan
@@ -120,7 +120,7 @@ const constraintsRef = useRef(null)
 Trigger drag from a different element:
 
 ```tsx
-import { useDragControls } from "motion/react";
+import { useDragControls } from 'motion/react';
 
 function Component() {
   const controls = useDragControls();
@@ -159,7 +159,7 @@ function Component() {
 Drag-to-reorder lists:
 
 ```tsx
-import { Reorder } from "motion/react";
+import { Reorder } from 'motion/react';
 
 function List() {
   const [items, setItems] = useState([1, 2, 3, 4]);

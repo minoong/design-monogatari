@@ -3,7 +3,7 @@
 A `transition` defines the animation type between two values.
 
 ```tsx
-<motion.div animate={{ x: 100 }} transition={{ ease: "easeOut", duration: 2 }} />
+<motion.div animate={{ x: 100 }} transition={{ ease: 'easeOut', duration: 2 }} />
 ```
 
 ## Setting Transitions
@@ -20,8 +20,8 @@ On any animation prop:
 <motion.li
   animate={{ x: 0, opacity: 1 }}
   transition={{
-    default: { type: "spring" },
-    opacity: { ease: "linear", duration: 0.2 },
+    default: { type: 'spring' },
+    opacity: { ease: 'linear', duration: 0.2 },
   }}
 />
 ```
@@ -29,7 +29,7 @@ On any animation prop:
 ### Default via MotionConfig
 
 ```tsx
-<MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
+<MotionConfig transition={{ duration: 0.4, ease: 'easeInOut' }}>
   <App />
 </MotionConfig>
 ```
@@ -39,10 +39,10 @@ On any animation prop:
 By default, higher-specificity transitions **replace** lower ones. Use `inherit: true` to merge:
 
 ```tsx
-<MotionConfig transition={{ duration: 1, ease: "linear" }}>
+<MotionConfig transition={{ duration: 1, ease: 'linear' }}>
   <motion.div
     animate={{ x: 100 }}
-    transition={{ inherit: true, ease: "easeInOut" }}
+    transition={{ inherit: true, ease: 'easeInOut' }}
     // duration: 1 inherited, ease: "easeInOut" overridden
   />
 </MotionConfig>
@@ -65,7 +65,7 @@ By default, higher-specificity transitions **replace** lower ones. Use `inherit:
 **Keyframe easings**: array of easings between each pair:
 
 ```tsx
-<motion.div animate={{ x: [0, 100, 0] }} transition={{ ease: ["easeIn", "easeOut"] }} />
+<motion.div animate={{ x: [0, 100, 0] }} transition={{ ease: ['easeIn', 'easeOut'] }} />
 ```
 
 ### `type: "spring"` (Physics-Based)
@@ -155,7 +155,7 @@ Decelerates from initial velocity. Used internally for `dragTransition`.
   layout
   animate={{ opacity: 0.5 }}
   transition={{
-    ease: "linear",
+    ease: 'linear',
     layout: { duration: 0.3 }, // separate transition for layout
   }}
 />

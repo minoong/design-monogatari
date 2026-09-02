@@ -4,10 +4,10 @@ description: Optimize web performance for faster loading and better user experie
 license: MIT
 metadata:
   author: web-quality-skills
-  version: "2.0"
+  version: '2.0'
 paths:
-  - "apps/**"
-  - "packages/ui/**"
+  - 'apps/**'
+  - 'packages/ui/**'
 ---
 
 # Performance optimization
@@ -121,14 +121,14 @@ Preload only resources whose late discovery is visible in the trace. Each preloa
 
 ```javascript
 // Route-based splitting
-const Dashboard = lazy(() => import("./Dashboard"));
+const Dashboard = lazy(() => import('./Dashboard'));
 
 // Component-based splitting
-const HeavyChart = lazy(() => import("./HeavyChart"));
+const HeavyChart = lazy(() => import('./HeavyChart'));
 
 // Feature-based splitting
 if (user.isPremium) {
-  const PremiumFeatures = await import("./PremiumFeatures");
+  const PremiumFeatures = await import('./PremiumFeatures');
 }
 ```
 
@@ -136,11 +136,11 @@ if (user.isPremium) {
 
 ```javascript
 // ❌ Imports entire library
-import _ from "lodash";
+import _ from 'lodash';
 _.debounce(fn, 300);
 
 // ✅ Imports only what's needed
-import debounce from "lodash/debounce";
+import debounce from 'lodash/debounce';
 debounce(fn, 300);
 ```
 
@@ -205,18 +205,18 @@ debounce(fn, 300);
 /* System font stack as fallback */
 body {
   font-family:
-    "Custom Font",
+    'Custom Font',
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     Roboto,
     sans-serif;
 }
 
 /* Prevent invisible text */
 @font-face {
-  font-family: "Custom Font";
-  src: url("/fonts/custom.woff2") format("woff2");
+  font-family: 'Custom Font';
+  src: url('/fonts/custom.woff2') format('woff2');
   font-display: swap; /* or optional for non-critical */
   font-weight: 400;
   font-style: normal;
@@ -235,8 +235,8 @@ body {
 ```css
 /* One file instead of multiple weights */
 @font-face {
-  font-family: "Inter";
-  src: url("/fonts/Inter-Variable.woff2") format("woff2-variations");
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Variable.woff2') format('woff2-variations');
   font-weight: 100 900;
   font-display: swap;
 }
@@ -264,11 +264,11 @@ Cache-Control: private, max-age=0, must-revalidate
 
 ```javascript
 // Cache-first for static assets
-self.addEventListener("fetch", (event) => {
+self.addEventListener('fetch', (event) => {
   if (
-    event.request.destination === "image" ||
-    event.request.destination === "style" ||
-    event.request.destination === "script"
+    event.request.destination === 'image' ||
+    event.request.destination === 'style' ||
+    event.request.destination === 'script'
   ) {
     event.respondWith(
       caches.match(event.request).then((cached) => {
@@ -276,7 +276,7 @@ self.addEventListener("fetch", (event) => {
           cached ||
           fetch(event.request).then((response) => {
             const clone = response.clone();
-            caches.open("static-v1").then((cache) => cache.put(event.request, clone));
+            caches.open('static-v1').then((cache) => cache.put(event.request, clone));
             return response;
           })
         );
@@ -294,13 +294,13 @@ self.addEventListener("fetch", (event) => {
 // ❌ Forces multiple reflows
 elements.forEach((el) => {
   const height = el.offsetHeight; // Read
-  el.style.height = height + 10 + "px"; // Write
+  el.style.height = height + 10 + 'px'; // Write
 });
 
 // ✅ Batch reads, then batch writes
 const heights = elements.map((el) => el.offsetHeight); // All reads
 elements.forEach((el, i) => {
-  el.style.height = heights[i] + 10 + "px"; // All writes
+  el.style.height = heights[i] + 10 + 'px'; // All writes
 });
 ```
 
@@ -316,7 +316,7 @@ function debounce(fn, delay) {
 }
 
 // Debounce scroll/resize handlers
-window.addEventListener("scroll", debounce(handleScroll, 100));
+window.addEventListener('scroll', debounce(handleScroll, 100));
 ```
 
 ### Use requestAnimationFrame
@@ -370,7 +370,7 @@ function navigate(newView) {
 That's the entire integration — same-origin navigations now fade automatically. To opt specific elements into shared-element transitions (e.g. a thumbnail expanding into a hero), give them a matching `view-transition-name`:
 
 ```css
-.product-thumb[data-id="42"],
+.product-thumb[data-id='42'],
 .product-hero {
   view-transition-name: product-42;
 }

@@ -71,6 +71,25 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 - `pnpm dlx shadcn@latest add minoong/design-monogatari/badge` (after public merge)
 - Rule: `.cursor/rules/shadcn-registry.mdc`
 
+## Lint & format
+
+| Config   | Path                                                            |
+| -------- | --------------------------------------------------------------- |
+| ESLint   | `@repo/eslint-config` — jsx-a11y, import sort, Tailwind v4 lint |
+| Prettier | `@repo/prettier-config` — single quotes, Tailwind class sort    |
+
+| Command             | Role                           |
+| ------------------- | ------------------------------ |
+| `pnpm format`       | Write Prettier                 |
+| `pnpm format:check` | Check formatting (in `verify`) |
+| `pnpm lint`         | ESLint per package             |
+| `pnpm verify`       | format + lint + types + build  |
+
+- Editor: `.editorconfig`, `.vscode/settings.json` (format on save)
+- Hooks: husky pre-commit → lint-staged
+- CI: `.github/workflows/ci.yml` → `pnpm verify`
+- Rule: `.cursor/rules/code-quality.mdc`
+
 ## This repository
 
 ```

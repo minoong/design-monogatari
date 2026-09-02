@@ -4,8 +4,8 @@ description: >-
   UI 변경 완료 전 품질 검증. format/lint/type/build를 실행하고 실패 시 수정.
   작업 완료, PR 전, ship, verify 요청 시 적용.
 paths:
-  - "packages/ui/**"
-  - "apps/**"
+  - 'packages/ui/**'
+  - 'apps/**'
 ---
 
 # UI 변경 완료 (Definition of Done)

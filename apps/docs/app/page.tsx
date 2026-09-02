@@ -1,9 +1,8 @@
-import Image, { type ImageProps } from "next/image";
+import { Button } from '@repo/ui/button';
+import { cn } from '@repo/ui/cn';
+import Image, { type ImageProps } from 'next/image';
 
-import { Button } from "@repo/ui/button";
-import { cn } from "@repo/ui/cn";
-
-type Props = Omit<ImageProps, "src"> & {
+type Props = Omit<ImageProps, 'src'> & {
   srcLight: string;
   srcDark: string;
 };
@@ -13,14 +12,14 @@ const ThemeImage = (props: Props) => {
 
   return (
     <>
-      <Image {...rest} src={srcLight} className={cn("imgLight", className)} />
-      <Image {...rest} src={srcDark} className={cn("imgDark dark:invert", className)} />
+      <Image {...rest} src={srcLight} className={cn('dark:hidden', className)} />
+      <Image {...rest} src={srcDark} className={cn('hidden dark:block', className)} />
     </>
   );
 };
 
 const linkBaseClasses =
-  "inline-flex h-12 items-center justify-center rounded-pill px-5 font-sans text-base leading-5 font-medium max-[600px]:h-10 max-[600px]:px-4 max-[600px]:text-sm";
+  'inline-flex h-12 items-center justify-center rounded-pill px-5 font-sans text-base leading-5 font-medium max-[600px]:h-10 max-[600px]:px-4 max-[600px]:text-sm';
 
 export default function Home() {
   return (
@@ -37,8 +36,8 @@ export default function Home() {
         />
         <ol className="m-0 list-inside p-0 font-mono text-sm leading-6 tracking-tight max-[600px]:text-center">
           <li className="mb-2">
-            Get started by editing{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-semibold">
+            Get started by editing{' '}
+            <code className="bg-muted rounded px-1 py-0.5 font-semibold">
               apps/docs/app/page.tsx
             </code>
           </li>
@@ -49,7 +48,7 @@ export default function Home() {
           <a
             className={cn(
               linkBaseClasses,
-              "gap-2 bg-foreground text-background hover:bg-primary-hover",
+              'bg-foreground text-background hover:bg-primary-hover gap-2',
             )}
             href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
             target="_blank"
@@ -64,7 +63,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className={cn(
               linkBaseClasses,
-              "min-w-[180px] border border-muted-strong hover:border-transparent hover:bg-secondary-hover max-[600px]:min-w-auto",
+              'border-muted-strong hover:bg-secondary-hover min-w-45 border hover:border-transparent max-[600px]:min-w-auto',
             )}
           >
             Read our docs

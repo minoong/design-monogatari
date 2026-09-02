@@ -10,8 +10,8 @@ description: |
   "whileHover", "whileTap", "whileInView", "AnimatePresence", "layoutId", "useScroll",
   "useSpring", "useAnimate", "motion value", "reorder", "parallax".
 paths:
-  - "apps/**/*.tsx"
-  - "packages/ui/**/*.tsx"
+  - 'apps/**/*.tsx'
+  - 'packages/ui/**/*.tsx'
 ---
 
 # Motion for React
@@ -55,17 +55,17 @@ pnpm add motion
 
 ```tsx
 // Standard React (Vite, CRA, Pages Router)
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from 'motion/react';
 
 // Next.js App Router — use "motion/react-client" for RSC tree-shaking
-("use client");
-import * as motion from "motion/react-client";
+('use client');
+import * as motion from 'motion/react-client';
 
 // Minimal bundle (2.3 KB) — imperative API only
-import { useAnimate } from "motion/react-mini";
+import { useAnimate } from 'motion/react-mini';
 
 // Reduced bundle (4.6 KB) — LazyMotion + m component
-import { LazyMotion, domAnimation, m } from "motion/react";
+import { LazyMotion, domAnimation, m } from 'motion/react';
 ```
 
 ## Motion Component
@@ -93,13 +93,13 @@ const MotionBox = motion.create(Box);
   initial={{ opacity: 0, y: 20 }} // mount state (or false to skip)
   animate={{ opacity: 1, y: 0 }} // target state
   exit={{ opacity: 0, y: -20 }} // unmount state (needs AnimatePresence)
-  transition={{ type: "spring", bounce: 0.25 }}
+  transition={{ type: 'spring', bounce: 0.25 }}
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.95 }}
-  whileFocus={{ borderColor: "#00f" }}
+  whileFocus={{ borderColor: '#00f' }}
   whileDrag={{ scale: 1.1 }}
   whileInView={{ opacity: 1 }}
-  viewport={{ once: true, margin: "-100px" }}
+  viewport={{ once: true, margin: '-100px' }}
 />
 ```
 
@@ -121,9 +121,9 @@ Motion animates **any CSS value**: `opacity`, `filter`, `background-image`, `mas
 
 ```tsx
 <motion.li
-  initial={{ transform: "translateX(-100px)" }}
-  animate={{ transform: "translateX(0px)" }}
-  transition={{ type: "spring" }}
+  initial={{ transform: 'translateX(-100px)' }}
+  animate={{ transform: 'translateX(0px)' }}
+  transition={{ type: 'spring' }}
 />
 ```
 
@@ -166,7 +166,7 @@ Variants propagate through the tree. Children inherit `animate`/`initial`/`exit`
 ## AnimatePresence — Exit Animations
 
 ```tsx
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence } from 'motion/react';
 
 <AnimatePresence>
   {isVisible && (
@@ -339,7 +339,7 @@ useMotionValueEvent(scrollY, "change", (v) => console.log(v))
 
 ```tsx
 // LazyMotion pattern
-import { LazyMotion, domAnimation, m } from "motion/react";
+import { LazyMotion, domAnimation, m } from 'motion/react';
 
 <LazyMotion features={domAnimation}>
   <m.div animate={{ opacity: 1 }} />
@@ -376,12 +376,12 @@ Motion components require client-side rendering. Use `"motion/react-client"` for
 
 ```tsx
 // components/motion-client.tsx
-"use client";
-import * as motion from "motion/react-client";
+'use client';
+import * as motion from 'motion/react-client';
 export { motion };
 
 // app/page.tsx (Server Component)
-import { motion } from "@/components/motion-client";
+import { motion } from '@/components/motion-client';
 <motion.div animate={{ opacity: 1 }} />;
 ```
 

@@ -7,7 +7,7 @@ Motion values are composable, signal-like values that update styles **without re
 ### `useMotionValue`
 
 ```tsx
-import { motion, useMotionValue } from "motion/react";
+import { motion, useMotionValue } from 'motion/react';
 
 function Component() {
   const x = useMotionValue(0);
@@ -44,14 +44,14 @@ const x = useMotionValue(0)
 React-safe event listener (auto-cleans up):
 
 ```tsx
-import { useMotionValueEvent } from "motion/react";
+import { useMotionValueEvent } from 'motion/react';
 
-useMotionValueEvent(x, "change", (latest) => {
-  console.log("x changed to", latest);
+useMotionValueEvent(x, 'change', (latest) => {
+  console.log('x changed to', latest);
 });
 
-useMotionValueEvent(x, "animationComplete", () => {
-  console.log("animation finished");
+useMotionValueEvent(x, 'animationComplete', () => {
+  console.log('animation finished');
 });
 ```
 
@@ -62,7 +62,7 @@ useMotionValueEvent(x, "animationComplete", () => {
 Create a motion value derived from other motion values:
 
 ```tsx
-import { useTransform } from "motion/react";
+import { useTransform } from 'motion/react';
 
 // Range mapping
 const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
@@ -71,7 +71,7 @@ const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
 const y = useTransform(() => x.get() * 2);
 
 // With custom easing per segment
-const color = useTransform(scrollYProgress, [0, 0.5, 1], ["#ff0000", "#00ff00", "#0000ff"]);
+const color = useTransform(scrollYProgress, [0, 0.5, 1], ['#ff0000', '#00ff00', '#0000ff']);
 ```
 
 **Range mapping signature:**
@@ -90,7 +90,7 @@ useTransform(
 Attach a spring to a motion value:
 
 ```tsx
-import { useSpring } from "motion/react";
+import { useSpring } from 'motion/react';
 
 // Spring from another motion value
 const x = useMotionValue(0);
@@ -133,7 +133,7 @@ const y = useSpring(dragY)
 Get velocity of a motion value as a new motion value:
 
 ```tsx
-import { useVelocity } from "motion/react";
+import { useVelocity } from 'motion/react';
 
 const x = useMotionValue(0);
 const xVelocity = useVelocity(x);
@@ -167,14 +167,14 @@ const transform = useMotionTemplate`translateX(${x}px) rotate(45deg)`
 Imperative animation control scoped to a component:
 
 ```tsx
-import { useAnimate } from "motion/react";
+import { useAnimate } from 'motion/react';
 
 function Component() {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
     // Selector scoped to scope element's children
-    animate("li", { opacity: 1 }, { stagger: 0.1 });
+    animate('li', { opacity: 1 }, { stagger: 0.1 });
   }, []);
 
   return <ul ref={scope}>{children}</ul>;
@@ -193,7 +193,7 @@ animate(scope.current, { opacity: 1 }, { duration: 1 });
 async function sequence() {
   await animate(scope.current, { x: 100 });
   await animate(scope.current, { rotate: 90 });
-  await animate("li", { opacity: 1 }, { stagger: 0.1 });
+  await animate('li', { opacity: 1 }, { stagger: 0.1 });
 }
 ```
 
@@ -219,7 +219,7 @@ const [scope, animate] = useAnimate();
 useEffect(() => {
   if (!isPresent) {
     const exit = async () => {
-      await animate("li", { opacity: 0, x: -100 });
+      await animate('li', { opacity: 0, x: -100 });
       await animate(scope.current, { opacity: 0 });
       safeToRemove();
     };
@@ -235,7 +235,7 @@ All animations started with `animate` auto-cleanup when the component unmounts.
 Run a callback every animation frame:
 
 ```tsx
-import { useAnimationFrame } from "motion/react";
+import { useAnimationFrame } from 'motion/react';
 
 useAnimationFrame((time, delta) => {
   // time: ms since mount
@@ -266,7 +266,7 @@ See [gestures-and-drag.md](gestures-and-drag.md#usedragcontrols).
 ### `useReducedMotion`
 
 ```tsx
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from 'motion/react';
 
 const shouldReduceMotion = useReducedMotion();
 // Returns true when user has "prefers-reduced-motion: reduce"
@@ -277,7 +277,7 @@ const shouldReduceMotion = useReducedMotion();
 Check if component is still in the DOM (inside AnimatePresence):
 
 ```tsx
-import { useIsPresent } from "motion/react";
+import { useIsPresent } from 'motion/react';
 
 const isPresent = useIsPresent();
 // false when component is performing exit animation
@@ -288,7 +288,7 @@ const isPresent = useIsPresent();
 Access data passed to AnimatePresence `custom` prop from within exiting children:
 
 ```tsx
-import { usePresenceData } from "motion/react";
+import { usePresenceData } from 'motion/react';
 
 function Slide() {
   const direction = usePresenceData(); // value from <AnimatePresence custom={direction}>
@@ -302,9 +302,9 @@ function Slide() {
 Set default transition/reducedMotion for all descendants:
 
 ```tsx
-import { MotionConfig } from "motion/react";
+import { MotionConfig } from 'motion/react';
 
-<MotionConfig transition={{ duration: 0.3, ease: "easeInOut" }} reducedMotion="user">
+<MotionConfig transition={{ duration: 0.3, ease: 'easeInOut' }} reducedMotion="user">
   <App />
 </MotionConfig>;
 ```

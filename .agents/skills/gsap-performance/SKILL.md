@@ -3,8 +3,8 @@ name: gsap-performance
 description: Official GSAP skill for performance — prefer transforms, avoid layout thrashing, will-change, batching. Use when optimizing GSAP animations, reducing jank, or when the user asks about animation performance, FPS, or smooth 60fps.
 license: MIT
 paths:
-  - "**/*.tsx"
-  - "**/*.ts"
+  - '**/*.tsx'
+  - '**/*.ts'
 ---
 
 # GSAP Performance
@@ -47,10 +47,10 @@ GSAP batches updates internally. When mixing GSAP with direct DOM reads/writes o
 Prefer **gsap.quickTo()** for properties that are updated often (e.g. mouse-follower x/y). It reuses a single tween instead of creating new tweens on each update.
 
 ```javascript
-let xTo = gsap.quickTo("#id", "x", { duration: 0.4, ease: "power3" }),
-  yTo = gsap.quickTo("#id", "y", { duration: 0.4, ease: "power3" });
+let xTo = gsap.quickTo('#id', 'x', { duration: 0.4, ease: 'power3' }),
+  yTo = gsap.quickTo('#id', 'y', { duration: 0.4, ease: 'power3' });
 
-document.querySelector("#container").addEventListener("mousemove", (e) => {
+document.querySelector('#container').addEventListener('mousemove', (e) => {
   xTo(e.pageX);
   yTo(e.pageY);
 });

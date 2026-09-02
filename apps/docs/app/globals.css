@@ -1,6 +1,6 @@
-@import "@repo/ui/styles.css";
+@import '@repo/ui/styles.css';
 
-@source "../**/*.{ts,tsx}";
+@source '../**/*.{ts,tsx}';
 
 *,
 *::before,
@@ -26,20 +26,8 @@ a {
   text-decoration: none;
 }
 
-.imgDark {
-  display: none;
-}
-
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
-  }
-
-  .imgLight {
-    display: none;
-  }
-
-  .imgDark {
-    display: unset;
   }
 }

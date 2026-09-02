@@ -21,7 +21,7 @@ Animate when element enters the viewport:
   whileInView={{ opacity: 1 }}
   viewport={{
     once: true, // only animate once (default: false)
-    margin: "-100px", // trigger margin (CSS margin syntax)
+    margin: '-100px', // trigger margin (CSS margin syntax)
     amount: 0.5, // 0-1, fraction visible to trigger (default: "some")
     root: scrollRef, // scroll container ref (default: window)
   }}
@@ -32,8 +32,8 @@ Animate when element enters the viewport:
 
 ```tsx
 <motion.div
-  onViewportEnter={(entry) => console.log("entered")}
-  onViewportLeave={(entry) => console.log("left")}
+  onViewportEnter={(entry) => console.log('entered')}
+  onViewportLeave={(entry) => console.log('left')}
   viewport={{ once: true }}
 />
 ```
@@ -43,7 +43,7 @@ Animate when element enters the viewport:
 React hook that returns `true` when element is in viewport:
 
 ```tsx
-import { useInView } from "motion/react";
+import { useInView } from 'motion/react';
 
 function Component() {
   const ref = useRef(null);
@@ -62,7 +62,7 @@ Options: `{ root, margin, amount, once, initial }`.
 Detects if the current page/tab is visible:
 
 ```tsx
-import { usePageInView } from "motion/react";
+import { usePageInView } from 'motion/react';
 
 function Component() {
   const isPageInView = usePageInView();
@@ -75,7 +75,7 @@ function Component() {
 Creates scroll-linked motion values:
 
 ```tsx
-import { useScroll } from "motion/react";
+import { useScroll } from 'motion/react';
 
 const { scrollX, scrollY, scrollXProgress, scrollYProgress } = useScroll();
 ```
@@ -97,13 +97,13 @@ function ProgressBar() {
     <motion.div
       style={{
         scaleX: scrollYProgress,
-        position: "fixed",
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         height: 4,
         originX: 0,
-        backgroundColor: "#ff0088",
+        backgroundColor: '#ff0088',
       }}
     />
   );
@@ -144,7 +144,7 @@ const { scrollYProgress } = useScroll({ container: containerRef })
 `offset` defines the start and end of the scroll range as an array of two intersection descriptions:
 
 ```tsx
-offset: ["start end", "end start"];
+offset: ['start end', 'end start'];
 //        ↑ target  ↑ container
 ```
 
@@ -162,13 +162,13 @@ Each intersection is `"<target-edge> <container-edge>"`:
 
 ```tsx
 // Element enters bottom, leaves top
-offset: ["start end", "end start"];
+offset: ['start end', 'end start'];
 
 // Element reaches center of viewport
-offset: ["start center", "end center"];
+offset: ['start center', 'end center'];
 
 // Full page scroll
-offset: ["start", "end"]; // (default for page scroll)
+offset: ['start', 'end']; // (default for page scroll)
 ```
 
 ## Composing with Motion Values
@@ -205,7 +205,7 @@ function ParallaxHero() {
   const fgY = useTransform(scrollYProgress, [0, 1], [0, -300]);
 
   return (
-    <div style={{ position: "relative", height: "200vh" }}>
+    <div style={{ position: 'relative', height: '200vh' }}>
       <motion.div style={{ y: bgY }} className="bg-layer" />
       <motion.div style={{ y: fgY }} className="fg-layer" />
     </div>

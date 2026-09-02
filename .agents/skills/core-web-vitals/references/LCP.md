@@ -37,11 +37,11 @@ Target: < 800ms
 ```javascript
 // Use edge functions for dynamic content
 // Vercel example
-export const config = { runtime: "edge" };
+export const config = { runtime: 'edge' };
 
 // Use stale-while-revalidate caching
 // Cache-Control header
-res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
 ```
 
 ### 2. Resource load time
@@ -71,8 +71,8 @@ res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
 
 ```css
 @font-face {
-  font-family: "Heading";
-  src: url("/fonts/heading.woff2") format("woff2");
+  font-family: 'Heading';
+  src: url('/fonts/heading.woff2') format('woff2');
   font-display: swap; /* Show fallback immediately */
 }
 ```
@@ -147,7 +147,7 @@ export async function getStaticProps() {
 
 ```jsx
 // React 18+
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
 function Page() {
   return (
@@ -163,7 +163,7 @@ function Page() {
 ### Next.js
 
 ```jsx
-import Image from "next/image";
+import Image from 'next/image';
 
 // LCP image with priority
 <Image src="/hero.jpg" priority fill sizes="100vw" alt="Hero" />;
@@ -198,7 +198,7 @@ new PerformanceObserver((entryList) => {
   const entries = entryList.getEntries();
   const lastEntry = entries[entries.length - 1];
 
-  console.log("LCP:", {
+  console.log('LCP:', {
     element: lastEntry.element,
     time: lastEntry.startTime,
     size: lastEntry.size,
@@ -206,7 +206,7 @@ new PerformanceObserver((entryList) => {
     renderTime: lastEntry.renderTime,
     loadTime: lastEntry.loadTime,
   });
-}).observe({ type: "largest-contentful-paint", buffered: true });
+}).observe({ type: 'largest-contentful-paint', buffered: true });
 ```
 
 ## Common issues

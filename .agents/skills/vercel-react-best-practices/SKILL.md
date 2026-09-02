@@ -4,10 +4,10 @@ description: React and Next.js performance optimization guidelines from Vercel E
 license: MIT
 metadata:
   author: vercel
-  version: "1.0.0"
+  version: '1.0.0'
 paths:
-  - "apps/**/*.tsx"
-  - "packages/ui/**/*.tsx"
+  - 'apps/**/*.tsx'
+  - 'packages/ui/**/*.tsx'
 ---
 
 # Vercel React Best Practices
