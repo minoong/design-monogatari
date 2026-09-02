@@ -1,0 +1,27 @@
+---
+globs: packages/ui/**/*
+alwaysApply: false
+description: Internal package conventions for the shared UI library
+---
+
+# @repo/ui internal package
+
+Just-in-Time package: exports TypeScript source, consumed and compiled by apps.
+
+## Exports
+
+- Subpath only: `@repo/ui/button`, `@repo/ui/card`
+- Configured in `package.json` `"exports": { "./*": "./src/*.tsx" }`
+- No barrel `index.ts`
+
+## Scripts
+
+- `lint`, `check-types` — run via turbo
+- `generate:component` — scaffolds new components (`turbo gen react-component`)
+- No `build` script (JIT pattern)
+
+## Reference
+
+See @packages/ui/src/button.tsx for component structure.
+
+When adding npm publish later, migrate to Compiled pattern (`tsc` → `dist/**`) and add Changesets.

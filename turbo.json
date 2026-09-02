@@ -3,19 +3,32 @@
   "ui": "tui",
   "tasks": {
     "build": {
+      "description": "Build applications and compiled packages for production",
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**", "storybook-static/**"]
     },
     "lint": {
+      "description": "Run ESLint in each package",
       "dependsOn": ["^lint"]
     },
+    "topo": {
+      "description": "Transit node for parallel type-checking with correct cache invalidation",
+      "dependsOn": ["^topo"]
+    },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "description": "Run TypeScript type checking without emitting files",
+      "dependsOn": ["topo"]
     },
     "dev": {
+      "description": "Start long-running development servers",
       "cache": false,
       "persistent": true
+    },
+    "//#format:check": {
+      "description": "Check Prettier formatting for the whole repository",
+      "inputs": ["$TURBO_DEFAULT$", "**/*.{ts,tsx,md,json,css,mjs,js}", "!pnpm-lock.yaml"],
+      "outputs": []
     }
   }
 }

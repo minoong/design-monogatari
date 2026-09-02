@@ -1,0 +1,38 @@
+---
+alwaysApply: true
+description: pnpm workspace and dependency conventions for the monorepo
+---
+
+# pnpm monorepo
+
+## Package manager
+
+- Use **pnpm only** (`pnpm add`, `pnpm install`, `pnpm --filter`)
+- Internal dependencies: `"workspace:*"`
+- Node: `>=24` (see root `engines`)
+
+## Installing dependencies
+
+Install where they are used, not at the root (except repo tools like turbo, prettier):
+
+```bash
+pnpm add <pkg> --filter @repo/ui
+pnpm add -D <pkg> --filter web
+```
+
+## Workspace packages
+
+| Package | Role |
+|---------|------|
+| `@repo/ui` | React design system (JIT internal package) |
+| `@repo/eslint-config` | Shared ESLint configs |
+| `@repo/typescript-config` | Shared tsconfig |
+| `@repo/prettier-config` | Shared Prettier config |
+
+## Internal package imports
+
+```tsx
+import { Button } from "@repo/ui/button";
+```
+
+Never use relative paths across package boundaries.

@@ -21,6 +21,7 @@ This Turborepo includes the following packages/apps:
 - `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
 - `@repo/eslint-config`: `eslint` configurations (includes `@next/eslint-plugin-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@repo/prettier-config`: shared Prettier configuration
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -35,6 +36,16 @@ This Turborepo has some additional tools already setup for you:
 ### Build
 
 To build all apps and packages, run the following command:
+
+```sh
+pnpm build
+```
+
+To verify formatting, lint, types, and build:
+
+```sh
+pnpm verify
+```
 
 With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
 
