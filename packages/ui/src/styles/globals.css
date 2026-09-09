@@ -2,29 +2,106 @@
 
 @source '../**/*.{ts,tsx}';
 
-@custom-variant dark (@media (prefers-color-scheme: dark));
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
 
-@theme {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
-  --color-muted: rgba(0, 0, 0, 0.05);
-  --color-muted-strong: rgba(0, 0, 0, 0.08);
-  --color-primary-hover: #383838;
-  --color-secondary-hover: #f2f2f2;
+  @media (prefers-color-scheme: dark) {
+    &:where(:not(.light, .light *, .dark, .dark *)) {
+      @slot;
+    }
+  }
+}
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-strong: var(--border);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-on-dark: var(--primary-on-dark);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+  --color-card: var(--card);
 
-  --radius-pill: 128px;
+  --font-sans:
+    var(--font-geist-sans, ui-sans-serif), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    var(--font-geist-mono, ui-monospace), 'SFMono-Regular', menlo, monaco, consolas, monospace;
+
+  --radius-md: 11px;
+  --radius-lg: 18px;
+  --radius-pill: 9999px;
+}
+
+:root,
+.light {
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;
+  --border: #d2d2d7;
+  --primary: #0066cc;
+  --primary-hover: #0071e3;
+  --primary-foreground: #ffffff;
+  --primary-on-dark: #2997ff;
+  --secondary-hover: #f5f5f7;
+  --ring: #0071e3;
+  --overlay: rgb(29 29 31 / 0.48);
+  --card: #ffffff;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --muted: #1d1d1f;
+  --muted-foreground: #a1a1a6;
+  --border: #424245;
+  --primary: #0066cc;
+  --primary-hover: #0071e3;
+  --primary-foreground: #ffffff;
+  --primary-on-dark: #2997ff;
+  --secondary-hover: #1d1d1f;
+  --ring: #2997ff;
+  --overlay: rgb(0 0 0 / 0.64);
+  --card: #1d1d1f;
 }
 
 @media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-    --color-muted: rgba(255, 255, 255, 0.06);
-    --color-muted-strong: rgba(255, 255, 255, 0.145);
-    --color-primary-hover: #cccccc;
-    --color-secondary-hover: #1a1a1a;
+  :root:not(.light) {
+    --background: #000000;
+    --foreground: #f5f5f7;
+    --muted: #1d1d1f;
+    --muted-foreground: #a1a1a6;
+    --border: #424245;
+    --primary: #0066cc;
+    --primary-hover: #0071e3;
+    --primary-foreground: #ffffff;
+    --primary-on-dark: #2997ff;
+    --secondary-hover: #1d1d1f;
+    --ring: #2997ff;
+    --overlay: rgb(0 0 0 / 0.64);
+    --card: #1d1d1f;
+  }
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light) {
+    color-scheme: dark;
   }
 }

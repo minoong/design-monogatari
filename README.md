@@ -15,6 +15,8 @@ Turborepo monorepo for the **design-monogatari** design system and demo apps.
 
 ## Develop
 
+Node **24+** (see `.nvmrc`). With nvm: `nvm use`.
+
 ```bash
 pnpm install
 pnpm dev              # all apps
@@ -28,11 +30,12 @@ pnpm format           # Prettier write (+ Tailwind class sort)
 pnpm format:check     # Prettier check
 pnpm lint             # ESLint (per package)
 pnpm verify           # format + lint + types + build
+pnpm --filter @repo/ui storybook   # component docs (port 6006)
 ```
 
 - **pre-commit**: husky + lint-staged (staged Prettier + ESLint fix)
 - **CI**: GitHub Actions runs `pnpm verify` on push/PR to `main`
-- Agent docs: [AGENTS.md](AGENTS.md), rule `.cursor/rules/code-quality.mdc`
+- Agent docs: [AGENTS.md](AGENTS.md), visual spec [DESIGN.md](DESIGN.md), rule `.cursor/rules/code-quality.mdc`
 
 ## Build
 

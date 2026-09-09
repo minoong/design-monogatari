@@ -13,7 +13,7 @@ const baseClasses =
 
 const variantClasses = {
   default: 'bg-foreground text-background',
-  secondary: 'border-muted-strong bg-muted text-foreground',
+  secondary: 'border-border bg-muted text-foreground',
 } as const;
 
 export function Badge({ children, className, variant = 'default' }: BadgeProps) {

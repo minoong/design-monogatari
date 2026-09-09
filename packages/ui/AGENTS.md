@@ -6,11 +6,20 @@ React design system package (Just-in-Time — no `build` script).
 
 - One component per file: `src/Button.tsx` → import `@repo/ui/button`
 - **Named exports** only; no barrel `index.ts`
-- `"use client"` only when needed (event handlers, hooks)
+- `"use client"` only when needed (event handlers, hooks, Motion, Radix)
 - **Styling**: Tailwind utility classes; merge with `./lib/cn`
-- **Design tokens**: `@theme` in @packages/ui/src/styles/globals.css
+- **Design language**: root `DESIGN.md` — read before UI changes
+- **Design tokens**: `@theme` in `src/styles/globals.css` (keep in sync with DESIGN.md)
 - **Monorepo import**: `@repo/ui/<name>` — **Registry export**: `registry/design-monogatari/` + `registry.json` for `shadcn add` (`bg-background`, `text-foreground`, …)
 - Reference: @packages/ui/src/button.tsx
+
+## Storybook
+
+```bash
+pnpm --filter @repo/ui storybook
+```
+
+Stories live next to components: `src/*.stories.tsx`.
 
 ## Skills when working here
 
@@ -25,7 +34,9 @@ React design system package (Just-in-Time — no `build` script).
 | UI motion       | `.agents/skills/motion-react/SKILL.md`                   |
 | Done            | `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify` |
 
-## Planned (not in repo yet)
+## Motion
 
-- Framer Motion for UI motion
-- `.stories.tsx` co-located when Storybook is added
+- Package: `motion` — import `motion/react-client` in client components
+- Button: `whileHover` / `whileTap`; Dialog: overlay/content enter via Motion
+- Do not combine `transition-*` Tailwind with Motion on the same element
+- Respect `useReducedMotion()`
