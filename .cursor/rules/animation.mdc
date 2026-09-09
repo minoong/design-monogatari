@@ -7,7 +7,7 @@ alwaysApply: false
 
 | Use case | Tool | Skill |
 |----------|------|-------|
-| Hover, enter/exit, layout UI motion | Motion (`motion/react`, planned) | `motion-react`, `fixing-motion-performance` |
+| Hover, enter/exit, layout UI motion | Motion (`motion/react`, active) | `motion-react`, `fixing-motion-performance` |
 | Scroll-linked, pin, scrub, complex timeline | GSAP + ScrollTrigger | `gsap-scrolltrigger`, `gsap-timeline` |
 | React integration | GSAP in components | `gsap-react` |
 | Performance | transforms, avoid layout thrash | `gsap-performance` |

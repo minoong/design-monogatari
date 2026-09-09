@@ -1,0 +1,29 @@
+---
+description: Visual design language — read DESIGN.md before UI, token, or Storybook color work
+globs: packages/ui/**/*.tsx, packages/ui/**/*.css, packages/ui/**/*.stories.tsx, apps/**/*.tsx, DESIGN.md, registry.json, registry/**/*.tsx
+alwaysApply: false
+---
+
+# Design language
+
+Canonical spec: [DESIGN.md](DESIGN.md). Do not copy tokens into this rule.
+
+When creating or editing UI, CSS tokens, stories, or the shadcn registry:
+
+1. Read @DESIGN.md
+2. Apply tokens only via Tailwind `@theme` classes from [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
+3. Keep `registry.json` `theme.cssVars` in sync when tokens change
+4. Storybook preview must set `html.light` or `html.dark` so canvas and tokens match
+
+## Do
+
+- Primary CTA: `bg-primary text-primary-foreground`
+- Borders: `border-border` (visible hairline, not 5–8% black)
+- Muted copy: `text-muted-foreground` (placeholder, caption, dialog description)
+- Pill actions: `rounded-pill`
+
+## Don't
+
+- Hardcode hex in `packages/ui/src/*.tsx` or `apps/**/*.tsx`
+- Use `bg-foreground` as the default primary button
+- Leave Storybook on a white canvas while OS dark tokens are active

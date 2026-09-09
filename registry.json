@@ -26,23 +26,41 @@
         "theme": {
           "font-sans": "var(--font-geist-sans)",
           "font-mono": "var(--font-geist-mono)",
-          "radius-pill": "128px"
+          "radius-md": "11px",
+          "radius-lg": "18px",
+          "radius-pill": "9999px"
         },
         "light": {
           "background": "#ffffff",
-          "foreground": "#171717",
-          "muted": "rgba(0, 0, 0, 0.05)",
-          "muted-strong": "rgba(0, 0, 0, 0.08)",
-          "primary-hover": "#383838",
-          "secondary-hover": "#f2f2f2"
+          "foreground": "#1d1d1f",
+          "muted": "#f5f5f7",
+          "muted-foreground": "#6e6e73",
+          "muted-strong": "#d2d2d7",
+          "border": "#d2d2d7",
+          "primary": "#0066cc",
+          "primary-hover": "#0071e3",
+          "primary-foreground": "#ffffff",
+          "primary-on-dark": "#2997ff",
+          "secondary-hover": "#f5f5f7",
+          "ring": "#0071e3",
+          "overlay": "rgb(29 29 31 / 0.48)",
+          "card": "#ffffff"
         },
         "dark": {
-          "background": "#0a0a0a",
-          "foreground": "#ededed",
-          "muted": "rgba(255, 255, 255, 0.06)",
-          "muted-strong": "rgba(255, 255, 255, 0.145)",
-          "primary-hover": "#cccccc",
-          "secondary-hover": "#1a1a1a"
+          "background": "#000000",
+          "foreground": "#f5f5f7",
+          "muted": "#1d1d1f",
+          "muted-foreground": "#a1a1a6",
+          "muted-strong": "#424245",
+          "border": "#424245",
+          "primary": "#0066cc",
+          "primary-hover": "#0071e3",
+          "primary-foreground": "#ffffff",
+          "primary-on-dark": "#2997ff",
+          "secondary-hover": "#1d1d1f",
+          "ring": "#2997ff",
+          "overlay": "rgb(0 0 0 / 0.64)",
+          "card": "#1d1d1f"
         }
       }
     },
@@ -58,6 +76,66 @@
           "path": "registry/design-monogatari/badge.tsx",
           "type": "registry:ui",
           "target": "@ui/badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Pill-shaped button with Motion hover and tap feedback.",
+      "dependencies": ["clsx", "motion", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Text input styled with design-monogatari tokens.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/input.tsx",
+          "type": "registry:ui",
+          "target": "@ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Accessible form label built on Radix Label.",
+      "dependencies": ["@radix-ui/react-label", "clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/label.tsx",
+          "type": "registry:ui",
+          "target": "@ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Modal dialog with Radix a11y and Motion enter/exit animation.",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/dialog.tsx",
+          "type": "registry:ui",
+          "target": "@ui/dialog.tsx"
         }
       ]
     }

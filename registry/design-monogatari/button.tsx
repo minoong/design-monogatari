@@ -1,10 +1,10 @@
 'use client';
 
-import { useReducedMotion } from 'motion/react';
-import * as motion from 'motion/react-client';
 import { type ReactNode } from 'react';
+import * as motion from 'motion/react-client';
+import { useReducedMotion } from 'motion/react';
 
-import { cn } from './lib/cn';
+import { cn } from '@/lib/utils';
 
 interface ButtonProps {
   children: ReactNode;

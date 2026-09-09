@@ -6,27 +6,29 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 
 | Layer             | Choice                                         | Status                     |
 | ----------------- | ---------------------------------------------- | -------------------------- |
+| Node              | 24+ (`.nvmrc`)                                 | active                     |
 | Monorepo          | Turborepo + pnpm                               | active                     |
 | React             | 19                                             | active                     |
 | Design system     | `@repo/ui` (JIT)                               | active                     |
 | Styling           | Tailwind CSS v4                                | active                     |
-| UI motion         | Framer Motion                                  | planned                    |
+| UI motion         | Framer Motion                                  | active                     |
 | Scroll animation  | GSAP + ScrollTrigger                           | planned (skills installed) |
-| Docs              | Storybook                                      | planned                    |
+| Docs              | Storybook (`@repo/ui`)                         | active                     |
 | ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active                     |
 
 Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
 
-## Cursor context ([docs](https://cursor.com/docs/context/rules))
+## Cursor context ([docs](https://cursor.com/docs/rules))
 
-| Layer            | Location              | Role                                                   |
-| ---------------- | --------------------- | ------------------------------------------------------ |
-| AGENTS.md        | repo root             | Short index — stack, skills, verify                    |
-| Project Rules    | `.cursor/rules/*.mdc` | Scoped prompts (`alwaysApply`, `globs`, `description`) |
-| Skills           | `.agents/skills/`     | Deep workflows; read on demand                         |
-| Nested AGENTS.md | e.g. `packages/ui/`   | Package-scoped instructions                            |
+| Layer            | Location              | Role                                                       |
+| ---------------- | --------------------- | ---------------------------------------------------------- |
+| AGENTS.md        | repo root             | Short index — stack, skills, verify                        |
+| Project Rules    | `.cursor/rules/*.mdc` | Scoped prompts (`alwaysApply`, `globs`, `description`)     |
+| Hooks            | `.cursor/hooks.json`  | Agent loop scripts ([docs](https://cursor.com/docs/hooks)) |
+| Skills           | `.agents/skills/`     | Deep workflows; read on demand                             |
+| Nested AGENTS.md | e.g. `packages/ui/`   | Package-scoped instructions                                |
 
-Do not duplicate skill content in rules. Point to canonical files with `@path`.
+Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`@DESIGN.md`). Project rule: `.cursor/rules/design.mdc`.
 
 ## Skill catalog
 
@@ -53,6 +55,15 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 - Read `.agents/skills/turborepo/SKILL.md` before changing `turbo.json`
 - Search docs: `turbo docs "<query>"`
 
+## Storybook
+
+```bash
+pnpm --filter @repo/ui storybook
+pnpm --filter @repo/ui build-storybook
+```
+
+Co-located stories: `packages/ui/src/*.stories.tsx`. Not included in `pnpm verify`.
+
 ## Motion for React (official)
 
 - Read `.agents/skills/motion-react/SKILL.md` before UI motion work
@@ -60,6 +71,7 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 
 ## Tailwind CSS
 
+- Visual spec: [DESIGN.md](DESIGN.md) — rule `.cursor/rules/design.mdc`, session hook `.cursor/hooks.json`
 - Shared theme: `@repo/ui/styles.css` — design tokens in `@theme`
 - Apps: `@import "@repo/ui/styles.css"` + `@source` for app TSX
 - Class merge: `@repo/ui/cn`

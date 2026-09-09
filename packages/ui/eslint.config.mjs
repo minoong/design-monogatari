@@ -3,6 +3,9 @@ import { withTailwindCss } from '@repo/eslint-config/tailwind';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+  {
+    ignores: ['storybook-static/**'],
+  },
   ...withTailwindCss(config, './src/styles/globals.css'),
   {
     files: ['src/lib/cn.ts'],

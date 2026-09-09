@@ -16,7 +16,7 @@ export function Card({
   return (
     <a
       className={cn(
-        'group border-muted-strong hover:bg-secondary-hover block rounded-lg border p-6 font-sans transition-colors',
+        'group border-border hover:bg-secondary-hover block rounded-lg border p-6 font-sans transition-colors',
         className,
       )}
       href={`${href}?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo`}
@@ -27,7 +27,7 @@ export function Card({
         {title}{' '}
         <span className="inline-block transition-transform group-hover:translate-x-1">-&gt;</span>
       </h2>
-      <p className="text-foreground/80 text-sm leading-6">{children}</p>
+      <p className="text-muted-foreground text-sm leading-6">{children}</p>
     </a>
   );
 }

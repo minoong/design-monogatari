@@ -8,10 +8,10 @@ alwaysApply: false
 
 When styling UI in `apps/` or `packages/ui/`:
 
-1. Read `.cursor/rules/styling.mdc` (this file) and [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
+1. Read @DESIGN.md (rule `.cursor/rules/design.mdc`), then [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
 2. Use **Tailwind utility classes** — avoid new CSS Modules unless Tailwind cannot express the style
 3. Merge classes with `cn()` from `@repo/ui/cn` (apps) or `./lib/cn` (within `@repo/ui`)
-4. Use `@theme` tokens (`bg-background`, `text-foreground`, `bg-muted`, `rounded-pill`, etc.) — do not hardcode hex in components
+4. Use `@theme` tokens (`bg-background`, `text-foreground`, `bg-primary`, `border-border`, `rounded-pill`, etc.) — do not hardcode hex in components. Token hex lives in DESIGN.md + `globals.css` only.
 5. Motion + Tailwind: do not put `transition-*` on `motion.*` elements (see `.agents/skills/motion-react/SKILL.md`)
 
 ## Monorepo CSS
