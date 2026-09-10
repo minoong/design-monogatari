@@ -24,16 +24,16 @@ Theme: `@storybook/addon-themes` applies `html.light` / `html.dark` (`withThemeB
 
 ## Skills when working here
 
-| Task            | Skill                                                                  |
-| --------------- | ---------------------------------------------------------------------- |
-| New component   | `.agents/skills/create-component/SKILL.md`                             |
-| Styling         | `.cursor/rules/styling.mdc`                                            |
-| Registry export | `.cursor/rules/shadcn-registry.mdc`                                    |
-| React patterns  | `.agents/skills/vercel-react-best-practices/SKILL.md`                  |
-| Accessibility   | `.agents/skills/accessibility/SKILL.md`                                |
-| GSAP in React   | `.agents/skills/gsap-react/SKILL.md`                                   |
-| UI motion       | `.agents/skills/motion-react/SKILL.md`                                 |
-| Done            | Playwright MCP 라이트/다크(요청 없이) → ship-ui-change → `pnpm verify` |
+| Task            | Skill                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| New component   | `.agents/skills/create-component/SKILL.md`                                                                  |
+| Styling         | `.cursor/rules/styling.mdc`                                                                                 |
+| Registry export | `.cursor/rules/shadcn-registry.mdc`                                                                         |
+| React patterns  | `.agents/skills/vercel-react-best-practices/SKILL.md`                                                       |
+| Accessibility   | `.agents/skills/accessibility/SKILL.md`                                                                     |
+| GSAP in React   | `.agents/skills/gsap-react/SKILL.md`                                                                        |
+| UI motion       | `.agents/skills/motion-react/SKILL.md`                                                                      |
+| Done            | Playwright MCP 라이트/다크(요청 없이) → `.cursor/agents/ui-verifier.md` 또는 ship-ui-change → `pnpm verify` |
 
 ## Motion
 

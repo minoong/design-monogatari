@@ -7,6 +7,9 @@ description: >-
 paths:
   - 'packages/ui/**'
   - 'apps/**'
+  - 'DESIGN.md'
+  - 'registry.json'
+  - 'registry/**'
 ---
 
 # UI 변경 완료 (Definition of Done)
@@ -16,7 +19,7 @@ paths:
 ## 절차
 
 1. 변경 범위 파악 (`git status`, `git diff`)
-2. 화면이 바뀌면 Playwright MCP (`playwright` in `.cursor/mcp.json`): Storybook `html.light`와 `html.dark`, 보더·링·눌림. 스크린샷 한 장이 아니라 상호작용.
+2. 화면이 바뀌면 Playwright MCP (`playwright` in `.cursor/mcp.json`): Storybook `html.light`와 `html.dark`, 보더·링·눌림. 스크린샷 한 장이 아니라 상호작용. 브라우저 노이즈를 줄이려면 `.cursor/agents/ui-verifier.md`에 위임.
 3. 전체 검증 실행:
 
 ```bash

@@ -21,6 +21,18 @@
         "command": "node .cursor/hooks/ui-verify.mjs afterMCPExecution"
       }
     ],
+    "postToolUse": [
+      {
+        "command": "node .cursor/hooks/ui-verify.mjs postToolUse",
+        "matcher": "Write|StrReplace|EditNotebook"
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": "node .cursor/hooks/ui-verify.mjs subagentStop",
+        "loop_limit": 2
+      }
+    ],
     "stop": [
       {
         "command": "node .cursor/hooks/ui-verify.mjs stop",

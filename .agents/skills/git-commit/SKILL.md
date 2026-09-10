@@ -1,8 +1,8 @@
 ---
 name: git-commit
 description: >-
-  Git 브랜치·커밋·PR 워크플로. 작업 전 feature 브랜치 생성, Conventional Commits 한글 메시지,
-  diff 분석, 사용자 요청 시 push/PR. 커밋, 브랜치, PR, pull request, /commit 시 적용.
+  Git 브랜치·커밋·PR 워크플로. 작업 전 main에서 feature 브랜치, 한글 Conventional Commits.
+  사용자가 커밋·push·PR·머지했어라고 하면 묻지 말고 실행. 기본 브랜치는 main(master 아님).
 license: MIT
 ---
 
