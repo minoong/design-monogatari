@@ -18,15 +18,16 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 
 Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
 
-## Cursor context ([docs](https://cursor.com/docs/rules))
+## Cursor context ([docs](https://cursor.com/docs/context/rules))
 
-| Layer            | Location              | Role                                                       |
-| ---------------- | --------------------- | ---------------------------------------------------------- |
-| AGENTS.md        | repo root             | Short index — stack, skills, verify                        |
-| Project Rules    | `.cursor/rules/*.mdc` | Scoped prompts (`alwaysApply`, `globs`, `description`)     |
-| Hooks            | `.cursor/hooks.json`  | Agent loop scripts ([docs](https://cursor.com/docs/hooks)) |
-| Skills           | `.agents/skills/`     | Deep workflows; read on demand                             |
-| Nested AGENTS.md | e.g. `packages/ui/`   | Package-scoped instructions                                |
+| Layer            | Location              | Role                                                                       |
+| ---------------- | --------------------- | -------------------------------------------------------------------------- |
+| AGENTS.md        | repo root             | Short index — stack, skills, verify                                        |
+| Project Rules    | `.cursor/rules/*.mdc` | Scoped prompts (`alwaysApply`, `globs`, `description`)                     |
+| Hooks            | `.cursor/hooks.json`  | Agent loop scripts ([docs](https://cursor.com/docs/agent/hooks))           |
+| Skills           | `.agents/skills/`     | Deep workflows ([docs](https://cursor.com/docs/context/skills))            |
+| MCP              | `.cursor/mcp.json`    | Playwright + lucide-animated ([docs](https://cursor.com/docs/context/mcp)) |
+| Nested AGENTS.md | e.g. `packages/ui/`   | Package-scoped instructions                                                |
 
 Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`@DESIGN.md`). Project rule: `.cursor/rules/design.mdc`.
 
@@ -46,7 +47,9 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 | Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning            |
 | GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP         |
 | Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component             |
-| Ship UI change    | `.agents/skills/ship-ui-change/`              | before marking work done             |
+| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치           |
+| Playwright MCP    | `.cursor/mcp.json` `playwright`               | UI 변경 후 라이트/다크 자동 확인     |
+| Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify           |
 
 Install updates: `npx skills add <owner/repo> --skill <name>`
 
@@ -62,7 +65,7 @@ pnpm --filter @repo/ui storybook
 pnpm --filter @repo/ui build-storybook
 ```
 
-Co-located stories: `packages/ui/src/*.stories.tsx`. Not included in `pnpm verify`.
+Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `@storybook/addon-themes` (`html.light` / `html.dark`). Not included in `pnpm verify`.
 
 ## Motion for React (official)
 
@@ -114,11 +117,12 @@ packages/*-config       shared eslint / typescript / prettier
 
 ## Verification (definition of done)
 
-Follow `.agents/skills/ship-ui-change/SKILL.md`:
+Do not wait for the user to ask. After UI / token / Storybook changes:
 
-```bash
-pnpm verify
-```
+1. Playwright MCP (`.cursor/mcp.json` `playwright`) — Storybook light **and** dark
+2. `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`
+
+A `stop` hook (`.cursor/hooks/ui-verify.mjs`) continues the agent if this is skipped.
 
 Do not commit or push unless the user asks.
 

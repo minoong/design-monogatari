@@ -14,6 +14,7 @@ When creating or editing UI, CSS tokens, stories, or the shadcn registry:
 2. Apply tokens only via Tailwind `@theme` classes from [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
 3. Keep `registry.json` `theme.cssVars` in sync when tokens change
 4. Storybook preview must set `html.light` or `html.dark` so canvas and tokens match
+5. **Do not wait to be asked.** After the change, use Playwright MCP (`playwright` in `.cursor/mcp.json`): Storybook light **and** dark, press/hover, `border-border` / `ring-ring`. Then `.agents/skills/ship-ui-change/SKILL.md`.
 
 ## Do
 

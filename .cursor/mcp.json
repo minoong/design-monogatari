@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "lucide-animated": {
+      "url": "https://lucide-animated.com/mcp"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}

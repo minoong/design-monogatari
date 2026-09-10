@@ -2,6 +2,8 @@ import { Button } from '@repo/ui/button';
 import { cn } from '@repo/ui/cn';
 import Image, { type ImageProps } from 'next/image';
 
+import { ThemeToggle } from './theme-toggle';
+
 type Props = Omit<ImageProps, 'src'> & {
   srcLight: string;
   srcDark: string;
@@ -23,7 +25,10 @@ const linkBaseClasses =
 
 export default function Home() {
   return (
-    <div className="grid min-h-svh grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-20 max-[600px]:gap-16 max-[600px]:p-8 max-[600px]:pb-20">
+    <div className="grid min-h-svh grid-rows-[auto_1fr_auto] items-center justify-items-center gap-16 p-20 max-[600px]:gap-16 max-[600px]:p-8 max-[600px]:pb-20">
+      <div className="row-start-1 justify-self-end">
+        <ThemeToggle />
+      </div>
       <main className="row-start-2 flex flex-col gap-8 max-[600px]:items-center">
         <ThemeImage
           className="dark:invert"
@@ -69,7 +74,7 @@ export default function Home() {
             Read our docs
           </a>
         </div>
-        <Button appName="docs">Open alert</Button>
+        <Button>다음에 하기</Button>
       </main>
       <footer className="row-start-3 flex gap-6 font-sans max-[600px]:flex-wrap max-[600px]:items-center max-[600px]:justify-center">
         <a

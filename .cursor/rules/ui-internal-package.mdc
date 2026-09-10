@@ -10,8 +10,8 @@ Just-in-Time package: exports TypeScript source, consumed and compiled by apps.
 
 ## Exports
 
-- Subpath only: `@repo/ui/button`, `@repo/ui/card`
-- Configured in `package.json` `"exports": { "./*": "./src/*.tsx" }`
+- Subpath only: `@repo/ui/button`, `@repo/ui/icons/plus`
+- Configured in `package.json` `"exports": { "./icons/*": "./src/icons/*.tsx", "./*": "./src/*.tsx" }`
 - No barrel `index.ts`
 
 ## Scripts

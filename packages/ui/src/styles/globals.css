@@ -15,6 +15,29 @@
 }
 
 @theme inline {
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #f5f5f7;
+  --color-neutral-200: #e3e3e7;
+  --color-neutral-300: #d2d2d7;
+  --color-neutral-400: #a1a1a6;
+  --color-neutral-500: #6e6e73;
+  --color-neutral-600: #58585c;
+  --color-neutral-700: #424245;
+  --color-neutral-800: #2f2f32;
+  --color-neutral-900: #1d1d1f;
+  --color-neutral-950: #000000;
+
+  --color-blue-50: #f2f9ff;
+  --color-blue-100: #e1f1ff;
+  --color-blue-200: #c3e2ff;
+  --color-blue-300: #74bbff;
+  --color-blue-400: #2997ff;
+  --color-blue-500: #0071e3;
+  --color-blue-600: #0066cc;
+  --color-blue-700: #0055aa;
+  --color-blue-800: #004488;
+  --color-blue-900: #003366;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -29,6 +52,7 @@
   --color-ring: var(--ring);
   --color-overlay: var(--overlay);
   --color-card: var(--card);
+  --color-dimmer: var(--dimmer);
 
   --font-sans:
     var(--font-geist-sans, ui-sans-serif), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
@@ -39,69 +63,92 @@
   --radius-md: 11px;
   --radius-lg: 18px;
   --radius-pill: 9999px;
+
+  --animate-button-loader-dot: button-loader-dot 0.9s ease-in-out infinite;
+}
+
+@keyframes button-loader-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.24;
+  }
+
+  40% {
+    opacity: 1;
+  }
 }
 
 :root,
 .light {
-  --background: #ffffff;
-  --foreground: #1d1d1f;
-  --muted: #f5f5f7;
-  --muted-foreground: #6e6e73;
-  --border: #d2d2d7;
-  --primary: #0066cc;
-  --primary-hover: #0071e3;
-  --primary-foreground: #ffffff;
-  --primary-on-dark: #2997ff;
-  --secondary-hover: #f5f5f7;
-  --ring: #0071e3;
-  --overlay: rgb(29 29 31 / 0.48);
-  --card: #ffffff;
+  --background: var(--color-neutral-50);
+  --foreground: var(--color-neutral-900);
+  --muted: var(--color-neutral-100);
+  --muted-foreground: var(--color-neutral-500);
+  --border: var(--color-neutral-300);
+  --primary: var(--color-blue-600);
+  --primary-hover: var(--color-blue-500);
+  --primary-foreground: var(--color-neutral-50);
+  --primary-on-dark: var(--color-blue-400);
+  --secondary-hover: var(--color-neutral-100);
+  --ring: var(--color-blue-500);
+  --overlay: color-mix(in srgb, var(--color-neutral-900) 48%, transparent);
+  --card: var(--color-neutral-50);
+  --dimmer: #000000;
 }
 
 .dark {
   --background: #000000;
-  --foreground: #f5f5f7;
-  --muted: #1d1d1f;
-  --muted-foreground: #a1a1a6;
-  --border: #424245;
-  --primary: #0066cc;
-  --primary-hover: #0071e3;
+  --foreground: #eeeef0;
+  --muted: #121315;
+  --muted-foreground: #b2b3bd;
+  --border: #393a3f;
+  --primary: #003cff;
+  --primary-hover: #0022ed;
   --primary-foreground: #ffffff;
-  --primary-on-dark: #2997ff;
-  --secondary-hover: #1d1d1f;
-  --ring: #2997ff;
-  --overlay: rgb(0 0 0 / 0.64);
-  --card: #1d1d1f;
+  --primary-on-dark: #8ab5ff;
+  --secondary-hover: #1f1f22;
+  --ring: #2356d6;
+  --overlay: color-mix(in srgb, #000000 64%, transparent);
+  --card: #121315;
+  --dimmer: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     --background: #000000;
-    --foreground: #f5f5f7;
-    --muted: #1d1d1f;
-    --muted-foreground: #a1a1a6;
-    --border: #424245;
-    --primary: #0066cc;
-    --primary-hover: #0071e3;
+    --foreground: #eeeef0;
+    --muted: #121315;
+    --muted-foreground: #b2b3bd;
+    --border: #393a3f;
+    --primary: #003cff;
+    --primary-hover: #0022ed;
     --primary-foreground: #ffffff;
-    --primary-on-dark: #2997ff;
-    --secondary-hover: #1d1d1f;
-    --ring: #2997ff;
-    --overlay: rgb(0 0 0 / 0.64);
-    --card: #1d1d1f;
+    --primary-on-dark: #8ab5ff;
+    --secondary-hover: #1f1f22;
+    --ring: #2356d6;
+    --overlay: color-mix(in srgb, #000000 64%, transparent);
+    --card: #121315;
+    --dimmer: #000000;
   }
 }
 
-html {
-  color-scheme: light;
-}
+@layer base {
+  html {
+    color-scheme: light;
+  }
 
-html.dark {
-  color-scheme: dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  html:not(.light) {
+  html.dark {
     color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html:not(.light) {
+      color-scheme: dark;
+    }
+  }
+
+  body {
+    @apply bg-background text-foreground;
   }
 }

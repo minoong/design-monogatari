@@ -30,7 +30,7 @@ pnpm format           # Prettier write (+ Tailwind class sort)
 pnpm format:check     # Prettier check
 pnpm lint             # ESLint (per package)
 pnpm verify           # format + lint + types + build
-pnpm --filter @repo/ui storybook   # component docs (port 6006)
+pnpm --filter @repo/ui storybook   # component docs (port 6006, Light/Dark themes)
 ```
 
 - **pre-commit**: husky + lint-staged (staged Prettier + ESLint fix)

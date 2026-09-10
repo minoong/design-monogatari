@@ -2,6 +2,30 @@
 version: alpha
 name: design-monogatari
 description: Apple-inspired product UI for design-monogatari. Quiet chrome, one Action Blue accent, Geist instead of SF Pro. Tokens in this file are the source of truth and must stay in sync with packages/ui/src/styles/globals.css.
+palette:
+  neutral:
+    50: '#ffffff'
+    100: '#f5f5f7'
+    200: '#e3e3e7'
+    300: '#d2d2d7'
+    400: '#a1a1a6'
+    500: '#6e6e73'
+    600: '#58585c'
+    700: '#424245'
+    800: '#2f2f32'
+    900: '#1d1d1f'
+    950: '#000000'
+  blue:
+    50: '#f2f9ff'
+    100: '#e1f1ff'
+    200: '#c3e2ff'
+    300: '#74bbff'
+    400: '#2997ff'
+    500: '#0071e3'
+    600: '#0066cc'
+    700: '#0055aa'
+    800: '#004488'
+    900: '#003366'
 colors:
   background: '#ffffff'
   foreground: '#1d1d1f'
@@ -13,9 +37,25 @@ colors:
   primary-foreground: '#ffffff'
   primary-on-dark: '#2997ff'
   ring: '#0071e3'
-  overlay: 'rgb(29 29 31 / 0.48)'
+  overlay: 'color-mix(in srgb, #1d1d1f 48%, transparent)'
   card: '#ffffff'
   secondary-hover: '#f5f5f7'
+  dimmer: '#000000'
+colorsDark:
+  background: '#000000'
+  foreground: '#eeeef0'
+  muted: '#121315'
+  muted-foreground: '#b2b3bd'
+  border: '#393a3f'
+  primary: '#003cff'
+  primary-hover: '#0022ed'
+  primary-foreground: '#ffffff'
+  primary-on-dark: '#8ab5ff'
+  ring: '#2356d6'
+  overlay: 'color-mix(in srgb, #000000 64%, transparent)'
+  card: '#121315'
+  secondary-hover: '#1f1f22'
+  dimmer: '#000000'
 rounded:
   md: 11px
   lg: 18px
@@ -29,6 +69,27 @@ design-monogatari is a **quiet, product-first UI**. Surfaces are white or parchm
 Typography uses **Geist** (apps) with `ui-sans-serif, system-ui, -apple-system` fallback (Storybook and non-Next consumers). Do not introduce SF Pro as a webfont.
 
 **Before any UI change**, read this file, then map tokens to Tailwind classes in `packages/ui/src/styles/globals.css`. Do not hardcode hex in components.
+
+## Palettes
+
+Primitive steps live in `@theme` as `--color-neutral-*` and `--color-blue-*`. They do **not** flip in dark mode. Light semantic tokens point at those steps. Dark semantic tokens are **Radix custom** hex (`accent` `#003cff`, `background` `#000000`) — not remapped Apple steps.
+
+Components use semantic Tailwind classes (`bg-background`, `bg-primary`). Do not use `bg-neutral-500` or `bg-blue-600` in product UI.
+
+| Semantic (light)        | Step          | Semantic (dark)    | Radix step          |
+| ----------------------- | ------------- | ------------------ | ------------------- |
+| `background`, `card`    | `neutral.50`  | `background`       | gray 1 `#000000`    |
+| `muted`                 | `neutral.100` | `card`, `muted`    | gray 2 `#121315`    |
+| `border`                | `neutral.300` | `secondary-hover`  | gray 3 `#1f1f22`    |
+| `muted-foreground`      | `neutral.500` | `border`           | gray 6 `#393a3f`    |
+| `foreground`            | `neutral.900` | `muted-foreground` | gray 11 `#b2b3bd`   |
+| `primary-on-dark`       | `blue.400`    | `foreground`       | gray 12 `#eeeef0`   |
+| `primary-hover`, `ring` | `blue.500`    | `ring`             | accent 8 `#2356d6`  |
+| `primary`               | `blue.600`    | `primary`          | accent 9 `#003cff`  |
+|                         |               | `primary-hover`    | accent 10 `#0022ed` |
+|                         |               | `primary-on-dark`  | accent 11 `#8ab5ff` |
+
+`neutral.950` is still the primitive black swatch. Catalogs show **50–900**. Dark chrome uses Radix gray, not `neutral.700`.
 
 ## Token mapping
 
@@ -45,23 +106,51 @@ Typography uses **Geist** (apps) with `ui-sans-serif, system-ui, -apple-system` 
 | `ring`                   | `focus-visible:ring-ring`                          |
 | `overlay`                | `bg-overlay`                                       |
 | `card`                   | `bg-card`                                          |
+| `dimmer`                 | `bg-dimmer` (press overlay; always black)          |
 | `rounded.pill`           | `rounded-pill`                                     |
 | `rounded.lg`             | `rounded-lg`                                       |
 | `rounded.md`             | `rounded-md`                                       |
 
-Dark values live on `.dark` (and OS `prefers-color-scheme: dark` when `html` is not `.light`). Storybook toolbar sets `.light` / `.dark` on `<html>` so the canvas always matches the tokens.
+Dark values live on `.dark` (and OS `prefers-color-scheme: dark` when `html` is not `.light`). Storybook `@storybook/addon-themes` (`withThemeByClassName`) sets `html.light` / `html.dark`. Apps use `next-themes` with `attribute="class"` so the same classes land on `<html>`.
 
 ## Colors
 
-- **Action Blue** (`primary` #0066cc): every primary CTA and in-copy link on light surfaces.
-- **Focus Blue** (`ring` / `primary-hover` #0071e3): focus ring and primary hover.
-- **Sky Link** (`primary-on-dark` #2997ff): links on dark tiles only — never on light backgrounds.
-- **Ink** (`foreground` #1d1d1f): headlines, body, labels.
-- **Muted text** (`muted-foreground` #6e6e73): placeholders, captions, dialog descriptions. Contrast ≥ 4.5:1 on `background`.
-- **Parchment** (`muted` #f5f5f7): secondary fills, hover wash, alternating sections.
-- **Hairline** (`border` #d2d2d7): input, card, dialog, secondary control edges. Do not use 5–8% black borders — they disappear on white.
+Primitive scales: **Neutral** 50–900 (+ 950 canvas) and **Blue** 50–900. Semantic names stay the product API.
 
-Dark surfaces: void black canvas, ink-inverted text, slightly brighter muted text (`#a1a1a6`). Primary buttons stay Action Blue with white label.
+- **Action Blue** (`primary` / `blue.600` #0066cc): every primary CTA and in-copy link on light surfaces.
+- **Focus Blue** (`ring` / `primary-hover` / `blue.500` #0071e3): focus ring and primary hover.
+- **Sky Link** (`primary-on-dark` / `blue.400` #2997ff): links on dark tiles only — never on light backgrounds.
+- **Ink** (`foreground` / `neutral.900` #1d1d1f): headlines, body, labels.
+- **Muted text** (`muted-foreground` / `neutral.500` #6e6e73): placeholders, captions, dialog descriptions. Contrast ≥ 4.5:1 on `background`.
+- **Parchment** (`muted` / `neutral.100` #f5f5f7): secondary fills, hover wash, alternating sections.
+- **Hairline** (`border` / `neutral.300` #d2d2d7): input, card, dialog, secondary control edges. Do not use 5–8% black borders — they disappear on white.
+
+Dark surfaces: void black canvas (`#000000`). Text is Radix gray 12 / 11. Solid CTA is accent 9 `#003cff` with white label. Focus ring is accent 8 `#2356d6`. Hairline is gray 6 `#393a3f` — do not use 5–8% white on black; it disappears.
+
+## Dark mode
+
+Same semantic tokens as light — override values under `.dark`, do not add `dark:bg-*` hex in components (shadcn [theming](https://ui.shadcn.com/docs/theming), Tailwind v4 `@custom-variant dark`). Dark hex comes from [Radix custom](https://www.radix-ui.com/colors/custom?accent-dark=003CFF&bg-dark=000000) (`accent` `#003cff`, `gray` `#8b8d98`, `background` `#000000`).
+
+| Surface            | Light             | Dark          |
+| ------------------ | ----------------- | ------------- |
+| `background`       | `#ffffff`         | `#000000`     |
+| `foreground`       | `#1d1d1f`         | `#eeeef0`     |
+| `muted`            | `#f5f5f7`         | `#121315`     |
+| `muted-foreground` | `#6e6e73`         | `#b2b3bd`     |
+| `border`           | `#d2d2d7`         | `#393a3f`     |
+| `card`             | `#ffffff`         | `#121315`     |
+| `overlay`          | `neutral.900` 48% | `#000000` 64% |
+| `ring`             | `#0071e3`         | `#2356d6`     |
+| `primary`          | `#0066cc`         | `#003cff`     |
+| `primary-hover`    | `#0071e3`         | `#0022ed`     |
+| `primary-on-dark`  | `#2997ff`         | `#8ab5ff`     |
+| `secondary-hover`  | `#f5f5f7`         | `#1f1f22`     |
+| `dimmer`           | `#000000`         | `#000000`     |
+
+`primary-foreground` stays white in both modes. Press dimmer is `neutral.950` (black), never `foreground` — on dark, foreground would flash white.
+
+- **Apps**: `next-themes` (`attribute="class"`, `defaultTheme="system"`) + page toggle. `html` needs `suppressHydrationWarning`.
+- **Storybook**: `@storybook/addon-themes` toolbar. Never leave the canvas on light chrome while OS dark tokens are active.
 
 ## Typography
 
@@ -74,10 +163,21 @@ Dark surfaces: void black canvas, ink-inverted text, slightly brighter muted tex
 
 ### Button
 
-- **Primary**: `bg-primary text-primary-foreground rounded-pill`. Hover `bg-primary-hover`. Never `bg-foreground` for the default CTA.
-- **Secondary**: ghost pill — `border-primary text-primary bg-transparent`. Hover parchment fill, keep blue text.
-- Motion (`motion/react-client`): `whileHover` scale 1.02, `whileTap` scale 0.95. Respect `useReducedMotion()`. No `transition-*` on the same node.
-- Focus: 2px `ring-ring`.
+- **Primary**: `bg-primary text-primary-foreground`. Hover `bg-primary-hover`. Never `bg-foreground` for the default CTA.
+- **Secondary**: ghost — `border-border text-foreground bg-transparent`. Hover parchment / gray-3 wash. Not a blue outline.
+- Primitive: native `<button>` + Radix `Slot` (`asChild`). No hover scale.
+- **Press**: Motion `whileTap` — Button `scale: 0.96`, IconButton `scale: 0.9`. Primary uses a 26% black `dimmer`. Secondary / clear use an 8% `foreground` wash (ink on light, lift on dark). `useReducedMotion()` keeps the wash and skips scale. Do not put Tailwind `transition-*` on the same node as Motion.
+- `radius`: `md` (`rounded-md`) | `lg` (`rounded-lg`, Button default) | `pill` (`rounded-pill`). IconButton default is `md`.
+- `size`: `small` | `medium` | `large` (default) | `xlarge`. `display`: `inline` | `block` | `full`. Same 1px hairline on primary and secondary (`box-border`).
+- `loading`: keep label width, three-dot overlay, `aria-busy`. Combine with `disabled` when needed.
+- Icons + text: nest the icon as a sibling (Radix). Prefix `data-icon="inline-start"`, suffix `data-icon="inline-end"` (shadcn). Do not infer icon-only from children.
+- Links: `asChild` on `<a>`, or `buttonVariants(...)` on a native `<a>`. Focus: 2px `ring-ring`. Primary also uses `ring-offset-2 ring-offset-background` so the ring reads on a filled CTA. Ghost buttons skip the offset so the halo stays small.
+
+### IconButton
+
+- Use for **icon-only** actions. `aria-label` is required.
+- Default `variant="clear"` (ink icon, no chrome until hover/press). `primary` = fill, `secondary` = hairline. Default `radius="md"`. Same `size` scale as Button; hit target is square (`size-8` … `size-14`).
+- lucide-animated icons inside; the button CSS sizes the SVG. Do not put text in `IconButton` — use `Button` instead.
 
 ### Input / Label
 
@@ -101,14 +201,15 @@ Dark surfaces: void black canvas, ink-inverted text, slightly brighter muted tex
 ### Do
 
 - Use `primary` for every “click me” fill or link on light surfaces.
-- Keep hairline borders visible (`border`, not 8% black).
+- Keep hairline borders visible (`border-border`). Not 8% black on white, not 8% white on black.
 - Pair Storybook / page chrome `bg-background` with `text-foreground`.
 - Update `registry.json` `theme.cssVars` when tokens change.
 
 ### Don't
 
-- Don't invert OS dark tokens onto a white Storybook canvas — set `html.light` or `html.dark` explicitly in docs.
+- Don't invert OS dark tokens onto a white Storybook canvas — `@storybook/addon-themes` must set `html.light` or `html.dark`.
 - Don't add a second accent color.
 - Don't put shadows on buttons, cards, or dialog frames.
 - Don't hardcode hex in `packages/ui/src/*.tsx`.
+- Don't use `bg-neutral-*` / `bg-blue-*` in components — map through semantic tokens.
 - Don't mix Tailwind `transition-*` with Motion on one element.

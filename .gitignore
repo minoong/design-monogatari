@@ -37,6 +37,12 @@ yarn-error.log*
 # Storybook
 storybook-static
 
+# Playwright MCP
+.playwright-mcp
+
+# Cursor hook session state
+.cursor/hooks/state/
+
 # Misc
 .DS_Store
 *.pem

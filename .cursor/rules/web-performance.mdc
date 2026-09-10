@@ -13,4 +13,4 @@ When optimizing or building features in apps or `@repo/ui`:
 3. `.agents/skills/core-web-vitals/SKILL.md` — LCP, INP, CLS
 4. Motion: `.agents/skills/fixing-motion-performance/SKILL.md`
 
-After changes, run `pnpm verify`.
+After changes, do not wait to be asked: Playwright MCP (light/dark) if the UI changed, then `pnpm verify`.

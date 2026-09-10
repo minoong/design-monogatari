@@ -5,6 +5,27 @@
       {
         "command": "node .cursor/hooks/session-design.mjs"
       }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/ui-verify.mjs afterFileEdit"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "node .cursor/hooks/ui-verify.mjs afterShellExecution"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": "node .cursor/hooks/ui-verify.mjs afterMCPExecution"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/ui-verify.mjs stop",
+        "loop_limit": 2
+      }
     ]
   }
 }

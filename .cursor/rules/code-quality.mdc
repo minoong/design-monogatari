@@ -40,4 +40,4 @@ pnpm verify          # format:check + lint + check-types + build
 
 ## Definition of done
 
-Before marking UI work complete: `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`.
+Before marking UI work complete (do not wait for the user): Playwright MCP light+dark, then `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`.

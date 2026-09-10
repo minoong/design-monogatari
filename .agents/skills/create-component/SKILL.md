@@ -19,9 +19,12 @@ pnpm --filter @repo/ui generate:component
 
 1. **파일**: `packages/ui/src/<Name>.tsx` (PascalCase 파일명)
 2. **export**: named export, `"use client"`는 필요할 때만
-3. **package.json exports**: `./*` 패턴으로 자동 — barrel `index.ts` 금지
+3. **package.json exports**: `./*` → `src/*.tsx`, `./icons/*` → `src/icons/*.tsx` — barrel `index.ts` 금지
 4. **import**: 앱에서 `@repo/ui/<kebab-name>` subpath
 5. **참조**: @packages/ui/src/button.tsx
+6. **Primitive**: 복합 위젯은 Radix (`Dialog`, `Label`). 버튼은 네이티브 `<button>` + `@radix-ui/react-slot` (`asChild`). Base UI 추가 금지.
+7. **아이콘**: [lucide-animated](https://lucide-animated.com). MCP `https://lucide-animated.com/mcp`로 검색·설치. 텍스트와 같이 쓸 때는 `Button` 안에 중첩하고 `data-icon="inline-start"` | `"inline-end"`. 아이콘만이면 `IconButton` + 필수 `aria-label`. 자식 개수로 아이콘 전용 레이아웃을 추측하지 않음.
+8. **DS 컨트롤**: 호버 scale 금지. 눌림은 Motion `whileTap`(버튼 0.96, 아이콘 버튼 0.9). 채운 버튼은 검정 딤, 보조·투명은 옅은 잉크 워시. `transition-*`와 Motion을 같은 노드에 두지 않음.
 
 ## 함께 읽을 skill
 
@@ -38,7 +41,7 @@ pnpm --filter @repo/ui generate:component
 - **Tailwind CSS v4** — utility classes, `@theme` 토큰 사용
 - `cn()` — 패키지 내부 `./lib/cn`, 앱에서 `@repo/ui/cn`
 - 새 CSS Module 금지 (Tailwind로 표현 불가한 경우만 예외)
-- UI motion: Motion (`motion/react`, planned) — `transition-*` 클래스와 Motion 동시 사용 금지
+- UI motion: Motion (`motion/react`) — 버튼 루트에는 쓰지 않음. `transition-*`와 Motion을 같은 노드에 두지 않음
 - Scroll/timeline: GSAP + ScrollTrigger
 
 ## Registry (external apps)
@@ -51,6 +54,7 @@ pnpm --filter @repo/ui generate:component
 
 ## 완료
 
-1. `pnpm format` (또는 staged 파일은 pre-commit hook)
-2. `pnpm --filter @repo/ui lint` (해당 패키지 변경 시)
-3. `.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify`
+사용자가 확인을 요청하지 않아도 바로 한다.
+
+1. Playwright MCP — Storybook `html.light` / `html.dark`, 보더·링·눌림
+2. `.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify`
