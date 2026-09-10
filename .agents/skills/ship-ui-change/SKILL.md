@@ -1,8 +1,9 @@
 ---
 name: ship-ui-change
 description: >-
-  UI 변경 완료 전 품질 검증. format/lint/type/build를 실행하고 실패 시 수정.
-  작업 완료, PR 전, ship, verify 요청 시 적용.
+  UI·토큰·Storybook 변경이 끝나면 사용자 요청 없이 바로 검증한다.
+  Playwright MCP로 라이트/다크를 보고, 이어서 format/lint/type/build를 돌린다.
+  작업 완료·PR 전·ship에도 적용.
 paths:
   - 'packages/ui/**'
   - 'apps/**'
@@ -10,12 +11,13 @@ paths:
 
 # UI 변경 완료 (Definition of Done)
 
-작업을 "완료"로 표시하기 **전에** 반드시 검증한다.
+사용자가 "확인해 줘"라고 하지 않아도, UI 작업을 마치면 아래를 실행한다.
 
 ## 절차
 
 1. 변경 범위 파악 (`git status`, `git diff`)
-2. 전체 검증 실행:
+2. 화면이 바뀌면 Playwright MCP (`playwright` in `.cursor/mcp.json`): Storybook `html.light`와 `html.dark`, 보더·링·눌림. 스크린샷 한 장이 아니라 상호작용.
+3. 전체 검증 실행:
 
 ```bash
 pnpm verify
@@ -28,13 +30,14 @@ pnpm format:check
 turbo run lint check-types build --filter=@repo/ui --filter=web --filter=docs
 ```
 
-3. **실패 시** 로그 확인 → 수정 → 2번 재실행
-4. 모두 통과할 때까지 "완료" 보고 금지
+4. **실패 시** 로그 확인 → 수정 → 2번부터 재실행
+5. 모두 통과할 때까지 "완료" 보고 금지
 
 ## 보고 형식
 
 ```
 검증 결과
+- playwright (light/dark): pass/fail
 - format:check: pass/fail
 - lint: pass/fail
 - check-types: pass/fail
