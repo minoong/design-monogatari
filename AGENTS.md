@@ -20,36 +20,39 @@ Alternative libraries require **AskQuestion** + user approval (see `.cursor/rule
 
 ## Cursor context ([docs](https://cursor.com/docs/context/rules))
 
-| Layer            | Location              | Role                                                                       |
-| ---------------- | --------------------- | -------------------------------------------------------------------------- |
-| AGENTS.md        | repo root             | Short index — stack, skills, verify                                        |
-| Project Rules    | `.cursor/rules/*.mdc` | Scoped prompts (`alwaysApply`, `globs`, `description`)                     |
-| Hooks            | `.cursor/hooks.json`  | Agent loop scripts ([docs](https://cursor.com/docs/agent/hooks))           |
-| Skills           | `.agents/skills/`     | Deep workflows ([docs](https://cursor.com/docs/context/skills))            |
-| MCP              | `.cursor/mcp.json`    | Playwright + lucide-animated ([docs](https://cursor.com/docs/context/mcp)) |
-| Nested AGENTS.md | e.g. `packages/ui/`   | Package-scoped instructions                                                |
+| Layer         | Location                       | Role                                                                                                   |
+| ------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| AGENTS.md     | repo root + packages           | Short index — nested files win in that folder ([docs](https://cursor.com/docs/context/rules#agentsmd)) |
+| Project Rules | `.cursor/rules/*.mdc`          | `alwaysApply` / `globs` / intelligent `description`                                                    |
+| Agent loop    | `.cursor/rules/agent-loop.mdc` | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                 |
+| Hooks         | `.cursor/hooks.json`           | Loop scripts ([docs](https://cursor.com/docs/agent/hooks))                                             |
+| Skills        | `.agents/skills/`              | Deep workflows ([docs](https://cursor.com/docs/context/skills))                                        |
+| Subagents     | `.cursor/agents/`              | Isolated verify ([docs](https://cursor.com/docs/subagents))                                            |
+| MCP           | `.cursor/mcp.json`             | Playwright + lucide-animated ([docs](https://cursor.com/docs/context/mcp))                             |
+| Commands      | _(none)_                       | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                                                |
 
-Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`@DESIGN.md`). Project rule: `.cursor/rules/design.mdc`.
+Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`@DESIGN.md`). Project rule: `.cursor/rules/design.mdc`. Do not copy skills into `.cursor/skills/` — `.agents/skills/` is already a project skill root.
 
 ## Skill catalog
 
-| Skill             | Path                                          | When                                 |
-| ----------------- | --------------------------------------------- | ------------------------------------ |
-| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages |
-| Git commit / PR   | `.agents/skills/git-commit/`                  | commit, branch, PR (한글)            |
-| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching     |
-| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                           |
-| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                 |
-| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                  |
-| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                        |
-| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                          |
-| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit    |
-| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning            |
-| GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP         |
-| Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component             |
-| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치           |
-| Playwright MCP    | `.cursor/mcp.json` `playwright`               | UI 변경 후 라이트/다크 자동 확인     |
-| Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify           |
+| Skill             | Path                                          | When                                    |
+| ----------------- | --------------------------------------------- | --------------------------------------- |
+| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages    |
+| Git commit / PR   | `.agents/skills/git-commit/`                  | 커밋·PR·머지했어 (한글, 묻지 말고 실행) |
+| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching        |
+| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                              |
+| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                    |
+| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                     |
+| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                           |
+| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                             |
+| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit       |
+| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning               |
+| GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP            |
+| Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component                |
+| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치              |
+| Playwright MCP    | `.cursor/mcp.json` `playwright`               | UI 변경 후 라이트/다크 자동 확인        |
+| UI verifier       | `.cursor/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리 |
+| Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify              |
 
 Install updates: `npx skills add <owner/repo> --skill <name>`
 
@@ -119,17 +122,17 @@ packages/*-config       shared eslint / typescript / prettier
 
 Do not wait for the user to ask. After UI / token / Storybook changes:
 
-1. Playwright MCP (`.cursor/mcp.json` `playwright`) — Storybook light **and** dark
+1. Playwright MCP (`.cursor/mcp.json` `playwright`) — Storybook light **and** dark. Prefer subagent `.cursor/agents/ui-verifier.md`.
 2. `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`
 
-A `stop` hook (`.cursor/hooks/ui-verify.mjs`) continues the agent if this is skipped.
+A `stop` hook (`.cursor/hooks/ui-verify.mjs`) continues the agent if this is skipped. `postToolUse` nudges mid-loop. `subagentStop` continues if a child edited UI and skipped verify.
 
 Do not commit or push unless the user asks.
 
 ## Git workflow
 
 - Skill: `.agents/skills/git-commit/SKILL.md`
-- **작업 전**: feature branch from `main` (`feat/`, `fix/`, `chore/` …)
+- **작업 전**: feature branch from `main` (`feat/`, `fix/`, `chore/` …). Default branch is **`main`**, not `master`.
 - **`main`에 직접 커밋하지 않음**
 - **커밋·push·PR**: 사용자 요청 시에만, **한글** Conventional Commits
 - **PR 머지 후**: 사용자가 머지했다고 알리면 에이전트가 `main` 체크아웃 + `git pull origin main` 실행 (skill §7)

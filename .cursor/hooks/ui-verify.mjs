@@ -40,7 +40,7 @@ const STATE_PATH = join(STATE_DIR, 'ui-verify.json');
 
 function loadState() {
   if (!existsSync(STATE_PATH)) {
-    return { dirty: false, files: [], playwright: false, verify: false };
+    return { dirty: false, files: [], playwright: false, verify: false, nudged: false };
   }
   try {
     return {
@@ -48,10 +48,11 @@ function loadState() {
       files: [],
       playwright: false,
       verify: false,
+      nudged: false,
       ...JSON.parse(readFileSync(STATE_PATH, 'utf8')),
     };
   } catch {
-    return { dirty: false, files: [], playwright: false, verify: false };
+    return { dirty: false, files: [], playwright: false, verify: false, nudged: false };
   }
 }
 
@@ -101,6 +102,23 @@ function verifySucceeded(command, output) {
   return true;
 }
 
+function filePathsFromTool(input) {
+  let obj = input.tool_input;
+  if (typeof obj === 'string') {
+    obj = parseInput(obj);
+  }
+  if (!obj || typeof obj !== 'object') {
+    obj = {};
+  }
+  return [obj.path, obj.target_notebook, obj.file_path, input.file_path]
+    .filter(Boolean)
+    .map(toPosix);
+}
+
+function emptyState() {
+  return { dirty: false, files: [], playwright: false, verify: false, nudged: false };
+}
+
 function isPlaywrightMcp(input) {
   const server = String(input.mcp_server_name || '');
   const tool = String(input.tool_name || '');
@@ -132,7 +150,7 @@ function followupMessage(state) {
   return [
     `UI changed (${files}) but definition of done is incomplete. Do not ask the user. Do not commit.`,
     `Still needed: ${missing.join(' then ')}.`,
-    'Then report pass/fail and stop. Skill: `.agents/skills/ship-ui-change/SKILL.md`.',
+    'Then report pass/fail and stop. Prefer `.cursor/agents/ui-verifier.md`. Skill: `.agents/skills/ship-ui-change/SKILL.md`.',
   ].join(' ');
 }
 
@@ -148,7 +166,13 @@ try {
       const state = loadState();
       const posix = toPosix(input.file_path);
       const files = [...new Set([...(state.files || []), posix])].slice(-20);
-      saveState({ dirty: true, files, playwright: false, verify: false });
+      saveState({
+        dirty: true,
+        files,
+        playwright: false,
+        verify: false,
+        nudged: Boolean(state.nudged),
+      });
     }
     writeJson({});
     process.exit(0);
@@ -176,6 +200,58 @@ try {
     process.exit(0);
   }
 
+  if (event === 'postToolUse') {
+    const uiPaths = filePathsFromTool(input).filter(isVisualUiPath);
+    if (uiPaths.length > 0) {
+      const state = loadState();
+      const files = [...new Set([...(state.files || []), ...uiPaths])].slice(-20);
+      const next = {
+        dirty: true,
+        files,
+        playwright: false,
+        verify: false,
+        nudged: Boolean(state.nudged),
+      };
+      if (!next.nudged) {
+        next.nudged = true;
+        saveState(next);
+        writeJson({
+          additional_context:
+            'UI file edited. Do not ask the user. Before finishing: Playwright Storybook html.light and html.dark (subagent .cursor/agents/ui-verifier.md), then pnpm verify. Do not commit unless asked.',
+        });
+        process.exit(0);
+      }
+      saveState(next);
+    }
+    writeJson({});
+    process.exit(0);
+  }
+
+  if (event === 'subagentStop') {
+    if (input.status !== 'completed') {
+      writeJson({});
+      process.exit(0);
+    }
+    const modified = Array.isArray(input.modified_files) ? input.modified_files : [];
+    const uiFiles = modified.filter(isVisualUiPath).map(toPosix);
+    if (uiFiles.length > 0) {
+      const state = loadState();
+      saveState({
+        ...state,
+        dirty: true,
+        files: [...new Set([...(state.files || []), ...uiFiles])].slice(-20),
+      });
+    }
+    const state = loadState();
+    const loopCount = Number(input.loop_count || 0);
+    if (isFresh(state) && (!state.playwright || !state.verify) && loopCount < 2) {
+      writeJson({ followup_message: followupMessage(state) });
+      process.exit(0);
+    }
+    writeJson({});
+    process.exit(0);
+  }
+
   if (event === 'stop') {
     if (input.status !== 'completed') {
       writeJson({});
@@ -184,7 +260,7 @@ try {
     const state = loadState();
     if (!isFresh(state)) {
       if (state.dirty) {
-        saveState({ dirty: false, files: [], playwright: false, verify: false });
+        saveState(emptyState());
       }
       writeJson({});
       process.exit(0);
@@ -196,7 +272,7 @@ try {
       process.exit(0);
     }
     if (state.dirty && state.playwright && state.verify) {
-      saveState({ dirty: false, files: [], playwright: false, verify: false });
+      saveState(emptyState());
     }
     writeJson({});
     process.exit(0);

@@ -4,8 +4,9 @@
       "url": "https://lucide-animated.com/mcp"
     },
     "playwright": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": ["-y", "@playwright/mcp@latest"]
     }
   }
 }

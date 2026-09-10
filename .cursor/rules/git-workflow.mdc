@@ -7,7 +7,7 @@ alwaysApply: true
 
 코드 변경 시 `.agents/skills/git-commit/SKILL.md` 를 따른다.
 
-1. **작업 시작**: `main`에서 feature 브랜치 생성 (`feat/…`, `fix/…`, `chore/…`)
+1. **작업 시작**: `main`에서 feature 브랜치 생성 (`feat/…`, `fix/…`, `chore/…`). 기본 브랜치는 `main`(master 아님).
 2. **`main`에 직접 작업·커밋 금지**
 3. **커밋**: diff 분석 → 한글 Conventional Commit (사용자 요청 시)
 4. **push / PR**: 사용자가 명시적으로 요청했을 때만
