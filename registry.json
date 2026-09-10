@@ -28,7 +28,28 @@
           "font-mono": "var(--font-geist-mono)",
           "radius-md": "11px",
           "radius-lg": "18px",
-          "radius-pill": "9999px"
+          "radius-pill": "9999px",
+          "color-neutral-50": "#ffffff",
+          "color-neutral-100": "#f5f5f7",
+          "color-neutral-200": "#e3e3e7",
+          "color-neutral-300": "#d2d2d7",
+          "color-neutral-400": "#a1a1a6",
+          "color-neutral-500": "#6e6e73",
+          "color-neutral-600": "#58585c",
+          "color-neutral-700": "#424245",
+          "color-neutral-800": "#2f2f32",
+          "color-neutral-900": "#1d1d1f",
+          "color-neutral-950": "#000000",
+          "color-blue-50": "#f2f9ff",
+          "color-blue-100": "#e1f1ff",
+          "color-blue-200": "#c3e2ff",
+          "color-blue-300": "#74bbff",
+          "color-blue-400": "#2997ff",
+          "color-blue-500": "#0071e3",
+          "color-blue-600": "#0066cc",
+          "color-blue-700": "#0055aa",
+          "color-blue-800": "#004488",
+          "color-blue-900": "#003366"
         },
         "light": {
           "background": "#ffffff",
@@ -43,26 +64,43 @@
           "primary-on-dark": "#2997ff",
           "secondary-hover": "#f5f5f7",
           "ring": "#0071e3",
-          "overlay": "rgb(29 29 31 / 0.48)",
-          "card": "#ffffff"
+          "overlay": "color-mix(in srgb, #1d1d1f 48%, transparent)",
+          "card": "#ffffff",
+          "dimmer": "#000000"
         },
         "dark": {
           "background": "#000000",
-          "foreground": "#f5f5f7",
-          "muted": "#1d1d1f",
-          "muted-foreground": "#a1a1a6",
-          "muted-strong": "#424245",
-          "border": "#424245",
-          "primary": "#0066cc",
-          "primary-hover": "#0071e3",
+          "foreground": "#eeeef0",
+          "muted": "#121315",
+          "muted-foreground": "#b2b3bd",
+          "muted-strong": "#393a3f",
+          "border": "#393a3f",
+          "primary": "#003cff",
+          "primary-hover": "#0022ed",
           "primary-foreground": "#ffffff",
-          "primary-on-dark": "#2997ff",
-          "secondary-hover": "#1d1d1f",
-          "ring": "#2997ff",
-          "overlay": "rgb(0 0 0 / 0.64)",
-          "card": "#1d1d1f"
+          "primary-on-dark": "#8ab5ff",
+          "secondary-hover": "#1f1f22",
+          "ring": "#2356d6",
+          "overlay": "color-mix(in srgb, #000000 64%, transparent)",
+          "card": "#121315",
+          "dimmer": "#000000"
         }
       }
+    },
+    {
+      "name": "animated-amount",
+      "type": "registry:ui",
+      "title": "Animated Amount",
+      "description": "Currency amount with digit-roll animation when the value changes.",
+      "dependencies": ["@number-flow/react", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/animated-amount.tsx",
+          "type": "registry:ui",
+          "target": "@ui/animated-amount.tsx"
+        }
+      ]
     },
     {
       "name": "badge",
@@ -83,14 +121,44 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "Pill-shaped button with Motion hover and tap feedback.",
-      "dependencies": ["clsx", "motion", "tailwind-merge"],
+      "description": "Button with size, radius, loading, and Motion whileTap press.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "motion",
+        "tailwind-merge"
+      ],
       "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
       "files": [
         {
           "path": "registry/design-monogatari/button.tsx",
           "type": "registry:ui",
           "target": "@ui/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "icon-button",
+      "type": "registry:ui",
+      "title": "Icon Button",
+      "description": "Square icon-only button. aria-label is required.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "minoong/design-monogatari/button",
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/icon-button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-button.tsx"
         }
       ]
     },

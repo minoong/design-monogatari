@@ -15,8 +15,6 @@ body {
 }
 
 body {
-  color: var(--color-foreground);
-  background: var(--color-background);
   margin: 0;
   padding: 0;
 }
@@ -24,10 +22,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }

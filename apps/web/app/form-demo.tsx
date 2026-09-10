@@ -23,9 +23,7 @@ export function FormDemo() {
       </div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button appName="web" variant="primary">
-            Open dialog
-          </Button>
+          <Button variant="primary">Open dialog</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -36,7 +34,7 @@ export function FormDemo() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button appName="web">Close</Button>
+              <Button>Close</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
