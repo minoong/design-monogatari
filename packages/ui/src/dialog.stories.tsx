@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Dialog`는 지금 하던 일을 잠시 멈추고 결정을 받을 때 사용해요. 제목은 본문색, 설명은 보조 글자색을 써 주세요.',
+          '`Dialog`는 지금 하던 일을 잠시 멈추고 결정을 받을 때 사용해요. `DialogTitle`은 접근 가능한 이름이라 필수예요. `DialogContent`가 오버레이를 그리니 `DialogOverlay`를 옆에 또 넣지 마세요. 제목은 본문색, 설명은 보조 글자색을 써 주세요.',
       },
     },
   },

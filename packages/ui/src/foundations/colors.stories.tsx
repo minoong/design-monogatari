@@ -193,6 +193,21 @@ const primary = [
   },
 ] as const;
 
+const status = [
+  {
+    label: '상태(오류)',
+    tokenClass: 'bg-destructive',
+    cssVar: '--destructive',
+    inkClass: 'text-destructive-foreground',
+  },
+  {
+    label: '상태 위 글자',
+    tokenClass: 'bg-destructive-foreground',
+    cssVar: '--destructive-foreground',
+    inkClass: 'text-destructive',
+  },
+] as const;
+
 const chrome = [
   { label: '테두리', tokenClass: 'bg-border', cssVar: '--border', inkClass: 'text-foreground' },
   {
@@ -270,7 +285,8 @@ function Colors() {
 
       <DocSection title="보조 글자">
         <DocBody>
-          설명, 플레이스홀더, 캡션은 muted-foreground예요. 대비율은 4.5:1을 지켜 주세요.
+          설명, 플레이스홀더, 캡션은 muted-foreground예요. 라이트에서 #6e6e73 on #ffffff는
+          5.07:1이에요. 4.5:1을 깨지 마세요.
         </DocBody>
         <Bars items={mutedText} />
       </DocSection>
@@ -281,6 +297,14 @@ function Colors() {
           primary-on-dark를 쓰고, 밝은 배경에는 올리지 마세요.
         </DocBody>
         <Bars items={primary} />
+      </DocSection>
+
+      <DocSection title="상태">
+        <DocBody>
+          실패·오류는 destructive예요. 브랜드 CTA를 대체하지 마세요. 라이트는 흰 글자와 5.84:1,
+          다크는 밝은 레드 글자(#ff6369)예요.
+        </DocBody>
+        <Bars items={status} />
       </DocSection>
 
       <DocSection title="테두리와 링">

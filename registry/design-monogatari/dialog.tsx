@@ -46,6 +46,7 @@ const overlayClasses = 'bg-overlay fixed inset-0 z-50';
 const contentClasses =
   'border-border bg-card text-foreground fixed top-1/2 left-1/2 z-50 grid w-full max-w-lg -translate-1/2 gap-4 rounded-lg border p-6';
 
+/** Shared overlay. `DialogContent` already mounts this — do not add a sibling overlay. */
 export const DialogOverlay = forwardRef<
   ElementRef<typeof DialogPrimitive.Overlay>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -65,6 +66,7 @@ export const DialogOverlay = forwardRef<
   );
 });
 
+/** Include `DialogTitle` inside for the accessible name. Overlay is rendered here. */
 export const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -75,17 +77,7 @@ export const DialogContent = forwardRef<
   return (
     <DialogPortal forceMount>
       <AnimatePresence>
-        {open ? (
-          <DialogPrimitive.Overlay key="dialog-overlay" asChild forceMount>
-            <motion.div
-              className={overlayClasses}
-              initial={shouldReduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-              transition={{ duration: 0.15 }}
-            />
-          </DialogPrimitive.Overlay>
-        ) : null}
+        {open ? <DialogOverlay key="dialog-overlay" forceMount /> : null}
         {open ? (
           <DialogPrimitive.Content ref={ref} key="dialog-content" asChild forceMount {...props}>
             <motion.div

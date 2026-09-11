@@ -17,14 +17,14 @@ pnpm --filter @repo/ui generate:component
 
 ## 체크리스트
 
-1. **파일**: `packages/ui/src/<Name>.tsx` (PascalCase 파일명)
+1. **파일**: `packages/ui/src/<kebab-name>.tsx` (예: `button.tsx`)
 2. **export**: named export, `"use client"`는 필요할 때만
 3. **package.json exports**: `./*` → `src/*.tsx`, `./icons/*` → `src/icons/*.tsx` — barrel `index.ts` 금지
 4. **import**: 앱에서 `@repo/ui/<kebab-name>` subpath
 5. **참조**: 단일 컨트롤 @packages/ui/src/button.tsx · 컴파운드 @packages/ui/src/dialog.tsx. 패턴 표는 `packages/ui/AGENTS.md` Composition patterns.
 6. **패턴 고르기** (새 public API):
    - variant만 다르면 props + CVA
-   - 트리거/패널/헤더처럼 여러 조각이면 compound (`Root` + parts, 같은 파일, context). render props·HOC 금지
+   - 트리거/패널/헤더처럼 여러 조각이면 compound (`Root` + parts, 같은 파일, context). 예: Dialog, Field, Card. render props·HOC 금지
    - 다른 태그로 렌더하면 `asChild` + Radix `Slot`만. `as="a"`·`children` 함수 금지
    - 아이콘 전용은 `IconButton`처럼 thin wrapper. 자식 개수로 레이아웃 추측 금지
 7. **Primitive**: 복합 위젯은 Radix (`Dialog`, `Label`). 버튼은 네이티브 `<button>` + `@radix-ui/react-slot` (`asChild`). Base UI 추가 금지.

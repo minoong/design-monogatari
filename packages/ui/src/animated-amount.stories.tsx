@@ -82,7 +82,7 @@ function InViewScrollDemo() {
         <>
           <p className="text-muted-foreground mb-2 text-sm">합계</p>
           <AnimatedAmount
-            className="text-[28px] font-semibold tracking-tight"
+            className="text-title font-semibold tracking-tight"
             inView
             inViewAmount={SCROLL_IN_VIEW_AMOUNT}
             inViewRoot={rootRef}
@@ -179,7 +179,7 @@ export const 견적헤더: Story = {
 export const 견적합계: Story = {
   render: () => (
     <EstimateAmountPlayground
-      className="text-[28px] font-semibold tracking-tight"
+      className="text-title font-semibold tracking-tight"
       initialTrim="long"
     />
   ),
@@ -195,7 +195,7 @@ export const 견적합계: Story = {
 export const 폭고정: Story = {
   render: () => (
     <StoryReplay>
-      <WidthComparePlayground className="text-[28px] font-semibold tracking-tight" />
+      <WidthComparePlayground className="text-title font-semibold tracking-tight" />
     </StoryReplay>
   ),
   parameters: {

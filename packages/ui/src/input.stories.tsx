@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Input`은 사용자가 값을 적을 때 사용해요. 높이는 44px, 모서리는 rounded-md, 안내 문구는 보조 글자색을 써 주세요.',
+          '`Input`은 사용자가 값을 적을 때 사용해요. 높이는 44px, 모서리는 rounded-md, 안내 문구는 보조 글자색을 써 주세요. 오류는 `aria-invalid`로 destructive 보더·링이 켜져요. 비활성은 불투명도가 아니라 muted 면이에요.',
       },
     },
   },
@@ -31,6 +31,13 @@ export const 비활성: Story = {
   args: {
     disabled: true,
     placeholder: '지금은 수정할 수 없어요',
+  },
+};
+
+export const 오류: Story = {
+  args: {
+    'aria-invalid': true,
+    defaultValue: 'not-an-email',
   },
 };
 

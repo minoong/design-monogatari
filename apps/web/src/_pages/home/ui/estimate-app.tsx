@@ -115,11 +115,11 @@ export function EstimateApp() {
 
         <div className="flex flex-col gap-24 px-6 py-10 pb-36 lg:gap-32 lg:py-16">
           <section className="flex flex-col gap-3">
-            <p className="text-muted-foreground text-sm">전기 쿠페</p>
-            <h1 className="text-[32px] leading-tight font-semibold tracking-tight">
+            <p className="text-muted-foreground text-caption">전기 쿠페</p>
+            <h1 className="text-title font-semibold tracking-tight">
               원하는 면을 고르면, 차가 함께 돌아요
             </h1>
-            <p className="text-foreground text-[17px] leading-relaxed">
+            <p className="text-foreground text-body">
               스크롤하면 차체가 각도를 바꿔요. 트림·색·휠을 고르면 오른쪽 합계가 바로 바뀌어요.
               숫자는 더미예요.
             </p>
@@ -257,12 +257,12 @@ export function EstimateApp() {
 
           <section className="border-border bg-card flex flex-col gap-3 rounded-lg border p-5">
             <h2 className="text-lg font-semibold tracking-tight">합계</h2>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-caption">
               {trim.name} · {paint.name} · {wheel.name}
             </p>
             <p aria-atomic="true" aria-live="polite">
               <AnimatedAmount
-                className="text-[28px] font-semibold tracking-tight"
+                className="text-title font-semibold tracking-tight"
                 inView
                 value={total}
               />
