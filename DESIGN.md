@@ -187,6 +187,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 ### Dialog
 
+- Compound: `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`. Parts share open state; do not collapse this into one mega-component.
 - Overlay: `bg-overlay`. Content: `bg-card border-border rounded-lg`. No drop-shadow on chrome.
 - Title: `text-foreground`. Description: `text-muted-foreground`.
 - Enter/exit via `AnimatePresence` + Motion; reduced motion skips scale/fade.

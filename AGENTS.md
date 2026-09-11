@@ -35,24 +35,26 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 
 ## Skill catalog
 
-| Skill             | Path                                          | When                                    |
-| ----------------- | --------------------------------------------- | --------------------------------------- |
-| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages    |
-| Git commit / PR   | `.agents/skills/git-commit/`                  | 커밋·PR·머지했어 (한글, 묻지 말고 실행) |
-| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching        |
-| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                              |
-| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                    |
-| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                     |
-| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                           |
-| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                             |
-| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit       |
-| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning               |
-| GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP            |
-| Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component                |
-| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치              |
-| Playwright MCP    | `.cursor/mcp.json` `playwright`               | UI 변경 후 라이트/다크 자동 확인        |
-| UI verifier       | `.cursor/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리 |
-| Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify              |
+| Skill             | Path                                          | When                                         |
+| ----------------- | --------------------------------------------- | -------------------------------------------- |
+| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages         |
+| Git commit / PR   | `.agents/skills/git-commit/`                  | 커밋·PR·머지했어 (한글, 묻지 말고 실행)      |
+| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching             |
+| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                                   |
+| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                         |
+| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                          |
+| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                                |
+| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                                  |
+| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit            |
+| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning                    |
+| GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP                 |
+| Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component                     |
+| Feature-Sliced    | `.agents/skills/feature-sliced-design/`       | `apps/web`·`apps/docs` 구조 (UI 패키지 제외) |
+| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치                   |
+| Playwright MCP    | `.cursor/mcp.json` `playwright`               | UI 변경 후 라이트/다크 자동 확인             |
+| UI verifier       | `.cursor/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
+| Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify                   |
+| Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤      |
 
 Install updates: `npx skills add <owner/repo> --skill <name>`
 
@@ -111,12 +113,13 @@ Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/s
 ## This repository
 
 ```
-apps/web, apps/docs     Next.js apps (ports 3000, 3001)
+apps/web, apps/docs     Next.js apps (ports 3000, 3001) — FSD in src/
 packages/ui             @repo/ui — JIT internal package
 packages/*-config       shared eslint / typescript / prettier
 ```
 
 - `@repo/ui` imports: `@repo/ui/button` (subpath, no barrels)
+- Apps: Next `app/` re-exports FSD `src/_app` + `src/_pages`. Rule: `.cursor/rules/fsd-apps.mdc`
 
 ## Verification (definition of done)
 

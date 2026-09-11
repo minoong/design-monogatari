@@ -7,8 +7,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useId, useRef, useState } from 'react';
 
-import { ThemeToggle } from '../theme-toggle';
-import { CarSilhouette } from './car-silhouette';
 import {
   BASE_PRICE,
   type ExtraId,
@@ -20,7 +18,9 @@ import {
   trims,
   type WheelId,
   wheels,
-} from './data';
+} from '../model/data';
+import { CarSilhouette } from './car-silhouette';
+import { ThemeToggle } from './theme-toggle';
 
 gsap.registerPlugin(useGSAP);
 

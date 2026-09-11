@@ -1,5 +1,1 @@
-import { EstimateApp } from './estimate/estimate-app';
-
-export default function Home() {
-  return <EstimateApp />;
-}
+export { HomePage as default } from '@/_pages/home';

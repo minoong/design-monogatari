@@ -11,7 +11,27 @@ React design system package (Just-in-Time — no `build` script).
 - **Design language**: root `DESIGN.md` — read before UI changes
 - **Design tokens**: `@theme` in `src/styles/globals.css` (keep in sync with DESIGN.md)
 - **Monorepo import**: `@repo/ui/<name>` — **Registry export**: `registry/design-monogatari/` + `registry.json` for `shadcn add` (`bg-background`, `text-foreground`, …)
-- Reference: @packages/ui/src/button.tsx
+- Reference: @packages/ui/src/button.tsx (variants / `asChild`), @packages/ui/src/dialog.tsx (compound)
+
+## Composition patterns
+
+This package is a design system, not FSD. Pick a pattern by API surface, then copy the referenced file. Do not invent a new public API style.
+
+| When                                        | Pattern                                             | Reference                                              | Do not                                                |
+| ------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- |
+| One control, visual variants                | Props + CVA (`variant` / `size` / `radius`)         | @packages/ui/src/button.tsx                            | Boolean soup (`isPrimary` + `isLarge` + `isPill`)     |
+| Same control, stricter a11y                 | Thin wrapper, named export                          | @packages/ui/src/icon-button.tsx                       | Guess icon-only from child count                      |
+| Trigger + content + header/footer           | Compound: `Root` + parts, same file, shared context | @packages/ui/src/dialog.tsx                            | Render props; one mega-component with 12 layout props |
+| Render as another element (`<a>`, `<Link>`) | `asChild` + Radix `Slot`                            | `Button asChild`, Dialog trigger/close                 | `as="a"` unions; `children` as function               |
+| Form primitive                              | Wrap native or Radix, forward ref                   | @packages/ui/src/input.tsx, @packages/ui/src/label.tsx | Reimplement labelling without Radix `Label`           |
+
+**Compound (Dialog):** `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose` — consumers compose JSX; parts share open state via context.
+
+**Polymorphism:** `asChild` only. No render-prop public API (`children(props) => …`), no HOCs. `cloneElement` for icon hover inside Button is internal — do not expose it.
+
+**`children`:** composition slot for nodes, not a function. Icon + label: nest in `Button` with `data-icon="inline-start"` \| `"inline-end"`.
+
+New components: `.agents/skills/create-component/SKILL.md`.
 
 ## Storybook
 
@@ -29,7 +49,8 @@ Theme: `@storybook/addon-themes` applies `html.light` / `html.dark` (`withThemeB
 | New component   | `.agents/skills/create-component/SKILL.md`                                                                  |
 | Styling         | `.cursor/rules/styling.mdc`                                                                                 |
 | Registry export | `.cursor/rules/shadcn-registry.mdc`                                                                         |
-| React patterns  | `.agents/skills/vercel-react-best-practices/SKILL.md`                                                       |
+| Composition     | 이 파일 **Composition patterns** + `dialog.tsx` / `button.tsx`                                              |
+| React perf      | `.agents/skills/vercel-react-best-practices/SKILL.md`                                                       |
 | Accessibility   | `.agents/skills/accessibility/SKILL.md`                                                                     |
 | GSAP in React   | `.agents/skills/gsap-react/SKILL.md`                                                                        |
 | UI motion       | `.agents/skills/motion-react/SKILL.md`                                                                      |

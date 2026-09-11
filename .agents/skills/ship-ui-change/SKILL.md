@@ -16,6 +16,8 @@ paths:
 
 사용자가 "확인해 줘"라고 하지 않아도, UI 작업을 마치면 아래를 실행한다.
 
+문서가 코드와 어긋나면 검증보다 먼저 `.agents/skills/sync-project-docs/SKILL.md` (README / DESIGN / nested AGENTS).
+
 ## 절차
 
 1. 변경 범위 파악 (`git status`, `git diff`)

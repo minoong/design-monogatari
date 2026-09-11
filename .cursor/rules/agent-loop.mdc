@@ -5,10 +5,11 @@ alwaysApply: true
 
 # Agent loop
 
-Do not ask “확인할까요?”, “커밋할까요?”, “이어서 할까요?”. Infer from the request, the diff, and this repo’s harness, then act.
+Do not ask “확인할까요?”, “커밋할까요?”, “이어서 할까요?”, “문서도 업데이트할까요?”. Infer from the request, the diff, and this repo’s harness, then act.
 
 1. **Before code changes**: feature branch from `main` (`feat/` `fix/` `chore/`). Never commit on `main`. Default branch is `main`, not `master`.
 2. **Skills** (`.agents/skills/`): read the matching `SKILL.md` instead of waiting for a paste or `/skill`.
 3. **MCP** (`.cursor/mcp.json`): Playwright and lucide-animated. Discover tools; do not wait for playwright.dev links.
 4. **UI / tokens / Storybook done**: Playwright light **and** dark, then `pnpm verify`. Subagent: `.cursor/agents/ui-verifier.md`. Stop hook continues if skipped.
-5. **Commit / push / PR**: only when the user asks. **Merge notice** (“머지했어”): `git checkout main && git pull origin main` — do not only print the commands.
+5. **Human docs**: 구조·DS API·토큰·스크립트가 바뀌면 `README.md` / `DESIGN.md` / nested `AGENTS.md`를 요청 없이 맞춤. Skill: `.agents/skills/sync-project-docs/SKILL.md`.
+6. **Commit / push / PR**: only when the user asks. **Merge notice** (“머지했어”): `git checkout main && git pull origin main` — do not only print the commands.
