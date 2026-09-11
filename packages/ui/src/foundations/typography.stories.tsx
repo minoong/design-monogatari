@@ -39,40 +39,40 @@ function Typography() {
     <DocPage
       kicker="파운데이션"
       title="타이포그래피"
-      lead="글자는 Tailwind 유틸리티로 맞춰요. 본문은 17px, 입력과 캡션은 text-sm(14px)예요. 제목은 font-semibold에 tracking-tight이고, 굵기 500은 쓰지 않아요."
+      lead="글자는 역할 토큰으로 맞춰요. 제목은 text-title(28px), 본문은 text-body(17px), 캡션은 text-caption(14px)예요. 제목은 font-semibold에 tracking-tight이고, 굵기 500은 쓰지 않아요."
     >
       <DocSection title="이렇게 써요">
         <DocBody>
           폰트는 @theme의 font-sans / font-mono예요. 앱은 Geist, 그 외는 system-ui로 떨어져요.
           크기를 외우지 말고 역할에 맞는 클래스만 골라 주세요.
         </DocBody>
-        <DocCode>{`<h1 className="font-sans text-[28px] font-semibold tracking-tight">
+        <DocCode>{`<h1 className="font-sans text-title font-semibold tracking-tight">
   이체할 금액을 확인할게요
 </h1>
-<p className="font-sans text-[17px] leading-relaxed">본문</p>
-<p className="text-muted-foreground text-sm">도움말</p>`}</DocCode>
+<p className="font-sans text-body">본문</p>
+<p className="text-muted-foreground text-caption">도움말</p>`}</DocCode>
       </DocSection>
 
       <DocSection title="크기">
         <TokenStack>
           <TypeRow
             label="제목"
-            tokenClass="font-sans text-[28px] leading-snug font-semibold tracking-tight"
+            tokenClass="font-sans text-title font-semibold tracking-tight"
             sample="이체할 금액을 확인할게요"
           />
           <TypeRow
             label="본문"
-            tokenClass="font-sans text-[17px] leading-relaxed"
+            tokenClass="font-sans text-body"
             sample="보내는 계좌와 받는 분을 한 번 더 확인한 뒤 진행해 주세요."
           />
           <TypeRow
             label="강조"
-            tokenClass="font-sans text-[17px] leading-relaxed font-semibold"
+            tokenClass="font-sans text-body font-semibold"
             sample="수수료는 없어요. 입력 칸의 안내 문구는 보조 글자색을 써 주세요."
           />
           <TypeRow
             label="캡션"
-            tokenClass="text-muted-foreground font-sans text-sm leading-6"
+            tokenClass="text-muted-foreground font-sans text-caption"
             sample="영업일 기준 하루가 걸릴 수 있어요."
           />
           <TypeRow

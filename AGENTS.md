@@ -4,17 +4,19 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 
 ## Default stack
 
-| Layer             | Choice                                         | Status                     |
-| ----------------- | ---------------------------------------------- | -------------------------- |
-| Node              | 24+ (`.nvmrc`)                                 | active                     |
-| Monorepo          | Turborepo + pnpm                               | active                     |
-| React             | 19                                             | active                     |
-| Design system     | `@repo/ui` (JIT)                               | active                     |
-| Styling           | Tailwind CSS v4                                | active                     |
-| UI motion         | Framer Motion                                  | active                     |
-| Scroll animation  | GSAP + ScrollTrigger                           | planned (skills installed) |
-| Docs              | Storybook (`@repo/ui`)                         | active                     |
-| ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active                     |
+| Layer             | Choice                                         | Status               |
+| ----------------- | ---------------------------------------------- | -------------------- |
+| Node              | 24+ (`.nvmrc`)                                 | active               |
+| Monorepo          | Turborepo + pnpm                               | active               |
+| React             | 19                                             | active               |
+| Design system     | `@repo/ui` (JIT)                               | active               |
+| Styling           | Tailwind CSS v4                                | active               |
+| UI motion         | Framer Motion                                  | active               |
+| Scroll animation  | GSAP + ScrollTrigger                           | active (견적 스크롤) |
+| Docs              | Storybook (`@repo/ui`)                         | active               |
+| ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active               |
+
+UI 모션은 Motion, 스크롤·핀·스크럽은 GSAP (`apps/web` 견적 페이지). 같은 요소에 둘을 섞지 마세요.
 
 Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
 

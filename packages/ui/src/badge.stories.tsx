@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Badge`는 상태나 분류를 짧게 보여 줄 때 사용해요. 기본은 잉크색 채움이고, 보조는 옅은 면에 헤어라인 테두리예요.',
+          '`Badge`는 상태나 분류를 짧게 보여 줄 때 사용해요. 기본은 정보 칩(잉크 채움), 보조는 옅은 면, 오류는 destructive 아웃라인이에요. CTA 대신 쓰지 마세요.',
       },
     },
   },
@@ -29,5 +29,12 @@ export const 보조: Story = {
   args: {
     variant: 'secondary',
     children: '대기 중',
+  },
+};
+
+export const 오류: Story = {
+  args: {
+    variant: 'destructive',
+    children: '한도 초과',
   },
 };

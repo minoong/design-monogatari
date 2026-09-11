@@ -41,6 +41,8 @@ colors:
   card: '#ffffff'
   secondary-hover: '#f5f5f7'
   dimmer: '#000000'
+  destructive: '#c41e3a'
+  destructive-foreground: '#ffffff'
 colorsDark:
   background: '#000000'
   foreground: '#eeeef0'
@@ -56,6 +58,8 @@ colorsDark:
   card: '#121315'
   secondary-hover: '#1f1f22'
   dimmer: '#000000'
+  destructive: '#ff6369'
+  destructive-foreground: '#000000'
 rounded:
   md: 11px
   lg: 18px
@@ -64,7 +68,7 @@ rounded:
 
 ## Overview
 
-design-monogatari is a **quiet, product-first UI**. Surfaces are white or parchment. Text is near-black ink, never pure `#000` on chrome. **One interactive color**: Action Blue. No second accent, no decorative gradients, no shadows on buttons or cards.
+design-monogatari is a **quiet, product-first UI**. Surfaces are white or parchment. Text is near-black ink, never pure `#000` on chrome. **One brand interactive color**: Action Blue. Status color (`destructive`) is allowed for errors — it is not a second brand accent. No decorative gradients, no shadows on buttons or cards.
 
 Typography uses **Geist** (apps) with `ui-sans-serif, system-ui, -apple-system` fallback (Storybook and non-Next consumers). Do not introduce SF Pro as a webfont.
 
@@ -93,23 +97,28 @@ Components use semantic Tailwind classes (`bg-background`, `bg-primary`). Do not
 
 ## Token mapping
 
-| DESIGN.md / CSS variable | Tailwind                                           |
-| ------------------------ | -------------------------------------------------- |
-| `background`             | `bg-background`                                    |
-| `foreground`             | `text-foreground`, `bg-foreground`                 |
-| `muted`                  | `bg-muted`                                         |
-| `muted-foreground`       | `text-muted-foreground`                            |
-| `border`                 | `border-border` (also `border-muted-strong` alias) |
-| `primary`                | `bg-primary`, `text-primary`, `border-primary`     |
-| `primary-hover`          | `hover:bg-primary-hover`                           |
-| `primary-foreground`     | `text-primary-foreground`                          |
-| `ring`                   | `focus-visible:ring-ring`                          |
-| `overlay`                | `bg-overlay`                                       |
-| `card`                   | `bg-card`                                          |
-| `dimmer`                 | `bg-dimmer` (press overlay; always black)          |
-| `rounded.pill`           | `rounded-pill`                                     |
-| `rounded.lg`             | `rounded-lg`                                       |
-| `rounded.md`             | `rounded-md`                                       |
+| DESIGN.md / CSS variable | Tailwind                                                   |
+| ------------------------ | ---------------------------------------------------------- |
+| `background`             | `bg-background`                                            |
+| `foreground`             | `text-foreground`, `bg-foreground`                         |
+| `muted`                  | `bg-muted`                                                 |
+| `muted-foreground`       | `text-muted-foreground`                                    |
+| `border`                 | `border-border` (also `border-muted-strong` alias)         |
+| `primary`                | `bg-primary`, `text-primary`, `border-primary`             |
+| `primary-hover`          | `hover:bg-primary-hover`                                   |
+| `primary-foreground`     | `text-primary-foreground`                                  |
+| `ring`                   | `focus-visible:ring-ring`                                  |
+| `overlay`                | `bg-overlay`                                               |
+| `card`                   | `bg-card`                                                  |
+| `dimmer`                 | `bg-dimmer` (`neutral.950`; press overlay)                 |
+| `destructive`            | `bg-destructive`, `text-destructive`, `border-destructive` |
+| `destructive-foreground` | `text-destructive-foreground`                              |
+| `text-title`             | `text-title` (28px)                                        |
+| `text-body`              | `text-body` (17px)                                         |
+| `text-caption`           | `text-caption` (14px)                                      |
+| `rounded.pill`           | `rounded-pill`                                             |
+| `rounded.lg`             | `rounded-lg`                                               |
+| `rounded.md`             | `rounded-md`                                               |
 
 Dark values live on `.dark` (and OS `prefers-color-scheme: dark` when `html` is not `.light`). Storybook `@storybook/addon-themes` (`withThemeByClassName`) sets `html.light` / `html.dark`. Apps use `next-themes` with `attribute="class"` so the same classes land on `<html>`.
 
@@ -121,7 +130,8 @@ Primitive scales: **Neutral** 50–900 (+ 950 canvas) and **Blue** 50–900. Sem
 - **Focus Blue** (`ring` / `primary-hover` / `blue.500` #0071e3): focus ring and primary hover.
 - **Sky Link** (`primary-on-dark` / `blue.400` #2997ff): links on dark tiles only — never on light backgrounds.
 - **Ink** (`foreground` / `neutral.900` #1d1d1f): headlines, body, labels.
-- **Muted text** (`muted-foreground` / `neutral.500` #6e6e73): placeholders, captions, dialog descriptions. Contrast ≥ 4.5:1 on `background`.
+- **Muted text** (`muted-foreground` / `neutral.500` #6e6e73): placeholders, captions, dialog descriptions. Measured **5.07:1** on `background` (`#ffffff`) — WCAG AA body text (≥ 4.5:1). Do not lighten.
+- **Destructive** (`destructive` #c41e3a light / #ff6369 dark): invalid fields, error copy, destructive chips. Not a second brand accent and not a substitute for `primary` CTAs. Light pair with white label is **5.84:1**.
 - **Parchment** (`muted` / `neutral.100` #f5f5f7): secondary fills, hover wash, alternating sections.
 - **Hairline** (`border` / `neutral.300` #d2d2d7): input, card, dialog, secondary control edges. Do not use 5–8% black borders — they disappear on white.
 
@@ -131,21 +141,23 @@ Dark surfaces: void black canvas (`#000000`). Text is Radix gray 12 / 11. Solid 
 
 Same semantic tokens as light — override values under `.dark`, do not add `dark:bg-*` hex in components (shadcn [theming](https://ui.shadcn.com/docs/theming), Tailwind v4 `@custom-variant dark`). Dark hex comes from [Radix custom](https://www.radix-ui.com/colors/custom?accent-dark=003CFF&bg-dark=000000) (`accent` `#003cff`, `gray` `#8b8d98`, `background` `#000000`).
 
-| Surface            | Light             | Dark          |
-| ------------------ | ----------------- | ------------- |
-| `background`       | `#ffffff`         | `#000000`     |
-| `foreground`       | `#1d1d1f`         | `#eeeef0`     |
-| `muted`            | `#f5f5f7`         | `#121315`     |
-| `muted-foreground` | `#6e6e73`         | `#b2b3bd`     |
-| `border`           | `#d2d2d7`         | `#393a3f`     |
-| `card`             | `#ffffff`         | `#121315`     |
-| `overlay`          | `neutral.900` 48% | `#000000` 64% |
-| `ring`             | `#0071e3`         | `#2356d6`     |
-| `primary`          | `#0066cc`         | `#003cff`     |
-| `primary-hover`    | `#0071e3`         | `#0022ed`     |
-| `primary-on-dark`  | `#2997ff`         | `#8ab5ff`     |
-| `secondary-hover`  | `#f5f5f7`         | `#1f1f22`     |
-| `dimmer`           | `#000000`         | `#000000`     |
+| Surface                  | Light             | Dark          |
+| ------------------------ | ----------------- | ------------- |
+| `background`             | `#ffffff`         | `#000000`     |
+| `foreground`             | `#1d1d1f`         | `#eeeef0`     |
+| `muted`                  | `#f5f5f7`         | `#121315`     |
+| `muted-foreground`       | `#6e6e73`         | `#b2b3bd`     |
+| `border`                 | `#d2d2d7`         | `#393a3f`     |
+| `card`                   | `#ffffff`         | `#121315`     |
+| `overlay`                | `neutral.900` 48% | `#000000` 64% |
+| `ring`                   | `#0071e3`         | `#2356d6`     |
+| `primary`                | `#0066cc`         | `#003cff`     |
+| `primary-hover`          | `#0071e3`         | `#0022ed`     |
+| `primary-on-dark`        | `#2997ff`         | `#8ab5ff`     |
+| `secondary-hover`        | `#f5f5f7`         | `#1f1f22`     |
+| `dimmer`                 | `#000000`         | `#000000`     |
+| `destructive`            | `#c41e3a`         | `#ff6369`     |
+| `destructive-foreground` | `#ffffff`         | `#000000`     |
 
 `primary-foreground` stays white in both modes. Press dimmer is `neutral.950` (black), never `foreground` — on dark, foreground would flash white.
 
@@ -155,7 +167,8 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ## Typography
 
 - Sans: Geist / system-ui. Mono: Geist Mono / ui-monospace.
-- Body ~17px in product UI; form controls 14px is allowed.
+- Role tokens in `@theme`: `text-title` (28px), `text-body` (17px), `text-caption` (14px). Do not use `text-[17px]` / `text-[28px]` in product UI.
+- Form controls may keep `text-sm` (same 14px as caption).
 - Headlines: weight 600, not 700. Body: 400. Strong: 600. Avoid weight 500.
 - Slightly tight tracking on titles (`tracking-tight`).
 
@@ -179,23 +192,31 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - Default `variant="clear"` (ink icon, no chrome until hover/press). `primary` = fill, `secondary` = hairline. Default `radius="md"`. Same `size` scale as Button; hit target is square (`size-8` … `size-14`).
 - lucide-animated icons inside; the button CSS sizes the SVG. Do not put text in `IconButton` — use `Button` instead.
 
-### Input / Label
+### Input / Label / Field
 
 - Input: `bg-background text-foreground border-border`, height 44px (`h-11`), `rounded-md`, placeholder `text-muted-foreground`.
 - Focus: `ring-2 ring-ring`, not a faint foreground ring.
+- Invalid: set `aria-invalid`. Border and ring use `destructive`. Do not color the field with `primary`.
+- Disabled: `bg-muted text-muted-foreground`, not `opacity-50` (opacity breaks contrast).
 - Label: `text-foreground`, `htmlFor` / `id` paired. Disabled via `peer-disabled`.
+- Field compound: `Field`, `FieldLabel`, `FieldError`. Pair `FieldLabel htmlFor` with Input `id`, and Input `aria-describedby` with `FieldError id`.
 
 ### Dialog
 
 - Compound: `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`. Parts share open state; do not collapse this into one mega-component.
-- Overlay: `bg-overlay`. Content: `bg-card border-border rounded-lg`. No drop-shadow on chrome.
+- **`DialogTitle` is required** inside `DialogContent` (Radix accessible name).
+- Overlay: `bg-overlay`. `DialogContent` already renders the shared overlay — do not add `DialogOverlay` as a sibling (double overlay). Export `DialogOverlay` only for custom portals.
+- Content: `bg-card border-border rounded-lg`. No drop-shadow on chrome.
 - Title: `text-foreground`. Description: `text-muted-foreground`.
 - Enter/exit via `AnimatePresence` + Motion; reduced motion skips scale/fade.
 
-### Badge / Card
+### Badge
 
-- Badge default: ink fill (`bg-foreground text-background`). Secondary: parchment + hairline.
-- Card: hairline border, parchment hover. No box-shadow.
+- CVA `variant`: `default` ink fill (`bg-foreground text-background`), `secondary` parchment + hairline, `destructive` outline (`border-destructive text-destructive`). Default is an info chip, not a CTA.
+
+### Card
+
+- Compound: `Card`, `CardHeader`, `CardTitle`, `CardDescription`. Hairline `border-border`, `bg-card`, `rounded-lg`. No box-shadow, no `href` / UTM demo API.
 
 ## Do's and Don'ts
 
@@ -209,7 +230,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ### Don't
 
 - Don't invert OS dark tokens onto a white Storybook canvas — `@storybook/addon-themes` must set `html.light` or `html.dark`.
-- Don't add a second accent color.
+- Don't add a second **brand** accent. Status color (`destructive`) is allowed; do not use it as a CTA fill.
 - Don't put shadows on buttons, cards, or dialog frames.
 - Don't hardcode hex in `packages/ui/src/*.tsx`.
 - Don't use `bg-neutral-*` / `bg-blue-*` in components — map through semantic tokens.

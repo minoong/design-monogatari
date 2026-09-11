@@ -53,6 +53,15 @@
   --color-overlay: var(--overlay);
   --color-card: var(--card);
   --color-dimmer: var(--dimmer);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --text-title: 1.75rem;
+  --text-title--line-height: 1.375;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.625;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
 
   --font-sans:
     var(--font-geist-sans, ui-sans-serif), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
@@ -79,6 +88,25 @@
   }
 }
 
+/* Dark semantic hex lives once. .dark and OS dark both map these variables. */
+:root {
+  --palette-dark-background: #000000;
+  --palette-dark-foreground: #eeeef0;
+  --palette-dark-muted: #121315;
+  --palette-dark-muted-foreground: #b2b3bd;
+  --palette-dark-border: #393a3f;
+  --palette-dark-primary: #003cff;
+  --palette-dark-primary-hover: #0022ed;
+  --palette-dark-primary-foreground: #ffffff;
+  --palette-dark-primary-on-dark: #8ab5ff;
+  --palette-dark-secondary-hover: #1f1f22;
+  --palette-dark-ring: #2356d6;
+  --palette-dark-overlay: color-mix(in srgb, #000000 64%, transparent);
+  --palette-dark-card: #121315;
+  --palette-dark-destructive: #ff6369;
+  --palette-dark-destructive-foreground: #000000;
+}
+
 :root,
 .light {
   --background: var(--color-neutral-50);
@@ -94,42 +122,48 @@
   --ring: var(--color-blue-500);
   --overlay: color-mix(in srgb, var(--color-neutral-900) 48%, transparent);
   --card: var(--color-neutral-50);
-  --dimmer: #000000;
+  --dimmer: var(--color-neutral-950);
+  --destructive: #c41e3a;
+  --destructive-foreground: var(--color-neutral-50);
 }
 
 .dark {
-  --background: #000000;
-  --foreground: #eeeef0;
-  --muted: #121315;
-  --muted-foreground: #b2b3bd;
-  --border: #393a3f;
-  --primary: #003cff;
-  --primary-hover: #0022ed;
-  --primary-foreground: #ffffff;
-  --primary-on-dark: #8ab5ff;
-  --secondary-hover: #1f1f22;
-  --ring: #2356d6;
-  --overlay: color-mix(in srgb, #000000 64%, transparent);
-  --card: #121315;
-  --dimmer: #000000;
+  --background: var(--palette-dark-background);
+  --foreground: var(--palette-dark-foreground);
+  --muted: var(--palette-dark-muted);
+  --muted-foreground: var(--palette-dark-muted-foreground);
+  --border: var(--palette-dark-border);
+  --primary: var(--palette-dark-primary);
+  --primary-hover: var(--palette-dark-primary-hover);
+  --primary-foreground: var(--palette-dark-primary-foreground);
+  --primary-on-dark: var(--palette-dark-primary-on-dark);
+  --secondary-hover: var(--palette-dark-secondary-hover);
+  --ring: var(--palette-dark-ring);
+  --overlay: var(--palette-dark-overlay);
+  --card: var(--palette-dark-card);
+  --dimmer: var(--color-neutral-950);
+  --destructive: var(--palette-dark-destructive);
+  --destructive-foreground: var(--palette-dark-destructive-foreground);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #000000;
-    --foreground: #eeeef0;
-    --muted: #121315;
-    --muted-foreground: #b2b3bd;
-    --border: #393a3f;
-    --primary: #003cff;
-    --primary-hover: #0022ed;
-    --primary-foreground: #ffffff;
-    --primary-on-dark: #8ab5ff;
-    --secondary-hover: #1f1f22;
-    --ring: #2356d6;
-    --overlay: color-mix(in srgb, #000000 64%, transparent);
-    --card: #121315;
-    --dimmer: #000000;
+    --background: var(--palette-dark-background);
+    --foreground: var(--palette-dark-foreground);
+    --muted: var(--palette-dark-muted);
+    --muted-foreground: var(--palette-dark-muted-foreground);
+    --border: var(--palette-dark-border);
+    --primary: var(--palette-dark-primary);
+    --primary-hover: var(--palette-dark-primary-hover);
+    --primary-foreground: var(--palette-dark-primary-foreground);
+    --primary-on-dark: var(--palette-dark-primary-on-dark);
+    --secondary-hover: var(--palette-dark-secondary-hover);
+    --ring: var(--palette-dark-ring);
+    --overlay: var(--palette-dark-overlay);
+    --card: var(--palette-dark-card);
+    --dimmer: var(--color-neutral-950);
+    --destructive: var(--palette-dark-destructive);
+    --destructive-foreground: var(--palette-dark-destructive-foreground);
   }
 }
 

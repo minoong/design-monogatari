@@ -4,7 +4,7 @@ React design system package (Just-in-Time — no `build` script).
 
 ## Conventions
 
-- One component per file: `src/Button.tsx` → import `@repo/ui/button`
+- One component per file: `src/button.tsx` → import `@repo/ui/button`
 - **Named exports** only; no barrel `index.ts`
 - `"use client"` only when needed (event handlers, hooks, Motion, Radix)
 - **Styling**: Tailwind utility classes; merge with `./lib/cn`
@@ -17,15 +17,21 @@ React design system package (Just-in-Time — no `build` script).
 
 This package is a design system, not FSD. Pick a pattern by API surface, then copy the referenced file. Do not invent a new public API style.
 
-| When                                        | Pattern                                             | Reference                                              | Do not                                                |
-| ------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- |
-| One control, visual variants                | Props + CVA (`variant` / `size` / `radius`)         | @packages/ui/src/button.tsx                            | Boolean soup (`isPrimary` + `isLarge` + `isPill`)     |
-| Same control, stricter a11y                 | Thin wrapper, named export                          | @packages/ui/src/icon-button.tsx                       | Guess icon-only from child count                      |
-| Trigger + content + header/footer           | Compound: `Root` + parts, same file, shared context | @packages/ui/src/dialog.tsx                            | Render props; one mega-component with 12 layout props |
-| Render as another element (`<a>`, `<Link>`) | `asChild` + Radix `Slot`                            | `Button asChild`, Dialog trigger/close                 | `as="a"` unions; `children` as function               |
-| Form primitive                              | Wrap native or Radix, forward ref                   | @packages/ui/src/input.tsx, @packages/ui/src/label.tsx | Reimplement labelling without Radix `Label`           |
+| When                                        | Pattern                                                           | Reference                                              | Do not                                                  |
+| ------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------- |
+| One control, visual variants                | Props + CVA (`variant` / `size` / `radius`)                       | @packages/ui/src/button.tsx                            | Boolean soup (`isPrimary` + `isLarge` + `isPill`)       |
+| Same control, stricter a11y                 | Thin wrapper, named export                                        | @packages/ui/src/icon-button.tsx                       | Guess icon-only from child count                        |
+| Trigger + content + header/footer           | Compound: `Root` + parts, same file, shared context               | @packages/ui/src/dialog.tsx                            | Render props; one mega-component with 12 layout props   |
+| Label + control + error                     | Compound: `Field` + `FieldLabel` + `FieldError`                   | @packages/ui/src/field.tsx                             | Unlabeled inputs; error text without `aria-describedby` |
+| Grouped surface                             | Compound: `Card` + `CardHeader` + `CardTitle` + `CardDescription` | @packages/ui/src/card.tsx                              | Demo link cards with required `href` / UTM              |
+| Render as another element (`<a>`, `<Link>`) | `asChild` + Radix `Slot`                                          | `Button asChild`, Dialog trigger/close                 | `as="a"` unions; `children` as function                 |
+| Form primitive                              | Wrap native or Radix, forward ref                                 | @packages/ui/src/input.tsx, @packages/ui/src/label.tsx | Reimplement labelling without Radix `Label`             |
 
-**Compound (Dialog):** `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose` — consumers compose JSX; parts share open state via context.
+**Compound (Dialog):** `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose` — consumers compose JSX; parts share open state via context. **`DialogTitle` is required** inside `DialogContent`. `DialogContent` already renders overlay — do not add `DialogOverlay` as a sibling.
+
+**Compound (Field):** `Field`, `FieldLabel`, `FieldError`. Pair `htmlFor` / `id` and `aria-describedby` / error `id`. Set `aria-invalid` on the control.
+
+**Compound (Card):** `Card`, `CardHeader`, `CardTitle`, `CardDescription` — hairline surface, no shadow.
 
 **Polymorphism:** `asChild` only. No render-prop public API (`children(props) => …`), no HOCs. `cloneElement` for icon hover inside Button is internal — do not expose it.
 

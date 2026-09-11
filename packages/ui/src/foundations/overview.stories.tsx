@@ -15,6 +15,13 @@ const tokenRows = [
   ['포커스', 'ring', 'focus-visible:ring-ring'],
   ['오버레이', 'overlay', 'bg-overlay'],
   ['카드', 'card', 'bg-card'],
+  ['상태(오류)', 'destructive', 'text-destructive, border-destructive'],
+  ['상태 위 글자', 'destructive-foreground', 'text-destructive-foreground'],
+  ['눌림 딤', 'dimmer', 'bg-dimmer'],
+  ['테두리 별칭', 'muted-strong', 'border-muted-strong'],
+  ['제목', 'text-title', 'text-title'],
+  ['본문', 'text-body', 'text-body'],
+  ['캡션', 'text-caption', 'text-caption'],
   ['버튼', 'rounded.pill', 'rounded-pill'],
   ['카드·다이얼로그', 'rounded.lg', 'rounded-lg'],
   ['입력', 'rounded.md', 'rounded-md'],
@@ -31,7 +38,7 @@ const donts = [
   '컴포넌트에 hex를 직접 넣지 마세요. 값은 토큰이 가지고 있어요.',
   'bg-neutral-*나 bg-blue-*를 컴포넌트에 쓰지 마세요. 시맨틱 클래스를 써 주세요.',
   '기본 확인 버튼에 bg-foreground를 쓰지 마세요.',
-  '강조색을 하나 더 만들지 마세요. 그림자도 크롬에 올리지 마세요.',
+  '브랜드 강조색을 하나 더 만들지 마세요. 실패·오류는 destructive를 쓰고, CTA에는 쓰지 마세요. 그림자도 크롬에 올리지 마세요.',
   'Motion을 쓰는 요소에 Tailwind transition 클래스를 같이 넣지 마세요.',
 ];
 
@@ -43,7 +50,7 @@ function Overview() {
       lead="제품을 만들 때 함께 쓰는 화면 언어예요. 바탕은 조용하고, 강조는 Action Blue 하나예요. 장식용 그라데이션이나 그림자는 쓰지 않고, 같은 토큰으로 라이트와 다크를 오가요."
     >
       <DocSection title="지향하는 목표">
-        <ul className="text-foreground list-disc space-y-2 pl-5 text-[17px] leading-relaxed">
+        <ul className="text-foreground text-body list-disc space-y-2 pl-5">
           <li>
             화면의 최소 품질을 항상 맞춰 줘요. 토큰만 따르면 배경·글자·테두리가 흔들리지 않아요.
           </li>

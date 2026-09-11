@@ -14,11 +14,9 @@ export function DocPage({
   return (
     <article className="flex w-full max-w-3xl flex-col gap-12 font-sans">
       <header className="flex flex-col gap-3">
-        <p className="text-muted-foreground text-sm">{kicker}</p>
-        <h1 className="text-foreground text-[32px] leading-tight font-semibold tracking-tight">
-          {title}
-        </h1>
-        <p className="text-foreground text-[17px] leading-relaxed">{lead}</p>
+        <p className="text-muted-foreground text-caption">{kicker}</p>
+        <h1 className="text-foreground text-title font-semibold tracking-tight">{title}</h1>
+        <p className="text-foreground text-body">{lead}</p>
       </header>
       {children}
     </article>
@@ -35,7 +33,7 @@ export function DocSection({ title, children }: { title: string; children: React
 }
 
 export function DocBody({ children }: { children: ReactNode }) {
-  return <p className="text-foreground text-[17px] leading-relaxed">{children}</p>;
+  return <p className="text-foreground text-body">{children}</p>;
 }
 
 export function DocCode({ children }: { children: string }) {
