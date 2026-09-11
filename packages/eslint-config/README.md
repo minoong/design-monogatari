@@ -23,7 +23,7 @@ export default withTailwindCss(config, './src/styles/globals.css');
 ```
 
 - `@repo/ui`: `./src/styles/globals.css`
-- Next apps: `./app/globals.css`
+- Next apps: `./src/_app/styles/globals.css`
 
 `tailwindcss/classnames-order` is off — Prettier plugin handles class order.
 

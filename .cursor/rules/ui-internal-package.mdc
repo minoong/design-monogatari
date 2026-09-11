@@ -20,8 +20,12 @@ Just-in-Time package: exports TypeScript source, consumed and compiled by apps.
 - `generate:component` — scaffolds new components (`turbo gen react-component`)
 - No `build` script (JIT pattern)
 
-## Reference
+## Composition
 
-See @packages/ui/src/button.tsx for component structure.
+Patterns live in `packages/ui/AGENTS.md` (Composition patterns). Do not add a separate DS skill.
+
+- Single control + variants: @packages/ui/src/button.tsx (`cva`, `asChild`)
+- Compound widget: @packages/ui/src/dialog.tsx (`Dialog*` parts + context)
+- No render-prop / HOC public API
 
 When adding npm publish later, migrate to Compiled pattern (`tsc` → `dist/**`) and add Changesets.

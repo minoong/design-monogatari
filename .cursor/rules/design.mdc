@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Design language
 
-Canonical spec: [DESIGN.md](DESIGN.md). Do not copy tokens into this rule.
+Canonical spec: [DESIGN.md](DESIGN.md). Do not copy tokens into this rule. Canonical components: @packages/ui/src/button.tsx (variants / `asChild`), @packages/ui/src/dialog.tsx (compound). Composition: `packages/ui/AGENTS.md`.
 
 When creating or editing UI, CSS tokens, stories, or the shadcn registry:
 

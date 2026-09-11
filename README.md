@@ -4,14 +4,14 @@ Turborepo monorepo for the **design-monogatari** design system and demo apps.
 
 ## Packages & apps
 
-| Name                      | Path                         | Role                                   |
-| ------------------------- | ---------------------------- | -------------------------------------- |
-| `web`                     | `apps/web`                   | Next.js demo (port 3000)               |
-| `docs`                    | `apps/docs`                  | Next.js docs (port 3001)               |
-| `@repo/ui`                | `packages/ui`                | React design system (JIT, Tailwind v4) |
-| `@repo/eslint-config`     | `packages/eslint-config`     | Shared ESLint flat config              |
-| `@repo/prettier-config`   | `packages/prettier-config`   | Shared Prettier config                 |
-| `@repo/typescript-config` | `packages/typescript-config` | Shared tsconfig                        |
+| Name                      | Path                         | Role                                                                 |
+| ------------------------- | ---------------------------- | -------------------------------------------------------------------- |
+| `web`                     | `apps/web`                   | Next.js demo (port 3000). FSD in `src/`; Next `app/` re-exports only |
+| `docs`                    | `apps/docs`                  | Next.js docs (port 3001). Same FSD layout                            |
+| `@repo/ui`                | `packages/ui`                | React design system (JIT, Tailwind v4) — not FSD slices              |
+| `@repo/eslint-config`     | `packages/eslint-config`     | Shared ESLint flat config                                            |
+| `@repo/prettier-config`   | `packages/prettier-config`   | Shared Prettier config                                               |
+| `@repo/typescript-config` | `packages/typescript-config` | Shared tsconfig                                                      |
 
 ## Develop
 
@@ -22,6 +22,8 @@ pnpm install
 pnpm dev              # all apps
 pnpm --filter web dev # single app
 ```
+
+`apps/web` and `apps/docs` follow Feature-Sliced Design in `src/_app` (providers, styles) and `src/_pages`. Next.js `app/` only re-exports those modules. `@repo/ui` stays a design system package — do not slice it. Details: [AGENTS.md](AGENTS.md), `.cursor/rules/fsd-apps.mdc`.
 
 ## Code quality
 

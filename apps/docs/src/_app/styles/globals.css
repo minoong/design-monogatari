@@ -1,6 +1,6 @@
 @import '@repo/ui/styles.css';
 
-@source '../**/*.{ts,tsx}';
+@source '../../../**/*.{ts,tsx}';
 
 *,
 *::before,
