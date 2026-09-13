@@ -43,6 +43,18 @@ storybook-static
 # Cursor hook session state
 .cursor/hooks/state/
 
+# Local prototype frames (Polestar source; do not commit)
+apps/web/public/exterior/
+downloads/
+
+# Storybook 3D comparison assets (not design-system files)
+packages/ui/.storybook/public/models/*.glb
+packages/ui/.storybook/public/models/*.hdr
+packages/ui/.storybook/public/models/Textures/
+packages/ui/.storybook/public/models/g05/
+packages/ui/.storybook/public/models/xc40/
+packages/ui/.storybook/public/models/carla/
+
 # Misc
 .DS_Store
 *.pem
