@@ -18,14 +18,16 @@ function applyHtmlTheme(theme: 'light' | 'dark') {
 const ThemeDecorator: Decorator = (Story, context) => {
   const theme = resolveTheme(context.globals.theme);
   const isFoundations = context.title.startsWith('파운데이션/');
+  const isFullscreen = context.parameters.layout === 'fullscreen';
 
   applyHtmlTheme(theme);
 
   return (
     <div
       className={cn(
-        'bg-background text-foreground rounded-lg p-8',
-        isFoundations ? 'w-full max-w-5xl' : 'min-w-80',
+        'bg-background text-foreground',
+        isFullscreen ? 'min-h-svh w-full' : 'rounded-lg p-8',
+        isFoundations ? 'w-full max-w-5xl' : !isFullscreen && 'min-w-80',
       )}
     >
       <Story />
@@ -67,6 +69,9 @@ const preview: Preview = {
             '라벨',
             '입력',
             '카드',
+            '필드',
+            '스크롤시퀀스',
+            '스크롤3D',
           ],
         ],
       },

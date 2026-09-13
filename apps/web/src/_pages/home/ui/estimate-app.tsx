@@ -20,12 +20,14 @@ import {
   wheels,
 } from '../model/data';
 import { CarSilhouette } from './car-silhouette';
+import { ExteriorSequence } from './exterior-sequence';
 import { ThemeToggle } from './theme-toggle';
 
 gsap.registerPlugin(useGSAP);
 
 export function EstimateApp() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const carRef = useRef<HTMLDivElement>(null);
   const formId = useId();
 
@@ -45,8 +47,8 @@ export function EstimateApp() {
   useGSAP(
     () => {
       const car = carRef.current;
-      const root = rootRef.current;
-      if (!car || !root) {
+      const stage = stageRef.current;
+      if (!car || !stage) {
         return;
       }
 
@@ -58,7 +60,7 @@ export function EstimateApp() {
         gsap
           .timeline({
             scrollTrigger: {
-              trigger: root,
+              trigger: stage,
               start: 'top top',
               end: 'bottom bottom',
               scrub: 0.7,
@@ -104,7 +106,9 @@ export function EstimateApp() {
         </div>
       </header>
 
-      <div className="lg:grid lg:grid-cols-[minmax(0,1.2fr)_minmax(22rem,0.8fr)]">
+      <ExteriorSequence />
+
+      <div ref={stageRef} className="lg:grid lg:grid-cols-[minmax(0,1.2fr)_minmax(22rem,0.8fr)]">
         <div className="bg-background sticky top-18 z-10 lg:top-18 lg:h-[calc(100svh-4.5rem)] lg:overflow-hidden">
           <div className="flex h-[42vh] items-center justify-center px-6 lg:h-full">
             <div ref={carRef} className="w-full max-w-3xl transform-3d">

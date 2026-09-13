@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "copy:exterior": "bash scripts/copy-exterior-frames.sh"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

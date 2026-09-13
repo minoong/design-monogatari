@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## design-monogatari web
 
-Next.js demo (port **3000**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`. Home is the estimate demo.
+Next.js demo (port **3000**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`. Home is the estimate demo. Exterior stills: `pnpm --filter web copy:exterior` (gitignored `public/exterior/`).
 
 Skill: `.agents/skills/feature-sliced-design/SKILL.md`. Rule: `.cursor/rules/fsd-apps.mdc`.
 
