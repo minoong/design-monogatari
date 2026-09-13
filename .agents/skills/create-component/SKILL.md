@@ -48,7 +48,8 @@ pnpm --filter @repo/ui generate:component
 - `cn()` — 패키지 내부 `./lib/cn`, 앱에서 `@repo/ui/cn`
 - 새 CSS Module 금지 (Tailwind로 표현 불가한 경우만 예외)
 - UI motion: Motion (`motion/react`) — 버튼 루트에는 쓰지 않음. `transition-*`와 Motion을 같은 노드에 두지 않음
-- Scroll/timeline: GSAP + ScrollTrigger
+- Scroll/timeline: GSAP + ScrollTrigger (`ScrollImageSequence`). Do not put Motion on that canvas.
+- Storybook 3D is not a public `@repo/ui/*` export. Do not add `three` to a shipped component.
 
 ## Registry (external apps)
 

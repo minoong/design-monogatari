@@ -11,9 +11,10 @@ description: Default tech stack and approval flow before using alternative libra
 - React **19** + TypeScript
 - Monorepo: **Turborepo** + workspace packages
 - Styling: **Tailwind CSS v4** (active — `@repo/ui/styles.css`, `@source` monorepo)
-- UI motion: **Framer Motion** (planned)
+- UI motion: **Framer Motion** (active)
 - Scroll/timeline animation: **GSAP** (+ ScrollTrigger)
-- Component docs: **Storybook** (planned)
+- Component docs: **Storybook** (active)
+- Storybook 3D: **Three.js** + `@react-three/fiber` (`@repo/ui` **devDependencies** only — not apps)
 - Design system: `@repo/ui` internal package
 
 ## Before using an alternative

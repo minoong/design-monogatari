@@ -46,6 +46,7 @@ New components: `.agents/skills/create-component/SKILL.md`.
 
 ```bash
 pnpm --filter @repo/ui storybook
+pnpm --filter @repo/ui copy:car
 ```
 
 Stories live next to components: `src/*.stories.tsx`. Foundations: `src/foundations/*.stories.tsx`.
