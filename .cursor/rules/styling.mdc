@@ -11,7 +11,7 @@ When styling UI in `apps/` or `packages/ui/`:
 1. Read @DESIGN.md (rule `.cursor/rules/design.mdc`), then [packages/ui/src/styles/globals.css](packages/ui/src/styles/globals.css)
 2. Use **Tailwind utility classes** — avoid new CSS Modules unless Tailwind cannot express the style
 3. Merge classes with `cn()` from `@repo/ui/cn` (apps) or `./lib/cn` (within `@repo/ui`). Canonical component: @packages/ui/src/button.tsx
-4. Use `@theme` tokens (`bg-background`, `text-foreground`, `bg-primary`, `border-border`, `rounded-pill`, etc.) — do not hardcode hex in components. Token hex lives in DESIGN.md + `globals.css` only.
+4. Use `@theme` tokens (`bg-background`, `text-foreground`, `bg-primary`, `border-border`, `rounded-pill`, etc.) — do not hardcode hex in components. Token hex lives in DESIGN.md + `globals.css` only. Storybook 3D OEM chips in `src/storybook/scroll-3d/` are the DESIGN.md exception.
 5. Motion + Tailwind: do not put `transition-*` on `motion.*` elements (see `.agents/skills/motion-react/SKILL.md`)
 
 ## Monorepo CSS

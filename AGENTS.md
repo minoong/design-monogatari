@@ -4,19 +4,20 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 
 ## Default stack
 
-| Layer             | Choice                                         | Status               |
-| ----------------- | ---------------------------------------------- | -------------------- |
-| Node              | 24+ (`.nvmrc`)                                 | active               |
-| Monorepo          | Turborepo + pnpm                               | active               |
-| React             | 19                                             | active               |
-| Design system     | `@repo/ui` (JIT)                               | active               |
-| Styling           | Tailwind CSS v4                                | active               |
-| UI motion         | Framer Motion                                  | active               |
-| Scroll animation  | GSAP + ScrollTrigger                           | active (견적 스크롤) |
-| Docs              | Storybook (`@repo/ui`)                         | active               |
-| ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active               |
+| Layer             | Choice                                         | Status         |
+| ----------------- | ---------------------------------------------- | -------------- |
+| Node              | 24+ (`.nvmrc`)                                 | active         |
+| Monorepo          | Turborepo + pnpm                               | active         |
+| React             | 19                                             | active         |
+| Design system     | `@repo/ui` (JIT)                               | active         |
+| Styling           | Tailwind CSS v4                                | active         |
+| UI motion         | Framer Motion                                  | active         |
+| Scroll animation  | GSAP + ScrollTrigger                           | active         |
+| Storybook 3D      | Three.js + R3F (`@repo/ui` devDependencies)    | Storybook only |
+| Docs              | Storybook (`@repo/ui`)                         | active         |
+| ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active         |
 
-UI 모션은 Motion, 스크롤·핀·스크럽은 GSAP (`apps/web` 견적 페이지). 같은 요소에 둘을 섞지 마세요.
+UI 모션은 Motion. 스크롤·핀·스크럽은 GSAP (`ScrollImageSequence`, 견적 외장, Storybook 도장 yaw). Storybook 원본 검사는 OrbitControls. 같은 요소에 Motion과 GSAP를 섞지 마세요. WebGL 캔버스에 Motion을 넣지 마세요. `three`는 Storybook 전용 — `apps/web`·`apps/docs`에서 import 금지. 세부: `packages/ui/AGENTS.md`, [DESIGN.md](DESIGN.md).
 
 Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
 
@@ -70,9 +71,10 @@ Install updates: `npx skills add <owner/repo> --skill <name>`
 ```bash
 pnpm --filter @repo/ui storybook
 pnpm --filter @repo/ui build-storybook
+pnpm --filter @repo/ui copy:car   # g05 / xc40 / HDR (gitignored)
 ```
 
-Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `@storybook/addon-themes` (`html.light` / `html.dark`). Not included in `pnpm verify`.
+Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `@storybook/addon-themes` (`html.light` / `html.dark`). Fullscreen 스토리는 ThemeDecorator `p-8`을 건너뜁니다. 3D 차량은 `src/storybook/scroll-3d/` — public `@repo/ui/*` 아님. Not included in `pnpm verify`.
 
 ## Motion for React (official)
 

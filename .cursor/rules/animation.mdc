@@ -11,9 +11,11 @@ alwaysApply: false
 | Scroll-linked, pin, scrub, complex timeline | GSAP + ScrollTrigger | `gsap-scrolltrigger`, `gsap-timeline` |
 | React integration | GSAP in components | `gsap-react` |
 | Performance | transforms, avoid layout thrash | `gsap-performance` |
+| Storybook 3D paint (pin + yaw) | GSAP + ScrollTrigger | `gsap-scrolltrigger`, `packages/ui/AGENTS.md` |
+| Storybook 3D OEM inspect | Three `OrbitControls` | `packages/ui/AGENTS.md` |
 
 Before implementing Motion APIs, read `.agents/skills/motion-react/SKILL.md` and fetch official docs via `https://motion.dev/llms.txt`.
 
-Do not mix GSAP and Motion on the same element without reason. If unclear, use AskQuestion.
+Do not mix GSAP and Motion on the same element without reason. Do not mix GSAP pin and OrbitControls on the same WebGL canvas. Do not put Motion on a WebGL canvas. If unclear, use AskQuestion.
 
 Register GSAP plugins before use; cleanup in `useEffect` / `useGSAP`.

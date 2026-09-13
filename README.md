@@ -21,6 +21,9 @@ Node **24+** (see `.nvmrc`). With nvm: `nvm use`.
 pnpm install
 pnpm dev              # all apps
 pnpm --filter web dev # single app
+pnpm --filter web copy:exterior      # 견적 외장 프레임 (gitignored)
+pnpm --filter @repo/ui storybook     # port 6006
+pnpm --filter @repo/ui copy:car      # Storybook 3D meshes (gitignored)
 ```
 
 `apps/web` and `apps/docs` follow Feature-Sliced Design in `src/_app` (providers, styles) and `src/_pages`. Next.js `app/` only re-exports those modules. `@repo/ui` stays a design system package — do not slice it. Details: [AGENTS.md](AGENTS.md), `.cursor/rules/fsd-apps.mdc`.
