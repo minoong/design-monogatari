@@ -218,6 +218,14 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 - Compound: `Card`, `CardHeader`, `CardTitle`, `CardDescription`. Hairline `border-border`, `bg-card`, `rounded-lg`. No box-shadow, no `href` / UTM demo API.
 
+### Loading
+
+- Stage / panel waiting state — not the Button three-dot overlay.
+- Dual hairline rings (`foreground` + `muted-foreground` on a `border` track). Motion rotate; `prefers-reduced-motion` keeps the arcs still.
+- `size`: `small` | `medium` (default) | `large`. Optional `progress` (0–1) switches to a determinate ring and `role="progressbar"`.
+- Visible `label` (`text-caption text-muted-foreground`). Default copy: `불러오는 중`.
+- Motion only. Do not add Lottie. Do not put this on a WebGL canvas node.
+
 ### ScrollImageSequence
 
 - Pin + scrub a viewport panel; map scroll progress to `frames` URLs (consumer-owned). Draw on canvas — do not `setState` per frame.
@@ -228,7 +236,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ### Storybook 3D (not public API)
 
 - **Image sequence** = 2D frames (`ScrollImageSequence`). **3D model** = GLTF or mesh, rotated by scroll.
-- Storybook `컴포넌트/스크롤3D` uses Three.js (`three`, `@react-three/fiber` as UI devDependencies). The paint story uses GSAP pin/scrub. OEM inspect stories use OrbitControls (drag to orbit, wheel to zoom). No Motion on the WebGL canvas.
+- Storybook `컴포넌트/스크롤3D` uses Three.js (`three`, `@react-three/fiber` as UI devDependencies). The paint story uses GSAP pin/scrub. OEM inspect stories use OrbitControls (drag to orbit, wheel to zoom). Both start from the same `REST_YAW` studio pose — kit `front` is mesh axis, not a per-car camera angle. Loading uses `Loading` over the HTML overlay, not on the canvas: X5 reports Three `LoadingManager` item counts (many GLTFs), XC40 reports FBX download bytes (one file). No Motion on the WebGL canvas.
 - Studio look (IBL, clearcoat paint, ground shadow, OEM paint chips) is for Storybook. Chip hex lives in `src/storybook/scroll-3d/paints.ts` and stays the same in light and dark — it is not a semantic token. Bumper plastics follow a paired hex per chip. Do not vendor Renault / Plus360 meshes. BMW X5 G05 is the BMW Car IT CC BY 4.0 release, not a scrape. Doors, hood, and seats in that kit are half-meshes and are mirrored on Z in the Storybook assembler. The cabin also loads interior trim and the steering wheel. Dark windshield glass is made transmissive so the cabin is visible. Volvo XC40 Recharge is the Unity Auto Showroom mesh (Volvo EULA, non-commercial, Storybook-only). The kit names body paint `carpaint_metallic_729glaciersilver` but does not ship the albedo; the XC40 OEM story restores Glacier Silver from that name. `X5 원본` / `XC40 원본` skip paint chips.
 - Fullscreen 3D stories skip the default Storybook canvas padding. The pin stage is the first paint in the iframe; the overlay stays compact at the top-left so the car is not covered.
 - Not exported from `@repo/ui/*`. Not in the registry. Sample `g05/` (BMW X5 G05, CC-BY 4.0), `xc40/` (Volvo XC40 Recharge, Volvo EULA), and `studio.hdr` are gitignored (`pnpm --filter @repo/ui copy:car`).
