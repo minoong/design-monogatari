@@ -1,11 +1,13 @@
 'use client';
 
 import { Canvas, useThree } from '@react-three/fiber';
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { Box3, Group, type Object3D, Vector3 } from 'three';
+import { Box3, Group, LoadingManager, type Object3D, Vector3 } from 'three';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { Loading } from '../../loading';
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
 import { applyThreePaint, enableThreeShadows, threePaintFromSwatch } from './apply-three-paint';
 import { assembleG05Three } from './assemble-g05-three';
@@ -58,18 +60,94 @@ function rewriteFbxTextureUrl(url: string) {
   return url;
 }
 
-function loadVehicleFile(file: string) {
-  if (file.endsWith('.fbx')) {
-    const loader = new FBXLoader();
-    loader.manager.setURLModifier(rewriteFbxTextureUrl);
-    const slash = file.lastIndexOf('/');
-    if (slash >= 0) {
-      loader.setResourcePath(`/models/${file.slice(0, slash + 1)}`);
-    }
-    return loader.loadAsync(`/models/${file}`);
+function paintProgressFrame() {
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      setTimeout(resolve, 0);
+    });
+  });
+}
+
+async function loadFbxWithProgress(
+  file: string,
+  manager: LoadingManager,
+  report: (progress: number) => void,
+  signal: AbortSignal,
+) {
+  const slash = file.lastIndexOf('/');
+  const resourcePath = slash >= 0 ? `/models/${file.slice(0, slash + 1)}` : '/models/';
+  const loader = new FBXLoader(manager);
+  loader.manager.setURLModifier(rewriteFbxTextureUrl);
+  loader.setResourcePath(resourcePath);
+
+  const response = await fetch(`/models/${file}`, { signal });
+  if (!response.ok) {
+    throw new Error(`Failed to load ${file}`);
   }
 
-  return new GLTFLoader().loadAsync(`/models/${file}`).then((gltf) => gltf.scene);
+  const total = Number(response.headers.get('content-length')) || 0;
+  const reader = response.body?.getReader();
+  report(0);
+  await paintProgressFrame();
+
+  if (!reader) {
+    const buffer = await response.arrayBuffer();
+    report(1);
+    await paintProgressFrame();
+    return loader.parse(buffer, resourcePath);
+  }
+
+  const chunks: Uint8Array[] = [];
+  let loaded = 0;
+  let lastPercent = -1;
+  let lastPaint = 0;
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    chunks.push(value);
+    loaded += value.byteLength;
+    if (total > 0) {
+      const progress = Math.min(1, loaded / total);
+      const percent = Math.round(progress * 100);
+      if (percent !== lastPercent) {
+        lastPercent = percent;
+        report(progress);
+        const now = performance.now();
+        if (now - lastPaint >= 80) {
+          lastPaint = now;
+          await paintProgressFrame();
+        }
+      }
+    }
+  }
+
+  const bytes = new Uint8Array(loaded);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  report(1);
+  await paintProgressFrame();
+  return loader.parse(bytes.buffer, resourcePath);
+}
+
+const NOOP_PROGRESS = () => undefined;
+
+function loadVehicleFile(
+  file: string,
+  manager: LoadingManager,
+  report: (progress: number) => void = NOOP_PROGRESS,
+  signal?: AbortSignal,
+) {
+  if (file.endsWith('.fbx')) {
+    return loadFbxWithProgress(file, manager, report, signal ?? new AbortController().signal);
+  }
+
+  return new GLTFLoader(manager).loadAsync(`/models/${file}`).then((gltf) => gltf.scene);
 }
 
 function hideUtilityMeshes(root: Object3D) {
@@ -86,20 +164,50 @@ function GltfModel({
   paint,
   front,
   oem = false,
+  onProgress,
+  onSettled,
 }: {
   files: readonly string[];
   paint?: PaintSwatch;
   front?: VehicleFront;
   oem?: boolean;
+  onProgress?: (progress: number) => void;
+  onSettled?: () => void;
 }) {
   const [model, setModel] = useState<Object3D | null>(null);
   const invalidate = useThree((state) => state.invalidate);
   const fileKey = files.join('|');
+  const onProgressRef = useRef(onProgress);
+  const onSettledRef = useRef(onSettled);
+
+  useEffect(() => {
+    onProgressRef.current = onProgress;
+    onSettledRef.current = onSettled;
+  });
 
   useEffect(() => {
     let cancelled = false;
+    const abort = new AbortController();
+    const manager = new LoadingManager();
+    const useBytes = files.some((file) => file.endsWith('.fbx'));
+    const report = (progress: number) => {
+      if (!cancelled) {
+        onProgressRef.current?.(progress);
+      }
+    };
 
-    void Promise.all(files.map((file) => loadVehicleFile(file)))
+    manager.onProgress = (_url, loaded, total) => {
+      if (useBytes || total <= 0) {
+        return;
+      }
+      report(loaded / total);
+    };
+
+    void Promise.all(
+      files.map((file) =>
+        loadVehicleFile(file, manager, useBytes ? report : NOOP_PROGRESS, abort.signal),
+      ),
+    )
       .then((gltfs) => {
         if (cancelled) {
           return;
@@ -129,19 +237,22 @@ function GltfModel({
         }
         setModel(root);
         invalidate();
+        onSettledRef.current?.();
       })
       .catch(() => {
         if (!cancelled) {
           setModel(null);
+          onSettledRef.current?.();
         }
       });
 
     return () => {
       cancelled = true;
+      abort.abort();
     };
     // Paint is applied in a later effect so a color change does not reload the GLB.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per file set
-  }, [fileKey, invalidate, oem]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload on file set, heading, or inspect mode
+  }, [fileKey, front, invalidate, oem]);
 
   useEffect(() => {
     if (!model || oem || !paint) {
@@ -168,11 +279,20 @@ export function ThreeGltfDemo({
   const progressRef = useRef(0);
   const [pickedId, setPickedId] = useState<VehicleId>(lockedId ?? 'x5');
   const vehicleId = lockedId ?? pickedId;
+  const loadKey = `${vehicleId}:${oem}`;
   const vehicle = vehicleById(vehicleId);
   const urls = vehicleUrls(vehicle);
   const available = useModelAvailable(urls[0] ?? '');
   const { paintId, setPaintId, paint } = usePaintSelection();
   const inspectRef = useRef<InspectHandle | null>(null);
+  const [loadSlot, setLoadSlot] = useState(loadKey);
+  const [loadProgress, setLoadProgress] = useState<number | null>(null);
+  const [modelReady, setModelReady] = useState(false);
+  if (loadSlot !== loadKey) {
+    setLoadSlot(loadKey);
+    setLoadProgress(null);
+    setModelReady(false);
+  }
 
   const overlay = (
     <SequenceOverlay
@@ -217,24 +337,41 @@ export function ThreeGltfDemo({
     >
       <ThreeStudio />
       {oem ? <InspectControls handleRef={inspectRef} /> : null}
-      {oem ? (
-        available ? (
-          <GltfModel key={`${vehicle.id}:oem`} files={vehicle.files} front={vehicle.front} oem />
-        ) : null
-      ) : (
-        <ThreeYawGroup progressRef={progressRef}>
-          {available ? (
-            <GltfModel
-              key={`${vehicle.id}:paint`}
-              files={vehicle.files}
-              front={vehicle.front}
-              paint={paint}
-            />
-          ) : null}
-        </ThreeYawGroup>
-      )}
+      <ThreeYawGroup progressRef={progressRef}>
+        {available ? (
+          <GltfModel
+            key={`${vehicle.id}:${oem ? 'oem' : 'paint'}`}
+            files={vehicle.files}
+            front={vehicle.front}
+            oem={oem}
+            paint={oem ? undefined : paint}
+            onProgress={setLoadProgress}
+            onSettled={() => {
+              setModelReady(true);
+            }}
+          />
+        ) : null}
+      </ThreeYawGroup>
     </Canvas>
   );
+
+  const loading =
+    available !== false && !modelReady ? (
+      <motion.div
+        key="model-loading"
+        className="absolute inset-0 z-5 flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.28 }}
+      >
+        <Loading
+          label="모델을 불러오는 중"
+          progress={loadProgress === null ? undefined : loadProgress}
+          size="large"
+        />
+      </motion.div>
+    ) : null;
 
   const missing =
     available === false ? (
@@ -255,6 +392,7 @@ export function ThreeGltfDemo({
       >
         {missing}
         {canvas}
+        <AnimatePresence>{loading}</AnimatePresence>
       </InspectStage>
     );
   }
@@ -269,6 +407,7 @@ export function ThreeGltfDemo({
     >
       {missing}
       {canvas}
+      <AnimatePresence>{loading}</AnimatePresence>
     </ScrollPinStage>
   );
 }

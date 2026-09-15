@@ -21,7 +21,7 @@ export const VEHICLES = [
     label: 'X5',
     files: X5_FILES,
     kind: 'BMW X5',
-    front: 'x-',
+    front: 'x-', // kit mesh axis (+X rear). Studio view is REST_YAW, not a per-car camera.
     credit: {
       work: 'BMW X5 G05 (2018)',
       by: 'BMW Car IT',
@@ -35,7 +35,7 @@ export const VEHICLES = [
     label: 'XC40',
     files: ['xc40/Models/XC40_Recharge_01_Mesh.fbx'] as const,
     kind: 'Volvo XC40 Recharge',
-    front: 'z+',
+    front: 'x-', // kit mesh axis (+X rear), same as X5. Studio view is REST_YAW.
     credit: {
       work: 'Volvo XC40 Recharge',
       by: 'Volvo Cars / Unity Hub',

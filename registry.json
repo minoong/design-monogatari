@@ -234,6 +234,21 @@
       ]
     },
     {
+      "name": "loading",
+      "type": "registry:ui",
+      "title": "Loading",
+      "description": "Stage loading indicator with dual Motion rings and optional progress.",
+      "dependencies": ["class-variance-authority", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/loading.tsx",
+          "type": "registry:ui",
+          "target": "@ui/loading.tsx"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
