@@ -1,6 +1,7 @@
 @import '@repo/ui/styles.css';
 
 @source '../../../**/*.{ts,tsx}';
+@source '../../../content/**/*.mdx';
 
 *,
 *::before,
@@ -11,15 +12,11 @@
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  /* hidden 은 body 를 스크롤 컨테이너로 만들어 position: sticky(문서 사이드바)를 깨뜨린다 */
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   padding: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }

@@ -37,7 +37,7 @@
     },
     "//#format:check": {
       "description": "Check Prettier formatting for the whole repository",
-      "inputs": ["$TURBO_DEFAULT$", "**/*.{ts,tsx,md,json,css,mjs,js}", "!pnpm-lock.yaml"],
+      "inputs": ["$TURBO_DEFAULT$", "**/*.{ts,tsx,md,mdx,json,css,mjs,js}", "!pnpm-lock.yaml"],
       "outputs": []
     }
   }

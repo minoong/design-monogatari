@@ -7,7 +7,7 @@ Turborepo monorepo for the **design-monogatari** design system and demo apps.
 | Name                      | Path                         | Role                                                                 |
 | ------------------------- | ---------------------------- | -------------------------------------------------------------------- |
 | `web`                     | `apps/web`                   | Next.js demo (port 3000). FSD in `src/`; Next `app/` re-exports only |
-| `docs`                    | `apps/docs`                  | Next.js docs (port 3001). Same FSD layout                            |
+| `docs`                    | `apps/docs`                  | 디자인 시스템 문서 사이트 (port 3001). 현재 템플릿, Fumadocs 예정    |
 | `@repo/ui`                | `packages/ui`                | React design system (JIT, Tailwind v4) — not FSD slices              |
 | `@repo/eslint-config`     | `packages/eslint-config`     | Shared ESLint flat config                                            |
 | `@repo/prettier-config`   | `packages/prettier-config`   | Shared Prettier config                                               |
