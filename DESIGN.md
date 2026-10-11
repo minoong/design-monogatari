@@ -120,7 +120,7 @@ Components use semantic Tailwind classes (`bg-background`, `bg-primary`). Do not
 | `rounded.lg`             | `rounded-lg`                                               |
 | `rounded.md`             | `rounded-md`                                               |
 
-Dark values live on `.dark` (and OS `prefers-color-scheme: dark` when `html` is not `.light`). Storybook `@storybook/addon-themes` (`withThemeByClassName`) sets `html.light` / `html.dark`. Apps use `next-themes` with `attribute="class"` so the same classes land on `<html>`.
+Dark values live on `.dark` (and OS `prefers-color-scheme: dark` when `html` is not `.light`). The Storybook theme toolbar (`globalTypes.theme` + `ThemeDecorator` in `.storybook/preview.tsx`) sets `html.light` / `html.dark`. Apps use `next-themes` with `attribute="class"` so the same classes land on `<html>`.
 
 ## Colors
 
@@ -162,7 +162,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 `primary-foreground` stays white in both modes. Press dimmer is `neutral.950` (black), never `foreground` — on dark, foreground would flash white.
 
 - **Apps**: `next-themes` (`attribute="class"`, `defaultTheme="system"`) + page toggle. `html` needs `suppressHydrationWarning`.
-- **Storybook**: `@storybook/addon-themes` toolbar. Never leave the canvas on light chrome while OS dark tokens are active.
+- **Storybook**: theme toolbar (`.storybook/preview.tsx`). Never leave the canvas on light chrome while OS dark tokens are active.
 
 ## Typography
 
@@ -244,7 +244,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 ### Don't
 
-- Don't invert OS dark tokens onto a white Storybook canvas — `@storybook/addon-themes` must set `html.light` or `html.dark`.
+- Don't invert OS dark tokens onto a white Storybook canvas — the Storybook theme toolbar must set `html.light` or `html.dark`.
 - Don't add a second **brand** accent. Status color (`destructive`) is allowed; do not use it as a CTA fill.
 - Don't put shadows on buttons, cards, or dialog frames.
 - Don't hardcode hex in `packages/ui/src/*.tsx`. Storybook 3D OEM chips in `src/storybook/scroll-3d/` are the exception so paint does not flip with theme.

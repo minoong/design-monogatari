@@ -1,6 +1,6 @@
 'use client';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode } from 'react';
 
 import { ThreeGltfDemo } from './storybook/scroll-3d/three-gltf';
