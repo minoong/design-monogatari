@@ -40,8 +40,9 @@ storybook-static
 # Playwright MCP
 .playwright-mcp
 
-# Agent hook session state
+# Agent hook session state and event log (the log may hold session ids; publish only exported traces)
 .claude/hooks/state/
+.claude/logs/
 
 # Claude Code local overrides
 .claude/settings.local.json
