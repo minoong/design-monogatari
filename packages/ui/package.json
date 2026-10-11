@@ -21,6 +21,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-mcp": "^10.6.1",
     "@storybook/react-vite": "^10.6.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "26.6.5",

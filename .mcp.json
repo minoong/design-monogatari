@@ -3,6 +3,10 @@
     "lucide-animated": {
       "type": "http",
       "url": "https://lucide-animated.com/mcp"
+    },
+    "storybook": {
+      "type": "http",
+      "url": "http://localhost:6006/mcp"
     }
   }
 }

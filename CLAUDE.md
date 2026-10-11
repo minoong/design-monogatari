@@ -38,8 +38,17 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 
 - **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, …).
 - **Skills** `.claude/skills/<name>` are symlinks to `.agents/skills/<name>` (the `npx skills add` install root, tracked by `skills-lock.json`). Add new skills under `.agents/skills/` and symlink them; don't copy.
-- **Subagent** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs Storybook light/dark checks and `pnpm verify`. The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` for the main session.
+- **Subagent** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs Storybook light/dark checks and `pnpm verify`. The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` and `storybook` for the main session.
 - **Hooks** (`.claude/settings.json` → `.claude/hooks/`): `SessionStart` injects DESIGN.md pointers; `ui-verify.mjs` tracks UI edits via `PostToolUse` and blocks `Stop` / `SubagentStop` until Playwright and `pnpm verify` have run (state in gitignored `.claude/hooks/state/`).
+
+## Storybook MCP (`@storybook/addon-mcp`)
+
+`.mcp.json` registers `storybook` → `http://localhost:6006/mcp`. It answers only while `pnpm --filter @repo/ui storybook` is running and shows as failed otherwise. `features.componentsManifest` in `.storybook/main.ts` feeds it.
+
+- Before creating or editing components or stories, call `get-storybook-story-instructions`. Look up component usage with `docs-list` / `docs-show` instead of reading source.
+- **Imports in the snippets are wrong for this repo.** They show `import { Button } from '@repo/ui'`; the real import is the subpath `@repo/ui/button` (no barrel).
+- **Props tables omit CVA options** (`variant`, `size`, `radius`, `display`): `react-docgen` cannot resolve `VariantProps`. Read the story examples or the component. `react-docgen-typescript` fails under TypeScript 7 (every component errors), so do not enable it.
+- No `test-run` tool (no `@storybook/addon-vitest`). UI checks stay with the `ui-verifier` subagent.
 
 ## Rules that are easy to violate
 
