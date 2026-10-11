@@ -1,6 +1,6 @@
 import '../src/styles/globals.css';
 
-import type { Decorator, Preview } from '@storybook/react';
+import type { Decorator, Preview } from '@storybook/react-vite';
 
 import { cn } from '../src/lib/cn';
 

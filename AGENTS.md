@@ -74,7 +74,7 @@ pnpm --filter @repo/ui build-storybook
 pnpm --filter @repo/ui copy:car   # g05 / xc40 / HDR (gitignored)
 ```
 
-Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `@storybook/addon-themes` (`html.light` / `html.dark`). Fullscreen 스토리는 ThemeDecorator `p-8`을 건너뜁니다. 3D 차량은 `src/storybook/scroll-3d/` — public `@repo/ui/*` 아님. Not included in `pnpm verify`.
+Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `globalTypes.theme` + `ThemeDecorator` in `packages/ui/.storybook/preview.tsx` (`html.light` / `html.dark`). Fullscreen 스토리는 ThemeDecorator `p-8`을 건너뜁니다. 3D 차량은 `src/storybook/scroll-3d/` — public `@repo/ui/*` 아님. Not included in `pnpm verify`.
 
 ## Motion for React (official)
 

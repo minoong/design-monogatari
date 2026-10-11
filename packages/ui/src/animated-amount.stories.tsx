@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, type RefObject, useRef, useState } from 'react';
 
 import { AnimatedAmount } from './animated-amount';

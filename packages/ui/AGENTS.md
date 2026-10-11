@@ -50,7 +50,7 @@ pnpm --filter @repo/ui copy:car
 ```
 
 Stories live next to components: `src/*.stories.tsx`. Foundations: `src/foundations/*.stories.tsx`.
-Theme: `@storybook/addon-themes` applies `html.light` / `html.dark` (`withThemeByClassName`).
+Theme: the toolbar in `.storybook/preview.tsx` (`globalTypes.theme` + `ThemeDecorator`) applies `html.light` / `html.dark`.
 `parameters.layout: 'fullscreen'` stories skip ThemeDecorator `p-8` so pin stages are not clipped below the iframe.
 3D car stories (`컴포넌트/스크롤3D`) live under `src/storybook/scroll-3d/` and are **not** a public `@repo/ui/*` export. `three` / `@react-three/fiber` are UI **devDependencies** — do not import them from `apps/web` or `apps/docs`. Sample models: `pnpm --filter @repo/ui copy:car` (BMW X5 G05 CC-BY 4.0 from BMW Car IT, Volvo XC40 Recharge Unity mesh under Volvo EULA, Poly Haven HDR CC0). G05 doors, hood, and seats are half-meshes; `assembleG05Three` mirrors them on Z and hides `*_void` / light-effect nodes. Interior also loads non-color trim and the steering wheel. Dark windshield glass is made transmissive so the cabin is visible. Paint story: GSAP pin + yaw. `X5 원본` / `XC40 원본`: OrbitControls (drag orbit, wheel zoom); XC40 restores Glacier Silver from the FBX material name because the kit has no paint albedo. Do not copy car meshes from third-party visualizers. Vision M NEXT print data is out of scope.
 
