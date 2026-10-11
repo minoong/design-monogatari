@@ -26,7 +26,7 @@ pnpm --filter @repo/ui storybook     # port 6006
 pnpm --filter @repo/ui copy:car      # Storybook 3D meshes (gitignored)
 ```
 
-`apps/web` and `apps/docs` follow Feature-Sliced Design in `src/_app` (providers, styles) and `src/_pages`. Next.js `app/` only re-exports those modules. `@repo/ui` stays a design system package — do not slice it. Details: [AGENTS.md](AGENTS.md), `.cursor/rules/fsd-apps.mdc`.
+`apps/web` and `apps/docs` follow Feature-Sliced Design in `src/_app` (providers, styles) and `src/_pages`. Next.js `app/` only re-exports those modules. `@repo/ui` stays a design system package — do not slice it. Details: [AGENTS.md](AGENTS.md), `.claude/rules/fsd-apps.md`.
 
 ## Code quality
 
@@ -40,7 +40,7 @@ pnpm --filter @repo/ui storybook   # component docs (port 6006, Light/Dark theme
 
 - **pre-commit**: husky + lint-staged (staged Prettier + ESLint fix)
 - **CI**: GitHub Actions runs `pnpm verify` on push/PR to `main`
-- Agent docs: [AGENTS.md](AGENTS.md), visual spec [DESIGN.md](DESIGN.md), rule `.cursor/rules/code-quality.mdc`
+- Agent docs: [AGENTS.md](AGENTS.md), visual spec [DESIGN.md](DESIGN.md), rule `.claude/rules/code-quality.md`
 
 ## Build
 
@@ -55,7 +55,7 @@ pnpm --filter web build
 pnpm dlx shadcn@latest add minoong/design-monogatari/badge
 ```
 
-See [registry.json](registry.json) and `.cursor/rules/shadcn-registry.mdc`.
+See [registry.json](registry.json) and `.claude/rules/shadcn-registry.md`.
 
 ## Links
 

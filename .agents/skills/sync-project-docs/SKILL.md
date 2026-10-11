@@ -16,7 +16,6 @@ paths:
   - 'CLAUDE.md'
   - '.claude/rules/**'
   - '.claude/agents/**'
-  - '.cursor/rules/**'
   - '.agents/skills/**'
 ---
 

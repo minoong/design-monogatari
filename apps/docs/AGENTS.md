@@ -2,9 +2,9 @@
 
 Next.js docs app (port **3001**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`.
 
-Skill: `.agents/skills/feature-sliced-design/SKILL.md`. Rule: `.cursor/rules/fsd-apps.mdc`.
+Skill: `.agents/skills/feature-sliced-design/SKILL.md`. Rule: `.claude/rules/fsd-apps.md`.
 
-After UI or token changes, do not wait to be asked: Playwright Storybook light/dark, then `pnpm verify`. See root `AGENTS.md` and `.cursor/agents/ui-verifier.md`.
+After UI or token changes, do not wait to be asked: `ui-verifier` subagent (Storybook light/dark), then `pnpm verify`. See root `AGENTS.md` and `.claude/agents/ui-verifier.md`.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
