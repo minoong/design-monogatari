@@ -1,0 +1,32 @@
+---
+paths:
+  - 'packages/ui/**'
+---
+
+# @repo/ui internal package
+
+Just-in-Time package: exports TypeScript source, consumed and compiled by apps.
+
+## Exports
+
+- Subpath only: `@repo/ui/button`, `@repo/ui/icons/plus`
+- Configured in `package.json` `"exports": { "./icons/*": "./src/icons/*.tsx", "./*": "./src/*.tsx" }`
+- No barrel `index.ts`
+
+## Scripts
+
+- `lint`, `check-types` — run via turbo
+- `generate:component` — scaffolds new components (`turbo gen react-component`)
+- `storybook` / `build-storybook` / `copy:car` — docs and local 3D meshes (gitignored)
+- No `build` script (JIT pattern)
+- `three` / `@react-three/fiber` are **devDependencies**. Do not import them from `apps/web` or `apps/docs`. 3D stories are not a public `@repo/ui/*` export.
+
+## Composition
+
+Patterns live in `packages/ui/AGENTS.md` (Composition patterns). Do not add a separate DS skill.
+
+- Single control + variants: `packages/ui/src/button.tsx` (`cva`, `asChild`)
+- Compound widget: `packages/ui/src/dialog.tsx` (`Dialog*` parts + context)
+- No render-prop / HOC public API
+
+When adding npm publish later, migrate to Compiled pattern (`tsc` → `dist/**`) and add Changesets.

@@ -63,6 +63,6 @@ pnpm --filter @repo/ui generate:component
 
 사용자가 확인을 요청하지 않아도 바로 한다.
 
-1. Playwright MCP — Storybook `html.light` / `html.dark`, 보더·링·눌림
+1. `ui-verifier` 서브에이전트(Playwright MCP) — Storybook `html.light` / `html.dark`, 보더·링·눌림
 2. `.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify`
 3. public API가 생겼거나 바뀌면 `DESIGN.md` Components + `packages/ui/AGENTS.md` Composition (`.agents/skills/sync-project-docs/SKILL.md`)

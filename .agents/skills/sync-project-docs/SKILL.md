@@ -13,6 +13,9 @@ paths:
   - 'turbo.json'
   - 'package.json'
   - 'registry.json'
+  - 'CLAUDE.md'
+  - '.claude/rules/**'
+  - '.claude/agents/**'
   - '.cursor/rules/**'
   - '.agents/skills/**'
 ---
@@ -30,7 +33,7 @@ paths:
 | 토큰·시맨틱 색                                               | [DESIGN.md](../../../DESIGN.md) + `packages/ui/src/styles/globals.css` + `registry.json` `theme.cssVars` | README에 hex 복사                           |
 | DS public API (compound 조각, `asChild`, variant, a11y 계약) | [DESIGN.md](../../../DESIGN.md) Components, `packages/ui/AGENTS.md` Composition                          | FSD 레이어 이름                             |
 | 앱 CSS 경로, ESLint `withTailwindCss`                        | `packages/eslint-config/README.md`                                                                       | DESIGN.md                                   |
-| 새 skill / rule / hook                                       | 루트 [AGENTS.md](../../../AGENTS.md) 카탈로그                                                            | DESIGN.md                                   |
+| 새 skill / rule / hook / subagent                            | 루트 [AGENTS.md](../../../AGENTS.md) 카탈로그, [CLAUDE.md](../../../CLAUDE.md)                           | DESIGN.md                                   |
 
 ## DESIGN.md vs README.md
 
