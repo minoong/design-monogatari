@@ -13,7 +13,7 @@
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static",
+    "build-storybook": "storybook build -o storybook-static && node scripts/prune-storybook-models.mjs",
     "copy:car": "bash scripts/copy-storybook-car.sh"
   },
   "devDependencies": {
