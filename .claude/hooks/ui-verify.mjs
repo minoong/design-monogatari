@@ -10,6 +10,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { env, stdin } from 'node:process';
 
+import { logEvent, repoRelative } from './lib/log.mjs';
+
 const STATE_DIR = join(env.CLAUDE_PROJECT_DIR || process.cwd(), '.claude/hooks/state');
 const STATE_PATH = join(STATE_DIR, 'ui-verify.json');
 
@@ -87,9 +89,12 @@ function isVisualUiPath(filePath) {
   return UI_ROOT.test(posix) && UI_EXT.test(posix);
 }
 
+function isVerifyCommand(command) {
+  return /\bpnpm(?:\s+\S+)*\s+verify\b/.test(String(command || ''));
+}
+
 function verifySucceeded(command, response) {
-  const cmd = String(command || '');
-  if (!/\bpnpm(?:\s+\S+)*\s+verify\b/.test(cmd)) {
+  if (!isVerifyCommand(command)) {
     return false;
   }
   if (response && typeof response === 'object' && response.interrupted) {
@@ -161,21 +166,42 @@ function handlePostToolUse(input) {
       verify: false,
       nudged: Boolean(state.nudged),
     };
+    const snapshot = {
+      tool,
+      file: repoRelative(uiPaths[0]),
+      dirty: true,
+      playwright: false,
+      verify: false,
+    };
     if (!next.nudged) {
       next.nudged = true;
       saveState(next);
+      logEvent(input, { ...snapshot, decision: 'nudge', reason: 'ui_edit_first' });
       return postToolUseContext(
         'UI file edited. Do not ask the user. Before finishing: delegate to the ui-verifier subagent (Playwright Storybook html.light and html.dark), then pnpm verify. Do not commit unless asked.',
       );
     }
     saveState(next);
+    logEvent(input, { ...snapshot, decision: 'mark', reason: 'ui_edit' });
     return {};
   }
 
   if (tool === 'Bash') {
     const state = loadState();
-    if (state.dirty && verifySucceeded(input.tool_input?.command, input.tool_response)) {
-      saveState({ ...state, verify: true });
+    const command = input.tool_input?.command;
+    if (state.dirty && isVerifyCommand(command)) {
+      const passed = verifySucceeded(command, input.tool_response);
+      if (passed) {
+        saveState({ ...state, verify: true });
+      }
+      logEvent(input, {
+        tool,
+        decision: passed ? 'mark' : 'skip',
+        reason: passed ? 'verify_passed' : 'verify_failed',
+        dirty: true,
+        playwright: state.playwright,
+        verify: passed || state.verify,
+      });
     }
     return {};
   }
@@ -184,31 +210,51 @@ function handlePostToolUse(input) {
     const state = loadState();
     if (state.dirty) {
       saveState({ ...state, playwright: true });
+      logEvent(input, {
+        tool,
+        decision: 'mark',
+        reason: 'playwright_used',
+        dirty: true,
+        playwright: true,
+        verify: state.verify,
+      });
     }
   }
   return {};
 }
 
 function handleStop(input) {
+  const state = loadState();
+  const snapshot = { dirty: state.dirty, playwright: state.playwright, verify: state.verify };
   // Already continuing because of this hook: let it finish instead of looping.
   if (input.stop_hook_active) {
+    if (state.dirty) {
+      logEvent(input, { ...snapshot, decision: 'allow', reason: 'reentry_guard' });
+    }
     return {};
   }
-  const state = loadState();
   // A subagent is only held back if it edited UI itself.
   if (input.hook_event_name === 'SubagentStop' && !(state.agents || []).includes(input.agent_id)) {
+    if (state.dirty) {
+      logEvent(input, { ...snapshot, decision: 'allow', reason: 'subagent_not_editor' });
+    }
     return {};
   }
   if (!isFresh(state)) {
     if (state.dirty) {
       saveState(emptyState());
+      logEvent(input, { ...snapshot, decision: 'allow', reason: 'stale_state_reset' });
     }
     return {};
   }
   if (!state.playwright || !state.verify) {
+    const missing =
+      !state.playwright && !state.verify ? 'both' : state.playwright ? 'verify' : 'playwright';
+    logEvent(input, { ...snapshot, decision: 'block', reason: `missing_${missing}` });
     return { decision: 'block', reason: followupMessage(state) };
   }
   saveState(emptyState());
+  logEvent(input, { ...snapshot, decision: 'allow', reason: 'dod_satisfied' });
   return {};
 }
 

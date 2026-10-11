@@ -8,6 +8,8 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { env, stdin } from 'node:process';
 
+import { logEvent } from './lib/log.mjs';
+
 async function readStdin() {
   const chunks = [];
   for await (const chunk of stdin) {
@@ -16,7 +18,12 @@ async function readStdin() {
   return Buffer.concat(chunks).toString('utf8');
 }
 
-await readStdin();
+let input = {};
+try {
+  input = JSON.parse(await readStdin());
+} catch {
+  // 입력이 없거나 JSON이 아니어도 컨텍스트 주입은 계속한다
+}
 
 const root = env.CLAUDE_PROJECT_DIR || process.cwd();
 
@@ -31,6 +38,14 @@ const additionalContext = existsSync(join(root, 'DESIGN.md'))
       'PostToolUse / SubagentStop / Stop hooks block finishing if verify is skipped. Merge notice → checkout main and pull.',
     ].join(' ')
   : 'DESIGN.md is missing. Recreate it (Apple-inspired, Geist) and sync packages/ui/src/styles/globals.css.';
+
+const source = String(input.source || 'start')
+  .toLowerCase()
+  .replace(/[^a-z]/g, '');
+logEvent(input, {
+  decision: 'allow',
+  reason: existsSync(join(root, 'DESIGN.md')) ? `session_${source}` : 'design_md_missing',
+});
 
 process.stdout.write(
   JSON.stringify({
