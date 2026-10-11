@@ -12,11 +12,13 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 export function ScrollPinStage({
   alt,
   overlay,
+  credit,
   onProgress,
   children,
 }: {
   alt: string;
   overlay: ReactNode;
+  credit?: ReactNode;
   onProgress: (progress: number) => void;
   children: ReactNode;
 }) {
@@ -73,6 +75,13 @@ export function ScrollPinStage({
             {overlay}
           </div>
         </div>
+        {credit ? (
+          <div className="pointer-events-none absolute inset-x-4 bottom-2 z-10">
+            <div className="bg-background/55 text-caption pointer-events-auto w-fit max-w-full rounded-md px-2.5 py-1 backdrop-blur-sm">
+              {credit}
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

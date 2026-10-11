@@ -15,6 +15,11 @@ export const X5_FILES = [
   'g05/O_G05_SteeringWheel.gltf',
 ] as const;
 
+/**
+ * CC BY 4.0 notices (Section 3(a)): creator, source URI, license + link, a pointer to the
+ * warranty disclaimer, and an indication that the material was modified. Trademark rights are
+ * not licensed (Section 2(b)(2)), so the trademark line is shown as well.
+ */
 export const VEHICLES = [
   {
     id: 'x5',
@@ -28,21 +33,11 @@ export const VEHICLES = [
       href: 'https://github.com/bmwcarit/digital-car-3d',
       license: 'CC BY 4.0',
       licenseHref: 'https://creativecommons.org/licenses/by/4.0/',
-    },
-  },
-  {
-    id: 'xc40',
-    label: 'XC40',
-    files: ['xc40/Models/XC40_Recharge_01_Mesh.fbx'] as const,
-    kind: 'Volvo XC40 Recharge',
-    front: 'z+',
-    credit: {
-      work: 'Volvo XC40 Recharge',
-      by: 'Volvo Cars / Unity Hub',
-      href: 'https://developer.volvocars.com/3d/unity-template/',
-      license: 'Volvo EULA (비상업)',
-      licenseHref:
-        'https://docs.unity3d.com/Packages/com.unity.template.test-track@1.0/license/Third%20Party%20Notices.html',
+      disclaimerHref: 'https://creativecommons.org/licenses/by/4.0/legalcode#s5',
+      changes:
+        '반쪽 메시(도어·후드·시트)를 Z축으로 미러링해 조립하고, *_void·라이트 이펙트 노드를 숨기고, 앞유리를 투과 처리하고, 크기·방향을 맞췄습니다. 도장 스토리에서는 도장 색도 바꿉니다.',
+      trademark:
+        'BMW, X5와 BMW 엠블럼은 BMW AG의 상표입니다. 이 프로젝트는 BMW와 제휴·후원 관계가 없으며, 상표권은 CC BY 4.0에 포함되지 않습니다.',
     },
   },
 ] as const;
