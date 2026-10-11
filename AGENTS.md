@@ -91,8 +91,9 @@ Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/s
 
 ## shadcn Registry (external install)
 
-- Root [registry.json](registry.json) — GitHub Registry for other Next.js apps
-- `pnpm dlx shadcn@latest add minoong/design-monogatari/badge` (after public merge)
+- Root [registry.json](registry.json) — GitHub Registry for other Next.js apps; `packages/ui` is the source, `pnpm registry:sync` generates `registry/` and the theme item (`pnpm registry:check` is in `pnpm verify`)
+- `pnpm dlx shadcn@latest add minoong/design-monogatari/badge` — consumers need a Radix-based shadcn project (`shadcn init -b radix`)
+- Hosted form: `SITE_URL=… pnpm --filter docs registry:build` → `apps/docs/public/r/`
 - Rule: `.claude/rules/shadcn-registry.md`
 
 ## Lint & format

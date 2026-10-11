@@ -1,12 +1,12 @@
 'use client';
 
 import * as LabelPrimitive from '@radix-ui/react-label';
-import { type ComponentProps, forwardRef } from 'react';
+import { type ComponentProps, type ElementRef, forwardRef } from 'react';
 
 import { cn } from '@/lib/utils';
 
 export const Label = forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
+  ElementRef<typeof LabelPrimitive.Root>,
   ComponentProps<typeof LabelPrimitive.Root>
 >(function Label({ className, ...props }, ref) {
   return (

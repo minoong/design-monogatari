@@ -10,8 +10,10 @@
     "//#format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,json,css,mjs,js}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,json,css,mjs,js}\"",
     "check-types": "turbo run check-types",
-    "verify": "turbo run //#format:check lint check-types build",
+    "verify": "turbo run //#format:check //#registry:check lint check-types build",
     "harness:trace": "node .claude/hooks/export-trace.mjs",
+    "registry:sync": "node scripts/sync-registry.mjs",
+    "registry:check": "node scripts/sync-registry.mjs --check",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -20,6 +22,7 @@
     "lint-staged": "^17.6.0",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "shadcn": "4.21.4",
     "turbo": "^2.11.7",
     "typescript": "7.0.2"
   },

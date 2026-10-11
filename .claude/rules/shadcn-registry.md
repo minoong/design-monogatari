@@ -7,22 +7,50 @@ paths:
 
 # shadcn Registry
 
-Distribute components via [GitHub Registries](https://ui.shadcn.com/docs/registry/github). Monorepo apps use `@repo/ui/*`; external apps use `shadcn add`.
+Distribute components via a [shadcn registry](https://ui.shadcn.com/docs/registry). Monorepo apps use `@repo/ui/*`; external apps use `shadcn add`.
+
+**`packages/ui/src` is the only source.** `registry/design-monogatari/*.tsx` and the `theme` item's `cssVars` / `css` in `registry.json` are **generated** by `pnpm registry:sync` (`scripts/sync-registry.mjs`). Never edit them by hand; `pnpm registry:check` (part of `pnpm verify`) fails on drift.
 
 ## When adding a component
 
-1. Implement in `packages/ui/src/<name>.tsx` (monorepo source)
-2. Add `registry/design-monogatari/<name>.tsx` with `@/lib/utils` import (shadcn consumer paths)
-3. Register item in root `registry.json` with `registryDependencies` on `cn` and `theme` when using design tokens
-4. Validate: `pnpm dlx shadcn@latest registry validate minoong/design-monogatari`
-5. **Format/lint**: `registry/` gets Prettier only (not ESLint — `@/lib/utils` paths). Source of truth lint is `packages/ui`.
+1. Implement in `packages/ui/src/<name>.tsx` (monorepo source). Siblings may be imported as `./<other>` only if `<other>` is also a registry item, otherwise the sync fails
+2. Add the item to `registry.json` `items` (`name`, `type: registry:ui`, `title`, `description`, npm `dependencies`, `registryDependencies` with `minoong/design-monogatari/cn` and `/theme` when using tokens, and `files: [{ path: registry/design-monogatari/<name>.tsx, type: registry:ui, target: @ui/<name>.tsx }]`)
+3. Run `pnpm registry:sync`. It rewrites `./lib/cn` to `@/lib/utils` and `./<sibling>` to `@/ui/<sibling>` (the shadcn CLI maps both to the consumer's aliases)
+4. New design tokens go in `packages/ui/src/styles/globals.css` only; the sync carries them to the `theme` item
+5. Verify in a real consumer (below), then `pnpm verify`
+6. **Format/lint**: `registry/` gets Prettier only (not ESLint — `@/lib/utils` paths). Source of truth lint is `packages/ui`
 
 Reference: `packages/ui/src/button.tsx`
 
-## External install (after merge to public main)
+## Why the theme item is generated this way
+
+Found by installing into a fresh app, not by reading docs:
+
+- Palette tokens (`--color-neutral-*`, `--color-blue-*`) belong in `cssVars.light`. In `cssVars.theme` the CLI also emits `--color-color-*`
+- `color-mix(...)` is not recognised as a colour: the CLI skips `--color-overlay`, so `bg-overlay` (Dialog scrim) is never generated. The sync converts it to `rgb(r g b / n%)`
+- `@keyframes` + `--animate-*` must ship in the item, or the Button loading dots do not animate
+
+## Consumer requirements
+
+- Tailwind v4 and a **Radix-based** shadcn project: `shadcn init -b radix`. The default `shadcn init -d` is Base UI (`base-nova`), and the CLI rewrites our Radix `asChild` into Base UI `render=`, which breaks Dialog (`render` does not exist on Radix props)
+- Files land in the consumer's `ui` alias (`@/components/ui/*`) and `@/lib/utils`
+
+## Building and testing the hosted registry
 
 ```bash
-pnpm dlx shadcn@latest add minoong/design-monogatari/badge
+SITE_URL=http://localhost:4102 pnpm --filter docs registry:build   # -> apps/docs/public/r/*.json (gitignored)
+cd apps/docs/public && python3 -m http.server 4102                 # serve it
+# in a Radix-initialised Next app
+pnpm dlx shadcn@latest add http://localhost:4102/r/button.json
 ```
 
-Consumer needs Tailwind v4 + `shadcn init`. Installs to `@/components/ui/*` and `@/lib/utils`.
+`scripts/build-registry.mjs` rewrites `registryDependencies` from `minoong/design-monogatari/<name>` to `${SITE_URL}/r/<name>.json` in a temporary copy only; the committed `registry.json` keeps the GitHub ids so GitHub installs still work. Check in the consumer: `tsc`, `next build`, and that utilities such as `.bg-overlay` and `.animate-button-loader-dot` exist in the compiled CSS.
+
+## External install
+
+```bash
+pnpm dlx shadcn@latest add minoong/design-monogatari/badge        # GitHub registry (public main)
+pnpm dlx shadcn@latest add https://<docs-host>/r/badge.json        # hosted registry (once deployed)
+```
+
+Validate the registry file: `pnpm exec shadcn registry validate registry.json`.
