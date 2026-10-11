@@ -13,6 +13,8 @@ pnpm --filter @repo/ui copy:car
 | `g05/`       | BMW Car IT, [X5 G05 (2018)](https://github.com/bmwcarit/digital-car-3d) | CC BY 4.0 | 아래 고지 참고                  |
 | `studio.hdr` | Poly Haven `studio_small_08` 1k                                         | CC0       | 현재 로컬 전용으로만 사용합니다 |
 
+**배포 빌드에는 이 폴더를 포함하지 않습니다.** `pnpm --filter @repo/ui build-storybook`은 끝에 `scripts/prune-storybook-models.mjs`를 실행해 `storybook-static/models/`를 지우고, 3D 에셋(`.gltf`, `.glb`, `.fbx`, `.hdr`, `.exr`, `.bin`)이 하나라도 남으면 실패합니다. 로컬에서 `copy:car`로 받은 파일이 있어도 정적 빌드 결과물에는 들어가지 않으며, 배포된 Storybook의 3D 스토리는 모델 없음 안내를 보여줍니다.
+
 EULA로 제한된 모델(예: Volvo)은 쓰지 않습니다. Renault / Plus360 컨피규레이터 메쉬와 Vision M NEXT 프린트 데이터도 넣지 않습니다.
 
 ## BMW X5 G05 — CC BY 4.0 고지
