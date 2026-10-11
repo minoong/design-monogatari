@@ -16,7 +16,7 @@
   "devDependencies": {
     "@repo/prettier-config": "workspace:*",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "^17.6.0",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "^0.7.4",
     "turbo": "^2.11.7",
