@@ -40,8 +40,13 @@ storybook-static
 # Playwright MCP
 .playwright-mcp
 
-# Cursor hook session state
+# Agent hook session state
 .cursor/hooks/state/
+.claude/hooks/state/
+
+# Claude Code local overrides
+.claude/settings.local.json
+CLAUDE.local.md
 
 # Local prototype frames (Polestar source; do not commit)
 apps/web/public/exterior/
