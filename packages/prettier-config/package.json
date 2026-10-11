@@ -8,7 +8,7 @@
     ".": "./index.mjs"
   },
   "devDependencies": {
-    "prettier": "3.9.6",
+    "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }
