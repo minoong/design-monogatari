@@ -1,0 +1,17 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "description": "Build the registry JSON (public/r) and the docs app",
+      "env": ["SITE_URL"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/registry.json",
+        "$TURBO_ROOT$/registry/**",
+        "$TURBO_ROOT$/scripts/build-registry.mjs"
+      ],
+      "outputs": ["$TURBO_EXTENDS$", "public/r/**"]
+    }
+  }
+}
