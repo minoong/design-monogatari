@@ -2,8 +2,7 @@
 
 import { Canvas, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
-import { Box3, Group, type Object3D, Vector3 } from 'three';
-import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { Box3, type Object3D, Vector3 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
@@ -12,10 +11,9 @@ import { assembleG05Three } from './assemble-g05-three';
 import { GROUND_Y, STUDIO_CAMERA } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
 import { InspectStage } from './inspect-stage';
-import { SequenceOverlay } from './overlay';
+import { SequenceOverlay, VehicleCredit } from './overlay';
 import { type PaintSwatch, usePaintSelection } from './paints';
 import { ScrollPinStage } from './pin-stage';
-import { prepareFbxMaterials } from './prepare-fbx-materials';
 import { ThreeStudio } from './three-studio';
 import { ThreeYawGroup } from './three-yaw';
 import { useModelAvailable } from './use-model-available';
@@ -40,35 +38,7 @@ function fitObject(root: Object3D, size = 4.2) {
   sitOnGround(root, GROUND_Y);
 }
 
-const EMPTY_PNG =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
-function rewriteFbxTextureUrl(url: string) {
-  const normalized = url.replace(/\\/g, '/');
-  if (/\.(fbx|glb|gltf)$/i.test(normalized)) {
-    return url;
-  }
-  if (
-    /\.(png|jpe?g|tga|tiff?|dds|exr|hdr)$/i.test(normalized) ||
-    normalized.includes('ShaderFX') ||
-    normalized.includes('volvocars.net')
-  ) {
-    return EMPTY_PNG;
-  }
-  return url;
-}
-
 function loadVehicleFile(file: string) {
-  if (file.endsWith('.fbx')) {
-    const loader = new FBXLoader();
-    loader.manager.setURLModifier(rewriteFbxTextureUrl);
-    const slash = file.lastIndexOf('/');
-    if (slash >= 0) {
-      loader.setResourcePath(`/models/${file.slice(0, slash + 1)}`);
-    }
-    return loader.loadAsync(`/models/${file}`);
-  }
-
   return new GLTFLoader().loadAsync(`/models/${file}`).then((gltf) => gltf.scene);
 }
 
@@ -108,21 +78,10 @@ function GltfModel({
           const scene = gltfs[index];
           return scene ? [{ file, scene }] : [];
         });
-        const root = files.some((file) => file.startsWith('g05/'))
-          ? assembleG05Three(parts)
-          : (() => {
-              const group = new Group();
-              for (const { scene } of parts) {
-                group.add(scene);
-              }
-              return group;
-            })();
+        const root = assembleG05Three(parts);
         hideUtilityMeshes(root);
         alignVehicleHeading(root, front);
         fitObject(root);
-        if (files.some((file) => file.endsWith('.fbx'))) {
-          prepareFbxMaterials(root);
-        }
         enableThreeShadows(root);
         if (!oem && paint) {
           applyThreePaint(root, threePaintFromSwatch(paint));
@@ -159,15 +118,13 @@ function GltfModel({
 }
 
 export function ThreeGltfDemo({
-  vehicleId: lockedId,
+  vehicleId = 'x5',
   oem = false,
 }: {
   vehicleId?: VehicleId;
   oem?: boolean;
 } = {}) {
   const progressRef = useRef(0);
-  const [pickedId, setPickedId] = useState<VehicleId>(lockedId ?? 'x5');
-  const vehicleId = lockedId ?? pickedId;
   const vehicle = vehicleById(vehicleId);
   const urls = vehicleUrls(vehicle);
   const available = useModelAvailable(urls[0] ?? '');
@@ -180,7 +137,6 @@ export function ThreeGltfDemo({
       kind={vehicle.kind}
       oem={oem}
       paintId={oem ? undefined : paintId}
-      vehicleId={vehicleId}
       onPaintId={oem ? undefined : setPaintId}
       onResetView={
         oem
@@ -189,7 +145,6 @@ export function ThreeGltfDemo({
             }
           : undefined
       }
-      onVehicleId={lockedId ? undefined : setPickedId}
       onZoomIn={
         oem
           ? () => {
@@ -251,6 +206,7 @@ export function ThreeGltfDemo({
     return (
       <InspectStage
         alt={`${vehicle.kind} 원본 모델입니다. 드래그하면 회전하고 스크롤하면 확대됩니다.`}
+        credit={<VehicleCredit vehicleId={vehicleId} />}
         overlay={overlay}
       >
         {missing}
@@ -262,6 +218,7 @@ export function ThreeGltfDemo({
   return (
     <ScrollPinStage
       alt={`${vehicle.kind} 모델이 스크롤에 따라 돌아갑니다.`}
+      credit={<VehicleCredit vehicleId={vehicleId} />}
       overlay={overlay}
       onProgress={(progress) => {
         progressRef.current = progress;

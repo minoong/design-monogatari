@@ -1,7 +1,10 @@
+'use client';
+
+import { useState } from 'react';
+
 import { Button } from '../../button';
-import { cn } from '../../lib/cn';
 import { PAINT_CHECK, PAINT_SWATCHES, type PaintId } from './paints';
-import { vehicleById, type VehicleId, VEHICLES } from './vehicles';
+import { vehicleById, type VehicleId } from './vehicles';
 
 function PaintCheckIcon() {
   return (
@@ -17,13 +20,75 @@ function PaintCheckIcon() {
   );
 }
 
+/**
+ * CC BY 4.0 notice for the vehicle model (see `vehicles.ts` `credit`). One line is always
+ * visible: source, creator, license, warranty disclaimer, "modified" and the trademark
+ * disclaimer. The full modification and trademark text opens above it on demand and is also in
+ * `.storybook/public/models/README.md`.
+ */
+export function VehicleCredit({ vehicleId }: { vehicleId: VehicleId }) {
+  const { credit } = vehicleById(vehicleId);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="text-muted-foreground space-y-1">
+      {open ? (
+        <div className="max-w-sm space-y-1" id="vehicle-credit-detail">
+          <p>수정: {credit.changes}</p>
+          <p>{credit.trademark}</p>
+        </div>
+      ) : null}
+      <p>
+        <a
+          className="underline underline-offset-2"
+          href={credit.href}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {credit.work}
+        </a>
+        {' · '}
+        {credit.by}
+        {' · '}
+        <a
+          className="underline underline-offset-2"
+          href={credit.licenseHref}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {credit.license}
+        </a>
+        {' · '}
+        <a
+          className="whitespace-nowrap underline underline-offset-2"
+          href={credit.disclaimerHref}
+          rel="noreferrer"
+          target="_blank"
+        >
+          보증 부인
+        </a>
+        {' · 수정됨 · BMW와 무관 · '}
+        <button
+          aria-controls={open ? 'vehicle-credit-detail' : undefined}
+          aria-expanded={open}
+          className="focus-visible:ring-ring rounded-sm whitespace-nowrap underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none"
+          type="button"
+          onClick={() => {
+            setOpen((value) => !value);
+          }}
+        >
+          {open ? '접기' : '고지 전문'}
+        </button>
+      </p>
+    </div>
+  );
+}
+
 export function SequenceOverlay({
   engine,
   kind,
   paintId,
   onPaintId,
-  vehicleId,
-  onVehicleId,
   oem = false,
   onResetView,
   onZoomIn,
@@ -33,22 +98,14 @@ export function SequenceOverlay({
   kind: string;
   paintId?: PaintId;
   onPaintId?: (id: PaintId) => void;
-  vehicleId?: VehicleId;
-  onVehicleId?: (id: VehicleId) => void;
   oem?: boolean;
   onResetView?: () => void;
   onZoomIn?: () => void;
   onZoomOut?: () => void;
 }) {
-  const credit = vehicleId ? vehicleById(vehicleId).credit : undefined;
   const showPaint = Boolean(paintId && onPaintId && !oem);
   const inspect = Boolean(onResetView && onZoomIn && onZoomOut);
-  const caption =
-    oem && vehicleId === 'xc40'
-      ? `${kind} · 도장 맵이 없어 Glacier Silver로 복원합니다.`
-      : oem
-        ? `${kind} · 원본 머티리얼입니다.`
-        : `${kind} · 도장 hex는 테마와 무관해요.`;
+  const caption = oem ? `${kind} · 원본 머티리얼입니다.` : `${kind} · 도장 hex는 테마와 무관해요.`;
 
   return (
     <>
@@ -72,59 +129,6 @@ export function SequenceOverlay({
             </Button>
           </div>
         </div>
-      ) : null}
-      {vehicleId && onVehicleId ? (
-        <div className="mt-3" role="radiogroup" aria-label="차종">
-          <p className="text-muted-foreground text-caption mb-2">차종</p>
-          <div className="flex flex-wrap gap-2">
-            {VEHICLES.map((vehicle) => {
-              const selected = vehicle.id === vehicleId;
-
-              return (
-                <button
-                  key={vehicle.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  className={cn(
-                    'text-caption rounded-md px-3 py-1.5',
-                    selected
-                      ? 'bg-foreground text-background'
-                      : 'text-foreground ring-border ring-1',
-                  )}
-                  onClick={() => {
-                    onVehicleId(vehicle.id);
-                  }}
-                >
-                  {vehicle.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
-      {credit ? (
-        <p className="text-muted-foreground text-caption mt-2 line-clamp-2">
-          <a
-            className="underline underline-offset-2"
-            href={credit.href}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {credit.work}
-          </a>
-          {' · '}
-          {credit.by}
-          {' · '}
-          <a
-            className="underline underline-offset-2"
-            href={credit.licenseHref}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {credit.license}
-          </a>
-        </p>
       ) : null}
       {showPaint && paintId && onPaintId ? (
         <div className="mt-3" role="radiogroup" aria-label="도장">
