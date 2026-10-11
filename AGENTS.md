@@ -23,16 +23,16 @@ Alternative libraries require **AskUserQuestion** + user approval (see `.claude/
 
 ## Claude Code context ([docs](https://code.claude.com/docs/ko/memory))
 
-| Layer      | Location                                   | Role                                                                     |
-| ---------- | ------------------------------------------ | ------------------------------------------------------------------------ |
-| CLAUDE.md  | repo root + `apps/web`, `packages/ui`      | Project instructions. Nested files import their folder's `AGENTS.md`     |
-| Rules      | `.claude/rules/*.md`                       | Always-on, or scoped with `paths:` frontmatter                           |
-| Agent loop | `.claude/rules/agent-loop.md`              | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                   |
-| Hooks      | `.claude/settings.json` → `.claude/hooks/` | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop) |
-| Skills     | `.agents/skills/`                          | Deep workflows. `.claude/skills/<name>` are symlinks to them             |
-| Subagents  | `.claude/agents/`                          | Isolated verify (`ui-verifier`)                                          |
-| MCP        | `.mcp.json`                                | `lucide-animated`. Playwright is defined inline in `ui-verifier` only    |
-| Commands   | _(none)_                                   | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                  |
+| Layer      | Location                                   | Role                                                                                                      |
+| ---------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| CLAUDE.md  | repo root + `apps/web`, `packages/ui`      | Project instructions. Nested files import their folder's `AGENTS.md`                                      |
+| Rules      | `.claude/rules/*.md`                       | Always-on, or scoped with `paths:` frontmatter                                                            |
+| Agent loop | `.claude/rules/agent-loop.md`              | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                    |
+| Hooks      | `.claude/settings.json` → `.claude/hooks/` | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop)                                  |
+| Skills     | `.agents/skills/`                          | Deep workflows. `.claude/skills/<name>` are symlinks to them                                              |
+| Subagents  | `.claude/agents/`                          | Isolated verify (`ui-verifier`)                                                                           |
+| MCP        | `.mcp.json`                                | `lucide-animated`, `storybook` (needs the dev server). Playwright is defined inline in `ui-verifier` only |
+| Commands   | _(none)_                                   | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                                                   |
 
 Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`DESIGN.md`). Project rule: `.claude/rules/design.md`. Do not copy skills into `.claude/skills/` — symlink them from `.agents/skills/`.
 
