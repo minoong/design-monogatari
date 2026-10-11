@@ -6,9 +6,9 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json,css,mjs,js}\"",
-    "//#format:check": "prettier --check \"**/*.{ts,tsx,md,json,css,mjs,js}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json,css,mjs,js}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md,mdx,json,css,mjs,js}\"",
+    "//#format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,json,css,mjs,js}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,json,css,mjs,js}\"",
     "check-types": "turbo run check-types",
     "verify": "turbo run //#format:check lint check-types build",
     "prepare": "husky"

@@ -10,7 +10,7 @@ export default {
     'prettier --write',
     (files) => `pnpm --filter web exec eslint --fix --max-warnings 0 ${quoteFiles(files)}`,
   ],
-  'apps/docs/**/*.{ts,tsx,js}': [
+  'apps/docs/**/*.{ts,tsx,js,mjs}': [
     'prettier --write',
     (files) => `pnpm --filter docs exec eslint --fix --max-warnings 0 ${quoteFiles(files)}`,
   ],
@@ -19,5 +19,5 @@ export default {
     (files) =>
       `pnpm --filter @repo/eslint-config exec eslint --fix --max-warnings 0 ${quoteFiles(files)}`,
   ],
-  '*.{json,md,css}': 'prettier --write',
+  '*.{json,md,mdx,css}': 'prettier --write',
 };
