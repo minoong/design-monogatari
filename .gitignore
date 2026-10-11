@@ -41,7 +41,6 @@ storybook-static
 .playwright-mcp
 
 # Agent hook session state
-.cursor/hooks/state/
 .claude/hooks/state/
 
 # Claude Code local overrides

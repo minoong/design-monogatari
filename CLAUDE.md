@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-`AGENTS.md` (root, `apps/web`, `packages/ui`) is the shared agent index also used by Cursor and other tools. Claude Code does not load the root one automatically when this file exists — this file and `.claude/` carry what Claude needs. `apps/web/CLAUDE.md` and `packages/ui/CLAUDE.md` import their folder's `AGENTS.md`.
+`AGENTS.md` (root, `apps/web`, `packages/ui`) holds the agent index and folder notes. Claude Code does not load the root one automatically when this file exists — this file and `.claude/` carry what Claude needs. `apps/web/CLAUDE.md` and `packages/ui/CLAUDE.md` import their folder's `AGENTS.md`.
 
 ## Commands
 
@@ -36,11 +36,10 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 
 ## Claude Code harness (`.claude/`, `.mcp.json`)
 
-- **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, …). Ported from `.cursor/rules/*.mdc`.
+- **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, …).
 - **Skills** `.claude/skills/<name>` are symlinks to `.agents/skills/<name>` (the `npx skills add` install root, tracked by `skills-lock.json`). Add new skills under `.agents/skills/` and symlink them; don't copy.
 - **Subagent** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs Storybook light/dark checks and `pnpm verify`. The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` for the main session.
 - **Hooks** (`.claude/settings.json` → `.claude/hooks/`): `SessionStart` injects DESIGN.md pointers; `ui-verify.mjs` tracks UI edits via `PostToolUse` and blocks `Stop` / `SubagentStop` until Playwright and `pnpm verify` have run (state in gitignored `.claude/hooks/state/`).
-- `.cursor/` still exists for Cursor users; when changing a rule, skill, or hook, update both or tell the user they've diverged.
 
 ## Rules that are easy to violate
 

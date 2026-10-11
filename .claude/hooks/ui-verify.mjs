@@ -16,7 +16,7 @@ const STATE_PATH = join(STATE_DIR, 'ui-verify.json');
 const UI_ROOT = /(?:^|\/)(?:packages\/ui\/|apps\/(?:web|docs)\/|registry\/)/;
 const UI_FILE = /(?:^|\/)(?:DESIGN\.md|registry\.json)$/;
 const UI_EXT = /\.(?:tsx|css)$/;
-const SKIP_DOC = /(?:\/(?:AGENTS|CLAUDE)\.md$|\.mdc?$|\/SKILL\.md$)/;
+const SKIP_DOC = /(?:\/(?:AGENTS|CLAUDE)\.md$|\.md$|\/SKILL\.md$)/;
 const EDIT_TOOLS = new Set(['Write', 'Edit', 'MultiEdit', 'NotebookEdit']);
 
 async function readStdin() {
@@ -72,7 +72,6 @@ function isVisualUiPath(filePath) {
   }
   if (
     posix.includes('/.claude/') ||
-    posix.includes('/.cursor/') ||
     posix.includes('/node_modules/') ||
     posix.includes('/.git/') ||
     posix.includes('/.agents/')

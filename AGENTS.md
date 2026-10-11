@@ -19,22 +19,22 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 
 UI 모션은 Motion. 스크롤·핀·스크럽은 GSAP (`ScrollImageSequence`, 견적 외장, Storybook 도장 yaw). Storybook 원본 검사는 OrbitControls. 같은 요소에 Motion과 GSAP를 섞지 마세요. WebGL 캔버스에 Motion을 넣지 마세요. `three`는 Storybook 전용 — `apps/web`·`apps/docs`에서 import 금지. 세부: `packages/ui/AGENTS.md`, [DESIGN.md](DESIGN.md).
 
-Alternative libraries require **AskQuestion** + user approval (see `.cursor/rules/stack-guardrails.mdc`).
+Alternative libraries require **AskUserQuestion** + user approval (see `.claude/rules/stack-guardrails.md`).
 
-## Cursor context ([docs](https://cursor.com/docs/context/rules))
+## Claude Code context ([docs](https://code.claude.com/docs/ko/memory))
 
-| Layer         | Location                       | Role                                                                                                   |
-| ------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| AGENTS.md     | repo root + packages           | Short index — nested files win in that folder ([docs](https://cursor.com/docs/context/rules#agentsmd)) |
-| Project Rules | `.cursor/rules/*.mdc`          | `alwaysApply` / `globs` / intelligent `description`                                                    |
-| Agent loop    | `.cursor/rules/agent-loop.mdc` | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                 |
-| Hooks         | `.cursor/hooks.json`           | Loop scripts ([docs](https://cursor.com/docs/agent/hooks))                                             |
-| Skills        | `.agents/skills/`              | Deep workflows ([docs](https://cursor.com/docs/context/skills))                                        |
-| Subagents     | `.cursor/agents/`              | Isolated verify ([docs](https://cursor.com/docs/subagents))                                            |
-| MCP           | `.cursor/mcp.json`             | Playwright + lucide-animated ([docs](https://cursor.com/docs/context/mcp))                             |
-| Commands      | _(none)_                       | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                                                |
+| Layer      | Location                                   | Role                                                                     |
+| ---------- | ------------------------------------------ | ------------------------------------------------------------------------ |
+| CLAUDE.md  | repo root + `apps/web`, `packages/ui`      | Project instructions. Nested files import their folder's `AGENTS.md`     |
+| Rules      | `.claude/rules/*.md`                       | Always-on, or scoped with `paths:` frontmatter                           |
+| Agent loop | `.claude/rules/agent-loop.md`              | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                   |
+| Hooks      | `.claude/settings.json` → `.claude/hooks/` | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop) |
+| Skills     | `.agents/skills/`                          | Deep workflows. `.claude/skills/<name>` are symlinks to them             |
+| Subagents  | `.claude/agents/`                          | Isolated verify (`ui-verifier`)                                          |
+| MCP        | `.mcp.json`                                | `lucide-animated`. Playwright is defined inline in `ui-verifier` only    |
+| Commands   | _(none)_                                   | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                  |
 
-Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`@DESIGN.md`). Project rule: `.cursor/rules/design.mdc`. Do not copy skills into `.cursor/skills/` — `.agents/skills/` is already a project skill root.
+Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`DESIGN.md`). Project rule: `.claude/rules/design.md`. Do not copy skills into `.claude/skills/` — symlink them from `.agents/skills/`.
 
 ## Skill catalog
 
@@ -54,8 +54,8 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 | Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component                     |
 | Feature-Sliced    | `.agents/skills/feature-sliced-design/`       | `apps/web`·`apps/docs` 구조 (UI 패키지 제외) |
 | lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치                   |
-| Playwright MCP    | `.cursor/mcp.json` `playwright`               | UI 변경 후 라이트/다크 자동 확인             |
-| UI verifier       | `.cursor/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
+| Playwright MCP    | `.claude/agents/ui-verifier.md` (inline)      | UI 변경 후 라이트/다크 자동 확인             |
+| UI verifier       | `.claude/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
 | Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify                   |
 | Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤      |
 
@@ -83,17 +83,17 @@ Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/s
 
 ## Tailwind CSS
 
-- Visual spec: [DESIGN.md](DESIGN.md) — rule `.cursor/rules/design.mdc`, session hook `.cursor/hooks.json`
+- Visual spec: [DESIGN.md](DESIGN.md) — rule `.claude/rules/design.md`, session hook `.claude/settings.json`
 - Shared theme: `@repo/ui/styles.css` — design tokens in `@theme`
 - Apps: `@import "@repo/ui/styles.css"` + `@source` for app TSX
 - Class merge: `@repo/ui/cn`
-- Rule: `.cursor/rules/styling.mdc`
+- Rule: `.claude/rules/styling.md`
 
 ## shadcn Registry (external install)
 
 - Root [registry.json](registry.json) — GitHub Registry for other Next.js apps
 - `pnpm dlx shadcn@latest add minoong/design-monogatari/badge` (after public merge)
-- Rule: `.cursor/rules/shadcn-registry.mdc`
+- Rule: `.claude/rules/shadcn-registry.md`
 
 ## Lint & format
 
@@ -112,7 +112,7 @@ Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/s
 - Editor: `.editorconfig`, `.vscode/settings.json` (format on save)
 - Hooks: husky pre-commit → lint-staged
 - CI: `.github/workflows/ci.yml` → `pnpm verify`
-- Rule: `.cursor/rules/code-quality.mdc`
+- Rule: `.claude/rules/code-quality.md`
 
 ## This repository
 
@@ -123,16 +123,16 @@ packages/*-config       shared eslint / typescript / prettier
 ```
 
 - `@repo/ui` imports: `@repo/ui/button` (subpath, no barrels)
-- Apps: Next `app/` re-exports FSD `src/_app` + `src/_pages`. Rule: `.cursor/rules/fsd-apps.mdc`
+- Apps: Next `app/` re-exports FSD `src/_app` + `src/_pages`. Rule: `.claude/rules/fsd-apps.md`
 
 ## Verification (definition of done)
 
 Do not wait for the user to ask. After UI / token / Storybook changes:
 
-1. Playwright MCP (`.cursor/mcp.json` `playwright`) — Storybook light **and** dark. Prefer subagent `.cursor/agents/ui-verifier.md`.
+1. Delegate to subagent `.claude/agents/ui-verifier.md` (Playwright MCP inline) — Storybook light **and** dark.
 2. `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`
 
-A `stop` hook (`.cursor/hooks/ui-verify.mjs`) continues the agent if this is skipped. `postToolUse` nudges mid-loop. `subagentStop` continues if a child edited UI and skipped verify.
+A `Stop` hook (`.claude/hooks/ui-verify.mjs`) blocks finishing if this is skipped. `PostToolUse` nudges mid-loop. `SubagentStop` holds back a subagent that edited UI and skipped verify.
 
 Do not commit or push unless the user asks.
 

@@ -79,13 +79,13 @@ git status --porcelain
 
 ## 범위 (이 monorepo)
 
-| scope         | 대상                                                         |
-| ------------- | ------------------------------------------------------------ |
-| `ui`          | `packages/ui`                                                |
-| `web`, `docs` | `apps/*`                                                     |
-| `turbo`       | `turbo.json`, Turborepo                                      |
-| `agent`       | `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.cursor/`, `.agents/` |
-| `config`      | eslint/typescript/prettier 공유 설정                         |
+| scope         | 대상                                             |
+| ------------- | ------------------------------------------------ |
+| `ui`          | `packages/ui`                                    |
+| `web`, `docs` | `apps/*`                                         |
+| `turbo`       | `turbo.json`, Turborepo                          |
+| `agent`       | `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.agents/` |
+| `config`      | eslint/typescript/prettier 공유 설정             |
 
 ## Breaking change
 
