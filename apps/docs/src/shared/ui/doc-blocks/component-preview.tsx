@@ -2,7 +2,7 @@ import { ServerCodeBlock } from '@fumadocs/base-ui/components/codeblock.rsc';
 import { Tab, Tabs } from '@fumadocs/base-ui/components/tabs';
 import type { ComponentType } from 'react';
 
-import { readRepoFile } from '@/shared/lib/repo-file';
+import { readExampleSource } from '@/shared/lib/repo-file';
 
 const EXAMPLE_NAME = /^[a-z0-9-]+\/[a-z0-9-]+$/;
 
@@ -23,7 +23,7 @@ export async function ComponentPreview({ name }: ComponentPreviewProps) {
   const { default: Example } = (await import(`@/_examples/${name}`)) as {
     default: ComponentType;
   };
-  const source = await readRepoFile(`apps/docs/src/_examples/${name}.tsx`);
+  const source = await readExampleSource(name);
 
   return (
     <Tabs items={['미리보기', '코드']}>
@@ -31,7 +31,9 @@ export async function ComponentPreview({ name }: ComponentPreviewProps) {
         {/* data-ds-preview: 문서 크롬의 반경 보정(globals.css)에서 제외해 컴포넌트 본래 모양을 보여 준다 */}
         <div
           data-ds-preview
-          className="bg-background text-foreground flex min-h-40 flex-wrap items-center justify-center gap-3 rounded-md p-6"
+          // not-prose 는 typography 플러그인의 클래스라 tailwindcss 린트가 모른다. 문서 본문의 p, ul 여백이 프리뷰로 새는 것을 막는다
+          // eslint-disable-next-line tailwindcss/no-custom-classname
+          className="not-prose bg-background text-foreground flex min-h-40 flex-wrap items-center justify-center gap-3 rounded-md p-6"
         >
           <Example />
         </div>

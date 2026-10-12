@@ -1,0 +1,68 @@
+---
+title: Field
+description: 레이블, 입력 칸, 오류 문구를 한 묶음으로 쌓는 세 부품이에요.
+---
+
+<ComponentPreview name="field/basic" />
+
+## 설치
+
+<InstallTabs name="field" />
+
+`Field`는 [`Label`](/docs/components/label)을 감싸서 만들어요. 설치하면 `Label`도 함께 들어와요. 입력 칸은 [`Input`](/docs/components/input)을 따로 설치하세요.
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+</Callout>
+
+## 사용법
+
+```tsx
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+
+export function Example({ error }: { error?: string }) {
+  return (
+    <Field>
+      <FieldLabel htmlFor="name">이름</FieldLabel>
+      <Input
+        id="name"
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? 'name-error' : undefined}
+      />
+      <FieldError id="name-error">{error}</FieldError>
+    </Field>
+  );
+}
+```
+
+`Field`는 연결을 자동으로 만들어 주지 않아요. 두 쌍을 직접 이어야 해요.
+
+- `FieldLabel`의 `htmlFor` ↔ `Input`의 `id`
+- `Input`의 `aria-describedby` ↔ `FieldError`의 `id`
+
+## 예시
+
+### 오류
+
+입력 칸을 비운 채 벗어나면 오류가 나타나요. `FieldError`는 내용이 없으면 아무것도 렌더하지 않아서, 오류가 없을 때 자리를 차지하지 않아요.
+
+<ComponentPreview name="field/error" />
+
+## API 레퍼런스
+
+| 컴포넌트     | 렌더하는 요소 | 설명                                                                                              |
+| ------------ | ------------- | ------------------------------------------------------------------------------------------------- |
+| `Field`      | `div`         | 세로로 쌓고 간격 8px, 너비 100%. `div`의 모든 속성을 받아요.                                      |
+| `FieldLabel` | `label`       | [`Label`](/docs/components/label)과 같아요. `htmlFor`를 받아요.                                   |
+| `FieldError` | `p`           | **`id`가 필수**예요. `children`이 비면 `null`을 돌려줘요. `role="alert"`, `destructive` 색이에요. |
+
+## 접근성
+
+- `FieldError`는 `role="alert"`라서 나타나는 순간 스크린 리더가 바로 읽어요. 입력 중에 계속 바뀌는 문구에는 쓰지 마세요. 벗어나거나 제출할 때만 보여 주세요.
+- 오류 색만으로 의미를 전하지 않도록 문구는 항상 무엇이 잘못됐는지 글자로 말해야 해요.
+- `aria-invalid`는 오류일 때만 켜세요. `false`를 넣기보다 속성을 빼는 편이 깔끔해요.
+
+## 소스
+
+<RepoFile path="packages/ui/src/field.tsx" />

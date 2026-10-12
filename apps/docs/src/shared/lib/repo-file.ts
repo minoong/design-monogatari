@@ -50,3 +50,13 @@ export async function readRepoFile(file: string, lines?: string): Promise<RepoFi
 
   return { code, lang: LANGUAGES[path.extname(resolved)] ?? 'text' };
 }
+
+/**
+ * 예시 파일의 표시용 소스. 포털로 열리는 요소(DialogContent 등)는 프리뷰 영역 밖에 그려져서
+ * 예시 파일에 문서 전용 `data-ds-preview` 속성이 들어가는데, 사용자가 복사해 갈 코드에는
+ * 없어야 하므로 코드 탭과 Markdown 출력에서는 뺀다.
+ */
+export async function readExampleSource(name: string): Promise<RepoFileContent> {
+  const file = await readRepoFile(`apps/docs/src/_examples/${name}.tsx`);
+  return { ...file, code: file.code.replace(/\s+data-ds-preview(?=[\s/>])/g, '') };
+}

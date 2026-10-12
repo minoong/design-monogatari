@@ -1,0 +1,105 @@
+---
+title: AnimatedAmount
+description: 숫자가 바뀔 때 자릿수가 굴러가며 바뀌는 금액 표시예요. 원화 형식이 기본이에요.
+---
+
+<ComponentPreview name="animated-amount/basic" />
+
+## 설치
+
+<InstallTabs name="animated-amount" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+</Callout>
+
+## 사용법
+
+```tsx
+import { AnimatedAmount } from '@/components/ui/animated-amount';
+
+export function Example({ total }: { total: number }) {
+  return <AnimatedAmount value={total} className="text-title font-semibold" />;
+}
+```
+
+`value`가 바뀔 때마다 자릿수별로 굴러가요. 처음 나타날 때는 애니메이션 없이 바로 보여 줘요(`animate`로 끌 수도 있어요). 소수 자릿수는 `format`을 따라요. 기본은 정수라서 반올림해요.
+
+## 예시
+
+### 접두사, 접미사, 형식
+
+기본은 `ko-KR`로 정수에 `원`이에요. `prefix`, `suffix`로 앞뒤 글자를, `format`으로 `Intl.NumberFormat` 옵션을 바꿀 수 있어요.
+
+<ComponentPreview name="animated-amount/affixes" />
+
+### 화면에 들어올 때 시작
+
+`inView`를 켜면 요소가 화면에 보일 때까지 숨겨 두었다가 0에서 값까지 굴러가요. 한 번만 실행되고(`inViewOnce`), 스크롤 위치 기준은 `inViewAmount`, `inViewMargin`, `inViewRoot`로 조절해요.
+
+```tsx
+<AnimatedAmount value={52_900_000} inView />
+```
+
+## API 레퍼런스
+
+<PropsTable
+  file="packages/ui/src/animated-amount.tsx"
+  name="AnimatedAmountProps"
+  include={[
+    'value',
+    'animate',
+    'prefix',
+    'suffix',
+    'locales',
+    'format',
+    'reserveWidth',
+    'inView',
+    'inViewOnce',
+    'inViewAmount',
+    'inViewMargin',
+    'inViewRoot',
+    'className',
+  ]}
+  defaults={{
+    animate: 'true',
+    suffix: '"원"',
+    locales: '"ko-KR"',
+    format: '정수 (소수 자릿수 0)',
+    reserveWidth: 'true',
+    inView: 'false',
+    inViewOnce: 'true',
+    inViewAmount: '"some"',
+  }}
+  descriptions={{
+    value: '보여 줄 숫자예요. format의 소수 자릿수(기본 0)까지 반올림해요.',
+    animate: '값이 바뀔 때 굴러가는 애니메이션을 쓸지.',
+    prefix: '숫자 앞에 붙는 글자.',
+    suffix: '숫자 뒤에 붙는 글자.',
+    locales: '숫자 표기 로케일 (Intl).',
+    format: 'Intl.NumberFormat 옵션. 소수나 퍼센트를 보여 줄 때 바꿔요.',
+    reserveWidth:
+      '현재 값의 너비를 미리 잡아 두어 굴러가는 동안 숫자 칸이 흔들리지 않게 해요. 자릿수가 달라지면 전체 너비는 바뀌어요.',
+    inView: '화면에 들어올 때까지 숨겼다가 그때 시작해요.',
+    inViewOnce: 'inView를 처음 한 번만 적용할지.',
+    inViewAmount: '요소가 얼마나 보여야 들어온 것으로 칠지 ("some", "all", 0~1).',
+    inViewMargin: '보이는 영역의 여백 (IntersectionObserver rootMargin).',
+    inViewRoot: '스크롤 기준 요소. 생략하면 화면이에요.',
+    className: '바깥 `span`에 붙는 클래스.',
+  }}
+/>
+
+## 접근성
+
+숫자는 [NumberFlow](https://number-flow.barvian.me/)로 그려요. 스크린 리더에는 이렇게 노출돼요 (Chrome 접근성 트리로 확인).
+
+- 숫자는 `image` 역할에 `aria-label="1,250,000"`처럼 **쉼표가 들어간 최종 값**이 이름이에요. 값이 바뀌면 이름도 바뀌어요.
+- 단위(`원`)와 `prefix`, `suffix`는 숫자 밖의 일반 텍스트라서, 스크린 리더가 "이미지 1,250,000", "원"을 **따로** 읽을 수 있어요.
+- 폭을 잡아 두는 보이지 않는 글자는 `aria-hidden`이라 중복해서 읽히지 않아요.
+- `prefers-reduced-motion`을 켜면 굴러가는 애니메이션 없이 값이 바로 바뀌어요.
+
+금액이 화면의 핵심이라면 값이 바뀔 때 알려야 하는지 직접 판단하세요. 바뀐 금액을 알려야 하면 바깥에 `aria-live="polite"` 영역을 두고 "1,250,000원"처럼 단위까지 한 문장으로 넣는 방법을 권해요.
+
+## 소스
+
+<RepoFile path="packages/ui/src/animated-amount.tsx" lines="20-100" />
