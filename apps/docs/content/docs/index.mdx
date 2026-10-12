@@ -1,0 +1,38 @@
+---
+title: 소개
+description: Radix, Tailwind, Motion으로 만든 디자인 시스템과 shadcn 레지스트리 문서예요.
+---
+
+design-monogatari는 Apple에서 영감을 받은 디자인 시스템이에요. 조용한 크롬에 강조색은 Action Blue 하나만 쓰고, 폰트는 Geist예요. 접근성과 동작이 필요한 곳(Dialog, Label, Slot)은 **Radix Primitives**를 쓰고, 스타일은 **Tailwind CSS v4**와 자체 토큰으로 만들어요. 움직임은 UI에 **Motion**, 스크롤 연동에 **GSAP**을 나눠 써요.
+
+## 지금 읽을 수 있는 것
+
+이 사이트는 골격 단계예요. 아래는 순서대로 채워 가요.
+
+| 영역                                        | 상태                                             |
+| ------------------------------------------- | ------------------------------------------------ |
+| 결정 기록                                   | 문서 프레임워크를 고른 이유와 측정 결과가 있어요 |
+| 파운데이션 (색, 타이포그래피, 라운딩, 보더) | 준비 중                                          |
+| 컴포넌트 (Button, Dialog, Field 등)         | 준비 중                                          |
+| Claude Code 에이전틱 개발 워크플로우        | 준비 중                                          |
+
+## 빠른 설치
+
+컴포넌트는 shadcn 레지스트리로 배포해요.
+
+```bash
+pnpm dlx shadcn@latest add minoong/design-monogatari/badge
+```
+
+설치하려면 두 가지가 필요해요.
+
+- **Tailwind CSS v4**
+- **Radix 기반 shadcn 프로젝트**: `shadcn init -b radix`로 초기화해야 해요. 요즘 `shadcn init -d`의 기본값은 Base UI인데, 이때 CLI가 Radix의 `asChild`를 Base UI의 `render=`로 바꿔서 `Dialog`가 깨져요.
+
+## 에이전트가 읽는 방법
+
+문서를 Claude Code 같은 에이전트가 읽을 수 있게 세 가지 경로를 열어 뒀어요.
+
+- [`/llms.txt`](/llms.txt): 페이지 목록
+- [`/llms-full.txt`](/llms-full.txt): 모든 페이지 본문
+- 각 페이지 주소 뒤에 `.md`를 붙이면 그 페이지의 Markdown 본문이 나와요. 페이지 위쪽의 **Copy Markdown** 버튼도 같은 내용을 복사해요.

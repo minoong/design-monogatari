@@ -14,7 +14,7 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 | UI motion         | Framer Motion                                  | active         |
 | Scroll animation  | GSAP + ScrollTrigger                           | active         |
 | Storybook 3D      | Three.js + R3F (`@repo/ui` devDependencies)    | Storybook only |
-| Docs              | Storybook (`@repo/ui`)                         | active         |
+| Docs              | Storybook (`@repo/ui`), Fumadocs (`apps/docs`) | active         |
 | ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active         |
 
 UI 모션은 Motion. 스크롤·핀·스크럽은 GSAP (`ScrollImageSequence`, 견적 외장, Storybook 도장 yaw). Storybook 원본 검사는 OrbitControls. 같은 요소에 Motion과 GSAP를 섞지 마세요. WebGL 캔버스에 Motion을 넣지 마세요. `three`는 Storybook 전용 — `apps/web`·`apps/docs`에서 import 금지. 세부: `packages/ui/AGENTS.md`, [DESIGN.md](DESIGN.md).
