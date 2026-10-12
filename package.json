@@ -14,6 +14,7 @@
     "harness:trace": "node .claude/hooks/export-trace.mjs",
     "registry:sync": "node scripts/sync-registry.mjs",
     "registry:check": "node scripts/sync-registry.mjs --check",
+    "registry:consumer-test": "node scripts/test-registry-consumer.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

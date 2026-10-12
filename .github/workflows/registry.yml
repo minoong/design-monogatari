@@ -1,0 +1,82 @@
+name: Registry consumer
+
+# 레지스트리를 "소비자처럼" 설치해 본다. pnpm verify 는 모노레포 안에서의 동작만 보므로,
+# `shadcn add`로 설치했을 때 깨지는 결함(테마 누락, 의존성 URL 등)은 여기서만 잡힌다.
+# 몇 분 걸리고 네트워크를 써서 메인 CI(ci.yml)와 분리했다.
+on:
+  pull_request:
+    paths: &paths
+      - registry.json
+      - registry/**
+      - packages/ui/src/**
+      - scripts/sync-registry.mjs
+      - scripts/build-registry.mjs
+      - scripts/test-registry-consumer.mjs
+      - .github/workflows/registry.yml
+  push:
+    branches: [main]
+    paths: *paths
+  schedule:
+    # 매일 04:17 KST. 외부 도구(create-next-app, shadcn 의존성)가 바뀌어 깨지는 것을 잡는다
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: registry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # PR의 변경을 그대로 검증한다: 빌드한 JSON을 로컬에서 서빙해 새 앱에 설치
+  hosted:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.23.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate registry.json
+        run: pnpm exec shadcn registry validate registry.json
+
+      - name: Check generated files
+        run: pnpm registry:check
+
+      - name: Install every item into a fresh Next app
+        run: pnpm registry:consumer-test
+
+  # 실제 사용자가 하는 방식: GitHub 기본 브랜치에서 설치한다.
+  # 의존성의 ref 는 `#ref`를 따라가지 않아서 PR 브랜치는 검증할 수 없다. 병합 뒤와 야간에만 돈다.
+  github:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.23.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install every item from GitHub into a fresh Next app
+        run: node scripts/test-registry-consumer.mjs --source github
