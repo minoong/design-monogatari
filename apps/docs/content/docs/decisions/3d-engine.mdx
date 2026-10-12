@@ -34,7 +34,7 @@ description: Babylon.js로 바꾸는 안을 측정해 보고 Three.js를 그대�
 
 ## 되돌릴 조건
 
-3D 코드를 별도 패키지(`@repo/vehicle-3d`)로 옮겨서 앱은 그 패키지의 작은 API만 쓰게 할 계획이에요(다음 작업). 그러면 나중에 엔진을 바꿔야 할 때 패키지 안쪽만 바꾸면 돼요.
+3D 코드는 별도 패키지 `@repo/vehicle-3d`에 있어요. `three`와 `@react-three/fiber`는 이 패키지의 의존성이고, 디자인 시스템(`@repo/ui`)과 앱은 작은 API(`viewer`, `vehicles`, `paints`, `constants`)만 써요. 이전에는 "three는 Storybook 전용, 앱에서 import 금지"였는데, 견적 앱이 3D를 쓰려면 이 규칙을 바꿔야 해서 **'three는 `@repo/vehicle-3d`에만'**으로 완화했어요. 나중에 엔진을 바꿔야 하면 패키지 안쪽만 바꾸면 돼요. 모델 파일(약 41MB)은 패키지에 싣지 않고 호스트(Storybook, 앱)가 `/models/`로 제공해요.
 
 ## 라이선스 메모
 

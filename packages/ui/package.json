@@ -16,9 +16,9 @@
     "copy:car": "bash scripts/copy-storybook-car.sh"
   },
   "devDependencies": {
-    "@react-three/fiber": "^9.8.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/vehicle-3d": "workspace:*",
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/addon-mcp": "^10.6.1",
     "@storybook/react-vite": "^10.6.1",
@@ -26,11 +26,9 @@
     "@types/node": "26.6.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@types/three": "^0.186.0",
     "eslint": "10.12.0",
     "storybook": "^10.6.1",
     "tailwindcss": "^4.3.3",
-    "three": "^0.186.1",
     "typescript": "7.0.2",
     "vite": "^8.3.4"
   },

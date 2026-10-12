@@ -29,6 +29,6 @@ When creating or editing UI, CSS tokens, stories, or the shadcn registry:
 
 ## Don't
 
-- Hardcode hex in `packages/ui/src/*.tsx` or `apps/**/*.tsx` (Storybook 3D chips in `src/storybook/scroll-3d/` are the DESIGN.md exception)
+- Hardcode hex in `packages/ui/src/*.tsx` or `apps/**/*.tsx` (the OEM paint chips in `packages/vehicle-3d/src/paints.ts` are the DESIGN.md exception)
 - Use `bg-foreground` as the default primary button
 - Leave Storybook on a white canvas while OS dark tokens are active

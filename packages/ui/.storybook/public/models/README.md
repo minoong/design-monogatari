@@ -19,7 +19,7 @@ EULA로 제한된 모델(예: Volvo)은 쓰지 않습니다. Renault / Plus360 �
 
 ## BMW X5 G05 — CC BY 4.0 고지
 
-CC BY 4.0 §3(a) 요건에 맞춘 고지입니다. Storybook 3D 스토리 화면 하단에도 같은 내용이 표시됩니다. 제작자·원본·라이선스·보증 부인 링크와 "수정됨 · BMW와 무관"은 항상 한 줄로 보이고, 수정 사항과 상표 전문은 '고지 전문' 버튼으로 펼칩니다(`src/storybook/scroll-3d/vehicles.ts`의 `credit`, `overlay.tsx`의 `VehicleCredit`).
+CC BY 4.0 §3(a) 요건에 맞춘 고지입니다. Storybook 3D 스토리 화면 하단에도 같은 내용이 표시됩니다. 제작자·원본·라이선스·보증 부인 링크와 "수정됨 · BMW와 무관"은 항상 한 줄로 보이고, 수정 사항과 상표 전문은 '고지 전문' 버튼으로 펼칩니다(`packages/vehicle-3d/src/vehicles.ts`의 `credit`, `src/storybook/scroll-3d/overlay.tsx`의 `VehicleCredit`).
 
 - **제목**: BMW X5 G05 (2018)
 - **제작자**: BMW Car IT

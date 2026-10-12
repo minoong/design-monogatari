@@ -9,7 +9,7 @@
 - UI motion: **Motion** (`motion/react`, active)
 - Scroll/timeline animation: **GSAP** (+ ScrollTrigger)
 - Component docs: **Storybook** (active)
-- Storybook 3D: **Three.js** + `@react-three/fiber` (`@repo/ui` **devDependencies** only — not apps)
+- 3D vehicle: **Three.js** + `@react-three/fiber`, dependencies of `@repo/vehicle-3d` only (not `@repo/ui`, not apps directly)
 - Design system: `@repo/ui` internal package
 
 ## Before using an alternative
