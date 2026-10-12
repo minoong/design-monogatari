@@ -1,4 +1,14 @@
 {
   "title": "컴포넌트",
-  "pages": ["button", "icon-button", "badge", "card"]
+  "pages": [
+    "button",
+    "icon-button",
+    "badge",
+    "card",
+    "label",
+    "input",
+    "field",
+    "dialog",
+    "animated-amount"
+  ]
 }

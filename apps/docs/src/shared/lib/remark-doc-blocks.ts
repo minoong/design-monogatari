@@ -2,7 +2,7 @@ import { markdownTable, replaceSource } from 'fumadocs-core/mdx-plugins/stringif
 
 import { addCommand, getInstallInfo, PACKAGE_MANAGERS } from './install-info';
 import { getPropsRows, type PropsSpec } from './props-info';
-import { readRepoFile } from './repo-file';
+import { readExampleSource, readRepoFile } from './repo-file';
 import {
   type ColorSpec,
   getColorRows,
@@ -108,7 +108,8 @@ async function repoFile(path: string, lines?: string, title?: string) {
 const expanders: Record<string, (node: Node) => Promise<string>> = {
   async ComponentPreview(node) {
     const name = required(node, 'name');
-    return repoFile(`apps/docs/src/_examples/${name}.tsx`, undefined, `${name}.tsx`);
+    const source = await readExampleSource(name);
+    return codeBlock(source.code, source.lang, `${name}.tsx`);
   },
 
   async RepoFile(node) {
@@ -123,7 +124,7 @@ const expanders: Record<string, (node: Node) => Promise<string>> = {
 
   async InstallTabs(node) {
     const name = required(node, 'name');
-    const { dependencies, files } = await getInstallInfo(name);
+    const { dependencies, needsTheme, files } = await getInstallInfo(name);
     const commands = (command: (pm: (typeof PACKAGE_MANAGERS)[number]) => string) =>
       codeBlock(PACKAGE_MANAGERS.map(command).join('\n'), 'bash');
 
@@ -132,9 +133,13 @@ const expanders: Record<string, (node: Node) => Promise<string>> = {
       commands((pm) => addCommand(pm, name)),
       `**수동 설치**: 1. 의존성을 설치합니다.`,
       commands((pm) => `${pm.add} ${dependencies.join(' ')}`),
-      `2. 테마 토큰(CSS 변수와 키프레임)을 설치합니다.`,
-      commands((pm) => addCommand(pm, 'theme')),
-      `3. 아래 파일을 프로젝트에 복사합니다. \`@/lib/utils\`와 \`@/ui/…\`는 shadcn이 쓰는 별칭입니다.`,
+      ...(needsTheme
+        ? [
+            `2. 테마 토큰(CSS 변수와 키프레임)을 설치합니다.`,
+            commands((pm) => addCommand(pm, 'theme')),
+          ]
+        : []),
+      `${needsTheme ? 3 : 2}. 아래 파일을 프로젝트에 복사합니다. \`@/lib/utils\`와 \`@/ui/…\`는 shadcn이 쓰는 별칭입니다.`,
     ];
     for (const file of files) {
       sections.push(await repoFile(file.path, undefined, file.title));

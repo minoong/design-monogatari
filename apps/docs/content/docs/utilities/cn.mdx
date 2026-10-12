@@ -1,0 +1,43 @@
+---
+title: cn
+description: 클래스 이름을 합치고, 충돌하는 Tailwind 클래스는 뒤의 것으로 정리하는 함수예요.
+---
+
+<ComponentPreview name="cn/merge" />
+
+모든 컴포넌트가 `className` prop을 받을 때 `cn`으로 합쳐요. `clsx`로 조건부 클래스를 이어 붙인 뒤 `tailwind-merge`로 충돌을 정리해요.
+
+## 설치
+
+<InstallTabs name="cn" />
+
+다른 컴포넌트를 설치하면 `cn`도 자동으로 함께 들어와요. 직접 설치할 필요는 거의 없어요.
+
+## 사용법
+
+```tsx
+import { cn } from '@/lib/utils';
+
+function Example({ active, className }: { active: boolean; className?: string }) {
+  return <div className={cn('px-2 py-1', active && 'bg-primary', className)} />;
+}
+```
+
+호출하는 쪽의 `className`을 **맨 뒤**에 두세요. 그래야 사용자가 넘긴 클래스가 기본 클래스를 이겨요.
+
+## 이 디자인 시스템의 확장
+
+`tailwind-merge`는 `text-title`, `text-body`, `text-caption`을 알지 못해요. 그대로 쓰면 `text-foreground`(색)와 `text-title`(크기)를 같은 그룹으로 오해해서 하나를 지워 버려요. 그래서 이 셋을 글자 크기(`font-size`) 그룹으로 등록했어요. 미리보기 표의 세 번째 줄이 그 결과예요. 같은 입력의 결과는 아래와 같아요.
+
+| 호출                                  | 결과                         | 이유                                       |
+| ------------------------------------- | ---------------------------- | ------------------------------------------ |
+| `cn('px-2 py-1', 'px-4')`             | `py-1 px-4`                  | 같은 그룹(가로 패딩)이라 뒤의 것만 남아요. |
+| `cn('text-body', 'text-caption')`     | `text-caption`               | 둘 다 글자 크기라 뒤의 것만 남아요.        |
+| `cn('text-foreground', 'text-title')` | `text-foreground text-title` | 하나는 색, 하나는 크기라 둘 다 남아요.     |
+| `cn('rounded-md', 'rounded-lg')`      | `rounded-lg`                 | 같은 그룹(반경)이라 뒤의 것만 남아요.      |
+
+새 글자 크기 토큰을 만들면 `packages/ui/src/lib/cn.ts`의 `classGroups`에도 추가해야 해요.
+
+## 소스
+
+<RepoFile path="packages/ui/src/lib/cn.ts" />

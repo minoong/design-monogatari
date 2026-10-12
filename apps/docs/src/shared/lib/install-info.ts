@@ -19,6 +19,8 @@ type RegistryItem = {
 
 export type InstallInfo = {
   dependencies: string[];
+  /** 테마 토큰(CSS 변수, 키프레임)이 필요한 항목인가. cn 같은 유틸리티는 필요 없다 */
+  needsTheme: boolean;
   /** 수동 설치 때 복사할 파일 (이 레지스트리 안의 파일 의존성 + 항목 자신) */
   files: { path: string; title: string }[];
 };
@@ -53,6 +55,7 @@ export async function getInstallInfo(name: string): Promise<InstallInfo> {
 
   return {
     dependencies: item.dependencies ?? [],
+    needsTheme: (item.registryDependencies ?? []).includes(`${NAMESPACE}/theme`),
     files: [...siblings, item].flatMap((entry) =>
       (entry.files ?? []).map((file) => ({
         path: file.path,

@@ -1,0 +1,107 @@
+---
+title: Dialog
+description: 화면 위에 떠서 사용자의 응답을 기다리는 창이에요. 여러 부품을 조합해요.
+---
+
+<ComponentPreview name="dialog/basic" />
+
+## 설치
+
+<InstallTabs name="dialog" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요. 기본값인 Base UI 프로젝트에서는 CLI가
+  `asChild`를 `render=`로 바꿔서 `DialogTrigger asChild`가 깨져요.
+</Callout>
+
+## 사용법
+
+```tsx
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
+export function Example() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button type="button">열기</button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>제목</DialogTitle>
+          <DialogDescription>설명</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <button type="button">닫기</button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+
+부품은 서로 열림 상태를 나눠 가져요. 하나의 큰 컴포넌트로 합치지 않았어요.
+
+<Callout type="warn" title="DialogTitle은 필수예요">
+  `DialogContent` 안에 `DialogTitle`이 있어야 창에 접근 가능한 이름이 생겨요. 또 `DialogContent`가
+  **어두운 막(overlay)을 이미 그려요**. `DialogOverlay`를 형제로 또 넣으면 막이 두 겹이 돼요.
+</Callout>
+
+## 예시
+
+### 제어 컴포넌트
+
+`open`과 `onOpenChange`로 열림 상태를 직접 들고 있을 수 있어요. 이 예시의 Dialog 안 내용은 문서 사이트의 화면 위에 열려요.
+
+<ComponentPreview name="dialog/controlled" />
+
+## API 레퍼런스
+
+### Dialog
+
+[Radix Dialog.Root](https://www.radix-ui.com/primitives/docs/components/dialog#root)의 props를 받아요. 열림 상태를 직접 관리하지 않으면(`open`이 없으면) 내부 상태를 써요.
+
+| 속성           | 타입                      | 기본값  | 설명                                             |
+| -------------- | ------------------------- | ------- | ------------------------------------------------ |
+| `open`         | `boolean`                 | -       | 열림 상태. 주면 제어 컴포넌트가 돼요.            |
+| `defaultOpen`  | `boolean`                 | `false` | 처음에 열려 있을지. 제어하지 않을 때만 써요.     |
+| `onOpenChange` | `(open: boolean) => void` | -       | Esc, 바깥 클릭, 닫기 버튼 등 모든 변화를 알려요. |
+| `modal`        | `boolean`                 | `true`  | 열려 있는 동안 바깥 상호작용을 막을지 (Radix).   |
+
+### 부품
+
+| 컴포넌트            | 설명                                                                                                                         |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `DialogTrigger`     | 창을 여는 요소. `asChild`로 내 버튼을 쓰세요.                                                                                |
+| `DialogContent`     | 창 본체. 어두운 막과 함께 포털에 그려지고, 열고 닫을 때 투명도와 크기(0.96배)가 0.15초 움직여요.                             |
+| `DialogHeader`      | 제목과 설명을 묶는 영역. 작은 화면에서는 가운데, 넓은 화면에서는 왼쪽 정렬이에요.                                            |
+| `DialogTitle`       | **필수.** 창의 이름이에요.                                                                                                   |
+| `DialogDescription` | 창 설명. 없으면 Radix가 콘솔 경고를 내요. 설명이 정말 필요 없으면 `DialogContent`에 `aria-describedby={undefined}`를 주세요. |
+| `DialogFooter`      | 버튼 영역. 작은 화면에서는 세로로, 넓은 화면에서는 오른쪽 정렬로 가로 배치돼요.                                              |
+| `DialogClose`       | 창을 닫는 요소. `asChild`로 내 버튼을 쓰세요.                                                                                |
+| `DialogOverlay`     | 어두운 막. `DialogContent`가 이미 그리니 직접 쓰지 마세요. 커스텀 포털을 만들 때만 써요.                                     |
+
+## 접근성
+
+Radix Dialog가 아래를 맡아요.
+
+- 열리면 포커스가 창 안으로 들어가고, 열려 있는 동안 Tab이 창 안에서만 돌아요.
+- Esc로 닫혀요. 닫히면 포커스가 창을 연 요소로 돌아가요.
+- `DialogTitle`이 창의 이름(`aria-labelledby`), `DialogDescription`이 설명(`aria-describedby`)이 돼요.
+- 움직임은 `prefers-reduced-motion`을 켜면 사라져요 (투명도·크기 전환 없이 바로 나타나요).
+
+## 소스
+
+열림 상태를 Context로 나눠 주고, `DialogContent`가 막과 본체를 함께 그리는 부분이에요.
+
+<RepoFile path="packages/ui/src/dialog.tsx" lines="15-97" />

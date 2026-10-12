@@ -55,7 +55,10 @@ export function AnimatedAmount({
     once: inViewOnce,
     root: inViewRoot,
   });
-  const rounded = Math.round(value);
+  // 소수 자릿수는 format 을 따른다. 기본(정수)이면 반올림하고, 소수를 보이는 format 이면 그 자릿수까지 남긴다
+  const fractionDigits = format.maximumFractionDigits ?? format.minimumFractionDigits ?? 0;
+  const factor = 10 ** fractionDigits;
+  const rounded = Math.round(value * factor) / factor;
   const waitingForView = inView && !isInView;
   const shown = waitingForView ? 0 : rounded;
   const digitText = new Intl.NumberFormat(locales, format).format(rounded);

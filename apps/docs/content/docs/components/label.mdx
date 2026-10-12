@@ -1,0 +1,54 @@
+---
+title: Label
+description: 입력 칸의 이름표예요. Radix Label을 감싸서, 글자를 눌러도 입력 칸에 포커스가 가요.
+---
+
+<ComponentPreview name="label/basic" />
+
+## 설치
+
+<InstallTabs name="label" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+</Callout>
+
+## 사용법
+
+```tsx
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+export function Example() {
+  return (
+    <>
+      <Label htmlFor="email">이메일</Label>
+      <Input id="email" type="email" />
+    </>
+  );
+}
+```
+
+`htmlFor`와 입력 칸의 `id`를 꼭 짝지으세요. 이름표가 입력 칸에 연결돼야 스크린 리더가 입력 칸의 이름을 읽어요. 레이블과 입력 칸, 오류 문구를 한 묶음으로 쓰려면 [`Field`](/docs/components/field)를 쓰세요.
+
+## 예시
+
+### 비활성 입력 칸
+
+입력 칸에 `peer` 클래스를 달고 **레이블을 그 뒤에** 두면, 입력 칸이 `disabled`일 때 레이블도 커서와 투명도가 바뀌어요 (`peer-disabled`). 순서가 반대면 동작하지 않아요.
+
+<ComponentPreview name="label/peer-disabled" />
+
+## API 레퍼런스
+
+[Radix Label](https://www.radix-ui.com/primitives/docs/components/label)의 props를 그대로 받아요. 자주 쓰는 것은 `htmlFor`예요. 스타일은 `text-foreground`, 14px, 굵기 500이고, `className`으로 덮어쓸 수 있어요.
+
+## 접근성
+
+- `<label>` 요소라서 글자를 누르면 연결된 입력 칸이 포커스를 받아요.
+- 입력 칸마다 보이는 레이블이 하나씩 있어야 해요. 레이블을 숨겨야 하면 입력 칸에 `aria-label`을 다세요.
+- 필수 입력 표시는 색이 아니라 글자로 하세요 ("필수").
+
+## 소스
+
+<RepoFile path="packages/ui/src/label.tsx" />
