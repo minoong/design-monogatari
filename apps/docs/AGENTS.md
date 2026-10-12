@@ -11,7 +11,8 @@
 - **문서 블록** (`src/shared/ui/doc-blocks/`, MDX에서 바로 사용): `ComponentPreview name="button/variants"`(예시 파일을 라이브 렌더 + 같은 파일을 코드 탭에), `InstallTabs name="button"`(`registry.json`에서 읽은 CLI/수동 설치), `PropsTable`(소스 타입을 읽는 props 표. 우리가 정의한 props만 `include`로 고르고 설명은 한국어로 직접 준다), `RepoFile path lines`(저장소 파일을 빌드 시 읽는 코드 블록). 모두 빌드 시 `fs`로 읽는 서버 컴포넌트라 페이지는 정적이다.
 - **예시**: `src/_examples/<컴포넌트>/<이름>.tsx` (default export). FSD 레이어가 아니라 docs 전용 폴더다. 프리뷰 영역은 `data-ds-preview`로 감싸져 문서 크롬의 반경 보정과 링크 밑줄에서 제외된다.
 - **새 컴포넌트 문서 추가**: ① `src/_examples/<name>/*.tsx` 예시 작성 ② `content/docs/components/<name>.mdx`를 `button.mdx` 형식(프리뷰 → 설치 → 사용법 → 예시 → API 레퍼런스 → 접근성 → 소스)으로 작성 ③ `content/docs/components/meta.json` `pages`에 추가. 설치 탭은 `registry.json` 항목이 있어야 한다.
-- 알려진 한계: `.md`/Copy Markdown 출력에는 `<ComponentPreview />` 같은 블록이 펼쳐지지 않고 태그 그대로 나온다.
+- **에이전트용 Markdown**: `src/shared/lib/remark-doc-blocks.ts`가 `/llms-full.txt`, 페이지별 `.md`, Copy Markdown에서 블록을 코드·표로 펼치고 `<Callout>`을 인용문으로 바꾼다 (`replaceSource`라 렌더링은 그대로). 블록이 읽는 정보는 페이지와 같은 함수(`install-info`, `props-info`, `repo-file`)로 읽어 둘이 어긋나지 않는다. **새 블록을 만들면 `expanders`에도 추가한다.** `defineDocs`의 `mdxOptions`는 반드시 `applyMdxPreset(...)`으로 감싼다: 객체로 직접 주면 기본 프리셋이 빠져 `/api/search`가 500이 된다.
+- **테마**: 시스템 설정을 따르고(`defaultTheme: system`), 헤더의 해/달 버튼(`shared/ui/theme-toggle.tsx`)과 "…" 메뉴의 System/Light/Dark, `d` 단축키로 바꾼다. Spacious 레이아웃이 클라이언트 컴포넌트라 `slots`는 `_pages/docs/ui/docs-layout-client.tsx`에서 조립한다.
 - UI from `@repo/ui/*`.
 - `.mdx`는 Prettier 대상(린트 대상 아님). 생성물(`.source`, `public/r`)은 `.prettierignore`에 있다.
 - 전역 CSS(`src/_app/styles/globals.css`)에 `overflow-x: hidden`이나 unlayered 링크 리셋(`a { color: inherit }`)을 넣지 말 것: sticky 사이드바와 문서 프레임워크의 링크 색을 깨뜨린다.

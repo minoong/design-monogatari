@@ -1,9 +1,15 @@
 import { llms, loader } from 'fumadocs-core/source';
+import { applyMdxPreset } from 'fumadocs-mdx/config';
 import { defineDocs } from 'fumadocs-mdx/macro';
+
+import { remarkDocBlocks } from './remark-doc-blocks';
 
 const docs = defineDocs({
   dir: 'content/docs',
   docs: {
+    // 문서 블록을 Markdown 출력에서 펼친다 (렌더링에는 영향 없음). 컬렉션에 mdxOptions 를 직접 주면
+    // 기본 프리셋(검색용 구조화 데이터, 목차 등)이 통째로 빠지므로 applyMdxPreset 으로 감싼다
+    mdxOptions: applyMdxPreset({ remarkPlugins: (plugins) => [...plugins, remarkDocBlocks] }),
     // 페이지 Markdown(llms.txt, 페이지별 .md)을 만들려면 처리된 본문을 보관해야 한다
     postprocess: { includeProcessedMarkdown: true },
   },
