@@ -1,10 +1,19 @@
 import defaultMdxComponents from '@fumadocs/base-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
-/** MDX 안에서 쓸 수 있는 컴포넌트. 문서 블록(미리보기, 설치 탭 등)은 이후 PR에서 여기에 추가한다 */
+import { ComponentPreview } from './doc-blocks/component-preview';
+import { InstallTabs } from './doc-blocks/install-tabs';
+import { PropsTable } from './doc-blocks/props-table';
+import { RepoFile } from './doc-blocks/repo-file';
+
+/** MDX 안에서 쓸 수 있는 컴포넌트. 문서 블록(미리보기, 설치 탭, props 표, 저장소 파일)을 포함한다 */
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
+    ComponentPreview,
+    InstallTabs,
+    PropsTable,
+    RepoFile,
     ...components,
   } satisfies MDXComponents;
 }
