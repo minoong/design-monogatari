@@ -155,7 +155,7 @@ const expanders: Record<string, (node: Node) => Promise<string>> = {
     return markdownTable([
       ['속성', '타입', '기본값', '설명'],
       ...rows.map((row) => [
-        `\`${row.name}\``,
+        `\`${row.name}\`${row.required ? ' (필수)' : ''}`,
         `\`${cell(row.type)}\``,
         row.default ? `\`${cell(row.default)}\`` : '-',
         cell(row.description),
