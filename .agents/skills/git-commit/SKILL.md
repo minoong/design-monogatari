@@ -219,7 +219,7 @@ git pull origin main
 - `--no-verify` 등 hook skip은 사용자 요청 시만
 - main/master force push 금지 (경고)
 - hook 실패 시 amend 금지 → 문제 수정 후 **새 커밋**
-- `Co-authored-by` 등 사용자 미요청 trailer 추가 금지
+- `Co-authored-by` 등 trailer는 임의로 추가하지 않는다. 단, 하네스(시스템 지침)가 커밋/PR에 붙이라고 지정한 귀속 문구가 있으면 그것은 따른다
 - **사용자 요청 없이 commit / push / PR 생성 금지**
 - **`main`에서 직접 작업 금지** — feature 브랜치에서 진행
 

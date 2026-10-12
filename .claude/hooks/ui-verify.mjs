@@ -18,6 +18,8 @@ const STATE_PATH = join(STATE_DIR, 'ui-verify.json');
 const UI_ROOT = /(?:^|\/)(?:packages\/ui\/|apps\/(?:web|docs)\/|registry\/)/;
 const UI_FILE = /(?:^|\/)(?:DESIGN\.md|registry\.json)$/;
 const UI_EXT = /\.(?:tsx|css)$/;
+// 문서 사이트의 MDX 는 화면을 바꾸지만 위 확장자에 걸리지 않는다 (SKIP_DOC 은 .md 만 막는다)
+const UI_CONTENT = /(?:^|\/)apps\/docs\/content\/.+\.mdx$/;
 const SKIP_DOC = /(?:\/(?:AGENTS|CLAUDE)\.md$|\.md$|\/SKILL\.md$)/;
 const EDIT_TOOLS = new Set(['Write', 'Edit', 'MultiEdit', 'NotebookEdit']);
 
@@ -86,7 +88,7 @@ function isVisualUiPath(filePath) {
   if (UI_FILE.test(posix)) {
     return true;
   }
-  return UI_ROOT.test(posix) && UI_EXT.test(posix);
+  return UI_CONTENT.test(posix) || (UI_ROOT.test(posix) && UI_EXT.test(posix));
 }
 
 function isVerifyCommand(command) {
@@ -137,7 +139,7 @@ function followupMessage(state) {
   return [
     `UI changed (${files}) but definition of done is incomplete. Do not ask the user. Do not commit.`,
     `Still needed: ${missing.join(' then ')}.`,
-    'Then report pass/fail and stop. Subagent: `.claude/agents/ui-verifier.md`. Skill: `ship-ui-change`.',
+    'Then report pass/fail and stop. Subagent: `.claude/agents/ui-verifier.md`. Skill: `verify`.',
   ].join(' ');
 }
 

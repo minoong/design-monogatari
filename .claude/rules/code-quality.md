@@ -35,4 +35,4 @@ pnpm verify          # format:check + lint + check-types + build
 
 ## Definition of done
 
-Before marking UI work complete (do not wait for the user): `ui-verifier` subagent (Playwright light+dark), then the `ship-ui-change` skill → `pnpm verify`.
+Before marking UI work complete (do not wait for the user): `ui-verifier` subagent (Playwright light+dark), then the `verify` skill → `pnpm verify`.

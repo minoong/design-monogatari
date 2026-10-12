@@ -1,9 +1,9 @@
 ---
-name: ship-ui-change
+name: verify
 description: >-
-  UI·토큰·Storybook 변경이 끝나면 사용자 요청 없이 바로 검증한다.
-  Playwright MCP로 라이트/다크를 보고, 이어서 format/lint/type/build를 돌린다.
-  작업 완료·PR 전·ship에도 적용.
+  UI·토큰·Storybook·문서 사이트 변경이 끝나면 사용자 요청 없이 바로 검증한다.
+  라이트/다크를 ui-verifier로 보고, 이어서 pnpm verify(format·lint·types·build)를 돌린다.
+  작업 완료와 커밋 직전에도 적용.
 paths:
   - 'packages/ui/**'
   - 'apps/**'
@@ -12,7 +12,9 @@ paths:
   - 'registry/**'
 ---
 
-# UI 변경 완료 (Definition of Done)
+# 검증 (Definition of Done)
+
+이름이 `verify`인 프로젝트 스킬은 Claude Code가 **커밋 직전에 실행하도록 안내**한다(문서·테스트만 바뀐 커밋은 제외). 그래서 이 이름을 쓴다.
 
 사용자가 "확인해 줘"라고 하지 않아도, UI 작업을 마치면 아래를 실행한다.
 

@@ -17,6 +17,6 @@ paths:
 
 Before implementing Motion APIs, invoke the `motion-react` skill and fetch official docs via `https://motion.dev/llms.txt`.
 
-Do not mix GSAP and Motion on the same element without reason. Do not mix GSAP pin and OrbitControls on the same WebGL canvas. Do not put Motion on a WebGL canvas. If unclear, use AskUserQuestion.
+Same-element and WebGL-canvas restrictions: see "Rules that are easy to violate" in `CLAUDE.md`. Do not mix GSAP pin and OrbitControls on the same WebGL canvas. If unclear, use AskUserQuestion.
 
 Register GSAP plugins before use; cleanup in `useEffect` / `useGSAP`.

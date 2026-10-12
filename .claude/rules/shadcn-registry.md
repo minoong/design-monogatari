@@ -22,39 +22,16 @@ Distribute components via a [shadcn registry](https://ui.shadcn.com/docs/registr
 
 Reference: `packages/ui/src/button.tsx`
 
-## Why the theme item is generated this way
-
-Found by installing into a fresh app, not by reading docs:
-
-- Palette tokens (`--color-neutral-*`, `--color-blue-*`) belong in `cssVars.light`. In `cssVars.theme` the CLI also emits `--color-color-*`
-- `color-mix(...)` is not recognised as a colour: the CLI skips `--color-overlay`, so `bg-overlay` (Dialog scrim) is never generated. The sync converts it to `rgb(r g b / n%)`
-- `@keyframes` + `--animate-*` must ship in the item, or the Button loading dots do not animate
+The reasons the theme item is shaped this way (palette in `cssVars.light`, `color-mix` → `rgb()`, keyframes via `css`) are documented at the top of `scripts/sync-registry.mjs`; read that before touching the theme generation.
 
 ## Consumer requirements
 
 - Tailwind v4 and a **Radix-based** shadcn project: `shadcn init -b radix`. The default `shadcn init -d` is Base UI (`base-nova`), and the CLI rewrites our Radix `asChild` into Base UI `render=`, which breaks Dialog (`render` does not exist on Radix props)
 - Files land in the consumer's `ui` alias (`@/components/ui/*`) and `@/lib/utils`
 
-## Building and testing the hosted registry
-
-```bash
-SITE_URL=http://localhost:4102 pnpm --filter docs registry:build   # -> apps/docs/public/r/*.json (gitignored)
-cd apps/docs/public && python3 -m http.server 4102                 # serve it
-# in a Radix-initialised Next app
-pnpm dlx shadcn@latest add http://localhost:4102/r/button.json
-```
-
-`scripts/build-registry.mjs` rewrites `registryDependencies` from `minoong/design-monogatari/<name>` to `${SITE_URL}/r/<name>.json` in a temporary copy only; the committed `registry.json` keeps the GitHub ids so GitHub installs still work. Check in the consumer: `tsc`, `next build`, and that utilities such as `.bg-overlay` and `.animate-button-loader-dot` exist in the compiled CSS.
-
 ## Consumer-install e2e (CI)
 
-`pnpm verify` only proves the components work inside the monorepo. `scripts/test-registry-consumer.mjs` (`pnpm registry:consumer-test`) installs every item into a fresh `create-next-app` project (pinned version), `shadcn init -b radix`, then `shadcn add` for all 11 items, `tsc`, `next build`, asserts `.bg-overlay` / `@keyframes button-loader-dot` exist in the compiled CSS, and fetches the rendered page.
-
-- `--source hosted` (default): builds the registry, serves `apps/docs/public/r` locally, installs from there. Verifies the PR's own changes.
-- `--source github`: installs `minoong/design-monogatari/<item>` from GitHub's default branch — what real users do. Dependency refs do **not** follow `#ref`, so a PR branch cannot be tested this way; it runs after merge and nightly.
-- `--only a,b --keep` for debugging (keeps the temp app).
-
-`.github/workflows/registry.yml`: `hosted` job on PRs/pushes touching `registry*`, `packages/ui/src`, or the scripts, plus nightly; `github` job on push to `main`, nightly, and manual dispatch. Kept out of `ci.yml` (minutes of network). Locally it takes ~1–2 min once the pnpm cache is warm.
+`pnpm registry:consumer-test` (`scripts/test-registry-consumer.mjs`) installs every item into a fresh pinned `create-next-app` project (`shadcn init -b radix`), then `tsc`, `next build`, a compiled-CSS check, and a rendered-page fetch. `--source hosted` (default) tests the PR's own build; `--source github` installs `minoong/design-monogatari/<item>` from the default branch (refs do not follow dependencies, so only after merge and nightly). Workflow: `.github/workflows/registry.yml`. Use `--only a,b --keep` to debug.
 
 ## External install
 
