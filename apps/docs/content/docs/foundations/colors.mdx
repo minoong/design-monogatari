@@ -1,0 +1,113 @@
+---
+title: 색
+description: 팔레트는 두 가지, 쓰는 색은 의미 토큰이에요. 라이트와 다크는 같은 토큰 이름에 값만 달라요.
+---
+
+디자인 시스템의 강조색은 **Action Blue 하나**예요. 오류를 나타내는 `destructive`는 상태 색이라서 브랜드 강조색이 아니에요. 화면 컴포넌트에는 `bg-neutral-500`이나 `bg-blue-600`을 쓰지 말고, 아래 의미 토큰(`bg-background`, `bg-primary` …)만 쓰세요. hex를 컴포넌트에 적지 않는 것도 같은 이유예요.
+
+<ComponentPreview name="color/surfaces" />
+
+이 페이지의 값은 소스(`packages/ui/src/styles/globals.css`)에서 생성되는 `registry.json`의 theme 항목에서 읽어 와서, 코드와 어긋날 수 없어요.
+
+## 팔레트
+
+원시 스케일이에요. 다크 모드에서도 값이 바뀌지 않아요. 의미 토큰이 이 중 한 칸을 가리켜요.
+
+### Neutral
+
+<Palette name="neutral" />
+
+### Blue
+
+<Palette name="blue" />
+
+## 의미 토큰
+
+컴포넌트가 쓰는 이름이에요. 라이트와 다크에서 같은 이름이 다른 값을 가져요. 글자 토큰은 배경 위 대비 비율을 함께 보여 줘요.
+
+### 면과 글자
+
+<ColorTokens
+  tokens={['background', 'foreground', 'muted', 'muted-foreground', 'card']}
+  classes={{
+    background: 'bg-background',
+    foreground: 'text-foreground',
+    muted: 'bg-muted',
+    'muted-foreground': 'text-muted-foreground',
+    card: 'bg-card',
+  }}
+  contrast={{ foreground: 'background', 'muted-foreground': 'background' }}
+  descriptions={{
+    background: '화면 배경. 라이트는 흰색, 다크는 검정이에요.',
+    foreground: '제목, 본문, 레이블.',
+    muted: '보조 면과 호버 배경.',
+    'muted-foreground': '플레이스홀더, 캡션, 다이얼로그 설명. 밝게 바꾸지 마세요.',
+    card: '카드와 다이얼로그 면.',
+  }}
+/>
+
+### 주요 액션
+
+<ColorTokens
+  tokens={['primary', 'primary-hover', 'primary-foreground', 'primary-on-dark', 'ring']}
+  classes={{
+    primary: 'bg-primary',
+    'primary-hover': 'hover:bg-primary-hover',
+    'primary-foreground': 'text-primary-foreground',
+    'primary-on-dark': 'text-primary-on-dark',
+    ring: 'ring-ring',
+  }}
+  contrast={{ 'primary-foreground': 'primary' }}
+  descriptions={{
+    primary: '모든 주요 버튼과 링크. 라이트에서는 Action Blue예요.',
+    'primary-hover': '주요 버튼의 호버.',
+    'primary-foreground': '주요 색 위의 글자. 두 모드 모두 흰색이에요.',
+    'primary-on-dark': '어두운 면 위의 링크. 밝은 배경에서는 쓰지 않아요.',
+    ring: '포커스 링.',
+  }}
+/>
+
+### 상태, 테두리, 오버레이
+
+<ColorTokens
+  tokens={[
+    'destructive',
+    'destructive-foreground',
+    'border',
+    'overlay',
+    'secondary-hover',
+    'dimmer',
+  ]}
+  classes={{
+    destructive: 'bg-destructive',
+    'destructive-foreground': 'text-destructive-foreground',
+    border: 'border-border',
+    overlay: 'bg-overlay',
+    'secondary-hover': 'hover:bg-secondary-hover',
+    dimmer: 'bg-dimmer',
+  }}
+  contrast={{ 'destructive-foreground': 'destructive' }}
+  descriptions={{
+    destructive: '오류 필드와 오류 문구. 주요 버튼 대신 쓰지 않아요.',
+    'destructive-foreground': 'destructive 위의 글자.',
+    border: '입력, 카드, 다이얼로그, 보조 버튼의 헤어라인.',
+    overlay: '다이얼로그 뒤의 어두운 막.',
+    'secondary-hover': '보조 버튼의 호버 배경.',
+    dimmer: '주요 버튼을 누를 때 덮는 어두운 층. foreground 대신 검정을 써요.',
+  }}
+/>
+
+## 다크 모드
+
+토큰 이름은 그대로 두고 `.dark` 아래에서 값만 바꿔요. 컴포넌트에 `dark:bg-…` 같은 hex를 적지 않아요. 다크 값은 [Radix 커스텀 팔레트](https://www.radix-ui.com/colors/custom?accent-dark=003CFF&bg-dark=000000)에서 왔고, 강조색은 `#003cff`, 배경은 검정이에요.
+
+- 앱은 `next-themes`(`attribute="class"`, `defaultTheme="system"`)로 `<html>`에 `light` 또는 `dark` 클래스를 붙여요. `html`에 `suppressHydrationWarning`이 필요해요.
+- 눌림 층(`dimmer`)은 항상 검정이에요. 다크에서 `foreground`를 쓰면 흰색으로 번쩍여요.
+- 이 사이트의 오른쪽 위 해/달 버튼으로 두 모드를 바꿔 보세요.
+
+## 지켜 주세요
+
+- 흰 배경에서 5~8% 검정, 검정 배경에서 5~8% 흰색 테두리는 보이지 않아요. `border-border`를 쓰세요.
+- 두 번째 브랜드 강조색을 만들지 마세요.
+- 버튼, 카드, 다이얼로그에 그림자를 넣지 마세요.
+- 토큰을 바꾸면 `DESIGN.md`와 `registry.json`의 theme 항목을 같이 맞춰야 해요 (`pnpm registry:sync`).

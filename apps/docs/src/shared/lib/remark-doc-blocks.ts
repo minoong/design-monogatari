@@ -3,6 +3,13 @@ import { markdownTable, replaceSource } from 'fumadocs-core/mdx-plugins/stringif
 import { addCommand, getInstallInfo, PACKAGE_MANAGERS } from './install-info';
 import { getPropsRows, type PropsSpec } from './props-info';
 import { readRepoFile } from './repo-file';
+import {
+  type ColorSpec,
+  getColorRows,
+  getPaletteRows,
+  getRadiusRows,
+  getTypeRows,
+} from './token-info';
 
 /**
  * 문서 블록(<ComponentPreview />, <InstallTabs />, <PropsTable />, <RepoFile />)을 에이전트가 읽는
@@ -155,6 +162,66 @@ const expanders: Record<string, (node: Node) => Promise<string>> = {
       ]),
     ]);
   },
+};
+
+const cell = (value: string) => value.replace(/\|/g, '\\|');
+
+expanders.Palette = async (node) => {
+  const name = required(node, 'name') as 'neutral' | 'blue';
+  const rows = await getPaletteRows(name);
+  return markdownTable([
+    ['단계', '값', 'Tailwind'],
+    ...rows.map((row) => [`${name} ${row.step}`, `\`${row.value}\``, `\`${row.tailwind}\``]),
+  ]);
+};
+
+expanders.ColorTokens = async (node) => {
+  const spec: ColorSpec = {
+    tokens: attribute(node, 'tokens') as string[],
+    descriptions: attribute(node, 'descriptions') as Record<string, string>,
+    classes: attribute(node, 'classes') as Record<string, string> | undefined,
+    contrast: attribute(node, 'contrast') as Record<string, string> | undefined,
+  };
+  const rows = await getColorRows(spec);
+  const ratio = (value: number | null) => (value == null ? '-' : `${value.toFixed(2)}:1`);
+  const showContrast = rows.some((row) => row.contrast);
+  return markdownTable([
+    ['토큰', '라이트', '다크', ...(showContrast ? ['대비 (라이트 / 다크)'] : []), '용도'],
+    ...rows.map((row) => [
+      `\`${row.token}\` (\`${row.tailwind}\`)`,
+      `\`${row.light}\``,
+      `\`${row.dark}\``,
+      ...(showContrast
+        ? [
+            row.contrast
+              ? `${ratio(row.contrast.light)} / ${ratio(row.contrast.dark)} (${row.contrast.against} 위)`
+              : '-',
+          ]
+        : []),
+      cell(row.description),
+    ]),
+  ]);
+};
+
+expanders.TypeScale = async () => {
+  const rows = await getTypeRows();
+  return markdownTable([
+    ['클래스', '크기', '줄 높이'],
+    ...rows.map((row) => [`\`${row.tailwind}\``, `${row.px}px (\`${row.size}\`)`, row.lineHeight]),
+  ]);
+};
+
+expanders.RadiusScale = async (node) => {
+  const descriptions = attribute(node, 'descriptions') as Record<string, string>;
+  const rows = await getRadiusRows();
+  return markdownTable([
+    ['클래스', '값', '용도'],
+    ...rows.map((row) => [
+      `\`${row.tailwind}\``,
+      `\`${row.value}\``,
+      descriptions[row.tailwind] ?? '-',
+    ]),
+  ]);
 };
 
 export function remarkDocBlocks() {
