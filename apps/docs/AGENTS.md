@@ -2,9 +2,13 @@
 
 디자인 시스템 사용 안내 사이트 (port **3001**). 컴포넌트 사용법, 설치(shadcn 레지스트리), 파운데이션, Claude Code 워크플로우 문서를 담는다.
 
-- **현재 상태**: create-turbo 템플릿 홈 페이지. 문서 프레임워크는 **Fumadocs로 채택 결정**(스파이크 통과)했고, 골격 PR에서 연결한다. 그 전까지 `src/_pages/home`만 있다.
-- FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports (프레임워크가 요구하는 catch-all 라우트도 re-export만, 예외는 `.claude/rules/fsd-apps.md`).
-- UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`.
+- **프레임워크**: Fumadocs (`@fumadocs/base-ui`의 Spacious `DocsLayout` — Radix 판 `fumadocs-ui`에는 없는 레이아웃, `fumadocs-mdx`). 선택 근거와 스파이크 게이트 결과는 `content/docs/decisions/docs-framework.mdx`.
+- **콘텐츠**: `content/docs/**` (MDX, 한국어). 사이드바 순서는 각 폴더의 `meta.json`. `.source/`는 `fumadocs-mdx`가 dev/build 때 만드는 생성물이라 커밋하지 않는다.
+- **구조**: FSD in `src/`. `_app`(루트 레이아웃, 전역 CSS, 폰트, `api-routes/`), `_pages/docs`(문서 셸, 페이지, 메타데이터), `_pages/home`(`/` → `/docs` 리다이렉트), `shared/`(`lib/source.ts` 콘텐츠 로더, `layout-options.tsx`, `ui/mdx-components.tsx`). Next `app/`은 re-export만 하고 route handler 구현은 `src/_app/api-routes/`에 둔다. 예외는 `.claude/rules/fsd-apps.md`.
+- **에이전트용 노출**: `/llms.txt`, `/llms-full.txt`, 페이지마다 `/docs/<경로>.md`(rewrite → `/llms.mdx/docs/…`), 검색 `/api/search`.
+- **테마**: `RootProvider`(next-themes, `attribute: 'class'`)가 `html.light` / `html.dark`를 전환한다. `globals.css`의 "테마 브리지"가 `--color-fd-*`를 `@repo/ui` 토큰에 연결하므로, 문서 크롬 색을 바꾸려면 Fumadocs 클래스가 아니라 이 브리지를 고친다.
+- **반경**: `@theme inline`이 `rounded-md/lg`에 값을 박아 넣어서 변수 덮어쓰기가 안 먹는다. 크롬은 `globals.css`에서 클래스를 겨냥해 되돌리고, 문서 안에서 `@repo/ui` 컴포넌트를 보여 주는 영역은 `data-ds-preview`로 표시해 제외한다.
+- UI from `@repo/ui/*`.
 - `.mdx`는 Prettier 대상(린트 대상 아님). 생성물(`.source`, `public/r`)은 `.prettierignore`에 있다.
 - 전역 CSS(`src/_app/styles/globals.css`)에 `overflow-x: hidden`이나 unlayered 링크 리셋(`a { color: inherit }`)을 넣지 말 것: sticky 사이드바와 문서 프레임워크의 링크 색을 깨뜨린다.
 

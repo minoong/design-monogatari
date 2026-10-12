@@ -1,4 +1,7 @@
 @import '@repo/ui/styles.css';
+@import '@fumadocs/base-ui/css/generated/spacious.css';
+@import '@fumadocs/base-ui/css/neutral.css';
+@import '@fumadocs/base-ui/css/preset.css';
 
 @source '../../../**/*.{ts,tsx}';
 @source '../../../content/**/*.mdx';
@@ -19,4 +22,77 @@ body {
 body {
   margin: 0;
   padding: 0;
+}
+
+/*
+ * 테마 브리지: Fumadocs 크롬(사이드바, 목차, 검색, 코드 블록)이 @repo/ui 토큰을 따르게 한다.
+ * 토큰은 html.light / html.dark 에 따라 바뀌므로 변수만 연결하면 두 테마가 함께 맞는다.
+ * 이 블록은 Fumadocs 의 기본 색 정의보다 뒤에 있어야 한다 (같은 우선순위에서 나중 것이 이긴다).
+ */
+:root,
+.light,
+.dark {
+  --color-fd-background: var(--background);
+  --color-fd-foreground: var(--foreground);
+  --color-fd-muted: var(--muted);
+  --color-fd-muted-foreground: var(--muted-foreground);
+  --color-fd-popover: var(--card);
+  --color-fd-popover-foreground: var(--foreground);
+  --color-fd-card: var(--card);
+  --color-fd-card-foreground: var(--foreground);
+  --color-fd-border: var(--border);
+  --color-fd-secondary: var(--muted);
+  --color-fd-secondary-foreground: var(--foreground);
+  --color-fd-accent: var(--secondary-hover);
+  --color-fd-accent-foreground: var(--foreground);
+  --color-fd-ring: var(--ring);
+}
+
+/* 활성 항목과 링크에 쓰이는 강조색. 어두운 배경에서는 --primary(진한 파랑)가 읽히지 않아 on-dark 변형을 쓴다 */
+:root,
+.light {
+  --color-fd-primary: var(--primary);
+  --color-fd-primary-foreground: var(--primary-foreground);
+}
+
+.dark {
+  --color-fd-primary: var(--primary-on-dark);
+  --color-fd-primary-foreground: var(--background);
+  /* --ring 은 어두운 배경에서 대비가 3.4:1 정도라 포커스 링이 흐리다. 강조색과 같은 on-dark 변형을 쓴다 */
+  --color-fd-ring: var(--primary-on-dark);
+}
+
+/* neutral.css 가 다크 사이드바만 id 선택자로 한 번 더 덮는다 */
+.dark #nd-sidebar {
+  --color-fd-muted: var(--muted);
+  --color-fd-secondary: var(--muted);
+  --color-fd-muted-foreground: var(--muted-foreground);
+}
+
+/*
+ * @repo/ui 의 --radius-md(11px), --radius-lg(18px)는 Button 같은 컴포넌트용 값이라 문서 크롬까지
+ * 키운다 (사이드바 항목 18px). 그런데 @theme inline 은 유틸리티에 값을 그대로 박아 넣으므로
+ * (.rounded-md { border-radius: 11px }) 변수를 덮어써도 소용이 없다. 클래스를 직접 겨냥해
+ * Fumadocs 크롬의 반경만 기본값으로 되돌린다. 포털로 열리는 검색 창, 메뉴, 모바일 드로어도
+ * 같은 규칙을 타야 해서 레이아웃 id 가 아니라 문서 전체에 건다.
+ *
+ * 문서 안에서 @repo/ui 컴포넌트를 보여 주는 영역은 [data-ds-preview] 로 표시하면 제외된다.
+ * 프리뷰가 실제 컴포넌트 반경 그대로 보여야 하기 때문이다. 포털로 열리는 @repo/ui 요소
+ * (예: DialogContent)는 이 영역 밖에 렌더되므로 프리뷰 쪽에서 같은 속성을 직접 달아야 한다.
+ */
+.rounded-md:not([data-ds-preview] *) {
+  border-radius: 0.375rem;
+}
+
+.rounded-lg:not([data-ds-preview] *) {
+  border-radius: 0.5rem;
+}
+
+/* 테마 토글 아이콘은 자식 변형(*:rounded-md)이고, 본문 표는 prose 규칙이 var(--radius-lg)를 직접 읽는다 */
+.\*\:rounded-md > * {
+  border-radius: 0.375rem;
+}
+
+#nd-page .prose :where(table) {
+  border-radius: 0.5rem;
 }
