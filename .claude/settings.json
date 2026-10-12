@@ -1,5 +1,16 @@
 {
   "$schema": "https://json-schema.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(npm view *)",
+      "Bash(pnpm verify)",
+      "Bash(pnpm format:check)",
+      "Bash(pnpm check-types)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm audit)",
+      "Bash(pnpm audit --json)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
