@@ -16,6 +16,7 @@ Just-in-Time package: exports TypeScript source, consumed and compiled by apps.
 ## Scripts
 
 - `lint`, `check-types` — run via turbo
+- New components: `pnpm component:new <name>` at the repo root (see the `create-component` skill); `pnpm components:check` enforces the checklist
 - `storybook` / `build-storybook` / `copy:car` — docs and local 3D meshes (gitignored)
 - No `build` script (JIT pattern)
 - `three` / `@react-three/fiber` are **devDependencies**. Do not import them from `apps/web` or `apps/docs`. 3D stories are not a public `@repo/ui/*` export.

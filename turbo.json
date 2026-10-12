@@ -40,6 +40,20 @@
       "inputs": ["registry.json", "registry/**", "packages/ui/src/**", "scripts/sync-registry.mjs"],
       "outputs": []
     },
+    "//#components:check": {
+      "description": "Fail when a public @repo/ui component lacks a story, docs page, example, registry item, or DESIGN.md entry",
+      "inputs": [
+        "packages/ui/src/**",
+        "packages/ui/components.config.json",
+        "apps/docs/content/docs/components/**",
+        "apps/docs/src/_examples/**",
+        "registry.json",
+        "registry/**",
+        "DESIGN.md",
+        "scripts/check-components.mjs"
+      ],
+      "outputs": []
+    },
     "//#format:check": {
       "description": "Check Prettier formatting for the whole repository",
       "inputs": ["$TURBO_DEFAULT$", "**/*.{ts,tsx,md,mdx,json,css,mjs,js}", "!pnpm-lock.yaml"],
