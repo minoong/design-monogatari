@@ -29,13 +29,9 @@ const root = env.CLAUDE_PROJECT_DIR || process.cwd();
 
 const additionalContext = existsSync(join(root, 'DESIGN.md'))
   ? [
-      'Harness: do not ask to continue, verify, or commit. Infer from the request and the repo.',
-      'Default git branch is main (not master). Create a feat/fix/chore branch before code changes.',
+      // 하네스 지침(묻지 말 것, 브랜치, 검증 루프)은 .claude/rules/agent-loop.md 와 git-workflow.md 에 있다. 여기서는 중복하지 않는다
       'Visual source of truth: DESIGN.md. CSS tokens: packages/ui/src/styles/globals.css. Rule: .claude/rules/design.md.',
       'Before UI work, read DESIGN.md. Do not hardcode hex in components.',
-      'Storybook must set html.light or html.dark so preview canvas matches tokens.',
-      'After UI, token, or Storybook changes: delegate to the ui-verifier subagent (.claude/agents/ui-verifier.md; Playwright MCP in light and dark), then pnpm verify. Skill: ship-ui-change.',
-      'PostToolUse / SubagentStop / Stop hooks block finishing if verify is skipped. Merge notice → checkout main and pull.',
     ].join(' ')
   : 'DESIGN.md is missing. Recreate it (Apple-inspired, Geist) and sync packages/ui/src/styles/globals.css.';
 

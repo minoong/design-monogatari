@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-`AGENTS.md` (root, `apps/web`, `packages/ui`) holds the agent index and folder notes. Claude Code does not load the root one automatically when this file exists — this file and `.claude/` carry what Claude needs. `apps/web/CLAUDE.md` and `packages/ui/CLAUDE.md` import their folder's `AGENTS.md`.
+`AGENTS.md` (root, `apps/web`, `packages/ui`) holds the agent index and folder notes. Claude Code does not load the root one automatically when this file exists — this file and `.claude/` carry what Claude needs. `apps/web/CLAUDE.md`, `apps/docs/CLAUDE.md` and `packages/ui/CLAUDE.md` each import their folder's `AGENTS.md`.
 
 ## Commands
 
@@ -21,7 +21,6 @@ pnpm lint                             # ESLint, --max-warnings 0
 pnpm check-types                      # web runs `next typegen && tsc --noEmit`
 pnpm verify                           # format:check + lint + check-types + build (what CI runs)
 pnpm --filter @repo/ui exec eslint src/button.tsx   # lint a single file
-pnpm --filter @repo/ui generate:component           # scaffold a new @repo/ui component
 ```
 
 Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
@@ -37,7 +36,7 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 ## Claude Code harness (`.claude/`, `.mcp.json`)
 
 - **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, …).
-- **Skills** `.claude/skills/<name>` are symlinks to `.agents/skills/<name>` (the `npx skills add` install root, tracked by `skills-lock.json`). Add new skills under `.agents/skills/` and symlink them; don't copy.
+- **Skills** (project-authored: `git-commit`, `verify`, `sync-project-docs`, `create-component`; the rest are installed) `.claude/skills/<name>` are symlinks to `.agents/skills/<name>` (the `npx skills add` install root, tracked by `skills-lock.json`). Add new skills under `.agents/skills/` and symlink them; don't copy.
 - **Subagent** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs Storybook light/dark checks and `pnpm verify`. The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` and `storybook` for the main session.
 - **Hooks** (`.claude/settings.json` → `.claude/hooks/`): `SessionStart` injects DESIGN.md pointers; `ui-verify.mjs` tracks UI edits via `PostToolUse` and blocks `Stop` / `SubagentStop` until Playwright and `pnpm verify` have run (state in gitignored `.claude/hooks/state/`). Every decision is also appended to the gitignored `.claude/logs/hook-events.jsonl` through `hooks/lib/log.mjs`, which writes an allowlisted, privacy-safe line (no prompts, commands or tool output; repo-relative paths only; hashed session id) and never affects the hook's decision. `pnpm harness:trace [--story|--last|--session <id>] [--out file]` exports a sanitized summary and refuses to write anything containing absolute paths or emails.
 
@@ -52,7 +51,7 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 
 ## Rules that are easy to violate
 
-- **Motion vs GSAP**: UI motion uses `motion` (import `motion/react-client`). Scroll/pin/scrub uses GSAP + ScrollTrigger (`ScrollImageSequence`, 견적 exterior). Never use both on the same element; never put Motion on a WebGL/canvas element; don't combine Tailwind `transition-*` with Motion on one element; respect `useReducedMotion()`.
+- **Motion vs GSAP** (canonical statement; `.claude/rules/animation.md` has the tool table): UI motion uses `motion` (import `motion/react-client`). Scroll/pin/scrub uses GSAP + ScrollTrigger (`ScrollImageSequence`, 견적 exterior). Never use both on the same element; never put Motion on a WebGL/canvas element; don't combine Tailwind `transition-*` with Motion on one element; respect `useReducedMotion()`.
 - **`three` / `@react-three/fiber` are Storybook-only** devDependencies of `@repo/ui` — never import them from `apps/web` or `apps/docs`.
 - **No new dependencies or alternative stack libraries** (styled-components, Vue, npm/yarn, etc.) without explicit user approval.
 - `"use client"` only when needed (handlers, hooks, Motion, Radix).
@@ -61,6 +60,6 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 ## Workflow
 
 - Work on a feature branch from `main` (`feat/`, `fix/`, `chore/`); never commit directly to `main`. Commit, push, and PR only when the user asks; commit messages are Korean Conventional Commits (`git-commit` skill).
-- After UI / token / Storybook changes, verify without being asked: delegate to `ui-verifier`, then run `pnpm verify` (`ship-ui-change` skill).
+- After UI / token / Storybook / docs-content changes, verify without being asked: delegate to `ui-verifier`, then run `pnpm verify` (`verify` skill; Claude Code also runs a skill named `verify` before commits).
 - If structure, DS API, tokens, or scripts change, update README.md / DESIGN.md / nested AGENTS.md to match (`sync-project-docs` skill).
 - Deep how-tos live in skills (turborepo, motion-react, gsap-*, create-component, feature-sliced-design, accessibility, …) — invoke the matching one before the relevant work.

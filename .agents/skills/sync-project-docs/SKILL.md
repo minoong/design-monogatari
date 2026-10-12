@@ -25,14 +25,16 @@ paths:
 
 ## 매핑
 
-| 코드가 바뀌면                                                | 맞출 문서                                                                                                | 넣지 말 것                                  |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `apps/web`·`apps/docs` 레이어, Next `app/` re-export, 포트   | 루트 [README.md](../../../README.md) 표·Develop, `apps/*/AGENTS.md`                                      | [DESIGN.md](../../../DESIGN.md)에 폴더 트리 |
-| 패키지 추가·삭제, 루트 스크립트                              | [README.md](../../../README.md)                                                                          | 토큰 표                                     |
-| 토큰·시맨틱 색                                               | [DESIGN.md](../../../DESIGN.md) + `packages/ui/src/styles/globals.css` + `registry.json` `theme.cssVars` | README에 hex 복사                           |
-| DS public API (compound 조각, `asChild`, variant, a11y 계약) | [DESIGN.md](../../../DESIGN.md) Components, `packages/ui/AGENTS.md` Composition                          | FSD 레이어 이름                             |
-| 앱 CSS 경로, ESLint `withTailwindCss`                        | `packages/eslint-config/README.md`                                                                       | DESIGN.md                                   |
-| 새 skill / rule / hook / subagent                            | 루트 [AGENTS.md](../../../AGENTS.md) 카탈로그, [CLAUDE.md](../../../CLAUDE.md)                           | DESIGN.md                                   |
+| 코드가 바뀌면                                                   | 맞출 문서                                                                                                | 넣지 말 것                                  |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `apps/web`·`apps/docs` 레이어, Next `app/` re-export, 포트      | 루트 [README.md](../../../README.md) 표·Develop, `apps/*/AGENTS.md`                                      | [DESIGN.md](../../../DESIGN.md)에 폴더 트리 |
+| 패키지 추가·삭제, 루트 스크립트                                 | [README.md](../../../README.md)                                                                          | 토큰 표                                     |
+| 토큰·시맨틱 색                                                  | [DESIGN.md](../../../DESIGN.md) + `packages/ui/src/styles/globals.css` + `registry.json` `theme.cssVars` | README에 hex 복사                           |
+| DS public API (compound 조각, `asChild`, variant, a11y 계약)    | [DESIGN.md](../../../DESIGN.md) Components, `packages/ui/AGENTS.md` Composition                          | FSD 레이어 이름                             |
+| 앱 CSS 경로, ESLint `withTailwindCss`                           | `packages/eslint-config/README.md`                                                                       | DESIGN.md                                   |
+| 새 skill / rule / hook / subagent                               | 루트 [AGENTS.md](../../../AGENTS.md) 카탈로그, [CLAUDE.md](../../../CLAUDE.md)                           | DESIGN.md                                   |
+| 새 컴포넌트·예시·문서 페이지 (`apps/docs/content`, `_examples`) | `apps/docs/AGENTS.md`(블록, 새 컴포넌트 문서 추가 절차), 소개 페이지 상태 표(`content/docs/index.mdx`)   | README에 컴포넌트 목록                      |
+| `apps/web` 앱 구조·견적 도메인 규칙                             | `apps/web/AGENTS.md`, 루트 [README.md](../../../README.md) 표                                            | DESIGN.md                                   |
 
 ## DESIGN.md vs README.md
 
@@ -43,5 +45,5 @@ paths:
 
 1. `git diff` (또는 이번 작업에서 만진 경로)
 2. 표에서 해당 행의 문서만 읽고, 더 이상 사실이 아닌 문장을 고친다
-3. UI/토큰/Storybook 파일이 같이 바뀌었으면 `.agents/skills/ship-ui-change/SKILL.md`
+3. UI/토큰/Storybook 파일이 같이 바뀌었으면 `.agents/skills/verify/SKILL.md`
 4. 커밋은 사용자 요청 전에 하지 않음

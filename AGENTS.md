@@ -50,13 +50,13 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 | UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                                  |
 | Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit            |
 | Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning                    |
-| GSAP (8)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP                 |
+| GSAP (7)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP                 |
 | Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component                     |
 | Feature-Sliced    | `.agents/skills/feature-sliced-design/`       | `apps/web`·`apps/docs` 구조 (UI 패키지 제외) |
 | lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치                   |
 | Playwright MCP    | `.claude/agents/ui-verifier.md` (inline)      | UI 변경 후 라이트/다크 자동 확인             |
 | UI verifier       | `.claude/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
-| Ship UI change    | `.agents/skills/ship-ui-change/`              | UI 끝나면 요청 없이 verify                   |
+| Verify            | `.agents/skills/verify/`                      | UI 끝나면, 커밋 직전에 verify                |
 | Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤      |
 
 Install updates: `npx skills add <owner/repo> --skill <name>`
@@ -132,7 +132,7 @@ packages/*-config       shared eslint / typescript / prettier
 Do not wait for the user to ask. After UI / token / Storybook changes:
 
 1. Delegate to subagent `.claude/agents/ui-verifier.md` (Playwright MCP inline) — Storybook light **and** dark.
-2. `.agents/skills/ship-ui-change/SKILL.md` → `pnpm verify`
+2. `.agents/skills/verify/SKILL.md` → `pnpm verify`
 
 A `Stop` hook (`.claude/hooks/ui-verify.mjs`) blocks finishing if this is skipped. `PostToolUse` nudges mid-loop. `SubagentStop` holds back a subagent that edited UI and skipped verify.
 
@@ -145,12 +145,6 @@ Do not commit or push unless the user asks.
 - **`main`에 직접 커밋하지 않음**
 - **커밋·push·PR**: 사용자 요청 시에만, **한글** Conventional Commits
 - **PR 머지 후**: 사용자가 머지했다고 알리면 에이전트가 `main` 체크아웃 + `git pull origin main` 실행 (skill §7)
-
-## Scaffolding
-
-```bash
-pnpm --filter @repo/ui generate:component
-```
 
 <!-- BEGIN:turborepo-agent-rules -->
 

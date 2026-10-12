@@ -9,12 +9,6 @@ paths:
 
 # @repo/ui 컴포넌트 생성
 
-## 스캐폴딩 (선택)
-
-```bash
-pnpm --filter @repo/ui generate:component
-```
-
 ## 체크리스트
 
 1. **파일**: `packages/ui/src/<kebab-name>.tsx` (예: `button.tsx`)
@@ -53,16 +47,16 @@ pnpm --filter @repo/ui generate:component
 
 ## Registry (external apps)
 
-새 UI 컴포넌트를 외부 Next.js 앱에 배포할 때:
+새 UI 컴포넌트를 외부 Next.js 앱에 배포할 때 (`registry/design-monogatari/*`는 생성물이라 **손으로 복사하지 않는다**):
 
-1. `registry/design-monogatari/<kebab-name>.tsx` — `@/lib/utils` import
-2. `registry.json`에 item 추가 (`registryDependencies`: `minoong/design-monogatari/cn`, `minoong/design-monogatari/theme`)
-3. `pnpm dlx shadcn@latest registry validate minoong/design-monogatari`
+1. `registry.json`에 item 추가 (`registryDependencies`: `minoong/design-monogatari/cn`, `minoong/design-monogatari/theme`, `files[].target`: `@ui/<name>.tsx`)
+2. `pnpm registry:sync` — `registry/design-monogatari/<name>.tsx`와 theme 항목을 원본에서 생성
+3. `pnpm registry:check`(verify에 포함)와 `pnpm exec shadcn registry validate registry.json`
 
 ## 완료
 
 사용자가 확인을 요청하지 않아도 바로 한다.
 
 1. `ui-verifier` 서브에이전트(Playwright MCP) — Storybook `html.light` / `html.dark`, 보더·링·눌림
-2. `.agents/skills/ship-ui-change/SKILL.md` — `pnpm verify`
+2. `.agents/skills/verify/SKILL.md` — `pnpm verify`
 3. public API가 생겼거나 바뀌면 `DESIGN.md` Components + `packages/ui/AGENTS.md` Composition (`.agents/skills/sync-project-docs/SKILL.md`)
