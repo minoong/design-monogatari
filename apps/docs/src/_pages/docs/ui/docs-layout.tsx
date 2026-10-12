@@ -1,13 +1,9 @@
-import { DocsLayout } from '@fumadocs/base-ui/layouts/spacious';
 import type { ReactNode } from 'react';
 
-import { baseOptions } from '@/shared/lib/layout-options';
 import { source } from '@/shared/lib/source';
 
+import { DocsLayoutClient } from './docs-layout-client';
+
 export function DocsShell({ children }: { children: ReactNode }) {
-  return (
-    <DocsLayout tree={source.getPageTree()} {...baseOptions()}>
-      {children}
-    </DocsLayout>
-  );
+  return <DocsLayoutClient tree={source.getPageTree()}>{children}</DocsLayoutClient>;
 }
