@@ -46,6 +46,16 @@ pnpm dlx shadcn@latest add http://localhost:4102/r/button.json
 
 `scripts/build-registry.mjs` rewrites `registryDependencies` from `minoong/design-monogatari/<name>` to `${SITE_URL}/r/<name>.json` in a temporary copy only; the committed `registry.json` keeps the GitHub ids so GitHub installs still work. Check in the consumer: `tsc`, `next build`, and that utilities such as `.bg-overlay` and `.animate-button-loader-dot` exist in the compiled CSS.
 
+## Consumer-install e2e (CI)
+
+`pnpm verify` only proves the components work inside the monorepo. `scripts/test-registry-consumer.mjs` (`pnpm registry:consumer-test`) installs every item into a fresh `create-next-app` project (pinned version), `shadcn init -b radix`, then `shadcn add` for all 11 items, `tsc`, `next build`, asserts `.bg-overlay` / `@keyframes button-loader-dot` exist in the compiled CSS, and fetches the rendered page.
+
+- `--source hosted` (default): builds the registry, serves `apps/docs/public/r` locally, installs from there. Verifies the PR's own changes.
+- `--source github`: installs `minoong/design-monogatari/<item>` from GitHub's default branch — what real users do. Dependency refs do **not** follow `#ref`, so a PR branch cannot be tested this way; it runs after merge and nightly.
+- `--only a,b --keep` for debugging (keeps the temp app).
+
+`.github/workflows/registry.yml`: `hosted` job on PRs/pushes touching `registry*`, `packages/ui/src`, or the scripts, plus nightly; `github` job on push to `main`, nightly, and manual dispatch. Kept out of `ci.yml` (minutes of network). Locally it takes ~1–2 min once the pnpm cache is warm.
+
 ## External install
 
 ```bash
@@ -53,4 +63,6 @@ pnpm dlx shadcn@latest add minoong/design-monogatari/badge        # GitHub regis
 pnpm dlx shadcn@latest add https://<docs-host>/r/badge.json        # hosted registry (once deployed)
 ```
 
-Validate the registry file: `pnpm exec shadcn registry validate registry.json`.
+Validate the registry file: `pnpm exec shadcn registry validate registry.json` (the workflow runs it too).
+
+GitHub addresses (`owner/repo/item`) need a public `github.com` repo with `registry.json` at the root. Pin with `#ref` (branch, tag, SHA), but the ref is **not inherited by `registryDependencies`** — a pinned item still pulls `cn` and `theme` from the default branch. The shadcn registry directory / health monitor do not apply to GitHub addresses.

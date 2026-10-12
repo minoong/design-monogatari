@@ -27,7 +27,7 @@ pnpm verify          # format:check + lint + check-types + build
 ## Hooks & CI
 
 - **pre-commit**: husky + lint-staged (staged files: Prettier + ESLint fix)
-- **CI**: GitHub Actions runs `pnpm verify` on PR/push to `main`
+- **CI**: GitHub Actions runs `pnpm verify` on PR/push to `main`. A separate `registry.yml` workflow installs the shadcn registry into a fresh app (PRs touching the registry, after merge, nightly)
 
 ## Registry exception
 

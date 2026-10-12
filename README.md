@@ -57,7 +57,7 @@ pnpm dlx shadcn@latest add minoong/design-monogatari/badge
 
 Requirements: Tailwind v4 and a **Radix-based** shadcn project (`shadcn init -b radix`). The default `shadcn init -d` is Base UI, where the CLI rewrites Radix `asChild` to `render=` and breaks `Dialog`.
 
-`packages/ui` is the single source. `pnpm registry:sync` generates `registry/design-monogatari/*` and the `theme` item in [registry.json](registry.json); `pnpm registry:check` (part of `pnpm verify`) fails on drift. `pnpm --filter docs registry:build` writes the hosted form to `apps/docs/public/r/` (set `SITE_URL`). Details: `.claude/rules/shadcn-registry.md`.
+`packages/ui` is the single source. `pnpm registry:sync` generates `registry/design-monogatari/*` and the `theme` item in [registry.json](registry.json); `pnpm registry:check` (part of `pnpm verify`) fails on drift. `pnpm --filter docs registry:build` writes the hosted form to `apps/docs/public/r/` (set `SITE_URL`). `pnpm registry:consumer-test` installs every item into a fresh Next app and builds it (CI: `.github/workflows/registry.yml`). Details: `.claude/rules/shadcn-registry.md`.
 
 ## Links
 
