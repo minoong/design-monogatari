@@ -33,6 +33,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/ui-verify.mjs\""
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/component-check.mjs\""
+          }
+        ]
       }
     ],
     "SubagentStop": [
@@ -51,6 +60,16 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/ui-verify.mjs\""
+          }
+        ]
+      }
+    ],
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/instructions-log.mjs\""
           }
         ]
       }

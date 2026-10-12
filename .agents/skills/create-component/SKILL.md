@@ -1,62 +1,42 @@
 ---
 name: create-component
 description: >-
-  @repo/ui React 컴포넌트 생성. subpath export, named export, a11y·React best practices 적용.
-  새 컴포넌트, UI 추가, generate component 요청 시 적용.
-paths:
-  - 'packages/ui/**'
+  @repo/ui 컴포넌트를 새로 만들거나 공개 API를 바꿀 때 쓴다. 스캐폴드 → 구현 → 스토리 →
+  문서 예시·페이지 → 레지스트리 → 누락 검사 → 접근성 리뷰 → 검증까지 한 번에 따라간다.
+when_to_use: >-
+  "컴포넌트 추가", "UI 추가", "새 컴포넌트", "컴포넌트 변경", "variant 추가" 같은 요청, 또는
+  packages/ui/src 의 공개 컴포넌트를 만들거나 props 를 바꾸는 작업.
+arguments: [name]
+allowed-tools: Bash(pnpm component:new *) Bash(pnpm components:check *) Bash(pnpm registry:sync) Bash(pnpm registry:check)
 ---
 
-# @repo/ui 컴포넌트 생성
+# @repo/ui 컴포넌트 만들기·바꾸기
 
-## 체크리스트
+현재 누락 현황(스킬을 불러올 때 계산됨):
 
-1. **파일**: `packages/ui/src/<kebab-name>.tsx` (예: `button.tsx`)
-2. **export**: named export, `"use client"`는 필요할 때만
-3. **package.json exports**: `./*` → `src/*.tsx`, `./icons/*` → `src/icons/*.tsx` — barrel `index.ts` 금지
-4. **import**: 앱에서 `@repo/ui/<kebab-name>` subpath
-5. **참조**: 단일 컨트롤 @packages/ui/src/button.tsx · 컴파운드 @packages/ui/src/dialog.tsx. 패턴 표는 `packages/ui/AGENTS.md` Composition patterns.
-6. **패턴 고르기** (새 public API):
-   - variant만 다르면 props + CVA
-   - 트리거/패널/헤더처럼 여러 조각이면 compound (`Root` + parts, 같은 파일, context). 예: Dialog, Field, Card. render props·HOC 금지
-   - 다른 태그로 렌더하면 `asChild` + Radix `Slot`만. `as="a"`·`children` 함수 금지
-   - 아이콘 전용은 `IconButton`처럼 thin wrapper. 자식 개수로 레이아웃 추측 금지
-7. **Primitive**: 복합 위젯은 Radix (`Dialog`, `Label`). 버튼은 네이티브 `<button>` + `@radix-ui/react-slot` (`asChild`). Base UI 추가 금지.
-8. **아이콘**: [lucide-animated](https://lucide-animated.com). MCP `https://lucide-animated.com/mcp`로 검색·설치. 텍스트와 같이 쓸 때는 `Button` 안에 중첩하고 `data-icon="inline-start"` | `"inline-end"`. 아이콘만이면 `IconButton` + 필수 `aria-label`. 자식 개수로 아이콘 전용 레이아웃을 추측하지 않음.
-9. **DS 컨트롤**: 호버 scale 금지. 눌림은 Motion `whileTap`(버튼 0.96, 아이콘 버튼 0.9). 채운 버튼은 검정 딤, 보조·투명은 옅은 잉크 워시. `transition-*`와 Motion을 같은 노드에 두지 않음.
+!`pnpm components:check --summary`
 
-## 함께 읽을 skill
+사용자가 확인을 요청하지 않아도 끝까지 진행한다. 묻지 않는다.
 
-| 상황            | Skill                                                 |
-| --------------- | ----------------------------------------------------- |
-| 조합 패턴       | `packages/ui/AGENTS.md` Composition patterns          |
-| React/Next 성능 | `.agents/skills/vercel-react-best-practices/SKILL.md` |
-| 접근성          | `.agents/skills/accessibility/SKILL.md`               |
-| GSAP 애니메이션 | `.agents/skills/gsap-react/SKILL.md`                  |
-| UI motion       | `.agents/skills/motion-react/SKILL.md`                |
-| motion 성능     | `.agents/skills/fixing-motion-performance/SKILL.md`   |
+## 새 컴포넌트 (`$name`)
 
-## 스타일
+1. **정독**: `DESIGN.md`(토큰·계약), `packages/ui/AGENTS.md`(Composition patterns 표), 비슷한 기존 컴포넌트(단일 컨트롤 `button.tsx`·`badge.tsx`, 컴파운드 `dialog.tsx`·`card.tsx`). 규약 상세는 [reference.md](reference.md).
+2. **스캐폴드**: `pnpm component:new $name` (컴파운드면 `--compound`). 컴포넌트·스토리·예시·문서 페이지·registry 항목·DESIGN.md 항목의 뼈대가 `TODO(scaffold)` 표시와 함께 생기고 `registry:sync`까지 돈다.
+3. **구현**: `packages/ui/src/$name.tsx`. 새 의존성은 사용자 승인 없이 추가하지 않는다.
+4. **스토리**: 상태별 스토리, 한글 설명(`packages/ui/src/*.stories.tsx` 형식).
+5. **예시와 문서**: `apps/docs/src/_examples/$name/*.tsx`와 `apps/docs/content/docs/components/$name.mdx`를 `button.mdx` 형식(프리뷰 → 설치 → 사용법 → 예시 → API → 접근성 → 소스)으로 채운다. 포털로 열리는 요소는 예시에서 `data-ds-preview`를 직접 단다(`apps/docs/AGENTS.md`).
+6. **DESIGN.md**: 계약(variant, 접근성, 토큰)을 적는다.
+7. **레지스트리**: `registry.json` 항목의 title·description·의존성을 채우고 `pnpm registry:sync`. 복사본은 생성물이라 손으로 고치지 않는다.
+8. **누락 검사**: `pnpm components:check`가 통과해야 한다(`TODO(scaffold)`가 하나라도 남으면 실패). `pnpm verify`에도 포함돼 있다.
+9. **접근성 리뷰**: `a11y-reviewer` 서브에이전트에 바뀐 파일 경로를 알려 읽기 전용 리뷰를 받고 지적을 고친다.
+10. **검증**: `ui-verifier`(Storybook과 문서 페이지, 라이트/다크) → `verify` 스킬(`pnpm verify`). 소비자 설치는 CI의 `registry.yml`이 확인한다.
 
-- **Tailwind CSS v4** — utility classes, `@theme` 토큰 사용
-- `cn()` — 패키지 내부 `./lib/cn`, 앱에서 `@repo/ui/cn`
-- 새 CSS Module 금지 (Tailwind로 표현 불가한 경우만 예외)
-- UI motion: Motion (`motion/react`) — 버튼 루트에는 쓰지 않음. `transition-*`와 Motion을 같은 노드에 두지 않음
-- Scroll/timeline: GSAP + ScrollTrigger (`ScrollImageSequence`). Do not put Motion on that canvas.
-- Storybook 3D is not a public `@repo/ui/*` export. Do not add `three` to a shipped component.
+## 기존 컴포넌트 변경
 
-## Registry (external apps)
+props·variant·접근성 계약이 바뀌면 2번을 빼고 위 순서를 그대로 따른다: 스토리, 예시, 문서 페이지의 API 표와 접근성 절, DESIGN.md, `registry:sync`, 검사, 리뷰, 검증. 공개 API가 바뀌면 `.agents/skills/sync-project-docs/SKILL.md`로 `packages/ui/AGENTS.md`도 맞춘다.
 
-새 UI 컴포넌트를 외부 Next.js 앱에 배포할 때 (`registry/design-monogatari/*`는 생성물이라 **손으로 복사하지 않는다**):
+## 금지
 
-1. `registry.json`에 item 추가 (`registryDependencies`: `minoong/design-monogatari/cn`, `minoong/design-monogatari/theme`, `files[].target`: `@ui/<name>.tsx`)
-2. `pnpm registry:sync` — `registry/design-monogatari/<name>.tsx`와 theme 항목을 원본에서 생성
-3. `pnpm registry:check`(verify에 포함)와 `pnpm exec shadcn registry validate registry.json`
-
-## 완료
-
-사용자가 확인을 요청하지 않아도 바로 한다.
-
-1. `ui-verifier` 서브에이전트(Playwright MCP) — Storybook `html.light` / `html.dark`, 보더·링·눌림
-2. `.agents/skills/verify/SKILL.md` — `pnpm verify`
-3. public API가 생겼거나 바뀌면 `DESIGN.md` Components + `packages/ui/AGENTS.md` Composition (`.agents/skills/sync-project-docs/SKILL.md`)
+- barrel `index.ts`, `render` props, HOC, 훅 없이 `scale` 호버, 하드코딩 hex (규약: reference.md)
+- 검사를 통과시키려고 `components.config.json`에 예외를 추가하는 것 (정말 배포·문서 대상이 아닐 때만, 이유와 함께)
+- 사용자 요청 없이 commit / push / PR

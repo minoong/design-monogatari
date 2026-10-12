@@ -19,7 +19,9 @@ pnpm --filter web copy:exterior       # exterior frame stills (gitignored public
 pnpm format                           # Prettier write (Tailwind class sort included)
 pnpm lint                             # ESLint, --max-warnings 0
 pnpm check-types                      # web runs `next typegen && tsc --noEmit`
-pnpm verify                           # format:check + lint + check-types + build (what CI runs)
+pnpm verify                           # format:check + registry:check + components:check + lint + check-types + build (what CI runs)
+pnpm component:new <name> [--compound]   # scaffold story + example + docs page + registry item + DESIGN.md entry (all marked TODO(scaffold))
+pnpm components:check                 # every public @repo/ui component must have story, docs page, example, registry item, DESIGN.md entry
 pnpm --filter @repo/ui exec eslint src/button.tsx   # lint a single file
 ```
 
@@ -37,8 +39,8 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 
 - **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, …).
 - **Skills** (project-authored: `git-commit`, `verify`, `sync-project-docs`, `create-component`; the rest are installed) `.claude/skills/<name>` are symlinks to `.agents/skills/<name>` (the `npx skills add` install root, tracked by `skills-lock.json`). Add new skills under `.agents/skills/` and symlink them; don't copy.
-- **Subagent** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs Storybook light/dark checks and `pnpm verify`. The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` and `storybook` for the main session.
-- **Hooks** (`.claude/settings.json` → `.claude/hooks/`): `SessionStart` injects DESIGN.md pointers; `ui-verify.mjs` tracks UI edits via `PostToolUse` and blocks `Stop` / `SubagentStop` until Playwright and `pnpm verify` have run (state in gitignored `.claude/hooks/state/`). Every decision is also appended to the gitignored `.claude/logs/hook-events.jsonl` through `hooks/lib/log.mjs`, which writes an allowlisted, privacy-safe line (no prompts, commands or tool output; repo-relative paths only; hashed session id) and never affects the hook's decision. `pnpm harness:trace [--story|--last|--session <id>] [--out file]` exports a sanitized summary and refuses to write anything containing absolute paths or emails.
+- **Subagents** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs light/dark checks (Storybook, docs, web) and `pnpm verify`; `a11y-reviewer` is a read-only accessibility reviewer (Read/Grep/Glob, preloads the `accessibility` skill, keeps project memory). The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` and `storybook` for the main session.
+- **Hooks** (`.claude/settings.json` → `.claude/hooks/`): `SessionStart` injects DESIGN.md pointers; `component-check.mjs` tells you right after a component edit which of story/docs/example/registry/DESIGN.md is missing; `InstructionsLoaded` is logged by `instructions-log.mjs`; `ui-verify.mjs` tracks UI edits via `PostToolUse` and blocks `Stop` / `SubagentStop` until Playwright and `pnpm verify` have run (state in gitignored `.claude/hooks/state/`). Every decision is also appended to the gitignored `.claude/logs/hook-events.jsonl` through `hooks/lib/log.mjs`, which writes an allowlisted, privacy-safe line (no prompts, commands or tool output; repo-relative paths only; hashed session id) and never affects the hook's decision. `pnpm harness:trace [--story|--last|--session <id>] [--out file]` exports a sanitized summary and refuses to write anything containing absolute paths or emails.
 
 ## Storybook MCP (`@storybook/addon-mcp`)
 
@@ -62,4 +64,5 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 - Work on a feature branch from `main` (`feat/`, `fix/`, `chore/`); never commit directly to `main`. Commit, push, and PR only when the user asks; commit messages are Korean Conventional Commits (`git-commit` skill).
 - After UI / token / Storybook / docs-content changes, verify without being asked: delegate to `ui-verifier`, then run `pnpm verify` (`verify` skill; Claude Code also runs a skill named `verify` before commits).
 - If structure, DS API, tokens, or scripts change, update README.md / DESIGN.md / nested AGENTS.md to match (`sync-project-docs` skill).
+- Adding or changing a component: follow the `create-component` skill (scaffold → implement → story → example/docs → registry → `components:check` → `a11y-reviewer` → `ui-verifier` → `verify`).
 - Deep how-tos live in skills (turborepo, motion-react, gsap-*, create-component, feature-sliced-design, accessibility, …) — invoke the matching one before the relevant work.
