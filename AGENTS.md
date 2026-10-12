@@ -51,11 +51,12 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 | Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit            |
 | Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning                    |
 | GSAP (7)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP                 |
-| Create component  | `.agents/skills/create-component/`            | new `@repo/ui` component                     |
+| Create component  | `.agents/skills/create-component/`            | new/changed `@repo/ui` component (full loop) |
 | Feature-Sliced    | `.agents/skills/feature-sliced-design/`       | `apps/web`·`apps/docs` 구조 (UI 패키지 제외) |
 | lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치                   |
 | Playwright MCP    | `.claude/agents/ui-verifier.md` (inline)      | UI 변경 후 라이트/다크 자동 확인             |
 | UI verifier       | `.claude/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
+| A11y reviewer     | `.claude/agents/a11y-reviewer.md`             | 읽기 전용 접근성 리뷰 (컴포넌트 변경 후)     |
 | Verify            | `.agents/skills/verify/`                      | UI 끝나면, 커밋 직전에 verify                |
 | Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤      |
 
@@ -126,6 +127,10 @@ packages/*-config       shared eslint / typescript / prettier
 
 - `@repo/ui` imports: `@repo/ui/button` (subpath, no barrels)
 - Apps: Next `app/` re-exports FSD `src/_app` + `src/_pages`. Rule: `.claude/rules/fsd-apps.md`
+
+## Component loop
+
+New or changed `@repo/ui` component: `.agents/skills/create-component/SKILL.md`. `pnpm component:new <name>` scaffolds the story, docs example and page, registry item and DESIGN.md entry (marked `TODO(scaffold)`); `pnpm components:check` (inside `pnpm verify`) fails until every public component has all of them. Exceptions live in `packages/ui/components.config.json` with a reason.
 
 ## Verification (definition of done)
 

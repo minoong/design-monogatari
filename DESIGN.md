@@ -218,6 +218,13 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 - Compound: `Card`, `CardHeader`, `CardTitle`, `CardDescription`. Hairline `border-border`, `bg-card`, `rounded-lg`. No box-shadow, no `href` / UTM demo API.
 
+### AnimatedAmount
+
+- Money or number readout whose digits roll (NumberFlow) when `value` changes. The first render shows the final value without animation. Do not wrap it in Motion; `prefers-reduced-motion` turns the roll off.
+- Default format is Korean won (`ko-KR`, integer, suffix `원`). `format` takes `Intl.NumberFormat` options; fraction digits follow `maximumFractionDigits` (else `minimumFractionDigits`, else 0) and `value` is rounded to them, so `4.5` with one fraction digit stays `4.5`.
+- `reserveWidth` (default on) reserves the width of the current value so neighbouring layout does not jitter while digits roll. The overall width still changes when the digit count changes.
+- Accessibility: the number is exposed as an `image` named with the formatted value; prefix and suffix are separate text. For an amount that matters and changes, pair it with an `aria-live="polite"` region holding the whole sentence ("1,250,000원").
+
 ### ScrollImageSequence
 
 - Pin + scrub a viewport panel; map scroll progress to `frames` URLs (consumer-owned). Draw on canvas — do not `setState` per frame.
