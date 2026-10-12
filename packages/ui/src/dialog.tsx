@@ -44,7 +44,7 @@ export const DialogPortal = DialogPrimitive.Portal;
 
 const overlayClasses = 'bg-overlay fixed inset-0 z-50';
 const contentClasses =
-  'border-border bg-card text-foreground fixed top-1/2 left-1/2 z-50 grid w-full max-w-lg -translate-1/2 gap-4 rounded-lg border p-6';
+  'border-border bg-card text-foreground fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-lg -translate-1/2 gap-4 rounded-lg border p-6';
 
 /** Shared overlay. `DialogContent` already mounts this — do not add a sibling overlay. */
 export const DialogOverlay = forwardRef<
