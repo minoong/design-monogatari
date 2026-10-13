@@ -13,12 +13,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '`IconButton`은 아이콘만으로 액션을 전달할 때 사용해요. `aria-label`은 필수예요. 기본 모서리는 `md`(둥근 사각형)이고, 기본 형태는 `clear`(잉크 아이콘)예요. 누르면 `whileTap`으로 0.9배 줄고 옅은 워시가 덮어요. 아이콘과 텍스트를 같이 쓸 때는 `Button`을 써 주세요.',
+          '`IconButton`은 아이콘만으로 액션을 전달할 때 사용합니다. `aria-label`은 필수입니다. 기본 모서리는 `md`(둥근 사각형)이고, 기본 형태는 `clear`(잉크 아이콘)입니다. 누르면 `whileTap`으로 0.9배 줄고 옅은 워시가 덮습니다. 아이콘과 텍스트를 같이 쓸 때는 `Button`을 써 주십시오.',
       },
     },
   },
   args: {
-    'aria-label': '좋아요',
+    'aria-label': '관심 차량 담기',
     children: <HeartIcon />,
   },
 } satisfies Meta<typeof IconButton>;
@@ -64,16 +64,16 @@ export const 형태: Story = {
 export const 크기: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-2">
-      <IconButton aria-label="좋아요" size="small" variant="primary">
+      <IconButton aria-label="관심 차량 담기" size="small" variant="primary">
         <HeartIcon />
       </IconButton>
-      <IconButton aria-label="좋아요" size="medium" variant="primary">
+      <IconButton aria-label="관심 차량 담기" size="medium" variant="primary">
         <HeartIcon />
       </IconButton>
-      <IconButton aria-label="좋아요" size="large" variant="primary">
+      <IconButton aria-label="관심 차량 담기" size="large" variant="primary">
         <HeartIcon />
       </IconButton>
-      <IconButton aria-label="좋아요" size="xlarge" variant="primary">
+      <IconButton aria-label="관심 차량 담기" size="xlarge" variant="primary">
         <HeartIcon />
       </IconButton>
     </div>
@@ -92,7 +92,7 @@ export const 로딩: Story = {
 export const 비활성화: Story = {
   args: {
     disabled: true,
-    'aria-label': '좋아요',
+    'aria-label': '관심 차량 담기',
     children: <HeartIcon />,
   },
 };

@@ -7,14 +7,16 @@ export default function CardWithContent() {
     <Card className="w-full max-w-sm">
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
-          <CardTitle>월 이체 한도</CardTitle>
+          <CardTitle>예상 견적가</CardTitle>
           <Badge variant="secondary">대기 중</Badge>
         </div>
-        <CardDescription>변경 요청은 영업일 기준 하루가 걸려요.</CardDescription>
+        <CardDescription>
+          구성을 바꾸시면 영업일 기준 하루 안에 상담원이 확인합니다.
+        </CardDescription>
       </CardHeader>
       <div className="flex justify-end px-6 pb-6">
         <Button variant="primary" size="medium">
-          한도 변경
+          구성 변경
         </Button>
       </div>
     </Card>

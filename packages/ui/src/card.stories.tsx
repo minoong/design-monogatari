@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Card`는 관련 정보를 한 덩어리로 묶어 줄 때 사용해요. 그림자는 올리지 않고, 헤어라인 테두리로 면을 나눠 주세요. `CardHeader` · `CardTitle` · `CardDescription`을 조합해요.',
+          '`Card`는 관련 정보를 한 덩어리로 묶어 줄 때 사용합니다. 그림자는 올리지 않고, 헤어라인 테두리로 면을 나눠 주십시오. `CardHeader` · `CardTitle` · `CardDescription`을 조합합니다.',
       },
     },
   },
@@ -24,9 +24,9 @@ export const 기본: Story = {
   render: () => (
     <Card className="max-w-sm">
       <CardHeader>
-        <CardTitle>이용 안내</CardTitle>
+        <CardTitle>견적 안내</CardTitle>
         <CardDescription>
-          이체 한도와 수수료는 상품마다 달라요. 진행 전에 한 번 더 확인해 주세요.
+          취득세와 부대비용은 지역과 과세 구분에 따라 다릅니다. 계약 전에 한 번 더 확인해 주십시오.
         </CardDescription>
       </CardHeader>
     </Card>

@@ -3,7 +3,7 @@
 import { ColorSwatchGroup } from '@repo/ui/color-swatch-group';
 import { useState } from 'react';
 
-// 데모용 색이에요. 컴포넌트는 색을 정하지 않고 `color`로 받아요.
+// 데모용 색입니다. 컴포넌트는 색을 정하지 않고 `color`로 받습니다.
 const options = [
   { value: 'white', label: '화이트', color: '#f2f2f0', group: '글로시', price: '기본 포함' },
   { value: 'black', label: '블랙', color: '#1a1a1c', group: '글로시', price: '기본 포함' },
@@ -15,7 +15,7 @@ const options = [
     color: '#7a5c3e',
     group: '메탈릭',
     price: '+1,000,000원',
-    unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
   },
 ];
 

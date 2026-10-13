@@ -129,7 +129,7 @@ const expanders: Record<string, (node: Node) => Promise<string>> = {
       codeBlock(PACKAGE_MANAGERS.map(command).join('\n'), 'bash');
 
     const sections = [
-      `**CLI 설치** (패키지 매니저 중 하나를 고르세요)`,
+      `**CLI 설치** (패키지 매니저 중 하나를 고르십시오)`,
       commands((pm) => addCommand(pm, name)),
       `**수동 설치**: 1. 의존성을 설치합니다.`,
       commands((pm) => `${pm.add} ${dependencies.join(' ')}`),

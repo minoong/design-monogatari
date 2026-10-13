@@ -13,7 +13,7 @@ import { SINGLE_SLOTS } from './types';
 
 export type Availability = { available: true } | { available: false; reason: string };
 
-const DEFAULT_UNAVAILABLE_REASON = '현재 사양 조합에서는 선택할 수 없어요.';
+const DEFAULT_UNAVAILABLE_REASON = '현재 사양 조합에서는 선택할 수 없습니다.';
 
 export function itemsOf(catalog: Catalog, slot: ItemRef['slot']): readonly CatalogItem<string>[] {
   return catalog[slot];

@@ -105,13 +105,15 @@ export function SequenceOverlay({
 }) {
   const showPaint = Boolean(paintId && onPaintId && !oem);
   const inspect = Boolean(onResetView && onZoomIn && onZoomOut);
-  const caption = oem ? `${kind} · 원본 머티리얼입니다.` : `${kind} · 도장 hex는 테마와 무관해요.`;
+  const caption = oem
+    ? `${kind} · 원본 머티리얼입니다.`
+    : `${kind} · 도장 hex는 테마와 무관합니다.`;
 
   return (
     <>
       <p className="text-muted-foreground text-caption">{engine}</p>
       <h2 className="text-title font-semibold tracking-tight">
-        {inspect ? '드래그해서 돌려요' : '스크롤하면 돌아요'}
+        {inspect ? '드래그해서 돌립니다' : '스크롤하면 돕니다'}
       </h2>
       <p className="text-caption text-muted-foreground mt-1">{caption}</p>
       {inspect && onResetView && onZoomIn && onZoomOut ? (

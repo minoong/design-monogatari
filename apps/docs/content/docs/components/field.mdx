@@ -1,6 +1,6 @@
 ---
 title: Field
-description: 레이블, 입력 칸, 오류 문구를 한 묶음으로 쌓는 세 부품이에요.
+description: 레이블, 입력 칸, 오류 문구를 한 묶음으로 쌓는 세 부품입니다.
 ---
 
 <ComponentPreview name="field/basic" />
@@ -9,10 +9,10 @@ description: 레이블, 입력 칸, 오류 문구를 한 묶음으로 쌓는 세
 
 <InstallTabs name="field" />
 
-`Field`는 [`Label`](/docs/components/label)을 감싸서 만들어요. 설치하면 `Label`도 함께 들어와요. 입력 칸은 [`Input`](/docs/components/input)을 따로 설치하세요.
+`Field`는 [`Label`](/docs/components/label)을 감싸서 만듭니다. 설치하면 `Label`도 함께 들어옵니다. 입력 칸은 [`Input`](/docs/components/input)을 따로 설치하십시오.
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
 </Callout>
 
 ## 사용법
@@ -36,7 +36,7 @@ export function Example({ error }: { error?: string }) {
 }
 ```
 
-`Field`는 연결을 자동으로 만들어 주지 않아요. 두 쌍을 직접 이어야 해요.
+`Field`는 연결을 자동으로 만들어 주지 않습니다. 두 쌍을 직접 이어야 합니다.
 
 - `FieldLabel`의 `htmlFor` ↔ `Input`의 `id`
 - `Input`의 `aria-describedby` ↔ `FieldError`의 `id`
@@ -45,23 +45,23 @@ export function Example({ error }: { error?: string }) {
 
 ### 오류
 
-입력 칸을 비운 채 벗어나면 오류가 나타나요. `FieldError`는 내용이 없으면 아무것도 렌더하지 않아서, 오류가 없을 때 자리를 차지하지 않아요.
+입력 칸을 비운 채 벗어나면 오류가 나타납니다. `FieldError`는 내용이 없으면 아무것도 렌더하지 않아서, 오류가 없을 때 자리를 차지하지 않습니다.
 
 <ComponentPreview name="field/error" />
 
 ## API 레퍼런스
 
-| 컴포넌트     | 렌더하는 요소 | 설명                                                                                              |
-| ------------ | ------------- | ------------------------------------------------------------------------------------------------- |
-| `Field`      | `div`         | 세로로 쌓고 간격 8px, 너비 100%. `div`의 모든 속성을 받아요.                                      |
-| `FieldLabel` | `label`       | [`Label`](/docs/components/label)과 같아요. `htmlFor`를 받아요.                                   |
-| `FieldError` | `p`           | **`id`가 필수**예요. `children`이 비면 `null`을 돌려줘요. `role="alert"`, `destructive` 색이에요. |
+| 컴포넌트     | 렌더하는 요소 | 설명                                                                                                  |
+| ------------ | ------------- | ----------------------------------------------------------------------------------------------------- |
+| `Field`      | `div`         | 세로로 쌓고 간격 8px, 너비 100%. `div`의 모든 속성을 받습니다.                                        |
+| `FieldLabel` | `label`       | [`Label`](/docs/components/label)과 같습니다. `htmlFor`를 받습니다.                                   |
+| `FieldError` | `p`           | **`id`가 필수**입니다. `children`이 비면 `null`을 돌려줍니다. `role="alert"`, `destructive` 색입니다. |
 
 ## 접근성
 
-- `FieldError`는 `role="alert"`라서 나타나는 순간 스크린 리더가 바로 읽어요. 입력 중에 계속 바뀌는 문구에는 쓰지 마세요. 벗어나거나 제출할 때만 보여 주세요.
-- 오류 색만으로 의미를 전하지 않도록 문구는 항상 무엇이 잘못됐는지 글자로 말해야 해요.
-- `aria-invalid`는 오류일 때만 켜세요. `false`를 넣기보다 속성을 빼는 편이 깔끔해요.
+- `FieldError`는 `role="alert"`라서 나타나는 순간 스크린 리더가 바로 읽습니다. 입력 중에 계속 바뀌는 문구에는 쓰지 마십시오. 벗어나거나 제출할 때만 보여 주십시오.
+- 오류 색만으로 의미를 전하지 않도록 문구는 항상 무엇이 잘못됐는지 글자로 말해야 합니다.
+- `aria-invalid`는 오류일 때만 켜십시오. `false`를 넣기보다 속성을 빼는 편이 깔끔합니다.
 
 ## 소스
 

@@ -121,11 +121,11 @@ export function EstimateApp() {
           <section className="flex flex-col gap-3">
             <p className="text-muted-foreground text-caption">전기 쿠페</p>
             <h1 className="text-title font-semibold tracking-tight">
-              원하는 면을 고르면, 차가 함께 돌아요
+              원하는 면을 고르면, 차가 함께 돕니다
             </h1>
             <p className="text-foreground text-body">
-              스크롤하면 차체가 각도를 바꿔요. 트림·색·휠을 고르면 오른쪽 합계가 바로 바뀌어요.
-              숫자는 더미예요.
+              스크롤하면 차체가 각도를 바꿉니다. 트림·색·휠을 고르면 오른쪽 합계가 바로 바뀝니다.
+              숫자는 더미입니다.
             </p>
           </section>
 

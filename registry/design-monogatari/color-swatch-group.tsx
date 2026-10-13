@@ -44,7 +44,7 @@ export function ColorSwatchGroup({
   value,
   onValueChange,
   options,
-  unavailableHint = '사선이 그어진 색은 지금 고를 수 없어요.',
+  unavailableHint = '사선이 그어진 색은 지금 고를 수 없습니다.',
   className,
 }: ColorSwatchGroupProps) {
   const captionId = useId();

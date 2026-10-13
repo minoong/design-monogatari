@@ -180,7 +180,7 @@ describe('규칙: 상위 선택 변경 시 재매핑(availableWhen)', () => {
       {
         kind: 'unavailable-reason',
         item: { slot: 'color', id: 'bronze' },
-        reason: '스포트 트림에서만 선택할 수 있어요.',
+        reason: '스포트 트림에서만 선택할 수 있습니다.',
         alternativeTrim: 'sport',
       },
     ]);

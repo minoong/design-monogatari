@@ -15,7 +15,7 @@ const options: ColorSwatchOption[] = [
     color: '#7a5c3e',
     group: '메탈릭',
     price: '+1,000,000원',
-    unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
   },
   {
     value: 'matte-gray',
@@ -23,7 +23,7 @@ const options: ColorSwatchOption[] = [
     color: '#6b6d70',
     group: '무광',
     price: '+8,000,000원',
-    unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
   },
 ];
 
@@ -40,7 +40,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`ColorSwatchGroup`은 외장·내장 색을 칩으로 고르는 라디오 묶음이에요. `group`이 같은 칩은 소제목 아래 묶이고, 선택한 칩은 두 겹 링으로 보여요. 칩에 마우스를 올리거나 키보드로 포커스하면 아래 캡션에 이름과 가격이 보이고, `unavailableReason`이 있는 칩은 사선이 그어지며 캡션에 이유가 보여요. 색 값은 호출하는 쪽이 넘기고 이 컴포넌트는 정하지 않아요.',
+          '`ColorSwatchGroup`은 외장·내장 색을 칩으로 고르는 라디오 묶음입니다. `group`이 같은 칩은 소제목 아래 묶이고, 선택한 칩은 두 겹 링으로 보입니다. 칩에 마우스를 올리거나 키보드로 포커스하면 아래 캡션에 이름과 가격이 보이고, `unavailableReason`이 있는 칩은 사선이 그어지며 캡션에 이유가 보입니다. 색 값은 호출하는 쪽이 넘기고 이 컴포넌트는 정하지 않습니다.',
       },
     },
   },

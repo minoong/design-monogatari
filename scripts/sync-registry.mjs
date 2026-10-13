@@ -224,7 +224,7 @@ await writeOrCheck(
 
 if (check) {
   if (drift.length > 0) {
-    say('레지스트리가 원본과 어긋나 있습니다. `pnpm registry:sync` 로 다시 생성하세요:');
+    say('레지스트리가 원본과 어긋나 있습니다. `pnpm registry:sync` 로 다시 생성하십시오:');
     for (const entry of drift) {
       say(`  - ${entry}`);
     }

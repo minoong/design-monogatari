@@ -131,7 +131,7 @@ packages/*-config       shared eslint / typescript / prettier
 
 ## Component loop
 
-New or changed `@repo/ui` component: `.agents/skills/create-component/SKILL.md`. `pnpm component:new <name>` scaffolds the story, docs example and page, registry item and DESIGN.md entry (marked `TODO(scaffold)`); `pnpm components:check` (inside `pnpm verify`) fails until every public component has all of them. Exceptions live in `packages/ui/components.config.json` with a reason.
+New or changed `@repo/ui` component: `.agents/skills/create-component/SKILL.md`. `pnpm component:new <name>` scaffolds the story, docs example and page, registry item and DESIGN.md entry (marked `TODO(scaffold)`); `pnpm components:check` (inside `pnpm verify`) fails until every public component has all of them. Korean copy in stories, docs, and the web app is 합쇼체 and car-estimate themed (`.claude/rules/copy-tone.md`; `pnpm copy:check` is inside `pnpm verify`). Exceptions live in `packages/ui/components.config.json` with a reason.
 
 ## Verification (definition of done)
 

@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Radio`는 여러 후보 중 하나만 고를 때 쓰는 네이티브 라디오예요. 같은 `name`끼리 묶이면 방향키로 옮겨 다니고, 보이는 이름표는 [`Label`](?path=/docs/컴포넌트-라벨--docs)을 `htmlFor`로 이어 주세요. 선택 상태는 테두리와 안쪽 점으로 보여 색만으로 구분하지 않아요.',
+          '`Radio`는 여러 후보 중 하나만 고를 때 쓰는 네이티브 라디오입니다. 같은 `name`끼리 묶이면 방향키로 옮겨 다니고, 보이는 이름표는 [`Label`](?path=/docs/컴포넌트-라벨--docs)을 `htmlFor`로 이어 주십시오. 선택 상태는 테두리와 안쪽 점으로 보여 색만으로 구분하지 않습니다.',
       },
     },
   },
@@ -50,11 +50,11 @@ export const 비활성: Story = {
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <Radio {...args} />
-        <Label htmlFor={args.id}>선택할 수 없어요</Label>
+        <Label htmlFor={args.id}>선택할 수 없습니다</Label>
       </div>
       <div className="flex items-center gap-2">
         <Radio {...args} id="story-radio-b" defaultChecked />
-        <Label htmlFor="story-radio-b">선택된 채로 잠겼어요</Label>
+        <Label htmlFor="story-radio-b">선택된 채로 잠겼습니다</Label>
       </div>
     </div>
   ),
@@ -65,7 +65,7 @@ export const 오류: Story = {
   render: (args) => (
     <div className="flex items-center gap-2">
       <Radio {...args} />
-      <Label htmlFor={args.id}>하나를 골라 주세요</Label>
+      <Label htmlFor={args.id}>하나를 골라 주십시오</Label>
     </div>
   ),
 };

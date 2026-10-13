@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Dialog`는 지금 하던 일을 잠시 멈추고 결정을 받을 때 사용해요. `DialogTitle`은 접근 가능한 이름이라 필수예요. `DialogContent`가 오버레이를 그리니 `DialogOverlay`를 옆에 또 넣지 마세요. 제목은 본문색, 설명은 보조 글자색을 써 주세요.',
+          '`Dialog`는 지금 하던 일을 잠시 멈추고 결정을 받을 때 사용합니다. `DialogTitle`은 접근 가능한 이름이라 필수입니다. `DialogContent`가 오버레이를 그리니 `DialogOverlay`를 옆에 또 넣지 마십시오. 제목은 본문색, 설명은 보조 글자색을 써 주십시오.',
       },
     },
   },
@@ -34,14 +34,14 @@ export const 기본: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="primary">약관 보기</Button>
+        <Button variant="primary">유의사항 보기</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>약관에 동의해 주세요</DialogTitle>
+          <DialogTitle>견적 유의사항을 확인해 주십시오</DialogTitle>
           <DialogDescription>
-            서비스를 이용하려면 필수 약관에 동의가 필요해요. 동의하지 않으면 이체를 진행할 수
-            없어요.
+            견적서는 참고용이며 실제 가격과 출고 일정은 계약 시점에 따라 달라질 수 있습니다.
+            확인하지 않으시면 견적 저장을 진행할 수 없습니다.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

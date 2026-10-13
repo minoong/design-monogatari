@@ -29,7 +29,7 @@ export const CATALOG: Catalog = {
       price: 1_000_000,
       group: '메탈릭',
       availableWhen: { trim: ['sport'] },
-      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+      unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
     },
     {
       id: 'matte-gray',
@@ -38,7 +38,7 @@ export const CATALOG: Catalog = {
       price: 8_000_000,
       group: '무광',
       availableWhen: { trim: ['sport'] },
-      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+      unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
     },
   ],
   wheel: [
@@ -49,7 +49,7 @@ export const CATALOG: Catalog = {
       label: '20인치 알로이 휠',
       price: 1_500_000,
       availableWhen: { trim: ['sport'] },
-      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+      unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
     },
     {
       id: 'w21',
@@ -57,7 +57,7 @@ export const CATALOG: Catalog = {
       label: '21인치 알로이 휠',
       price: 3_200_000,
       availableWhen: { trim: ['sport'], powertrain: ['gasoline'] },
-      unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있어요.',
+      unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있습니다.',
       requires: { packages: ['popular'], onMissing: 'cascade' },
     },
   ],
@@ -80,7 +80,7 @@ export const CATALOG: Catalog = {
       price: 500_000,
       defaultGarnish: 'wood',
       availableWhen: { color: ['white', 'pearl', 'gray', 'blue'] },
-      unavailableReason: '선택한 외장 색과 어울리는 조합이 아니에요.',
+      unavailableReason: '선택한 외장 색과 어울리는 조합이 아닙니다.',
     },
     {
       id: 'brown',
@@ -89,7 +89,7 @@ export const CATALOG: Catalog = {
       price: 800_000,
       defaultGarnish: 'wood',
       availableWhen: { color: ['black', 'pearl', 'bronze', 'green'] },
-      unavailableReason: '선택한 외장 색과 어울리는 조합이 아니에요.',
+      unavailableReason: '선택한 외장 색과 어울리는 조합이 아닙니다.',
     },
   ],
   garnish: [
@@ -99,7 +99,7 @@ export const CATALOG: Catalog = {
       label: '카본',
       price: 0,
       availableWhen: { interior: ['black'] },
-      unavailableReason: '블랙 내장에서만 선택할 수 있어요.',
+      unavailableReason: '블랙 내장에서만 선택할 수 있습니다.',
     },
     {
       id: 'wood',
@@ -107,7 +107,7 @@ export const CATALOG: Catalog = {
       label: '우드',
       price: 0,
       availableWhen: { interior: ['cream', 'brown'] },
-      unavailableReason: '크림·브라운 내장에서만 선택할 수 있어요.',
+      unavailableReason: '크림·브라운 내장에서만 선택할 수 있습니다.',
     },
     { id: 'metal', code: 'M', label: '메탈', price: 1_000_000 },
   ],
@@ -119,7 +119,7 @@ export const CATALOG: Catalog = {
       id: 'popular',
       code: 'pp',
       label: '파퓰러 패키지',
-      description: '드라이빙 어시스턴스와 헤드업 디스플레이를 함께 담았어요.',
+      description: '드라이빙 어시스턴스와 헤드업 디스플레이를 함께 담았습니다.',
       price: 3_600_000,
       includes: ['driving-assist', 'hud'],
     },
@@ -137,7 +137,7 @@ export const CATALOG: Catalog = {
       price: 3_200_000,
       excludes: ['panorama'],
       availableWhen: { trim: ['sport'] },
-      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+      unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
     },
   ],
   accessory: [
@@ -149,7 +149,7 @@ export const CATALOG: Catalog = {
       label: '견인 장치',
       price: 1_200_000,
       availableWhen: { powertrain: ['gasoline'] },
-      unavailableReason: '가솔린 모델에서만 선택할 수 있어요.',
+      unavailableReason: '가솔린 모델에서만 선택할 수 있습니다.',
     },
   ],
   suggestions: [
@@ -157,7 +157,7 @@ export const CATALOG: Catalog = {
       id: 'popular-bundle',
       trigger: ['driving-assist', 'hud'],
       suggest: 'popular',
-      message: '두 옵션을 따로 고르는 것보다 파퓰러 패키지가 더 저렴해요.',
+      message: '두 옵션을 따로 고르는 것보다 파퓰러 패키지가 더 저렴합니다.',
     },
   ],
   regions: [

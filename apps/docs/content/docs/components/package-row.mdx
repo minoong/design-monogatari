@@ -1,6 +1,6 @@
 ---
 title: PackageRow
-description: 여러 옵션을 묶은 선택 품목 한 줄이에요. 체크박스로 켜고 끄고, 구성 항목은 펼쳐서 확인해요.
+description: 여러 옵션을 묶은 선택 품목 한 줄입니다. 체크박스로 켜고 끄고, 구성 항목은 펼쳐서 확인합니다.
 ---
 
 <ComponentPreview name="package-row/basic" />
@@ -9,8 +9,8 @@ description: 여러 옵션을 묶은 선택 품목 한 줄이에요. 체크박�
 
 <InstallTabs name="package-row" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
 </Callout>
 
 ## 사용법
@@ -33,19 +33,19 @@ export function Example() {
 }
 ```
 
-하나만 고르는 자리는 [`OptionRow`](/docs/components/option-row)를 쓰세요. `items`를 주면 "구성 보기" 버튼이 생기고, 주지 않으면 체크박스 한 줄만 그려요.
+하나만 고르는 자리는 [`OptionRow`](/docs/components/option-row)를 쓰십시오. `items`를 주면 "구성 보기" 버튼이 생기고, 주지 않으면 체크박스 한 줄만 그립니다.
 
 ## 예시
 
 ### 다른 패키지에 포함된 항목
 
-`includedIn`을 주면 행이 `muted` 면이 되고 "파퓰러 패키지에 포함" 같은 표식이 붙어요. 체크박스를 막지는 않아요. 눌러서 해제하면 패키지를 풀어야 하니, 호출하는 쪽에서 확인 안내를 띄우고 상태를 바꾸세요.
+`includedIn`을 주면 행이 `muted` 면이 되고 "파퓰러 패키지에 포함" 같은 표식이 붙습니다. 체크박스를 막지는 않습니다. 눌러서 해제하면 패키지를 풀어야 하니, 호출하는 쪽에서 확인 안내를 띄우고 상태를 바꾸십시오.
 
 <ComponentPreview name="package-row/included" />
 
 ## API 레퍼런스
 
-`<input>`의 모든 속성과 `ref`를 받아요(`type`은 `checkbox`로 고정이에요). 직접 정의한 props는 아래와 같아요.
+`<input>`의 모든 속성과 `ref`를 받습니다(`type`은 `checkbox`로 고정입니다). 직접 정의한 props는 아래와 같습니다.
 
 <PropsTable
   file="packages/ui/src/package-row.tsx"
@@ -53,23 +53,23 @@ export function Example() {
   include={['label', 'description', 'price', 'items', 'itemsLabel', 'includedIn']}
   defaults={{ itemsLabel: '"구성 보기"' }}
   descriptions={{
-    label: '패키지 이름이에요. 체크박스의 접근성 이름이 돼요.',
-    description: '한 줄 설명이에요. aria-describedby로 연결돼요.',
-    price: '화면에 보일 가격 문구예요. 포맷은 호출하는 쪽이 정해요.',
-    items: '패키지에 들어 있는 항목이에요. 주면 펼침 버튼이 생겨요.',
-    itemsLabel: '펼침 버튼의 글자예요.',
-    includedIn: '다른 패키지에 포함돼 이미 체크된 항목에 그 사실을 적어요.',
+    label: '패키지 이름입니다. 체크박스의 접근성 이름이 됩니다.',
+    description: '한 줄 설명입니다. aria-describedby로 연결됩니다.',
+    price: '화면에 보일 가격 문구입니다. 포맷은 호출하는 쪽이 정합니다.',
+    items: '패키지에 들어 있는 항목입니다. 주면 펼침 버튼이 생깁니다.',
+    itemsLabel: '펼침 버튼의 글자입니다.',
+    includedIn: '다른 패키지에 포함돼 이미 체크된 항목에 그 사실을 적습니다.',
   }}
 />
 
 ## 접근성
 
-- 네이티브 체크박스(시각적으로만 숨김)라서 스페이스로 켜고 끄고 상태를 브라우저가 알려 줘요. 이름은 `aria-labelledby`, 설명은 `aria-describedby`로 연결돼요.
-- 가격은 `aria-describedby`로 연결돼요.
-- 펼침은 Radix Accordion이에요. 버튼은 Enter와 스페이스로 열고 닫고, `aria-expanded`와 `aria-controls`가 자동으로 붙어요. 펼친 목록은 `region`이고 이름은 펼침 버튼의 이름을 따라요.
-- 펼침 버튼의 이름은 "구성 보기"에 패키지 이름을 이어 붙여서, 여러 행이 있어도 어느 패키지인지 구분돼요.
-- 체크 표시는 체크 모양 아이콘과 테두리 색이 함께 바뀌어요.
-- 화살표 회전은 `prefers-reduced-motion`에서 꺼져요. 펼침 자체에는 높이 애니메이션이 없어요.
+- 네이티브 체크박스(시각적으로만 숨김)라서 스페이스로 켜고 끄고 상태를 브라우저가 알려 줍니다. 이름은 `aria-labelledby`, 설명은 `aria-describedby`로 연결됩니다.
+- 가격은 `aria-describedby`로 연결됩니다.
+- 펼침은 Radix Accordion입니다. 버튼은 Enter와 스페이스로 열고 닫고, `aria-expanded`와 `aria-controls`가 자동으로 붙습니다. 펼친 목록은 `region`이고 이름은 펼침 버튼의 이름을 따릅니다.
+- 펼침 버튼의 이름은 "구성 보기"에 패키지 이름을 이어 붙여서, 여러 행이 있어도 어느 패키지인지 구분됩니다.
+- 체크 표시는 체크 모양 아이콘과 테두리 색이 함께 바뀝니다.
+- 화살표 회전은 `prefers-reduced-motion`에서 꺼집니다. 펼침 자체에는 높이 애니메이션이 없습니다.
 
 ## 소스
 

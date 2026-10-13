@@ -10,7 +10,7 @@ export default function PackageRowBasic() {
     <div className="w-full max-w-md">
       <PackageRow
         label="파퓰러 패키지"
-        description="드라이빙 어시스턴스와 헤드업 디스플레이를 함께 담았어요."
+        description="드라이빙 어시스턴스와 헤드업 디스플레이를 함께 담았습니다."
         price="+3,600,000원"
         items={['드라이빙 어시스턴스', '헤드업 디스플레이']}
         checked={checked}

@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Field`는 라벨·입력·오류를 한 세트로 묶어요. `FieldLabel`의 `htmlFor`와 입력 `id`를 짝짓고, 오류가 있으면 입력 `aria-describedby`와 `FieldError`의 `id`를 연결해 주세요.',
+          '`Field`는 라벨·입력·오류를 한 세트로 묶습니다. `FieldLabel`의 `htmlFor`와 입력 `id`를 짝짓고, 오류가 있으면 입력 `aria-describedby`와 `FieldError`의 `id`를 연결해 주십시오.',
       },
     },
   },
@@ -41,7 +41,7 @@ export const 오류: Story = {
         aria-invalid
         aria-describedby="field-email-invalid-error"
       />
-      <FieldError id="field-email-invalid-error">올바른 이메일을 입력해 주세요.</FieldError>
+      <FieldError id="field-email-invalid-error">올바른 이메일을 입력해 주십시오.</FieldError>
     </Field>
   ),
 };

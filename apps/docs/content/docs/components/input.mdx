@@ -1,6 +1,6 @@
 ---
 title: Input
-description: 한 줄 텍스트 입력 칸이에요. 오류와 비활성 상태가 속성에 따라 자동으로 바뀌어요.
+description: 한 줄 텍스트 입력 칸입니다. 오류와 비활성 상태가 속성에 따라 자동으로 바뀝니다.
 ---
 
 <ComponentPreview name="input/basic" />
@@ -9,8 +9,8 @@ description: 한 줄 텍스트 입력 칸이에요. 오류와 비활성 상태�
 
 <InstallTabs name="input" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
 </Callout>
 
 ## 사용법
@@ -23,31 +23,31 @@ export function Example() {
 }
 ```
 
-`Input`은 보이는 이름표가 필요해요. [`Label`](/docs/components/label)을 짝지어 쓰거나, 이름표가 없는 자리라면 `aria-label`을 다세요. 이름표, 입력 칸, 오류 문구를 한 번에 묶으려면 [`Field`](/docs/components/field)를 쓰세요.
+`Input`은 보이는 이름표가 필요합니다. [`Label`](/docs/components/label)을 짝지어 쓰거나, 이름표가 없는 자리라면 `aria-label`을 다십시오. 이름표, 입력 칸, 오류 문구를 한 번에 묶으려면 [`Field`](/docs/components/field)를 쓰십시오.
 
 ## 예시
 
 ### 상태
 
-상태는 prop이 아니라 HTML 속성으로 정해요. `aria-invalid`를 켜면 테두리와 링이 `destructive`로, `disabled`를 켜면 배경이 `muted`로 바뀌어요 (투명도를 낮추지 않아서 대비가 유지돼요).
+상태는 prop이 아니라 HTML 속성으로 정합니다. `aria-invalid`를 켜면 테두리와 링이 `destructive`로, `disabled`를 켜면 배경이 `muted`로 바뀝니다 (투명도를 낮추지 않아서 대비가 유지됩니다).
 
 <ComponentPreview name="input/states" />
 
 ## API 레퍼런스
 
-`<input>`의 모든 속성과 `ref`를 받아요. 정의된 prop은 없고 기본값만 하나 있어요.
+`<input>`의 모든 속성과 `ref`를 받습니다. 정의된 prop은 없고 기본값만 하나 있습니다.
 
-| 속성   | 기본값   | 설명                                                    |
-| ------ | -------- | ------------------------------------------------------- |
-| `type` | `"text"` | 입력 종류예요. `password`, `email` 등 HTML 값을 쓰세요. |
+| 속성   | 기본값   | 설명                                                        |
+| ------ | -------- | ----------------------------------------------------------- |
+| `type` | `"text"` | 입력 종류입니다. `password`, `email` 등 HTML 값을 쓰십시오. |
 
-높이는 44px(`h-11`), 모서리는 `rounded-md`, 글자는 14px이에요. 포커스는 두 겹 링(`ring-2 ring-ring`)에 간격(`ring-offset-2`)이 있고 테두리가 `primary`로 바뀌어요.
+높이는 44px(`h-11`), 모서리는 `rounded-md`, 글자는 14px입니다. 포커스는 두 겹 링(`ring-2 ring-ring`)에 간격(`ring-offset-2`)이 있고 테두리가 `primary`로 바뀝니다.
 
 ## 접근성
 
-- 오류는 `aria-invalid`로 알리고, 오류 문구는 `aria-describedby`로 입력 칸에 연결하세요. [`Field`](/docs/components/field)의 오류 예시를 보세요.
-- 비활성 칸은 `disabled`를 쓰세요. 시각 처리만 바꾸면 키보드로 여전히 들어가요.
-- 플레이스홀더는 이름표를 대신하지 않아요. 입력을 시작하면 사라져요.
+- 오류는 `aria-invalid`로 알리고, 오류 문구는 `aria-describedby`로 입력 칸에 연결하십시오. [`Field`](/docs/components/field)의 오류 예시를 보십시오.
+- 비활성 칸은 `disabled`를 쓰십시오. 시각 처리만 바꾸면 키보드로 여전히 들어갑니다.
+- 플레이스홀더는 이름표를 대신하지 않습니다. 입력을 시작하면 사라집니다.
 
 ## 소스
 

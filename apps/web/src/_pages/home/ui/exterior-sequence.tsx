@@ -26,7 +26,7 @@ export function ExteriorSequence() {
   if (!hasFrames) {
     return (
       <p className="text-muted-foreground text-caption px-6 py-8">
-        외장 시퀀스 프레임이 없어요. <code>pnpm --filter web copy:exterior</code> 를 실행하세요.
+        외장 시퀀스 프레임이 없습니다. <code>pnpm --filter web copy:exterior</code> 를 실행하십시오.
       </p>
     );
   }
@@ -37,11 +37,11 @@ export function ExteriorSequence() {
       frames={EXTERIOR_FRAMES}
     >
       <h2 className="text-title font-semibold tracking-tight">
-        매끈한 앞면이 공기를 가르며 달릴 준비를 해요
+        매끈한 앞면이 공기를 가르며 달릴 준비를 합니다
       </h2>
       <p className="text-muted-foreground text-body mt-2">
-        스크롤하면 차체가 천천히 돌아 앞모습이 드러나요. 공기역학은 숫자 더미가 아니라 면의 흐름으로
-        보여 줘요.
+        스크롤하면 차체가 천천히 돌아 앞모습이 드러납니다. 공기역학은 숫자 더미가 아니라 면의
+        흐름으로 보여 줍니다.
       </p>
     </ScrollImageSequence>
   );

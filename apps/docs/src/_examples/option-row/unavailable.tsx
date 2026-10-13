@@ -23,10 +23,10 @@ export default function OptionRowUnavailable() {
           value="w21"
           label="21인치 알로이 휠"
           price="+3,200,000원"
-          unavailableReason="가솔린 스포트 트림에서만 선택할 수 있어요."
+          unavailableReason="가솔린 스포트 트림에서만 선택할 수 있습니다."
           checked={value === 'w21'}
           onChange={() =>
-            setMessage('선택 불가 행을 눌렀어요. 여기서 트림 변경 같은 대안을 안내해요.')
+            setMessage('선택 불가 행을 눌렀습니다. 여기서 트림 변경 같은 대안을 안내합니다.')
           }
         />
         <OptionRow

@@ -1,6 +1,6 @@
 ---
 title: NativeSelect
-description: 브라우저 기본 select에 Input과 같은 모양을 입힌 선택 칸이에요. 모바일에서는 OS 선택 창이 열려요.
+description: 브라우저 기본 select에 Input과 같은 모양을 입힌 선택 칸입니다. 모바일에서는 OS 선택 창이 열립니다.
 ---
 
 <ComponentPreview name="native-select/basic" />
@@ -9,8 +9,8 @@ description: 브라우저 기본 select에 Input과 같은 모양을 입힌 선�
 
 <InstallTabs name="native-select" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
 </Callout>
 
 ## 사용법
@@ -28,30 +28,30 @@ export function Example() {
 }
 ```
 
-지역이나 과세 구분처럼 짧고 닫힌 목록에 알맞아요. 옵션을 직접 그리거나 검색해야 하는 목록이라면 쓰지 마세요. 옵션 목록은 꾸미지 않고 브라우저에 맡겨요.
+지역이나 과세 구분처럼 짧고 닫힌 목록에 알맞습니다. 옵션을 직접 그리거나 검색해야 하는 목록이라면 쓰지 마십시오. 옵션 목록은 꾸미지 않고 브라우저에 맡깁니다.
 
-[`Field`](/docs/components/field)와 함께 쓰면 이름표와 오류 문구까지 한 번에 묶여요.
+[`Field`](/docs/components/field)와 함께 쓰면 이름표와 오류 문구까지 한 번에 묶입니다.
 
 ## 예시
 
 ### 상태
 
-기본, 오류, 비활성이에요. [`Input`](/docs/components/input)과 같은 방식으로 `aria-invalid`와 `disabled` 속성이 모양을 바꿔요.
+기본, 오류, 비활성입니다. [`Input`](/docs/components/input)과 같은 방식으로 `aria-invalid`와 `disabled` 속성이 모양을 바꿉니다.
 
 <ComponentPreview name="native-select/states" />
 
 ## API 레퍼런스
 
-`<select>`의 모든 속성과 `ref`를 받아요. 정의된 prop은 없어요. `className`은 `<select>`에 붙어요.
+`<select>`의 모든 속성과 `ref`를 받습니다. 정의된 prop은 없습니다. `className`은 `<select>`에 붙습니다.
 
-높이는 44px(`h-11`), 모서리는 `rounded-md`예요. 오른쪽 화살표는 장식이라 클릭을 가로채지 않아요(`pointer-events-none`).
+높이는 44px(`h-11`), 모서리는 `rounded-md`입니다. 오른쪽 화살표는 장식이라 클릭을 가로채지 않습니다(`pointer-events-none`).
 
 ## 접근성
 
-- 네이티브 `<select>`라서 역할, 열기/닫기, 방향키와 글자 입력으로 항목 찾기를 브라우저와 스크린 리더가 그대로 처리해요.
-- 보이는 이름표는 `Label`/`FieldLabel`을 `htmlFor`로 잇고, 이름표가 없는 자리에는 `aria-label`을 다세요.
-- 오류는 `aria-invalid`로 알리고 안내 문구를 `aria-describedby`로 연결하세요.
-- 화살표 아이콘은 `aria-hidden`이에요.
+- 네이티브 `<select>`라서 역할, 열기/닫기, 방향키와 글자 입력으로 항목 찾기를 브라우저와 스크린 리더가 그대로 처리합니다.
+- 보이는 이름표는 `Label`/`FieldLabel`을 `htmlFor`로 잇고, 이름표가 없는 자리에는 `aria-label`을 다십시오.
+- 오류는 `aria-invalid`로 알리고 안내 문구를 `aria-describedby`로 연결하십시오.
+- 화살표 아이콘은 `aria-hidden`입니다.
 
 ## 소스
 

@@ -60,6 +60,18 @@
       ],
       "outputs": []
     },
+    "//#copy:check": {
+      "description": "Fail when user-facing Korean copy uses 해요체 or bank-style examples instead of 합쇼체 car-estimate copy",
+      "inputs": [
+        "packages/ui/src/**",
+        "packages/ui/.storybook/**",
+        "apps/docs/content/**",
+        "apps/docs/src/**",
+        "apps/web/src/**",
+        "scripts/check-copy-tone.mjs"
+      ],
+      "outputs": []
+    },
     "//#format:check": {
       "description": "Check Prettier formatting for the whole repository",
       "inputs": ["$TURBO_DEFAULT$", "**/*.{ts,tsx,md,mdx,json,css,mjs,js}", "!pnpm-lock.yaml"],

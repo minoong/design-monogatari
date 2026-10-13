@@ -11,14 +11,14 @@ const meta = {
     docs: {
       description: {
         component:
-          '`OptionRow`는 견적처럼 하나만 고르는 옵션 한 줄이에요. 네이티브 라디오라서 같은 `name`끼리 방향키로 이동하고, 이름·설명·선택 불가 이유가 모두 입력에 연결돼요. `unavailableReason`을 주면 행이 muted 면이 되고 이유가 행 안에 항상 보여요(호버에 의존하지 않아요). 이때도 입력은 비활성이 아니라서 눌렀을 때 대안을 안내할 수 있어요. 완전히 막으려면 `disabled`를 쓰세요. 묶음은 `OptionGroup`이 `fieldset`과 `legend`로 감싸요.',
+          '`OptionRow`는 견적처럼 하나만 고르는 옵션 한 줄입니다. 네이티브 라디오라서 같은 `name`끼리 방향키로 이동하고, 이름·설명·선택 불가 이유가 모두 입력에 연결됩니다. `unavailableReason`을 주면 행이 muted 면이 되고 이유가 행 안에 항상 보입니다(호버에 의존하지 않습니다). 이때도 입력은 비활성이 아니라서 눌렀을 때 대안을 안내할 수 있습니다. 완전히 막으려면 `disabled`를 쓰십시오. 묶음은 `OptionGroup`이 `fieldset`과 `legend`로 감쌉니다.',
       },
     },
   },
   args: {
     name: 'story-option',
     label: '19인치 기본 휠',
-    description: '모든 트림에 기본으로 들어가요.',
+    description: '모든 트림에 기본으로 들어갑니다.',
     price: '기본 포함',
   },
 } satisfies Meta<typeof OptionRow>;
@@ -46,9 +46,9 @@ export const 선택불가이유: Story = {
   name: '선택 불가 + 이유',
   args: {
     label: '21인치 알로이 휠',
-    description: '지름이 커서 더 단단한 인상이에요.',
+    description: '지름이 커서 더 단단한 인상입니다.',
     price: '+3,200,000원',
-    unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있어요.',
+    unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있습니다.',
   },
   decorators: 기본.decorators,
 };
@@ -82,7 +82,7 @@ function WheelGroup() {
       value: 'w21',
       label: '21인치 알로이 휠',
       price: '+3,200,000원',
-      unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있어요.',
+      unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있습니다.',
     },
   ];
   return (

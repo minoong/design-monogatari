@@ -9,7 +9,7 @@ export default function NativeSelectStates() {
       </NativeSelect>
       <NativeSelect aria-label="오류" aria-invalid defaultValue="">
         <option value="" disabled>
-          탁송지를 선택해 주세요
+          탁송지를 선택해 주십시오
         </option>
         <option value="seoul">서울</option>
       </NativeSelect>

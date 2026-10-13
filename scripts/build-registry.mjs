@@ -69,7 +69,7 @@ writeFileSync(tempRegistry, JSON.stringify(registry, null, 2));
 rmSync(OUT_DIR, { recursive: true, force: true });
 const shadcn = join(ROOT, 'node_modules/.bin/shadcn');
 if (!existsSync(shadcn)) {
-  fail('shadcn CLI가 없습니다. `pnpm install` 후 다시 실행하세요.');
+  fail('shadcn CLI가 없습니다. `pnpm install` 후 다시 실행하십시오.');
 }
 const result = spawnSync(shadcn, ['build', tempRegistry, '--output', OUT_DIR], {
   cwd: ROOT,
