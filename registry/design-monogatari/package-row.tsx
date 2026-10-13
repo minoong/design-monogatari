@@ -53,7 +53,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
       <div
         data-included={includedIn ? '' : undefined}
         className={cn(
-          'border-border bg-background text-foreground relative rounded-lg border font-sans transition-colors motion-reduce:transition-none',
+          'border-border bg-background text-foreground hover:bg-secondary-hover relative rounded-lg border font-sans transition-colors motion-reduce:transition-none',
           'has-[input:checked]:border-primary has-[input:checked]:ring-primary has-[input:checked]:ring-1',
           'has-[input:focus-visible]:outline-ring has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2',
           'data-included:bg-muted',
@@ -65,7 +65,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
             <div className="flex items-start gap-3 p-4">
               <label
                 htmlFor={inputId}
-                className="hover:bg-secondary-hover -m-4 flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-lg p-4"
+                className="-m-4 flex min-w-0 flex-1 cursor-pointer items-start gap-3 p-4"
               >
                 <input
                   ref={ref}
@@ -122,7 +122,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                     <AccordionPrimitive.Trigger
                       id={triggerId}
                       aria-labelledby={`${triggerId} ${labelId}`}
-                      className="text-muted-foreground hover:text-foreground hover:bg-secondary-hover focus-visible:ring-ring group flex h-10 cursor-pointer items-center gap-1 rounded-md px-2 text-sm outline-hidden focus-visible:ring-2"
+                      className="text-muted-foreground hover:text-foreground focus-visible:ring-ring group flex h-10 cursor-pointer items-center gap-1 rounded-md px-2 text-sm outline-hidden focus-visible:ring-2"
                     >
                       {itemsLabel}
                       <svg
