@@ -289,7 +289,7 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 - **Durations**: instant 0.12s, fast 0.18s (hover/press), base 0.28s (selection/state), slow 0.45s (list/section entrance), hero 0.8s (one per screen).
 - **Springs**: `snappy` (520/32: press, active indicator), `gentle` (260/28: panels), `bouncy` (380/18: small emphasis, one per screen). Ease: `outExpo` cubic-bezier(0.22, 1, 0.36, 1) default, `inOut` for size/position swaps. Stagger 0.03/0.04/0.08s.
-- **Applied**: selection pop on OptionRow/PackageRow/ColorSwatchGroup (`animate-select-pop`, 0.32s), Stepper active border glides between steps (`layoutId`, `SPRING.snappy`), Reveal entrance, Button press uses `SPRING.snappy`.
+- **Applied**: selection pop on OptionRow/PackageRow/ColorSwatchGroup (`animate-select-pop`, 0.32s) and the reverse on clear (the fill shrinks to 0.4 and fades, `animate-select-out`, 0.2s), both driven by `useCheckPhase` (`./lib/check-phase`, registry item `check-phase`) so nothing moves on first paint; radios need `checked` (controlled) for the clear motion, Stepper active border glides between steps (`layoutId`, `SPRING.snappy`), Reveal entrance, Button press uses `SPRING.snappy`.
 - **Rules**: motion marks a state change (select, enter, move, load); no ambient or cursor-following decoration. Move `opacity`/`transform` only. One big flourish per screen. Honour reduced motion live (`useReducedMotion`; CSS gets `motion-reduce:animate-none`). Never Motion + Tailwind `transition-*` on one node, never Motion on a WebGL canvas, pause anything looping when off-screen. Hover scale, shadows and decorative gradients stay out.
 
 ## Do's and Don'ts

@@ -77,6 +77,19 @@
 
   --animate-button-loader-dot: button-loader-dot 0.9s ease-in-out infinite;
   --animate-select-pop: select-pop 0.32s var(--ease-out-expo) both;
+  --animate-select-out: select-out 0.2s var(--ease-out-expo) both;
+}
+
+@keyframes select-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
 }
 
 @keyframes select-pop {

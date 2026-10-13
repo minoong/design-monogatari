@@ -1,5 +1,15 @@
-import { type ComponentProps, forwardRef, type ReactNode, useId } from 'react';
+'use client';
 
+import {
+  type ComponentProps,
+  forwardRef,
+  type ReactNode,
+  useId,
+  useImperativeHandle,
+  useRef,
+} from 'react';
+
+import { useCheckPhase } from './lib/check-phase';
 import { cn } from './lib/cn';
 
 export type OptionRowProps = Omit<ComponentProps<'input'>, 'type' | 'children'> & {
@@ -37,6 +47,9 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
   },
   ref,
 ) {
+  const innerRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => innerRef.current as HTMLInputElement);
+  const phase = useCheckPhase(props.checked, innerRef);
   const autoId = useId();
   const inputId = id ?? autoId;
   const labelId = `${inputId}-label`;
@@ -66,7 +79,7 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       )}
     >
       <input
-        ref={ref}
+        ref={innerRef}
         id={inputId}
         type="radio"
         disabled={disabled}
@@ -78,7 +91,9 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       />
       <span
         aria-hidden
-        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary motion-safe:peer-checked:animate-select-pop mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)]"
+        data-phase={phase}
+        // 선택되면 튀어 오르고(in), 해제되면 채움이 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary after:bg-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)] after:pointer-events-none after:absolute after:-inset-px after:rounded-full after:opacity-0 after:content-['']"
       />
       {media ? <span className="shrink-0">{media}</span> : null}
       <span className="flex min-w-0 flex-1 flex-col gap-1">

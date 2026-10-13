@@ -17,7 +17,7 @@ paths:
 
 ## Motion budget
 
-Tokens: `@repo/ui/motion` (`DURATION`, `EASE`, `SPRING`, `STAGGER`, `reducedTransition`) and the CSS `animate-select-pop`. Use them instead of ad-hoc numbers; the table and rationale are in DESIGN.md "Motion" and docs 파운데이션 > 모션.
+Tokens: `@repo/ui/motion` (`DURATION`, `EASE`, `SPRING`, `STAGGER`, `reducedTransition`) and the CSS `animate-select-pop` / `animate-select-out` (driven by `useCheckPhase` from `./lib/check-phase`, so first paint stays still). Use them instead of ad-hoc numbers; the table and rationale are in DESIGN.md "Motion" and docs 파운데이션 > 모션.
 
 - Motion marks a **state change** (select, enter, move, load). No ambient/looping decoration, no cursor-following effects on the estimate flow.
 - Animate `opacity` and `transform` only. One large flourish (`DURATION.hero`, `SPRING.bouncy`) per screen.

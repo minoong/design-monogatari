@@ -15,7 +15,7 @@ Distribute components via a [shadcn registry](https://ui.shadcn.com/docs/registr
 
 1. Implement in `packages/ui/src/<name>.tsx` (monorepo source). Siblings may be imported as `./<other>` only if `<other>` is also a registry item, otherwise the sync fails
 2. Add the item to `registry.json` `items` (`name`, `type: registry:ui`, `title`, `description`, npm `dependencies`, `registryDependencies` with `minoong/design-monogatari/cn` and `/theme` when using tokens, and `files: [{ path: registry/design-monogatari/<name>.tsx, type: registry:ui, target: @ui/<name>.tsx }]`)
-3. Run `pnpm registry:sync`. It rewrites `./lib/cn` to `@/lib/utils`, `./lib/motion` to `@/lib/motion` (components using motion tokens list the `motion` item in `registryDependencies`), and `./<sibling>` to `@/ui/<sibling>` (the shadcn CLI maps both to the consumer's aliases)
+3. Run `pnpm registry:sync`. It rewrites `./lib/cn` to `@/lib/utils`, `./lib/motion` and `./lib/check-phase` to `@/lib/...` (components list the `motion` / `check-phase` items in `registryDependencies`), and `./<sibling>` to `@/ui/<sibling>` (the shadcn CLI maps both to the consumer's aliases)
 4. New design tokens go in `packages/ui/src/styles/globals.css` only; the sync carries them to the `theme` item
 5. Verify in a real consumer (below), then `pnpm verify`
 6. **Format/lint**: `registry/` gets Prettier only (not ESLint — `@/lib/utils` paths). Source of truth lint is `packages/ui`

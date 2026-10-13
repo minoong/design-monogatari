@@ -30,7 +30,7 @@ description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, �
 
 ## 이미 적용된 곳
 
-- **선택 반응**: `OptionRow`, `PackageRow`, `ColorSwatchGroup`은 선택되는 순간 표시가 0.6배에서 1.12배를 거쳐 1배로 돌아옵니다(`animate-select-pop`, 0.32초). 처음부터 선택된 상태로 그려지는 항목도 화면이 열릴 때 한 번 움직입니다.
+- **선택 반응**: `OptionRow`, `PackageRow`, `ColorSwatchGroup`은 선택되는 순간 표시가 0.6배에서 1.12배를 거쳐 1배로 돌아오고(`animate-select-pop`, 0.32초), 해제되면 채움이 0.4배로 줄어들며 사라집니다(`animate-select-out`, 0.2초). 처음 그려질 때는 움직이지 않습니다. 바뀐 순간은 `useCheckPhase` 훅이 알려 주며, 라디오에서 해제 모션을 쓰려면 제어 컴포넌트(`checked`)여야 합니다.
 - **단계 이동**: [`Stepper`](/docs/components/stepper)의 현재 단계 테두리가 이전 단계에서 새 단계로 미끄러집니다(`SPRING.snappy`).
 - **목록 진입**: [`Reveal`](/docs/components/reveal)이 화면에 들어올 때 차례로 떠오릅니다.
 - **눌림**: `Button`은 `SPRING.snappy`로 눌립니다.

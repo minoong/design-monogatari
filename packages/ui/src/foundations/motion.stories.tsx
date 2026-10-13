@@ -2,9 +2,10 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Button } from '../button';
+import { useCheckPhase } from '../lib/check-phase';
 import { DURATION, EASE, SPRING, STAGGER } from '../lib/motion';
 import { StoryReplay } from '../story-replay';
 import { TokenStack } from './catalog-row';
@@ -81,24 +82,50 @@ function SpringBalls() {
   );
 }
 
+function DemoChip({
+  checked,
+  label,
+  onSelect,
+}: {
+  checked: boolean;
+  label: string;
+  onSelect: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const phase = useCheckPhase(checked, inputRef);
+
+  return (
+    <label className="relative inline-flex size-9 cursor-pointer">
+      <input
+        ref={inputRef}
+        type="radio"
+        name="motion-pop-demo"
+        checked={checked}
+        onChange={onSelect}
+        aria-label={label}
+        className="peer sr-only"
+      />
+      <span
+        aria-hidden
+        data-phase={phase}
+        className="bg-muted border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring after:border-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 after:pointer-events-none after:absolute after:-inset-1.5 after:rounded-full after:border-2 after:opacity-0 after:content-['']"
+      />
+    </label>
+  );
+}
+
 function PopDemo() {
   const [value, setValue] = useState('a');
 
   return (
     <div className="flex gap-4" role="radiogroup" aria-label="선택 반응 시연">
       {['a', 'b', 'c'].map((item) => (
-        <label key={item} className="relative inline-flex size-9 cursor-pointer">
-          <input
-            type="radio"
-            name="motion-pop-demo"
-            value={item}
-            checked={value === item}
-            onChange={() => setValue(item)}
-            aria-label={`칩 ${item}`}
-            className="peer sr-only"
-          />
-          <span className="bg-muted border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring motion-safe:peer-checked:animate-select-pop size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4" />
-        </label>
+        <DemoChip
+          key={item}
+          label={`칩 ${item}`}
+          checked={value === item}
+          onSelect={() => setValue(item)}
+        />
       ))}
     </div>
   );
@@ -134,10 +161,11 @@ function Motion() {
         <SpringBalls />
       </DocSection>
 
-      <DocSection title="선택 반응 (animate-select-pop)">
+      <DocSection title="선택과 해제 반응 (animate-select-pop, animate-select-out)">
         <DocBody>
-          칩을 눌러 보십시오. 선택되는 순간 0.6배에서 1.12배를 거쳐 1배로 돌아옵니다. 감소 모션이면
-          움직이지 않습니다.
+          칩을 눌러 보십시오. 선택되는 순간 0.6배에서 1.12배를 거쳐 1배로 돌아오고, 다른 칩으로
+          옮기면 이전 칩의 링이 줄어들며 사라집니다. 처음 그려질 때와 감소 모션에서는 움직이지
+          않습니다.
         </DocBody>
         <StoryReplay>
           <PopDemo />

@@ -1,8 +1,16 @@
 'use client';
 
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
-import { type ComponentProps, forwardRef, type ReactNode, useId } from 'react';
+import {
+  type ComponentProps,
+  forwardRef,
+  type ReactNode,
+  useId,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 
+import { useCheckPhase } from './lib/check-phase';
 import { cn } from './lib/cn';
 
 export type PackageRowProps = Omit<ComponentProps<'input'>, 'type' | 'children'> & {
@@ -36,6 +44,9 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
   },
   ref,
 ) {
+  const innerRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => innerRef.current as HTMLInputElement);
+  const phase = useCheckPhase(props.checked, innerRef);
   const autoId = useId();
   const inputId = id ?? autoId;
   const labelId = `${inputId}-label`;
@@ -68,7 +79,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                 className="-m-4 flex min-w-0 flex-1 cursor-pointer items-start gap-3 p-4"
               >
                 <input
-                  ref={ref}
+                  ref={innerRef}
                   id={inputId}
                   type="checkbox"
                   aria-labelledby={labelId}
@@ -78,7 +89,9 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                 />
                 <span
                   aria-hidden
-                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:peer-checked:animate-select-pop mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100"
+                  data-phase={phase}
+                  // 체크되면 튀어 오르고(in), 해제되면 채움이 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground after:bg-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border after:pointer-events-none after:absolute after:-inset-px after:rounded-md after:opacity-0 after:content-[''] [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100"
                 >
                   <svg
                     viewBox="0 0 24 24"

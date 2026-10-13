@@ -1,7 +1,8 @@
 'use client';
 
-import { type ReactNode, useId, useState } from 'react';
+import { type ReactNode, useId, useRef, useState } from 'react';
 
+import { useCheckPhase } from './lib/check-phase';
 import { cn } from './lib/cn';
 
 export type ColorSwatchOption = {
@@ -27,6 +28,74 @@ export type ColorSwatchGroupProps = {
   unavailableHint?: ReactNode;
   className?: string;
 };
+
+type ColorSwatchProps = {
+  option: ColorSwatchOption;
+  name: string;
+  checked: boolean;
+  descriptionId: string;
+  onSelect: () => void;
+  onPreview: (value: string | null) => void;
+};
+
+function ColorSwatch({
+  option,
+  name,
+  checked,
+  descriptionId,
+  onSelect,
+  onPreview,
+}: ColorSwatchProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const phase = useCheckPhase(checked, inputRef);
+  const hasDescription = Boolean(option.price || option.unavailableReason);
+
+  return (
+    <label
+      className="relative inline-flex size-9 cursor-pointer"
+      onPointerEnter={() => onPreview(option.value)}
+      onPointerLeave={(event) => {
+        // 터치는 손을 떼도 마지막으로 누른 칩의 캡션을 남긴다.
+        if (event.pointerType === 'mouse') onPreview(null);
+      }}
+    >
+      <input
+        ref={inputRef}
+        type="radio"
+        name={name}
+        value={option.value}
+        checked={checked}
+        onChange={onSelect}
+        onFocus={() => onPreview(option.value)}
+        onBlur={() => onPreview(null)}
+        aria-label={option.label}
+        aria-describedby={hasDescription ? descriptionId : undefined}
+        aria-disabled={option.unavailableReason ? true : undefined}
+        className="peer sr-only"
+      />
+      <span
+        aria-hidden
+        data-phase={phase}
+        style={{ backgroundColor: option.color }}
+        // 선택되면 튀어 오르고(in), 해제되면 바깥 링이 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+        className="border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring after:border-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 after:pointer-events-none after:absolute after:-inset-1.5 after:rounded-full after:border-2 after:opacity-0 after:content-['']"
+      />
+      {option.unavailableReason ? (
+        <span
+          aria-hidden
+          className="bg-foreground ring-background pointer-events-none absolute top-1/2 left-1/2 h-0.5 w-11 -translate-1/2 rotate-45 rounded-full ring-1"
+        />
+      ) : null}
+      {hasDescription ? (
+        <span id={descriptionId} className="sr-only">
+          {option.price}
+          {option.price && option.unavailableReason ? ' · ' : null}
+          {option.unavailableReason}
+        </span>
+      ) : null}
+    </label>
+  );
+}
 
 function groupOptions(options: readonly ColorSwatchOption[]) {
   const groups = new Map<string, ColorSwatchOption[]>();
@@ -74,53 +143,17 @@ export function ColorSwatchGroup({
               </p>
             ) : null}
             <div className="flex flex-wrap gap-3">
-              {items.map((option) => {
-                const descriptionId = `${captionId}-${option.value}-description`;
-                const hasDescription = Boolean(option.price || option.unavailableReason);
-                return (
-                  <label
-                    key={option.value}
-                    className="relative inline-flex size-9 cursor-pointer"
-                    onPointerEnter={() => setPreviewValue(option.value)}
-                    onPointerLeave={(event) => {
-                      // 터치는 손을 떼도 마지막으로 누른 칩의 캡션을 남긴다.
-                      if (event.pointerType === 'mouse') setPreviewValue(null);
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name={name}
-                      value={option.value}
-                      checked={value === option.value}
-                      onChange={() => onValueChange(option.value)}
-                      onFocus={() => setPreviewValue(option.value)}
-                      onBlur={() => setPreviewValue(null)}
-                      aria-label={option.label}
-                      aria-describedby={hasDescription ? descriptionId : undefined}
-                      aria-disabled={option.unavailableReason ? true : undefined}
-                      className="peer sr-only"
-                    />
-                    <span
-                      aria-hidden
-                      style={{ backgroundColor: option.color }}
-                      className="border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring motion-safe:peer-checked:animate-select-pop size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
-                    />
-                    {option.unavailableReason ? (
-                      <span
-                        aria-hidden
-                        className="bg-foreground ring-background pointer-events-none absolute top-1/2 left-1/2 h-0.5 w-11 -translate-1/2 rotate-45 rounded-full ring-1"
-                      />
-                    ) : null}
-                    {hasDescription ? (
-                      <span id={descriptionId} className="sr-only">
-                        {option.price}
-                        {option.price && option.unavailableReason ? ' · ' : null}
-                        {option.unavailableReason}
-                      </span>
-                    ) : null}
-                  </label>
-                );
-              })}
+              {items.map((option) => (
+                <ColorSwatch
+                  key={option.value}
+                  option={option}
+                  name={name}
+                  checked={value === option.value}
+                  descriptionId={`${captionId}-${option.value}-description`}
+                  onSelect={() => onValueChange(option.value)}
+                  onPreview={setPreviewValue}
+                />
+              ))}
             </div>
           </div>
         ))}
