@@ -1,0 +1,1 @@
+- [Recurring a11y issues](recurring-issues.md) — sr-only input rows, Radix accordion ids, forced-colors focus, price not announced
