@@ -336,6 +336,21 @@
           "target": "@ui/package-row.tsx"
         }
       ]
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Stepper",
+      "description": "Linked step navigation with aria-current, completed steps and auto-centred current step.",
+      "dependencies": ["@radix-ui/react-slot", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/stepper.tsx",
+          "type": "registry:ui",
+          "target": "@ui/stepper.tsx"
+        }
+      ]
     }
   ]
 }

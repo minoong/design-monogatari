@@ -1,0 +1,88 @@
+---
+title: Stepper
+description: 여러 단계로 나뉜 화면에서 지금 위치를 보여 주고 어느 단계로든 이동하게 하는 링크 목록입니다.
+---
+
+<ComponentPreview name="stepper/basic" />
+
+## 설치
+
+<InstallTabs name="stepper" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import Link from 'next/link';
+
+import { Stepper, StepperItem } from '@/components/ui/stepper';
+
+export function Example({ current }: { current: string }) {
+  return (
+    <Stepper aria-label="견적 단계" value={current}>
+      <StepperItem value="model" asChild completed>
+        <Link href="/estimate/model">모델</Link>
+      </StepperItem>
+      <StepperItem value="color" asChild>
+        <Link href="/estimate/color">외장 색상</Link>
+      </StepperItem>
+    </Stepper>
+  );
+}
+```
+
+`Stepper`의 `value`가 `StepperItem`의 `value`와 같으면 그 단계가 현재 단계가 됩니다. 번호는 목록 순서대로 자동으로 붙습니다. 모든 단계가 링크라서 순서와 관계없이 이동할 수 있고, 끝낸 단계는 `completed`로 표시합니다.
+
+링크는 `href`를 주거나, `asChild`로 Next `Link` 같은 자식 요소에 스타일을 입히십시오. 같은 화면 안에서 단계를 바꾸는 용도라도 버튼이 아니라 링크(주소가 바뀌는 이동)로 쓰는 것을 전제로 합니다.
+
+## 예시
+
+### 좁은 폭
+
+폭이 좁으면 목록이 가로로 스크롤되고, 현재 단계가 바뀔 때 그 단계가 가운데로 옮겨집니다. 아래에서 뒤쪽 단계를 눌러 보십시오. `prefers-reduced-motion`이 켜져 있으면 부드럽게 움직이지 않고 바로 이동합니다.
+
+<ComponentPreview name="stepper/narrow" />
+
+## API 레퍼런스
+
+`Stepper`는 `<nav>`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/stepper.tsx"
+  name="StepperProps"
+  include={['value']}
+  descriptions={{
+    value: '현재 단계의 StepperItem value입니다.',
+  }}
+/>
+
+`StepperItem`은 `<a>`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/stepper.tsx"
+  name="StepperItemProps"
+  include={['value', 'completed', 'asChild', 'completedLabel']}
+  defaults={{ completed: 'false', asChild: 'false', completedLabel: '"완료"' }}
+  descriptions={{
+    value: '이 단계의 값입니다. Stepper의 value와 같으면 현재 단계가 됩니다.',
+    completed: '끝낸 단계입니다. 번호 대신 체크 표시가 붙고 스크린 리더에 "완료"가 읽힙니다.',
+    asChild: '링크 대신 자식 요소(예: Next Link)에 스타일을 입힙니다 (Radix Slot).',
+    completedLabel: 'completed일 때 스크린 리더에 읽힐 말입니다.',
+  }}
+/>
+
+## 접근성
+
+- `nav`와 `ol`이라서 스크린 리더가 "내비게이션, 목록 N개 항목"과 현재 위치를 알려 줍니다. `list-style: none`으로 목록 역할이 사라지는 Safari를 위해 `role="list"`를 명시했습니다. `nav`에는 `aria-label`로 이름을 꼭 달아야 합니다.
+- 현재 단계에는 `aria-current="step"`이 붙습니다. 현재 표시는 색뿐 아니라 테두리와 굵은 글자로도 구분됩니다.
+- 끝낸 단계는 체크 아이콘(장식)과 함께 "(완료)"가 스크린 리더에 읽힙니다.
+- 모든 단계가 링크이므로 Tab으로 하나씩 이동하고 Enter로 열립니다. 숫자 배지는 CSS 카운터로 그려서 스크린 리더에는 읽히지 않고, 목록이 순서를 알려 줍니다.
+- 키보드 포커스는 2px 아웃라인(간격 2px)으로 보입니다. 각 항목의 높이는 44px입니다.
+- 키보드로 포커스한 단계가 가장자리에 걸려 있으면 링이 잘리지 않게 안쪽으로 스크롤합니다. 현재 단계를 가운데로 옮기는 스크롤은 `prefers-reduced-motion`에서 즉시 이동으로 바뀝니다. 가로 스크롤바는 숨겨져 있으므로 마우스만 쓰는 사용자는 휠이나 터치 스와이프로 넘기고, 키보드 사용자는 Tab으로 이동하면 브라우저가 해당 항목을 보이는 곳으로 가져옵니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/stepper.tsx" />
