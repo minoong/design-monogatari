@@ -70,12 +70,12 @@ function Border() {
     <DocPage
       kicker="파운데이션"
       title="보더"
-      lead="기본 테두리는 border-border 한 줄이에요. 두께는 Tailwind border(1px)이고, 포커스는 ring-ring이에요. 5–8% 검정은 흰 배경에서, 5–8% 흰색은 검정 배경에서 사라지니 쓰지 마세요."
+      lead="기본 테두리는 border-border 한 줄입니다. 두께는 Tailwind border(1px)이고, 포커스는 ring-ring입니다. 5–8% 검정은 흰 배경에서, 5–8% 흰색은 검정 배경에서 사라지니 쓰지 마십시오."
     >
-      <DocSection title="이렇게 써요">
+      <DocSection title="이렇게 씁니다">
         <DocBody>
-          색은 --border / --ring 토큰, 두께는 Tailwind 유틸리티예요. 카드·입력·다이얼로그·보조
-          버튼은 같은 헤어라인을 공유해요.
+          색은 --border / --ring 토큰, 두께는 Tailwind 유틸리티입니다. 카드·입력·다이얼로그·보조
+          버튼은 같은 헤어라인을 공유합니다.
         </DocBody>
         <DocCode>{`<div className="border-border rounded-lg border" />
 <input className="border-border focus-visible:ring-ring focus-visible:ring-offset-background border focus-visible:ring-2 focus-visible:ring-offset-2" />`}</DocCode>
@@ -90,9 +90,9 @@ function Border() {
       </DocSection>
 
       <DocSection title="구분선">
-        <DocBody>목록이나 표는 border-b border-border로 나눠 주세요.</DocBody>
+        <DocBody>목록이나 표는 border-b border-border로 나눠 주십시오.</DocBody>
         <div className="border-border bg-card overflow-hidden rounded-md border">
-          {['보내는 계좌', '받는 분', '이체 금액'].map((item) => (
+          {['트림', '외장 색상', '예상 견적가'].map((item) => (
             <div
               key={item}
               className="border-border text-foreground border-b px-4 py-3 text-sm last:border-b-0"

@@ -240,6 +240,36 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - Fullscreen 3D stories skip the default Storybook canvas padding. The pin stage is the first paint in the iframe; the overlay stays compact at the top-left so the car is not covered.
 - Not exported from `@repo/ui/*`. Not in the registry. Sample `g05/` (BMW X5 G05, CC BY 4.0) and `studio.hdr` (Poly Haven, CC0; local use only for now) are gitignored (`pnpm --filter @repo/ui copy:car`).
 
+### Radio
+
+- Native `<input type="radio">` with `appearance-none`: 20px circle, `border-border`; checked = `border-primary` + `bg-primary` with a 4px `background` inset ring so the centre reads as a dot (shape, not colour alone). Forced-colors falls back to the native control.
+- Focus `ring-2 ring-ring ring-offset-2`; invalid `aria-invalid` → destructive ring; disabled `bg-muted` (never opacity).
+- Pair with `Label htmlFor`; group with `fieldset` + `legend`. Same `name` gives arrow-key navigation for free.
+
+### NativeSelect
+
+- Native `<select>` inside a `relative` wrapper with a decorative chevron (`aria-hidden`, `pointer-events-none`). Same 44px height, `rounded-md`, hairline and focus ring as Input; invalid and disabled behave like Input.
+- Use for short closed lists (region, tax type). Do not style the option list; mobile opens the OS picker.
+
+### OptionRow
+
+- Single-choice row: `rounded-lg`, hairline `border-border`, 16px padding. Native radio is `sr-only`; a decorative indicator mirrors Radio. Selected = `border-primary` + `ring-1 ring-primary`; keyboard focus = 2px `outline-ring` offset 2px; hover = `bg-secondary-hover`. No scale on hover or press.
+- Slots: `label`, `description`, `price`, `media`, `badge`. The label, description and reason are wired through `aria-labelledby` / `aria-describedby`.
+- `unavailableReason` turns the row `bg-muted` and always shows the reason inline (never hover-only). The input stays enabled with `aria-disabled` so a click can offer an alternative; use `disabled` to block outright.
+- `OptionGroup` = `fieldset` + `legend` (`text-sm font-semibold`). Use one `name` per group.
+
+### ColorSwatchGroup
+
+- Colour chips: 36px circles with a hairline; selected = `ring-2 ring-primary ring-offset-2`; keyboard focus = 2px outline offset 4px. The chip colour comes from the caller (`color`) and is the only place a non-token colour appears; the component never hardcodes one.
+- `group` renders sub-headings (`text-caption text-muted-foreground`). The caption under the chips shows the hovered/focused chip, else the selected one: name + price, or its `unavailableReason`.
+- Unavailable chips get a diagonal strike (not colour alone), stay enabled with `aria-disabled`, and expose the reason via `aria-describedby`.
+
+### PackageRow
+
+- Checkbox row built like OptionRow (native checkbox `sr-only`, decorative box with a check mark, `ring-1 ring-primary` when checked). `items` adds a Radix Accordion trigger ("구성 보기") that expands the included list; the trigger's accessible name includes the package label.
+- `includedIn` marks an item that is already checked because another package includes it (muted surface + small tag). It does not disable the checkbox; callers show a confirmation before unpacking the package.
+- Chevron rotation is the only animation and is off under reduced motion.
+
 ## Do's and Don'ts
 
 ### Do

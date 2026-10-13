@@ -27,6 +27,6 @@ CC BY 4.0 §3(a) 요건에 맞춘 고지입니다. Storybook 3D 스토리 화면
 - **라이선스**: [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) — 전문은 `g05/LICENSE.txt`(`copy:car`가 함께 받습니다)
 - **보증 부인**: 모델은 있는 그대로 제공되며 어떤 보증도 없습니다. [CC BY 4.0 §5](https://creativecommons.org/licenses/by/4.0/legalcode#s5) 참고
 - **수정 사항**: 반쪽 메시(도어·후드·시트)를 Z축으로 미러링해 조립하고, `*_void`·라이트 이펙트 노드를 숨기고, 앞유리를 투과 처리하고, 크기·방향을 맞췄습니다. 도장 스토리에서는 도장 색도 바꿉니다.
-- **상표**: BMW, X5와 BMW 엠블럼은 BMW AG의 상표입니다. 이 프로젝트는 BMW와 제휴·후원 관계가 없으며, 상표권은 CC BY 4.0에 포함되지 않습니다(§2(b)(2)). 엠블럼 메시(`O_G05_Emblem.gltf`)를 쓰고 싶지 않으면 `vehicles.ts`의 `X5_FILES`에서 제외하세요.
+- **상표**: BMW, X5와 BMW 엠블럼은 BMW AG의 상표입니다. 이 프로젝트는 BMW와 제휴·후원 관계가 없으며, 상표권은 CC BY 4.0에 포함되지 않습니다(§2(b)(2)). 엠블럼 메시(`O_G05_Emblem.gltf`)를 쓰고 싶지 않으면 `vehicles.ts`의 `X5_FILES`에서 제외하십시오.
 
 이 repo는 모델 파일을 재배포하지 않습니다. 파일을 커밋하거나 배포 결과물에 포함할 때는 `g05/LICENSE.txt`와 위 고지를 함께 유지해야 합니다.

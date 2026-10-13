@@ -14,19 +14,21 @@ export default function DialogBasic() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">이체 확인</Button>
+        <Button variant="secondary">견적 확인</Button>
       </DialogTrigger>
       <DialogContent data-ds-preview>
         <DialogHeader>
-          <DialogTitle>10,000원을 이체할까요?</DialogTitle>
-          <DialogDescription>보내는 계좌와 받는 분을 한 번 더 확인해 주세요.</DialogDescription>
+          <DialogTitle>이 구성으로 견적을 저장하시겠습니까?</DialogTitle>
+          <DialogDescription>
+            선택하신 트림과 옵션, 지역별 부대비용을 한 번 더 확인해 주십시오.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="secondary">취소</Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button variant="primary">이체하기</Button>
+            <Button variant="primary">견적 저장</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

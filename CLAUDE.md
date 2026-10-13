@@ -20,9 +20,10 @@ pnpm format                           # Prettier write (Tailwind class sort incl
 pnpm lint                             # ESLint, --max-warnings 0
 pnpm check-types                      # web runs `next typegen && tsc --noEmit`
 pnpm test                             # vitest (apps/web estimate model)
-pnpm verify                           # format:check + registry:check + components:check + lint + check-types + test + build (what CI runs)
+pnpm verify                           # format:check + registry:check + components:check + copy:check + lint + check-types + test + build (what CI runs)
 pnpm component:new <name> [--compound]   # scaffold story + example + docs page + registry item + DESIGN.md entry (all marked TODO(scaffold))
 pnpm components:check                 # every public @repo/ui component must have story, docs page, example, registry item, DESIGN.md entry
+pnpm copy:check                       # user-facing Korean copy must be 합쇼체 (-습니다/-십시오) and car-estimate themed, not 해요체 or bank examples
 pnpm --filter @repo/ui exec eslint src/button.tsx   # lint a single file
 ```
 
@@ -38,7 +39,7 @@ Pre-commit runs husky + lint-staged (Prettier + ESLint --fix on staged files).
 
 ## Claude Code harness (`.claude/`, `.mcp.json`)
 
-- **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, …).
+- **Rules** `.claude/rules/*.md`: always-on (`agent-loop`, `code-quality`, `git-workflow`, `pnpm-monorepo`, `stack-guardrails`) or `paths`-scoped (`design`, `styling`, `animation`, `fsd-apps`, `ui-a11y`, `copy-tone`, …).
 - **Skills** (project-authored: `git-commit`, `verify`, `sync-project-docs`, `create-component`; the rest are installed) `.claude/skills/<name>` are symlinks to `.agents/skills/<name>` (the `npx skills add` install root, tracked by `skills-lock.json`). Add new skills under `.agents/skills/` and symlink them; don't copy.
 - **Subagents** `ui-verifier` (`.claude/agents/ui-verifier.md`) runs light/dark checks (Storybook, docs, web) and `pnpm verify`; `a11y-reviewer` is a read-only accessibility reviewer (Read/Grep/Glob, preloads the `accessibility` skill, keeps project memory). The Playwright MCP server is defined inline in that file, so it exists only inside the subagent; `.mcp.json` holds `lucide-animated` and `storybook` for the main session.
 - **Hooks** (`.claude/settings.json` → `.claude/hooks/`): `SessionStart` injects DESIGN.md pointers; `component-check.mjs` tells you right after a component edit which of story/docs/example/registry/DESIGN.md is missing; `InstructionsLoaded` is logged by `instructions-log.mjs`; `ui-verify.mjs` tracks UI edits via `PostToolUse` and blocks `Stop` / `SubagentStop` until Playwright and `pnpm verify` have run (state in gitignored `.claude/hooks/state/`). Every decision is also appended to the gitignored `.claude/logs/hook-events.jsonl` through `hooks/lib/log.mjs`, which writes an allowlisted, privacy-safe line (no prompts, commands or tool output; repo-relative paths only; hashed session id) and never affects the hook's decision. `pnpm harness:trace [--story|--last|--session <id>] [--out file]` exports a sanitized summary and refuses to write anything containing absolute paths or emails.

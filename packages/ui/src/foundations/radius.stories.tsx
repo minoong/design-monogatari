@@ -32,12 +32,12 @@ function Radius() {
     <DocPage
       kicker="파운데이션"
       title="라운딩"
-      lead="모서리는 역할에 따라 세 가지만 써요. 입력은 rounded-md, 떠 있는 면은 rounded-lg, 누르는 알약은 rounded-pill이에요."
+      lead="모서리는 역할에 따라 세 가지만 씁니다. 입력은 rounded-md, 떠 있는 면은 rounded-lg, 누르는 알약은 rounded-pill입니다."
     >
-      <DocSection title="이렇게 써요">
+      <DocSection title="이렇게 씁니다">
         <DocBody>
-          값은 @theme의 --radius-md / --radius-lg / --radius-pill이에요. 같은 화면에서도 역할이
-          바뀌면 라운딩도 바뀌어요.
+          값은 @theme의 --radius-md / --radius-lg / --radius-pill입니다. 같은 화면에서도 역할이
+          바뀌면 라운딩도 바뀝니다.
         </DocBody>
         <DocCode>{`<input className="rounded-md" />
 <div className="rounded-lg border border-border" />

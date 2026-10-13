@@ -8,21 +8,21 @@ import { StoryReplay } from './story-replay';
 const SCROLL_IN_VIEW_AMOUNT = 'all';
 
 const TRIM_TOTALS = {
-  standard: 62_900_000,
-  long: 71_400_000,
-  performance: 79_800_000,
+  comfort: 90_000_000,
+  sport: 98_500_000,
+  phev: 112_500_000,
 } as const;
 
 type TrimId = keyof typeof TRIM_TOTALS;
 
 const TRIM_LABELS: Record<TrimId, string> = {
-  standard: '스탠다드',
-  long: '롱 레인지',
-  performance: '퍼포먼스',
+  comfort: '컴포트',
+  sport: '스포트',
+  phev: '스포트 PHEV',
 };
 
 function EstimateAmountPlayground({
-  initialTrim = 'long',
+  initialTrim = 'sport',
   className,
 }: {
   initialTrim?: TrimId;
@@ -77,7 +77,7 @@ function AmountScrollStage({
 
 function InViewScrollDemo() {
   return (
-    <AmountScrollStage hint="아래로 스크롤해 금액이 상자에 다 들어오면 굴러요.">
+    <AmountScrollStage hint="아래로 스크롤해 금액이 상자에 다 들어오면 구릅니다.">
       {(rootRef) => (
         <>
           <p className="text-muted-foreground mb-2 text-sm">합계</p>
@@ -96,7 +96,7 @@ function InViewScrollDemo() {
 
 function WidthComparePlayground({ className }: { className?: string }) {
   return (
-    <AmountScrollStage hint="아래로 스크롤해 금액이 상자에 다 들어오면 굴러요. 위는 ‘원’이 고정되고, 아래는 따라가요.">
+    <AmountScrollStage hint="아래로 스크롤해 금액이 상자에 다 들어오면 구릅니다. 위는 ‘원’이 고정되고, 아래는 따라갑니다.">
       {(rootRef) => (
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
@@ -135,7 +135,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`AnimatedAmount`는 금액이 바뀔 때 자릿수가 세로로 굴러가요. 기본은 `reserveWidth`로 목표 금액 너비를 미리 잡아 `원`이 밀리지 않아요. `inView`를 켜면 뷰포트에 들어올 때 0에서 목표값까지 굴러요. `inViewOnce`, `inViewAmount`, `inViewMargin`은 Motion `useInView` 옵션과 같아요. `prefers-reduced-motion`이면 롤 없이 바로 최종 값을 보여 줘요.',
+          '`AnimatedAmount`는 금액이 바뀔 때 자릿수가 세로로 굴러갑니다. 기본은 `reserveWidth`로 목표 금액 너비를 미리 잡아 `원`이 밀리지 않습니다. `inView`를 켜면 뷰포트에 들어올 때 0에서 목표값까지 구릅니다. `inViewOnce`, `inViewAmount`, `inViewMargin`은 Motion `useInView` 옵션과 같습니다. `prefers-reduced-motion`이면 롤 없이 바로 최종 값을 보여 줍니다.',
       },
     },
   },
@@ -165,12 +165,12 @@ export const 기본: Story = {};
 
 export const 견적헤더: Story = {
   render: () => (
-    <EstimateAmountPlayground className="font-sans text-sm font-semibold" initialTrim="long" />
+    <EstimateAmountPlayground className="font-sans text-sm font-semibold" initialTrim="sport" />
   ),
   parameters: {
     docs: {
       description: {
-        story: '견적 헤더 크기예요. 트림을 고르면 합계가 자리수 롤로 바뀌어요.',
+        story: '견적 헤더 크기입니다. 트림을 고르면 합계가 자리수 롤로 바뀝니다.',
       },
     },
   },
@@ -180,13 +180,13 @@ export const 견적합계: Story = {
   render: () => (
     <EstimateAmountPlayground
       className="text-title font-semibold tracking-tight"
-      initialTrim="long"
+      initialTrim="sport"
     />
   ),
   parameters: {
     docs: {
       description: {
-        story: '하단 합계 크기예요. 트림을 고르면 합계가 자리수 롤로 바뀌어요.',
+        story: '하단 합계 크기입니다. 트림을 고르면 합계가 자리수 롤로 바뀝니다.',
       },
     },
   },
@@ -203,7 +203,7 @@ export const 폭고정: Story = {
     docs: {
       description: {
         story:
-          '스크롤해서 금액이 상자에 다 들어오면 (`inViewAmount: all`) `reserveWidth` 차이가 보여요. 위는 목표 너비를 미리 잡아 `원`이 안 움직이고, 아래는 숫자 폭을 따라가요. 오른쪽 위 새로고침으로 처음부터 다시 볼 수 있어요.',
+          '스크롤해서 금액이 상자에 다 들어오면 (`inViewAmount: all`) `reserveWidth` 차이가 보입니다. 위는 목표 너비를 미리 잡아 `원`이 안 움직이고, 아래는 숫자 폭을 따라갑니다. 오른쪽 위 새로고침으로 처음부터 다시 볼 수 있습니다.',
       },
     },
   },
@@ -219,7 +219,7 @@ export const 뷰포트진입: Story = {
     docs: {
       description: {
         story:
-          '스크롤해서 금액이 상자에 다 들어오면 (`inViewAmount: all`) 0에서 목표값까지 자리수가 굴러요. 기본은 한 번만 재생해요 (`inViewOnce`). 오른쪽 위 새로고침으로 처음부터 다시 볼 수 있어요.',
+          '스크롤해서 금액이 상자에 다 들어오면 (`inViewAmount: all`) 0에서 목표값까지 자리수가 구릅니다. 기본은 한 번만 재생합니다 (`inViewOnce`). 오른쪽 위 새로고침으로 처음부터 다시 볼 수 있습니다.',
       },
     },
   },

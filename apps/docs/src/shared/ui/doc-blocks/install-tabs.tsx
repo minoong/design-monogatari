@@ -32,7 +32,7 @@ export async function InstallTabs({ name }: { name: string }) {
       </Tab>
       <Tab value="수동">
         <div className="flex flex-col gap-2 [&>p]:my-0">
-          <p>1. 의존성을 설치해요.</p>
+          <p>1. 의존성을 설치합니다.</p>
           <PackageManagerTabs
             commands={Object.fromEntries(
               PACKAGE_MANAGERS.map((pm) => [pm.name, `${pm.add} ${dependencies.join(' ')}`]),
@@ -41,8 +41,8 @@ export async function InstallTabs({ name }: { name: string }) {
           {needsTheme ? (
             <>
               <p>
-                2. 테마 토큰을 설치해요. CSS 변수와 키프레임이 들어 있어서 레지스트리로 받는 쪽이
-                안전해요.
+                2. 테마 토큰을 설치합니다. CSS 변수와 키프레임이 들어 있어서 레지스트리로 받는 쪽이
+                안전합니다.
               </p>
               <PackageManagerTabs
                 commands={Object.fromEntries(
@@ -52,8 +52,8 @@ export async function InstallTabs({ name }: { name: string }) {
             </>
           ) : null}
           <p>
-            {needsTheme ? 3 : 2}. 아래 파일을 프로젝트에 복사해요. <code>@/lib/utils</code>와{' '}
-            <code>@/ui/…</code>는 shadcn이 쓰는 별칭이에요.
+            {needsTheme ? 3 : 2}. 아래 파일을 프로젝트에 복사합니다. <code>@/lib/utils</code>와{' '}
+            <code>@/ui/…</code>는 shadcn이 쓰는 별칭입니다.
           </p>
           {files.map((file) => (
             <RepoFile key={file.path} path={file.path} title={file.title} />

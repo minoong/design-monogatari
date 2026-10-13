@@ -1,6 +1,6 @@
 ---
 title: Badge
-description: 상태나 분류를 짧게 보여 주는 작은 칩이에요.
+description: 상태나 분류를 짧게 보여 주는 작은 칩입니다.
 ---
 
 <ComponentPreview name="badge/default" />
@@ -9,8 +9,8 @@ description: 상태나 분류를 짧게 보여 주는 작은 칩이에요.
 
 <InstallTabs name="badge" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
 </Callout>
 
 ## 사용법
@@ -19,23 +19,23 @@ description: 상태나 분류를 짧게 보여 주는 작은 칩이에요.
 import { Badge } from '@/components/ui/badge';
 
 export function Example() {
-  return <Badge variant="secondary">대기 중</Badge>;
+  return <Badge variant="secondary">상담 대기</Badge>;
 }
 ```
 
-배지는 정보를 알리는 용도예요. 눌러서 무언가를 하게 만드는 CTA 대신 쓰지 마세요.
+배지는 정보를 알리는 용도입니다. 눌러서 무언가를 하게 만드는 CTA 대신 쓰지 마십시오.
 
 ## 예시
 
 ### 형태
 
-`default`는 잉크 색 채움, `secondary`는 옅은 면에 헤어라인, `destructive`는 오류색 테두리예요.
+`default`는 잉크 색 채움, `secondary`는 옅은 면에 헤어라인, `destructive`는 오류색 테두리입니다.
 
 <ComponentPreview name="badge/variants" />
 
 ## API 레퍼런스
 
-`<span>`의 모든 속성을 받고, 아래 prop 하나가 더 있어요. 변형 스타일이 필요하면 `badgeVariants`를 가져다 `<a>` 같은 다른 요소에 쓸 수 있어요.
+`<span>`의 모든 속성을 받고, 아래 prop 하나가 더 있습니다. 변형 스타일이 필요하면 `badgeVariants`를 가져다 `<a>` 같은 다른 요소에 쓸 수 있습니다.
 
 <PropsTable
   file="packages/ui/src/badge.tsx"
@@ -43,15 +43,15 @@ export function Example() {
   include={['variant']}
   defaults={{ variant: '"default"' }}
   descriptions={{
-    variant: '칩의 모양이에요. default는 정보, secondary는 보조 상태, destructive는 오류예요.',
+    variant: '칩의 모양입니다. default는 정보, secondary는 보조 상태, destructive는 오류입니다.',
   }}
 />
 
 ## 접근성
 
-- 의미를 **색으로만** 전달하지 마세요. `destructive`도 "한도 초과"처럼 글자가 상태를 말해야 해요.
-- 글자와 배경의 대비는 토큰이 보장해요 (`default`는 잉크색 배경에 `background` 색 글자, `destructive`는 오류색 글자와 테두리). 값은 [색](/docs/foundations/colors) 페이지에서 볼 수 있어요.
-- 상태가 바뀌는 것을 알려야 한다면 배지에 `role="status"`를 직접 달아 주세요. 기본은 일반 `<span>`이에요.
+- 의미를 **색으로만** 전달하지 마십시오. `destructive`도 "재고 없음"처럼 글자가 상태를 말해야 합니다.
+- 글자와 배경의 대비는 토큰이 보장합니다 (`default`는 잉크색 배경에 `background` 색 글자, `destructive`는 오류색 글자와 테두리). 값은 [색](/docs/foundations/colors) 페이지에서 볼 수 있습니다.
+- 상태가 바뀌는 것을 알려야 한다면 배지에 `role="status"`를 직접 달아 주십시오. 기본은 일반 `<span>`입니다.
 
 ## 소스
 

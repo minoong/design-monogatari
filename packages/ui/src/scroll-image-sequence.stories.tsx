@@ -35,13 +35,15 @@ function DummySequence() {
 
   return (
     <div className="-m-8">
-      <p className="text-muted-foreground text-caption px-6 py-8">아래로 스크롤해 시퀀스를 봐요.</p>
+      <p className="text-muted-foreground text-caption px-6 py-8">
+        아래로 스크롤해 시퀀스를 봅니다.
+      </p>
       <ScrollImageSequence alt="각도가 바뀌는 쿠페 실루엣" frames={frames} pinDistance={1.6}>
-        <h2 className="text-title font-semibold tracking-tight">앞면이 공기를 가르며 돌아요</h2>
-        <p className="text-body mt-2">스크롤하면 차체가 각도를 바꿔 앞모습이 드러나요.</p>
+        <h2 className="text-title font-semibold tracking-tight">앞면이 공기를 가르며 돕니다</h2>
+        <p className="text-body mt-2">스크롤하면 차체가 각도를 바꿔 앞모습이 드러납니다.</p>
       </ScrollImageSequence>
       <p className="text-muted-foreground text-caption px-6 py-16">
-        시퀀스가 끝나면 여기로 내려와요.
+        시퀀스가 끝나면 여기로 내려옵니다.
       </p>
     </div>
   );
@@ -55,7 +57,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`ScrollImageSequence`는 스크롤 진행도를 이미지 프레임에 매핑해요. 핀과 스크럽은 GSAP ScrollTrigger예요. Motion을 같은 노드에 넣지 마세요. 에셋 URL은 소비자가 넣어요.',
+          '`ScrollImageSequence`는 스크롤 진행도를 이미지 프레임에 매핑합니다. 핀과 스크럽은 GSAP ScrollTrigger입니다. Motion을 같은 노드에 넣지 마십시오. 에셋 URL은 소비자가 넣습니다.',
       },
     },
   },

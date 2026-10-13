@@ -6,21 +6,21 @@ export const trims = [
     name: '스탠다드',
     price: 0,
     range: '520km',
-    note: '일상 주행에 맞춰 듀얼 모터를 빼 둔 트림이에요.',
+    note: '일상 주행에 맞춰 듀얼 모터를 빼 둔 트림입니다.',
   },
   {
     id: 'long',
     name: '롱 레인지',
     price: 8_500_000,
     range: '620km',
-    note: '한 번 충전으로 서울–부산을 여유 있게 가요.',
+    note: '한 번 충전으로 서울–부산을 여유 있게 갑니다.',
   },
   {
     id: 'performance',
     name: '퍼포먼스',
     price: 16_900_000,
     range: '560km',
-    note: '가속과 댐핑을 스포츠로 조여 둔 트림이에요.',
+    note: '가속과 댐핑을 스포츠로 조여 둔 트림입니다.',
   },
 ] as const;
 

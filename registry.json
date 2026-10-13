@@ -261,6 +261,81 @@
           "target": "@ui/dialog.tsx"
         }
       ]
+    },
+    {
+      "name": "radio",
+      "type": "registry:ui",
+      "title": "Radio",
+      "description": "Native radio input styled with design-monogatari tokens.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/radio.tsx",
+          "type": "registry:ui",
+          "target": "@ui/radio.tsx"
+        }
+      ]
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "title": "NativeSelect",
+      "description": "Native select with the Input look and a chevron.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/native-select.tsx",
+          "type": "registry:ui",
+          "target": "@ui/native-select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "option-row",
+      "type": "registry:ui",
+      "title": "OptionRow",
+      "description": "Single-choice option row with description, price and an inline unavailable reason.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/option-row.tsx",
+          "type": "registry:ui",
+          "target": "@ui/option-row.tsx"
+        }
+      ]
+    },
+    {
+      "name": "color-swatch-group",
+      "type": "registry:ui",
+      "title": "ColorSwatchGroup",
+      "description": "Colour chip radio group with grouped headings and a live caption.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/color-swatch-group.tsx",
+          "type": "registry:ui",
+          "target": "@ui/color-swatch-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "package-row",
+      "type": "registry:ui",
+      "title": "PackageRow",
+      "description": "Checkbox package row that expands to show what it includes.",
+      "dependencies": ["@radix-ui/react-accordion", "clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/package-row.tsx",
+          "type": "registry:ui",
+          "target": "@ui/package-row.tsx"
+        }
+      ]
     }
   ]
 }

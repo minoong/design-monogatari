@@ -1,4 +1,4 @@
-const ITEMS = ['보내는 계좌', '받는 분', '이체 금액'];
+const ITEMS = ['트림', '외장 색상', '예상 견적가'];
 
 export default function BorderHairline() {
   return (

@@ -79,7 +79,7 @@ function fallbackFor(slot: SingleSlot, draft: Draft, catalog: Catalog): string {
   const candidate = itemsOf(catalog, slot).find(
     (item) => getAvailability(selection, singleRef(slot, item.id), catalog).available,
   );
-  if (!candidate) throw new Error(`선택 가능한 ${slot} 항목이 없어요.`);
+  if (!candidate) throw new Error(`선택 가능한 ${slot} 항목이 없습니다.`);
   return candidate.id;
 }
 
@@ -275,7 +275,7 @@ function normalize(draft: Draft, ctx: Context): Effect[] | null {
     if (blocked) return blocked;
     if (JSON.stringify(toSelection(draft, ctx.catalog)) === before) return null;
   }
-  throw new Error('규칙이 수렴하지 않아요. 카탈로그에 순환하는 규칙이 있는지 확인하세요.');
+  throw new Error('규칙이 수렴하지 않습니다. 카탈로그에 순환하는 규칙이 있는지 확인하십시오.');
 }
 
 function findAlternativeTrim(

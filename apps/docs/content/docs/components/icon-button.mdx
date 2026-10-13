@@ -1,6 +1,6 @@
 ---
 title: IconButton
-description: 아이콘만으로 액션을 전달하는 정사각형 버튼이에요. aria-label이 필수예요.
+description: 아이콘만으로 액션을 전달하는 정사각형 버튼입니다. aria-label이 필수입니다.
 ---
 
 <ComponentPreview name="icon-button/clear" />
@@ -9,11 +9,11 @@ description: 아이콘만으로 액션을 전달하는 정사각형 버튼이에
 
 <InstallTabs name="icon-button" />
 
-`IconButton`은 `Button`을 감싸서 만들어요. 설치하면 `Button`도 함께 들어와요.
+`IconButton`은 `Button`을 감싸서 만듭니다. 설치하면 `Button`도 함께 들어옵니다.
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요. 기본값인 Base UI 프로젝트에서는 CLI가
-  Radix의 `asChild`를 `render=`로 바꿔서 깨져요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다. 기본값인 Base UI 프로젝트에서는 CLI가
+  Radix의 `asChild`를 `render=`로 바꿔서 깨집니다.
 </Callout>
 
 ## 사용법
@@ -24,40 +24,40 @@ import { Heart } from 'lucide-react';
 
 export function Example() {
   return (
-    <IconButton aria-label="좋아요">
+    <IconButton aria-label="관심 차량 담기">
       <Heart />
     </IconButton>
   );
 }
 ```
 
-아이콘은 어떤 SVG든 괜찮아요. 위 예시는 shadcn 프로젝트에 흔한 `lucide-react`를 썼고, 이 문서의 미리보기는 호버하면 움직이는 애니메이션 아이콘이에요.
+아이콘은 어떤 SVG든 괜찮습니다. 위 예시는 shadcn 프로젝트에 흔한 `lucide-react`를 썼고, 이 문서의 미리보기는 호버하면 움직이는 애니메이션 아이콘입니다.
 
-아이콘과 글자를 함께 쓸 때는 `IconButton`이 아니라 [`Button`](/docs/components/button)을 쓰세요.
+아이콘과 글자를 함께 쓸 때는 `IconButton`이 아니라 [`Button`](/docs/components/button)을 쓰십시오.
 
 ## 예시
 
 ### 형태
 
-기본은 `clear`예요. 호버하기 전까지 배경이 없어서 도구 모음처럼 아이콘이 여럿일 때 조용해요. 강조할 하나에만 `primary`를 쓰세요.
+기본은 `clear`입니다. 호버하기 전까지 배경이 없어서 도구 모음처럼 아이콘이 여럿일 때 조용합니다. 강조할 하나에만 `primary`를 쓰십시오.
 
 <ComponentPreview name="icon-button/variants" />
 
 ### 크기
 
-`Button`과 같은 크기 단계예요. 정사각형이라 `small` 32px, `medium` 40px, `large` 48px, `xlarge` 56px가 한 변이에요.
+`Button`과 같은 크기 단계입니다. 정사각형이라 `small` 32px, `medium` 40px, `large` 48px, `xlarge` 56px가 한 변입니다.
 
 <ComponentPreview name="icon-button/sizes" />
 
 ### 모서리
 
-기본은 `md`예요. `Button`의 기본 `lg`와 다르니 같이 놓을 때 맞춰 주세요.
+기본은 `md`입니다. `Button`의 기본 `lg`와 다르니 같이 놓을 때 맞춰 주십시오.
 
 <ComponentPreview name="icon-button/radius" />
 
 ## API 레퍼런스
 
-`Button`의 props에서 `icon`과 `display`를 뺀 것이고, `aria-label`이 필수예요. 기본값이 `Button`과 다른 `variant`와 `radius`를 표에 적었어요. 나머지 `<button>` 속성은 그대로 받아요.
+`Button`의 props에서 `icon`과 `display`를 뺀 것이고, `aria-label`이 필수입니다. 기본값이 `Button`과 다른 `variant`와 `radius`를 표에 적었습니다. 나머지 `<button>` 속성은 그대로 받습니다.
 
 <PropsTable
   file="packages/ui/src/icon-button.tsx"
@@ -71,20 +71,20 @@ export function Example() {
     asChild: 'false',
   }}
   descriptions={{
-    'aria-label': '버튼이 하는 일을 설명하는 이름. 글자가 없어서 필수예요.',
-    variant: '시각 강조 정도예요. clear는 호버 전까지 배경이 없어요.',
-    size: '한 변의 길이예요. small 32px, medium 40px, large 48px, xlarge 56px예요.',
-    radius: '모서리 반경이에요.',
-    loading: '로딩 표시를 보이고 클릭을 막아요.',
-    asChild: '버튼 대신 자식 요소에 스타일을 입혀 렌더해요 (Radix Slot).',
+    'aria-label': '버튼이 하는 일을 설명하는 이름. 글자가 없어서 필수입니다.',
+    variant: '시각 강조 정도입니다. clear는 호버 전까지 배경이 없습니다.',
+    size: '한 변의 길이입니다. small 32px, medium 40px, large 48px, xlarge 56px입니다.',
+    radius: '모서리 반경입니다.',
+    loading: '로딩 표시를 보이고 클릭을 막습니다.',
+    asChild: '버튼 대신 자식 요소에 스타일을 입혀 렌더합니다 (Radix Slot).',
   }}
 />
 
 ## 접근성
 
-- 보이는 글자가 없으니 스크린 리더는 `aria-label`로만 버튼을 알아요. 타입이 필수로 강제해요. 아이콘의 모양이 아니라 **동작**을 적으세요 ("하트" 대신 "좋아요").
-- 키보드 포커스에서만 링이 나타나요. 누를 때 0.9배로 줄어드는 움직임은 `prefers-reduced-motion`을 켜면 사라져요.
-- 터치 대상은 `small`이 32px예요. 모바일에서 촘촘히 놓을 때는 `medium` 이상을 쓰세요.
+- 보이는 글자가 없으니 스크린 리더는 `aria-label`로만 버튼을 압니다. 타입이 필수로 강제합니다. 아이콘의 모양이 아니라 **동작**을 적으십시오 ("하트" 대신 "관심 차량 담기").
+- 키보드 포커스에서만 링이 나타납니다. 누를 때 0.9배로 줄어드는 움직임은 `prefers-reduced-motion`을 켜면 사라집니다.
+- 터치 대상은 `small`이 32px입니다. 모바일에서 촘촘히 놓을 때는 `medium` 이상을 쓰십시오.
 
 ## 소스
 

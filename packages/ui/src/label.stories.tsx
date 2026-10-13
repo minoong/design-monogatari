@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Label`은 입력 칸이 무엇을 받는지 알려 줘요. 반드시 `htmlFor`와 입력 `id`를 짝지어 주세요.',
+          '`Label`은 입력 칸이 무엇을 받는지 알려 줍니다. 반드시 `htmlFor`와 입력 `id`를 짝지어 주십시오.',
       },
     },
   },

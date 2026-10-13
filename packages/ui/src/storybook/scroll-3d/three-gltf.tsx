@@ -80,7 +80,7 @@ export function ThreeGltfDemo({
       <p className="text-muted-foreground text-caption absolute inset-x-0 top-8 px-6">
         {vehicleMissingHint(vehicle) ?? (
           <>
-            {vehicle.label} 모델이 없어요. <code>pnpm --filter @repo/ui copy:car</code>
+            {vehicle.label} 모델이 없습니다. <code>pnpm --filter @repo/ui copy:car</code>
           </>
         )}
       </p>

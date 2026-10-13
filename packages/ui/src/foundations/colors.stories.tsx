@@ -245,72 +245,72 @@ function Colors() {
     <DocPage
       kicker="파운데이션"
       title="색"
-      lead="아래 50–900은 @theme 원시 스케일이에요. 화면 컴포넌트에는 bg-neutral-*를 쓰지 말고, bg-background / bg-primary 같은 시맨틱 클래스만 써 주세요. 툴바에서 테마를 바꿔도 원시 스케일 값은 그대로예요."
+      lead="아래 50–900은 @theme 원시 스케일입니다. 화면 컴포넌트에는 bg-neutral-*를 쓰지 말고, bg-background / bg-primary 같은 시맨틱 클래스만 써 주십시오. 툴바에서 테마를 바꿔도 원시 스케일 값은 그대로입니다."
     >
-      <DocSection title="이렇게 써요">
-        <DocBody>시맨틱 토큰이 스케일 한 칸을 가리켜요. hex는 컴포넌트에 적지 마세요.</DocBody>
+      <DocSection title="이렇게 씁니다">
+        <DocBody>시맨틱 토큰이 스케일 한 칸을 가리킵니다. hex는 컴포넌트에 적지 마십시오.</DocBody>
         <DocCode>{`<div className="bg-background text-foreground" />
 <button className="bg-primary text-primary-foreground" />`}</DocCode>
       </DocSection>
 
       <DocSection title="Neutral">
         <DocBody>
-          면·글자·테두리의 회색 계단이에요. 950은 라이트 스케일의 검정 칸이에요. 다크
-          캔버스·헤어라인은 시맨틱 토큰(background, border)을 쓰세요.
+          면·글자·테두리의 회색 계단입니다. 950은 라이트 스케일의 검정 칸입니다. 다크
+          캔버스·헤어라인은 시맨틱 토큰(background, border)을 쓰십시오.
         </DocBody>
         <Bars items={NEUTRAL_BARS} />
       </DocSection>
 
       <DocSection title="Blue">
         <DocBody>
-          Action Blue 한 줄기예요. 라이트에서 600이 primary, 500이 호버·링, 400이 어두운 면
-          링크예요. 다크 primary·링은 이 스케일이 아니라 시맨틱 토큰이에요.
+          Action Blue 한 줄기입니다. 라이트에서 600이 primary, 500이 호버·링, 400이 어두운 면
+          링크입니다. 다크 primary·링은 이 스케일이 아니라 시맨틱 토큰입니다.
         </DocBody>
         <Bars items={BLUE_BARS} />
       </DocSection>
 
       <DocSection title="페이지">
         <DocBody>
-          기본 면은 background, 그 위 글자는 foreground예요. 테마를 바꾸면 이 값만 바뀌어요.
+          기본 면은 background, 그 위 글자는 foreground입니다. 테마를 바꾸면 이 값만 바뀝니다.
         </DocBody>
         <Bars items={page} />
       </DocSection>
 
       <DocSection title="카드와 보조 면">
         <DocBody>
-          떠 있는 면은 card, 옅은 채움은 muted예요. 호버만 secondary-hover를 써 주세요.
+          떠 있는 면은 card, 옅은 채움은 muted입니다. 호버만 secondary-hover를 써 주십시오.
         </DocBody>
         <Bars items={card} />
       </DocSection>
 
       <DocSection title="보조 글자">
         <DocBody>
-          설명, 플레이스홀더, 캡션은 muted-foreground예요. 라이트에서 #6e6e73 on #ffffff는
-          5.07:1이에요. 4.5:1을 깨지 마세요.
+          설명, 플레이스홀더, 캡션은 muted-foreground입니다. 라이트에서 #6e6e73 on #ffffff는
+          5.07:1입니다. 4.5:1을 깨지 마십시오.
         </DocBody>
         <Bars items={mutedText} />
       </DocSection>
 
       <DocSection title="주요 액션">
         <DocBody>
-          누르는 면은 primary 하나예요. 다크에서는 Radix accent 9예요. 어두운 타일 위 링크만
-          primary-on-dark를 쓰고, 밝은 배경에는 올리지 마세요.
+          누르는 면은 primary 하나입니다. 다크에서는 Radix accent 9입니다. 어두운 타일 위 링크만
+          primary-on-dark를 쓰고, 밝은 배경에는 올리지 마십시오.
         </DocBody>
         <Bars items={primary} />
       </DocSection>
 
       <DocSection title="상태">
         <DocBody>
-          실패·오류는 destructive예요. 브랜드 CTA를 대체하지 마세요. 라이트는 흰 글자와 5.84:1,
-          다크는 밝은 레드 글자(#ff6369)예요.
+          실패·오류는 destructive입니다. 브랜드 CTA를 대체하지 마십시오. 라이트는 흰 글자와 5.84:1,
+          다크는 밝은 레드 글자(#ff6369)입니다.
         </DocBody>
         <Bars items={status} />
       </DocSection>
 
       <DocSection title="테두리와 링">
         <DocBody>
-          색 토큰은 여기 있고, 두께와 쓰는 방법은 보더 페이지에서 볼 수 있어요. 포커스는 ring, 딤은
-          overlay예요. 다크 헤어라인은 5–8% 흰색이 아니라 border 토큰이에요.
+          색 토큰은 여기 있고, 두께와 쓰는 방법은 보더 페이지에서 볼 수 있습니다. 포커스는 ring,
+          딤은 overlay입니다. 다크 헤어라인은 5–8% 흰색이 아니라 border 토큰입니다.
         </DocBody>
         <Bars items={chrome} />
       </DocSection>

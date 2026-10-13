@@ -9,6 +9,11 @@
     "input",
     "field",
     "dialog",
-    "animated-amount"
+    "animated-amount",
+    "radio",
+    "native-select",
+    "option-row",
+    "color-swatch-group",
+    "package-row"
   ]
 }

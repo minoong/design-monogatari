@@ -24,7 +24,8 @@ export default function DialogControlled() {
           <DialogHeader>
             <DialogTitle>제어 컴포넌트</DialogTitle>
             <DialogDescription>
-              열림 상태를 직접 들고 있어요. Esc, 바깥 클릭, 닫기 버튼 모두 onOpenChange로 알려요.
+              열림 상태를 직접 들고 있습니다. Esc, 바깥 클릭, 닫기 버튼 모두 onOpenChange로
+              알립니다.
             </DialogDescription>
           </DialogHeader>
           <Button variant="secondary" onClick={() => setOpen(false)}>

@@ -145,7 +145,7 @@ process.on('exit', () => {
 });
 
 if (!existsSync(SHADCN)) {
-  fail('shadcn CLI가 없습니다. `pnpm install` 후 다시 실행하세요.');
+  fail('shadcn CLI가 없습니다. `pnpm install` 후 다시 실행하십시오.');
 }
 
 let addresses;

@@ -1,6 +1,6 @@
 ---
 title: Button
-description: 눌렀을 때 살짝 눌리는 버튼이에요. 변형, 크기, 모서리, 로딩, 링크 렌더링을 지원해요.
+description: 눌렀을 때 살짝 눌리는 버튼입니다. 변형, 크기, 모서리, 로딩, 링크 렌더링을 지원합니다.
 ---
 
 <ComponentPreview name="button/primary" />
@@ -9,9 +9,9 @@ description: 눌렀을 때 살짝 눌리는 버튼이에요. 변형, 크기, 모
 
 <InstallTabs name="button" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
-  `shadcn init -b radix`로 초기화한 프로젝트에서 설치해요. 기본값인 Base UI 프로젝트에서는 CLI가
-  Radix의 `asChild`를 `render=`로 바꿔서 `Dialog` 같은 컴포넌트가 깨져요.
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다. 기본값인 Base UI 프로젝트에서는 CLI가
+  Radix의 `asChild`를 `render=`로 바꿔서 `Dialog` 같은 컴포넌트가 깨집니다.
 </Callout>
 
 ## 사용법
@@ -24,61 +24,61 @@ export function Example() {
 }
 ```
 
-`variant`를 생략하면 `secondary`(테두리만 있는 버튼)가 돼요. 화면의 핵심 행동 하나에만 `primary`를 쓰세요.
+`variant`를 생략하면 `secondary`(테두리만 있는 버튼)가 됩니다. 화면의 핵심 행동 하나에만 `primary`를 쓰십시오.
 
 ## 예시
 
 ### 변형
 
-`primary`는 채워진 버튼, `secondary`는 테두리만 있는 버튼, `clear`는 호버 전까지 배경이 없는 버튼이에요.
+`primary`는 채워진 버튼, `secondary`는 테두리만 있는 버튼, `clear`는 호버 전까지 배경이 없는 버튼입니다.
 
 <ComponentPreview name="button/variants" />
 
 ### 크기
 
-`small`(32px), `medium`(40px), `large`(48px, 기본값), `xlarge`(56px)가 있어요.
+`small`(32px), `medium`(40px), `large`(48px, 기본값), `xlarge`(56px)가 있습니다.
 
 <ComponentPreview name="button/sizes" />
 
 ### 모서리
 
-`md`, `lg`(기본값), `pill`이에요.
+`md`, `lg`(기본값), `pill`입니다.
 
 <ComponentPreview name="button/radius" />
 
 ### 너비
 
-`inline`(기본값)은 내용만큼, `block`은 부모 너비만큼, `full`은 부모 너비를 채우고 남는 공간까지 차지해요.
+`inline`(기본값)은 내용만큼, `block`은 부모 너비만큼, `full`은 부모 너비를 채우고 남는 공간까지 차지합니다.
 
 <ComponentPreview name="button/display" />
 
 ### 아이콘과 함께
 
-아이콘에 `data-icon="inline-start"` 또는 `data-icon="inline-end"`를 달면 그쪽 안쪽 여백이 줄어서 글자와 균형이 맞아요. 이 예시의 아이콘은 호버하면 움직이는 애니메이션 아이콘이에요. 다른 SVG 아이콘도 같은 방식으로 쓸 수 있어요.
+아이콘에 `data-icon="inline-start"` 또는 `data-icon="inline-end"`를 달면 그쪽 안쪽 여백이 줄어서 글자와 균형이 맞습니다. 이 예시의 아이콘은 호버하면 움직이는 애니메이션 아이콘입니다. 다른 SVG 아이콘도 같은 방식으로 쓸 수 있습니다.
 
 <ComponentPreview name="button/with-icon" />
 
 ### 아이콘만
 
-`icon`을 켜면 정사각형 버튼이 돼요. 글자가 없으니 `aria-label`을 꼭 달아야 해요.
+`icon`을 켜면 정사각형 버튼이 됩니다. 글자가 없으니 `aria-label`을 꼭 달아야 합니다.
 
 <ComponentPreview name="button/icon-only" />
 
 ### 로딩
 
-`loading`을 켜면 글자 대신 점 세 개가 움직이고, 클릭은 무시돼요. 버튼 크기는 그대로 유지돼요.
+`loading`을 켜면 글자 대신 점 세 개가 움직이고, 클릭은 무시됩니다. 버튼 크기는 그대로 유지됩니다.
 
 <ComponentPreview name="button/loading" />
 
 ### 링크로 렌더링
 
-`asChild`를 켜면 `<button>` 대신 자식 요소를 버튼 모양으로 렌더해요. 이동이 목적이면 `<button>`이 아니라 링크가 맞아서, 이럴 때 써요.
+`asChild`를 켜면 `<button>` 대신 자식 요소를 버튼 모양으로 렌더합니다. 이동이 목적이면 `<button>`이 아니라 링크가 맞아서, 이럴 때 씁니다.
 
 <ComponentPreview name="button/as-child" />
 
 ## API 레퍼런스
 
-아래는 `Button`이 직접 정의한 props예요. 그 밖에 `onClick`, `disabled`, `type` 같은 `<button>`의 모든 속성을 그대로 받아요. 타입 값은 소스에서 읽어 와서 코드와 어긋나지 않아요.
+아래는 `Button`이 직접 정의한 props입니다. 그 밖에 `onClick`, `disabled`, `type` 같은 `<button>`의 모든 속성을 그대로 받습니다. 타입 값은 소스에서 읽어 와서 코드와 어긋나지 않습니다.
 
 <PropsTable
   file="packages/ui/src/button.tsx"
@@ -94,27 +94,27 @@ export function Example() {
     asChild: 'false',
   }}
   descriptions={{
-    variant: '버튼의 시각 강조 정도예요.',
-    size: '높이와 안쪽 여백이에요. small 32px, medium 40px, large 48px, xlarge 56px예요.',
-    display: '부모 안에서 차지하는 너비예요.',
-    radius: '모서리 반경이에요.',
-    icon: '글자 없이 아이콘만 있는 정사각형 버튼으로 만들어요. 켜면 display는 inline으로 고정돼요.',
-    loading: '로딩 표시를 보이고 클릭을 막아요. aria-busy가 함께 설정돼요.',
-    asChild: '버튼 대신 자식 요소에 스타일을 입혀 렌더해요 (Radix Slot).',
+    variant: '버튼의 시각 강조 정도입니다.',
+    size: '높이와 안쪽 여백입니다. small 32px, medium 40px, large 48px, xlarge 56px입니다.',
+    display: '부모 안에서 차지하는 너비입니다.',
+    radius: '모서리 반경입니다.',
+    icon: '글자 없이 아이콘만 있는 정사각형 버튼으로 만듭니다. 켜면 display는 inline으로 고정됩니다.',
+    loading: '로딩 표시를 보이고 클릭을 막습니다. aria-busy가 함께 설정됩니다.',
+    asChild: '버튼 대신 자식 요소에 스타일을 입혀 렌더합니다 (Radix Slot).',
   }}
 />
 
 ## 접근성
 
-- 기본 요소가 `<button type="button">`이라서 키보드(Tab, Enter, Space)로 조작하고, 폼 안에서 의도치 않게 제출되지 않아요.
-- 키보드 포커스에서만 링 두 겹이 나타나요(`focus-visible`). `primary`는 링과 버튼 사이에 배경색 간격이 생겨요.
-- `loading` 동안 `aria-busy`가 설정되고 클릭 핸들러가 호출되지 않아요.
-- `disabled`는 투명도 40%로 흐려지고 포인터 이벤트를 받지 않아요.
-- 누를 때 줄어드는 움직임은 `prefers-reduced-motion`을 켜면 사라져요.
-- `icon` 버튼과 `asChild`로 만든 아이콘 링크에는 `aria-label`을 직접 달아야 해요.
+- 기본 요소가 `<button type="button">`이라서 키보드(Tab, Enter, Space)로 조작하고, 폼 안에서 의도치 않게 제출되지 않습니다.
+- 키보드 포커스에서만 링 두 겹이 나타납니다(`focus-visible`). `primary`는 링과 버튼 사이에 배경색 간격이 생깁니다.
+- `loading` 동안 `aria-busy`가 설정되고 클릭 핸들러가 호출되지 않습니다.
+- `disabled`는 투명도 40%로 흐려지고 포인터 이벤트를 받지 않습니다.
+- 누를 때 줄어드는 움직임은 `prefers-reduced-motion`을 켜면 사라집니다.
+- `icon` 버튼과 `asChild`로 만든 아이콘 링크에는 `aria-label`을 직접 달아야 합니다.
 
 ## 소스
 
-변형은 `class-variance-authority`로 정의해요. 아래는 `buttonVariants` 선언이에요.
+변형은 `class-variance-authority`로 정의합니다. 아래는 `buttonVariants` 선언입니다.
 
 <RepoFile path="packages/ui/src/button.tsx" lines="21-70" />
