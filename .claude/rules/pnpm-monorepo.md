@@ -17,12 +17,13 @@ pnpm add -D <pkg> --filter web
 
 ## Workspace packages
 
-| Package                   | Role                                       |
-| ------------------------- | ------------------------------------------ |
-| `@repo/ui`                | React design system (JIT internal package) |
-| `@repo/eslint-config`     | Shared ESLint configs                      |
-| `@repo/typescript-config` | Shared tsconfig                            |
-| `@repo/prettier-config`   | Shared Prettier config                     |
+| Package                   | Role                                                              |
+| ------------------------- | ----------------------------------------------------------------- |
+| `@repo/ui`                | React design system (JIT internal package)                        |
+| `@repo/vehicle-3d`        | Three.js vehicle viewer (JIT; the only place `three` is imported) |
+| `@repo/eslint-config`     | Shared ESLint configs                                             |
+| `@repo/typescript-config` | Shared tsconfig                                                   |
+| `@repo/prettier-config`   | Shared Prettier config                                            |
 
 ## Internal package imports
 

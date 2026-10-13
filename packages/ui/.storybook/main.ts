@@ -14,12 +14,13 @@ const config: StorybookConfig = {
       ...config.optimizeDeps,
       include: [
         ...(config.optimizeDeps?.include ?? []),
-        'three',
-        'three/addons/environments/RoomEnvironment.js',
-        'three/addons/loaders/GLTFLoader.js',
-        'three/addons/loaders/RGBELoader.js',
-        'three/addons/controls/OrbitControls.js',
-        '@react-three/fiber',
+        // three 와 R3F 는 @repo/vehicle-3d 의 의존성이라 "패키지 > 의존성" 형식으로 지정한다
+        '@repo/vehicle-3d > three',
+        '@repo/vehicle-3d > three/addons/environments/RoomEnvironment.js',
+        '@repo/vehicle-3d > three/addons/loaders/GLTFLoader.js',
+        '@repo/vehicle-3d > three/addons/loaders/RGBELoader.js',
+        '@repo/vehicle-3d > three/addons/controls/OrbitControls.js',
+        '@repo/vehicle-3d > @react-three/fiber',
       ],
     };
     return config;

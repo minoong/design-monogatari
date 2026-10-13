@@ -1,11 +1,10 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
+import { PIN_DISTANCE } from '@repo/vehicle-3d/constants';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { type ReactNode, useEffect, useRef } from 'react';
-
-import { PIN_DISTANCE } from './constants';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 

@@ -15,7 +15,7 @@ import { logEvent, repoRelative } from './lib/log.mjs';
 const STATE_DIR = join(env.CLAUDE_PROJECT_DIR || process.cwd(), '.claude/hooks/state');
 const STATE_PATH = join(STATE_DIR, 'ui-verify.json');
 
-const UI_ROOT = /(?:^|\/)(?:packages\/ui\/|apps\/(?:web|docs)\/|registry\/)/;
+const UI_ROOT = /(?:^|\/)(?:packages\/(?:ui|vehicle-3d)\/|apps\/(?:web|docs)\/|registry\/)/;
 const UI_FILE = /(?:^|\/)(?:DESIGN\.md|registry\.json)$/;
 const UI_EXT = /\.(?:tsx|css)$/;
 // 문서 사이트의 MDX 는 화면을 바꾸지만 위 확장자에 걸리지 않는다 (SKIP_DOC 은 .md 만 막는다)

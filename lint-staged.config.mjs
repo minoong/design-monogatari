@@ -6,6 +6,11 @@ export default {
     'prettier --write',
     (files) => `pnpm --filter @repo/ui exec eslint --fix --max-warnings 0 ${quoteFiles(files)}`,
   ],
+  'packages/vehicle-3d/**/*.{ts,tsx,js,mjs}': [
+    'prettier --write',
+    (files) =>
+      `pnpm --filter @repo/vehicle-3d exec eslint --fix --max-warnings 0 ${quoteFiles(files)}`,
+  ],
   'apps/web/**/*.{ts,tsx,js}': [
     'prettier --write',
     (files) => `pnpm --filter web exec eslint --fix --max-warnings 0 ${quoteFiles(files)}`,

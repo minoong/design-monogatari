@@ -1,10 +1,10 @@
 'use client';
 
+import { PAINT_CHECK, PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
+import { vehicleById, type VehicleId } from '@repo/vehicle-3d/vehicles';
 import { useState } from 'react';
 
 import { Button } from '../../button';
-import { PAINT_CHECK, PAINT_SWATCHES, type PaintId } from './paints';
-import { vehicleById, type VehicleId } from './vehicles';
 
 function PaintCheckIcon() {
   return (

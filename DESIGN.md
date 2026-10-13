@@ -235,8 +235,8 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ### Storybook 3D (not public API)
 
 - **Image sequence** = 2D frames (`ScrollImageSequence`). **3D model** = GLTF or mesh, rotated by scroll.
-- Storybook `컴포넌트/스크롤3D` uses Three.js (`three`, `@react-three/fiber` as UI devDependencies). The paint story uses GSAP pin/scrub. OEM inspect stories use OrbitControls (drag to orbit, wheel to zoom). No Motion on the WebGL canvas.
-- Studio look (IBL, clearcoat paint, ground shadow, OEM paint chips) is for Storybook. Chip hex lives in `src/storybook/scroll-3d/paints.ts` and stays the same in light and dark — it is not a semantic token. Bumper plastics follow a paired hex per chip. Do not vendor Renault / Plus360 meshes. BMW X5 G05 is the BMW Car IT CC BY 4.0 release, not a scrape. Doors, hood, and seats in that kit are half-meshes and are mirrored on Z in the Storybook assembler. The cabin also loads interior trim and the steering wheel. Dark windshield glass is made transmissive so the cabin is visible. `X5 원본` skips paint chips. Only openly licensed models are used (no EULA-restricted meshes). The CC BY 4.0 notice (creator, source, license, warranty disclaimer, modifications, trademark) lives in `vehicles.ts` `credit`, is shown in the story overlay, and is spelled out in `.storybook/public/models/README.md`.
+- Storybook `컴포넌트/스크롤3D` uses Three.js through `@repo/vehicle-3d` (`three`, `@react-three/fiber` are that package's dependencies). The paint story uses GSAP pin/scrub. OEM inspect stories use OrbitControls (drag to orbit, wheel to zoom). No Motion on the WebGL canvas.
+- Studio look (IBL, clearcoat paint, ground shadow, OEM paint chips) is for Storybook. Chip hex lives in `packages/vehicle-3d/src/paints.ts` and stays the same in light and dark — it is not a semantic token. Bumper plastics follow a paired hex per chip. Do not vendor Renault / Plus360 meshes. BMW X5 G05 is the BMW Car IT CC BY 4.0 release, not a scrape. Doors, hood, and seats in that kit are half-meshes and are mirrored on Z in the Storybook assembler. The cabin also loads interior trim and the steering wheel. Dark windshield glass is made transmissive so the cabin is visible. `X5 원본` skips paint chips. Only openly licensed models are used (no EULA-restricted meshes). The CC BY 4.0 notice (creator, source, license, warranty disclaimer, modifications, trademark) lives in `vehicles.ts` `credit`, is shown in the story overlay, and is spelled out in `.storybook/public/models/README.md`.
 - Fullscreen 3D stories skip the default Storybook canvas padding. The pin stage is the first paint in the iframe; the overlay stays compact at the top-left so the car is not covered.
 - Not exported from `@repo/ui/*`. Not in the registry. Sample `g05/` (BMW X5 G05, CC BY 4.0) and `studio.hdr` (Poly Haven, CC0; local use only for now) are gitignored (`pnpm --filter @repo/ui copy:car`).
 
@@ -254,6 +254,6 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - Don't invert OS dark tokens onto a white Storybook canvas — the Storybook theme toolbar must set `html.light` or `html.dark`.
 - Don't add a second **brand** accent. Status color (`destructive`) is allowed; do not use it as a CTA fill.
 - Don't put shadows on buttons, cards, or dialog frames.
-- Don't hardcode hex in `packages/ui/src/*.tsx`. Storybook 3D OEM chips in `src/storybook/scroll-3d/` are the exception so paint does not flip with theme.
+- Don't hardcode hex in `packages/ui/src/*.tsx`. The OEM paint chips in `packages/vehicle-3d/src/paints.ts` are the exception so paint does not flip with theme.
 - Don't use `bg-neutral-*` / `bg-blue-*` in components — map through semantic tokens.
 - Don't mix Tailwind `transition-*` with Motion on one element.
