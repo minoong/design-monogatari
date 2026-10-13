@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
+    "test": "vitest run",
     "copy:exterior": "bash scripts/copy-exterior-frames.sh"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@types/react-dom": "19.3.0",
     "eslint": "10.12.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "vitest": "^5.0.4"
   }
 }

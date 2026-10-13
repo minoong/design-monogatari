@@ -2,7 +2,7 @@
 name: verify
 description: >-
   UI·토큰·Storybook·문서 사이트 변경이 끝나면 사용자 요청 없이 바로 검증한다.
-  라이트/다크를 ui-verifier로 보고, 이어서 pnpm verify(format·lint·types·build)를 돌린다.
+  라이트/다크를 ui-verifier로 보고, 이어서 pnpm verify(format·lint·types·test·build)를 돌린다.
   작업 완료와 커밋 직전에도 적용.
 paths:
   - 'packages/ui/**'

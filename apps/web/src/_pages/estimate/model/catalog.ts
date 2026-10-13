@@ -1,0 +1,171 @@
+import type { Catalog } from './types';
+
+/**
+ * 가상 카탈로그. 이름·가격·사양은 모두 포트폴리오용 허구이며 실제 BMW와 무관하다.
+ * 각 목록의 첫 항목이 기본값이므로, 기본 트림·파워트레인에서 항상 선택 가능해야 한다.
+ */
+export const CATALOG: Catalog = {
+  modelName: 'X5 (가상 카탈로그)',
+  basePrice: 90_000_000,
+  powertrain: [
+    { id: 'gasoline', code: 'G', label: '3.0 가솔린', price: 0 },
+    { id: 'phev', code: 'P', label: '플러그인 하이브리드', price: 14_000_000 },
+  ],
+  trim: [
+    { id: 'comfort', code: 'C', label: '컴포트', price: 0 },
+    { id: 'sport', code: 'S', label: '스포트', price: 8_500_000 },
+  ],
+  color: [
+    { id: 'white', code: 'W', label: '화이트', price: 0, group: '글로시' },
+    { id: 'black', code: 'B', label: '블랙', price: 0, group: '글로시' },
+    { id: 'gray', code: 'G', label: '그레이', price: 0, group: '글로시' },
+    { id: 'blue', code: 'U', label: '블루', price: 0, group: '글로시' },
+    { id: 'green', code: 'N', label: '그린', price: 0, group: '글로시' },
+    { id: 'pearl', code: 'P', label: '펄 화이트', price: 1_000_000, group: '메탈릭' },
+    {
+      id: 'bronze',
+      code: 'R',
+      label: '브론즈',
+      price: 1_000_000,
+      group: '메탈릭',
+      availableWhen: { trim: ['sport'] },
+      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    },
+    {
+      id: 'matte-gray',
+      code: 'M',
+      label: '무광 그레이',
+      price: 8_000_000,
+      group: '무광',
+      availableWhen: { trim: ['sport'] },
+      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    },
+  ],
+  wheel: [
+    { id: 'w19', code: '9', label: '19인치 기본 휠', price: 0 },
+    {
+      id: 'w20',
+      code: '0',
+      label: '20인치 알로이 휠',
+      price: 1_500_000,
+      availableWhen: { trim: ['sport'] },
+      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    },
+    {
+      id: 'w21',
+      code: '1',
+      label: '21인치 알로이 휠',
+      price: 3_200_000,
+      availableWhen: { trim: ['sport'], powertrain: ['gasoline'] },
+      unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있어요.',
+      requires: { packages: ['popular'], onMissing: 'cascade' },
+    },
+  ],
+  seat: [
+    { id: 'five', code: '5', label: '5인승', price: 0 },
+    {
+      id: 'four',
+      code: '4',
+      label: '4인승 독립 시트',
+      price: 3_000_000,
+      requires: { packages: ['comfort-rear'], onMissing: 'block' },
+    },
+  ],
+  interior: [
+    { id: 'black', code: 'K', label: '블랙', price: 0, defaultGarnish: 'carbon' },
+    {
+      id: 'cream',
+      code: 'C',
+      label: '크림',
+      price: 500_000,
+      defaultGarnish: 'wood',
+      availableWhen: { color: ['white', 'pearl', 'gray', 'blue'] },
+      unavailableReason: '선택한 외장 색과 어울리는 조합이 아니에요.',
+    },
+    {
+      id: 'brown',
+      code: 'R',
+      label: '브라운',
+      price: 800_000,
+      defaultGarnish: 'wood',
+      availableWhen: { color: ['black', 'pearl', 'bronze', 'green'] },
+      unavailableReason: '선택한 외장 색과 어울리는 조합이 아니에요.',
+    },
+  ],
+  garnish: [
+    {
+      id: 'carbon',
+      code: 'C',
+      label: '카본',
+      price: 0,
+      availableWhen: { interior: ['black'] },
+      unavailableReason: '블랙 내장에서만 선택할 수 있어요.',
+    },
+    {
+      id: 'wood',
+      code: 'W',
+      label: '우드',
+      price: 0,
+      availableWhen: { interior: ['cream', 'brown'] },
+      unavailableReason: '크림·브라운 내장에서만 선택할 수 있어요.',
+    },
+    { id: 'metal', code: 'M', label: '메탈', price: 1_000_000 },
+  ],
+  package: [
+    { id: 'comfort-rear', code: 'rc', label: '뒷좌석 컴포트 패키지', price: 5_000_000 },
+    { id: 'driving-assist', code: 'da', label: '드라이빙 어시스턴스', price: 2_800_000 },
+    { id: 'hud', code: 'hd', label: '헤드업 디스플레이', price: 1_500_000 },
+    {
+      id: 'popular',
+      code: 'pp',
+      label: '파퓰러 패키지',
+      description: '드라이빙 어시스턴스와 헤드업 디스플레이를 함께 담았어요.',
+      price: 3_600_000,
+      includes: ['driving-assist', 'hud'],
+    },
+    {
+      id: 'panorama',
+      code: 'sr',
+      label: '파노라마 선루프',
+      price: 1_800_000,
+      excludes: ['sky-lounge'],
+    },
+    {
+      id: 'sky-lounge',
+      code: 'sl',
+      label: '스카이 라운지 루프',
+      price: 3_200_000,
+      excludes: ['panorama'],
+      availableWhen: { trim: ['sport'] },
+      unavailableReason: '스포트 트림에서만 선택할 수 있어요.',
+    },
+  ],
+  accessory: [
+    { id: 'floor-mat', code: 'fm', label: '프리미엄 플로어 매트', price: 150_000 },
+    { id: 'dashcam', code: 'dc', label: '빌트인 블랙박스', price: 400_000 },
+    {
+      id: 'tow-hitch',
+      code: 'th',
+      label: '견인 장치',
+      price: 1_200_000,
+      availableWhen: { powertrain: ['gasoline'] },
+      unavailableReason: '가솔린 모델에서만 선택할 수 있어요.',
+    },
+  ],
+  suggestions: [
+    {
+      id: 'popular-bundle',
+      trigger: ['driving-assist', 'hud'],
+      suggest: 'popular',
+      message: '두 옵션을 따로 고르는 것보다 파퓰러 패키지가 더 저렴해요.',
+    },
+  ],
+  regions: [
+    { id: 'seoul', label: '서울', delivery: 300_000 },
+    { id: 'gyeonggi', label: '경기', delivery: 300_000 },
+    { id: 'busan', label: '부산', delivery: 450_000 },
+    { id: 'jeju', label: '제주', delivery: 900_000 },
+  ],
+  fees: { stampDuty: 3_000, plate: 12_000, agency: 150_000 },
+  tax: { vatPercent: 10, acquisitionPercent: 7 },
+};
