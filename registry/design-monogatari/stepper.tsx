@@ -1,12 +1,13 @@
 'use client';
 
 import { Slot, Slottable } from '@radix-ui/react-slot';
-import { useReducedMotion } from 'motion/react';
-import { type ComponentProps, createContext, useContext, useEffect, useRef } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { type ComponentProps, createContext, useContext, useEffect, useId, useRef } from 'react';
 
 import { cn } from '@/lib/utils';
+import { SPRING } from '@/lib/motion';
 
-const StepperContext = createContext<{ value?: string }>({});
+const StepperContext = createContext<{ value?: string; gliderId?: string }>({});
 
 export type StepperProps = ComponentProps<'nav'> & {
   /** 현재 단계의 `StepperItem` value */
@@ -21,6 +22,7 @@ export type StepperProps = ComponentProps<'nav'> & {
 export function Stepper({ value, className, children, ...props }: StepperProps) {
   const listRef = useRef<HTMLOListElement>(null);
   const reduceMotion = useReducedMotion();
+  const gliderId = useId();
 
   useEffect(() => {
     const list = listRef.current;
@@ -31,7 +33,7 @@ export function Stepper({ value, className, children, ...props }: StepperProps) 
   }, [value, reduceMotion]);
 
   return (
-    <StepperContext.Provider value={{ value }}>
+    <StepperContext.Provider value={{ value, gliderId }}>
       <nav className={cn('font-sans', className)} {...props}>
         {/* list-style: none 이면 Safari/VoiceOver 가 목록 역할을 버리므로 role 을 명시한다 */}
         {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
@@ -69,7 +71,7 @@ export function StepperItem({
   onFocus,
   ...props
 }: StepperItemProps) {
-  const { value: currentValue } = useContext(StepperContext);
+  const { value: currentValue, gliderId } = useContext(StepperContext);
   const reduceMotion = useReducedMotion();
   const current = currentValue === value;
   const Comp = asChild ? Slot : 'a';
@@ -89,9 +91,9 @@ export function StepperItem({
         }}
         data-completed={completed ? '' : undefined}
         className={cn(
-          'text-muted-foreground hover:bg-secondary-hover hover:text-foreground flex min-h-11 items-center gap-2 rounded-full border border-transparent px-3 text-sm font-medium whitespace-nowrap no-underline transition-[background-color,border-color,color] motion-reduce:transition-none',
+          'text-muted-foreground hover:bg-secondary-hover hover:text-foreground relative flex min-h-11 items-center gap-2 rounded-full border border-transparent px-3 text-sm font-medium whitespace-nowrap no-underline transition-[background-color,border-color,color] motion-reduce:transition-none',
           'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2',
-          'aria-[current=step]:border-primary aria-[current=step]:text-foreground aria-[current=step]:font-semibold',
+          'aria-[current=step]:text-foreground aria-[current=step]:font-semibold',
           'data-completed:text-foreground',
           className,
         )}
@@ -125,6 +127,15 @@ export function StepperItem({
         </span>
         <Slottable>{children}</Slottable>
         {completed ? <span className="sr-only">({completedLabel})</span> : null}
+        {current ? (
+          // 현재 단계의 테두리. 단계가 바뀌면 이전 항목에서 새 항목으로 미끄러진다.
+          <motion.span
+            aria-hidden
+            layoutId={`${gliderId}-glider`}
+            className="border-primary pointer-events-none absolute -inset-px rounded-full border"
+            transition={reduceMotion ? { duration: 0 } : SPRING.snappy}
+          />
+        ) : null}
       </Comp>
     </li>
   );

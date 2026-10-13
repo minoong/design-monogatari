@@ -15,6 +15,7 @@
     "option-row",
     "color-swatch-group",
     "package-row",
-    "stepper"
+    "stepper",
+    "reveal"
   ]
 }

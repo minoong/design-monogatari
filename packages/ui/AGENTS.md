@@ -72,7 +72,8 @@ Theme: the toolbar in `.storybook/preview.tsx` (`globalTypes.theme` + `ThemeDeco
 
 - Package: `motion` — import `motion/react-client` in client components
 - Button: native `<button>` + Radix `Slot`. `radius` `md` | `lg` (default) | `pill`. No hover scale. Press: Motion `whileTap` (0.96, IconButton 0.9). Primary uses black dimmer; secondary/clear use a light foreground wash. lucide-animated icons may animate on button hover. Icon-only: `IconButton` with required `aria-label`, default `radius="md"`.
-- Dialog: overlay/content enter via Motion
+- Dialog: overlay/content enter via Motion (`DURATION.base` + `EASE.outExpo` in, `DURATION.fast` out; no motion under reduced motion)
+- Tokens: `@repo/ui/motion` (`DURATION`, `EASE`, `SPRING`, `STAGGER`); selection pop via CSS `motion-safe:...animate-select-pop`; entrance via `Reveal`. Rules: `.claude/rules/animation.md`
 - Scroll frames: `ScrollImageSequence` — GSAP pin/scrub, canvas `drawImage`
 - Do not combine `transition-*` Tailwind with Motion on the same element
 - Respect `useReducedMotion()`

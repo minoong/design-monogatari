@@ -277,6 +277,21 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - Numbers come from CSS counters (decorative, `aria-hidden`); the list supplies order to assistive tech.
 - The list scrolls horizontally with the scrollbar hidden; the current step is centred on change (instant under reduced motion). Hover = `bg-secondary-hover`; focus = 2px `outline-ring`, offset 2px. No scale.
 
+### Reveal
+
+- Compound: `RevealGroup` (staggers its `Reveal`s) and `Reveal` (fade + 12px rise on entering the viewport, plays once, `motion.div`). Standalone `Reveal` works without a group. Properties animated: `opacity` and `transform` only; duration `DURATION.slow`, ease `EASE.outExpo`, stagger `STAGGER.base` (0.04s).
+- Reduced motion (live `useReducedMotion`): no translate, `DURATION.instant` fade, no stagger. Content is in the DOM from the start (assistive tech unaffected) but hidden until JS runs, so do not wrap above-the-fold essentials.
+- No Tailwind `transition-*` on these nodes.
+
+## Motion
+
+Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item `motion`) and `@theme` (`--ease-out-expo`, `--animate-select-pop`). Page: docs 파운데이션 > 모션.
+
+- **Durations**: instant 0.12s, fast 0.18s (hover/press), base 0.28s (selection/state), slow 0.45s (list/section entrance), hero 0.8s (one per screen).
+- **Springs**: `snappy` (520/32: press, active indicator), `gentle` (260/28: panels), `bouncy` (380/18: small emphasis, one per screen). Ease: `outExpo` cubic-bezier(0.22, 1, 0.36, 1) default, `inOut` for size/position swaps. Stagger 0.03/0.04/0.08s.
+- **Applied**: selection pop on OptionRow/PackageRow/ColorSwatchGroup (`animate-select-pop`, 0.32s), Stepper active border glides between steps (`layoutId`, `SPRING.snappy`), Reveal entrance, Button press uses `SPRING.snappy`.
+- **Rules**: motion marks a state change (select, enter, move, load); no ambient or cursor-following decoration. Move `opacity`/`transform` only. One big flourish per screen. Honour reduced motion live (`useReducedMotion`; CSS gets `motion-reduce:animate-none`). Never Motion + Tailwind `transition-*` on one node, never Motion on a WebGL canvas, pause anything looping when off-screen. Hover scale, shadows and decorative gradients stay out.
+
 ## Do's and Don'ts
 
 ### Do

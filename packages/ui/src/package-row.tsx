@@ -53,7 +53,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
       <div
         data-included={includedIn ? '' : undefined}
         className={cn(
-          'border-border bg-background text-foreground hover:bg-secondary-hover relative rounded-lg border font-sans transition-colors motion-reduce:transition-none',
+          'border-border bg-background text-foreground hover:bg-secondary-hover relative rounded-lg border font-sans transition-[background-color] motion-reduce:transition-none',
           'has-[input:checked]:border-primary has-[input:checked]:ring-primary has-[input:checked]:ring-1',
           'has-[input:focus-visible]:outline-ring has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2',
           'data-included:bg-muted',
@@ -78,7 +78,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                 />
                 <span
                   aria-hidden
-                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100"
+                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:peer-checked:animate-select-pop mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100"
                 >
                   <svg
                     viewBox="0 0 24 24"

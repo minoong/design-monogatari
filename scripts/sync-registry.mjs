@@ -9,6 +9,7 @@
  *
  * 1. 컴포넌트: `registry/design-monogatari/<name>.tsx`. 원본에서 import 줄만 바꾼다.
  *      ./lib/cn  -> @/lib/utils      (소비자의 utils 별칭)
+ *      ./lib/motion -> @/lib/motion  (모션 토큰, 레지스트리 lib 항목)
  *      ./<형제>   -> @/ui/<형제>      (shadcn CLI가 소비자의 ui 별칭으로 바꿔 준다)
  * 2. 테마: `registry.json` 의 `theme` 항목(cssVars, css). `packages/ui/src/styles/globals.css`
  *    의 @theme, :root/.light, .dark, @keyframes 에서 만든다.
@@ -75,6 +76,7 @@ const uiNames = new Set(uiItems.map((item) => item.name));
 export function transformComponent(source) {
   return source
     .replace(/from '\.\/lib\/cn'/g, "from '@/lib/utils'")
+    .replace(/from '\.\/lib\/motion'/g, "from '@/lib/motion'")
     .replace(/from '\.\/([a-z0-9-]+)'/g, (match, sibling) =>
       uiNames.has(sibling) ? `from '@/ui/${sibling}'` : match,
     );

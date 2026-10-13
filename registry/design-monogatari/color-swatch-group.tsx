@@ -103,7 +103,7 @@ export function ColorSwatchGroup({
                     <span
                       aria-hidden
                       style={{ backgroundColor: option.color }}
-                      className="border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
+                      className="border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring motion-safe:peer-checked:animate-select-pop size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
                     />
                     {option.unavailableReason ? (
                       <span

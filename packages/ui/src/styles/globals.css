@@ -73,7 +73,24 @@
   --radius-lg: 18px;
   --radius-pill: 9999px;
 
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
   --animate-button-loader-dot: button-loader-dot 0.9s ease-in-out infinite;
+  --animate-select-pop: select-pop 0.32s var(--ease-out-expo) both;
+}
+
+@keyframes select-pop {
+  0% {
+    transform: scale(0.6);
+  }
+
+  60% {
+    transform: scale(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes button-loader-dot {

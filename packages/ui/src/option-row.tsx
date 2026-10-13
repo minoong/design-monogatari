@@ -58,7 +58,7 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       htmlFor={inputId}
       data-unavailable={unavailableReason ? '' : undefined}
       className={cn(
-        'border-border bg-background text-foreground relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-sans transition-colors motion-reduce:transition-none',
+        'border-border bg-background text-foreground relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-sans transition-[background-color] motion-reduce:transition-none',
         'hover:bg-secondary-hover has-checked:border-primary has-checked:ring-primary has-checked:ring-1',
         'has-focus-visible:outline-ring has-focus-visible:outline-2 has-focus-visible:outline-offset-2',
         'data-unavailable:bg-muted data-unavailable:text-muted-foreground has-disabled:bg-muted has-disabled:text-muted-foreground has-disabled:cursor-not-allowed',
@@ -78,7 +78,7 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       />
       <span
         aria-hidden
-        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)]"
+        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary motion-safe:peer-checked:animate-select-pop mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)]"
       />
       {media ? <span className="shrink-0">{media}</span> : null}
       <span className="flex min-w-0 flex-1 flex-col gap-1">
