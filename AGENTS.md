@@ -105,12 +105,13 @@ Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/s
 | ESLint   | `@repo/eslint-config` — jsx-a11y, import sort, Tailwind v4 lint |
 | Prettier | `@repo/prettier-config` — single quotes, Tailwind class sort    |
 
-| Command             | Role                           |
-| ------------------- | ------------------------------ |
-| `pnpm format`       | Write Prettier                 |
-| `pnpm format:check` | Check formatting (in `verify`) |
-| `pnpm lint`         | ESLint per package             |
-| `pnpm verify`       | format + lint + types + build  |
+| Command             | Role                                 |
+| ------------------- | ------------------------------------ |
+| `pnpm format`       | Write Prettier                       |
+| `pnpm format:check` | Check formatting (in `verify`)       |
+| `pnpm lint`         | ESLint per package                   |
+| `pnpm test`         | vitest (estimate model)              |
+| `pnpm verify`       | format + lint + types + test + build |
 
 - Editor: `.editorconfig`, `.vscode/settings.json` (format on save)
 - Hooks: husky pre-commit → lint-staged

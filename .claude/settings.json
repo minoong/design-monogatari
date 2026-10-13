@@ -4,6 +4,7 @@
     "allow": [
       "Bash(npm view *)",
       "Bash(pnpm verify)",
+      "Bash(pnpm test)",
       "Bash(pnpm format:check)",
       "Bash(pnpm check-types)",
       "Bash(pnpm lint)",

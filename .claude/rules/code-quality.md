@@ -13,7 +13,8 @@
 pnpm format          # write Prettier (+ Tailwind class sort)
 pnpm format:check    # check only (turbo-cached)
 pnpm lint            # ESLint in each package
-pnpm verify          # format:check + lint + check-types + build
+pnpm test            # vitest (apps/web estimate model)
+pnpm verify          # format:check + lint + check-types + test + build
 ```
 
 ## Rules of thumb

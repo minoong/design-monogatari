@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Node 24+, pnpm (Turborepo). No test runner exists; correctness is gated by lint, types, and build.
+Node 24+, pnpm (Turborepo). Unit tests (vitest) exist only for the pure estimate model in `apps/web/src/_pages/estimate/model`; UI correctness is gated by lint, types, build, and the `ui-verifier` browser check.
 
 ```bash
 pnpm install
@@ -19,7 +19,8 @@ pnpm --filter web copy:exterior       # exterior frame stills (gitignored public
 pnpm format                           # Prettier write (Tailwind class sort included)
 pnpm lint                             # ESLint, --max-warnings 0
 pnpm check-types                      # web runs `next typegen && tsc --noEmit`
-pnpm verify                           # format:check + registry:check + components:check + lint + check-types + build (what CI runs)
+pnpm test                             # vitest (apps/web estimate model)
+pnpm verify                           # format:check + registry:check + components:check + lint + check-types + test + build (what CI runs)
 pnpm component:new <name> [--compound]   # scaffold story + example + docs page + registry item + DESIGN.md entry (all marked TODO(scaffold))
 pnpm components:check                 # every public @repo/ui component must have story, docs page, example, registry item, DESIGN.md entry
 pnpm --filter @repo/ui exec eslint src/button.tsx   # lint a single file

@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## design-monogatari web
 
-Next.js demo (port **3000**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`. Home is the estimate demo. Exterior stills: `pnpm --filter web copy:exterior` (gitignored `public/exterior/`).
+Next.js demo (port **3000**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`. Home is the estimate demo. The estimate rules live in `src/_pages/estimate/model/` as pure TypeScript (catalog data, `resolveSelection`, `calculateQuote`, URL codec) with vitest tests (`pnpm --filter web test`); rule `.claude/rules/estimate-domain.md`. Exterior stills: `pnpm --filter web copy:exterior` (gitignored `public/exterior/`).
 
 Skill: `.agents/skills/feature-sliced-design/SKILL.md`. Rule: `.claude/rules/fsd-apps.md`.
 

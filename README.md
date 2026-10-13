@@ -35,7 +35,8 @@ pnpm --filter @repo/ui copy:car      # Storybook 3D meshes (gitignored)
 pnpm format           # Prettier write (+ Tailwind class sort)
 pnpm format:check     # Prettier check
 pnpm lint             # ESLint (per package)
-pnpm verify           # format + lint + types + build
+pnpm test             # unit tests (estimate model)
+pnpm verify           # format + lint + types + test + build
 pnpm --filter @repo/ui storybook   # component docs (port 6006, Light/Dark themes)
 ```
 

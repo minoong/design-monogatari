@@ -13,6 +13,12 @@
       "dependsOn": [],
       "inputs": ["$TURBO_DEFAULT$", "eslint.config.*", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs"]
     },
+    "test": {
+      "description": "Run unit tests (vitest) for pure TypeScript models",
+      "dependsOn": [],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.*"],
+      "outputs": []
+    },
     "topo": {
       "description": "Transit node for parallel type-checking with correct cache invalidation",
       "dependsOn": ["^topo"]
