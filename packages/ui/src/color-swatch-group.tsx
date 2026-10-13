@@ -77,8 +77,15 @@ function ColorSwatch({
         aria-hidden
         data-phase={phase}
         style={{ backgroundColor: option.color }}
-        // 선택되면 튀어 오르고(in), 해제되면 바깥 링이 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
-        className="border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring after:border-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 after:pointer-events-none after:absolute after:-inset-1.5 after:rounded-full after:border-2 after:opacity-0 after:content-['']"
+        // 선택되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+        className="border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring motion-safe:data-[phase=in]:animate-select-pop relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
+      />
+      {/* 해제될 때만 보이는 "선택된 모습"(링 포함). 커지지 않고 바로 줄어들며 사라진다(select-out). */}
+      <span
+        aria-hidden
+        data-phase={phase}
+        style={{ backgroundColor: option.color }}
+        className="border-border ring-primary ring-offset-background motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute inset-0 rounded-full border opacity-0 ring-2 ring-offset-2"
       />
       {option.unavailableReason ? (
         <span

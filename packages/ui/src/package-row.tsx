@@ -90,8 +90,8 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                 <span
                   aria-hidden
                   data-phase={phase}
-                  // 체크되면 튀어 오르고(in), 해제되면 채움이 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
-                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground after:bg-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border after:pointer-events-none after:absolute after:-inset-px after:rounded-md after:opacity-0 after:content-[''] [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100"
+                  // 체크되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -104,6 +104,24 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                   >
                     <path d="M20 6 9 17l-5-5" />
                   </svg>
+                  {/* 해제될 때만 보이는 "체크된 모습". 커지지 않고 바로 줄어들며 사라진다(select-out). */}
+                  <span
+                    aria-hidden
+                    data-phase={phase}
+                    className="bg-primary border-primary text-primary-foreground motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute -inset-px flex items-center justify-center rounded-md border opacity-0"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="size-3.5"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
                   <span

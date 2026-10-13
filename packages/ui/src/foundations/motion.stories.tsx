@@ -108,7 +108,12 @@ function DemoChip({
       <span
         aria-hidden
         data-phase={phase}
-        className="bg-muted border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring after:border-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 after:pointer-events-none after:absolute after:-inset-1.5 after:rounded-full after:border-2 after:opacity-0 after:content-['']"
+        className="bg-muted border-border peer-checked:ring-primary peer-checked:ring-offset-background peer-focus-visible:outline-ring motion-safe:data-[phase=in]:animate-select-pop relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
+      />
+      <span
+        aria-hidden
+        data-phase={phase}
+        className="bg-muted border-border ring-primary ring-offset-background motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute inset-0 rounded-full border opacity-0 ring-2 ring-offset-2"
       />
     </label>
   );

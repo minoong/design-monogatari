@@ -92,9 +92,16 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       <span
         aria-hidden
         data-phase={phase}
-        // 선택되면 튀어 오르고(in), 해제되면 채움이 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
-        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary after:bg-primary motion-safe:data-[phase=in]:animate-select-pop motion-safe:data-[phase=out]:after:animate-select-out relative mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)] after:pointer-events-none after:absolute after:-inset-px after:rounded-full after:opacity-0 after:content-['']"
-      />
+        // 선택되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)]"
+      >
+        {/* 해제될 때만 보이는 "선택된 모습". 커지지 않고 바로 줄어들며 사라진다(select-out). */}
+        <span
+          aria-hidden
+          data-phase={phase}
+          className="border-primary bg-primary motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute -inset-px rounded-full border opacity-0 shadow-[inset_0_0_0_4px_var(--color-background)]"
+        />
+      </span>
       {media ? <span className="shrink-0">{media}</span> : null}
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span id={labelId} className="flex flex-wrap items-center gap-2 text-sm font-medium">

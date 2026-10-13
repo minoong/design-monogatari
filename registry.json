@@ -65,7 +65,7 @@
           "ease-out-expo": "cubic-bezier(0.22, 1, 0.36, 1)",
           "animate-button-loader-dot": "button-loader-dot 0.9s ease-in-out infinite",
           "animate-select-pop": "select-pop 0.32s var(--ease-out-expo) both",
-          "animate-select-out": "select-out 0.2s var(--ease-out-expo) both"
+          "animate-select-out": "select-out 0.2s cubic-bezier(0.4, 0, 0.8, 0.4) both"
         },
         "light": {
           "neutral-50": "#ffffff",
@@ -133,9 +133,12 @@
             "opacity": "1",
             "transform": "scale(1)"
           },
+          "60%": {
+            "opacity": "1"
+          },
           "100%": {
             "opacity": "0",
-            "transform": "scale(0.4)"
+            "transform": "scale(0.6)"
           }
         },
         "@keyframes select-pop": {
@@ -327,7 +330,11 @@
       "title": "Radio",
       "description": "Native radio input styled with design-monogatari tokens.",
       "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/check-phase"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/radio.tsx",
@@ -439,6 +446,25 @@
           "path": "registry/design-monogatari/reveal.tsx",
           "type": "registry:ui",
           "target": "@ui/reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Native checkbox styled with design-monogatari tokens, with select and clear motion.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/check-phase",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/checkbox.tsx"
         }
       ]
     }

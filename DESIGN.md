@@ -245,6 +245,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - Native `<input type="radio">` with `appearance-none`: 20px circle, `border-border`; checked = `border-primary` + `bg-primary` with a 4px `background` inset ring so the centre reads as a dot (shape, not colour alone). Forced-colors falls back to the native control.
 - Focus `ring-2 ring-ring ring-offset-2`; invalid `aria-invalid` → destructive ring; disabled `bg-muted` (never opacity).
 - Pair with `Label htmlFor`; group with `fieldset` + `legend`. Same `name` gives arrow-key navigation for free.
+- Motion: selecting pops (`animate-select-pop`); when another radio of the group takes over, the selected dot (a `::before` ghost) shrinks away (`animate-select-out`, 0.2s). Driven by `useCheckPhase`; still on first paint and under reduced motion.
 
 ### NativeSelect
 
@@ -289,8 +290,14 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 - **Durations**: instant 0.12s, fast 0.18s (hover/press), base 0.28s (selection/state), slow 0.45s (list/section entrance), hero 0.8s (one per screen).
 - **Springs**: `snappy` (520/32: press, active indicator), `gentle` (260/28: panels), `bouncy` (380/18: small emphasis, one per screen). Ease: `outExpo` cubic-bezier(0.22, 1, 0.36, 1) default, `inOut` for size/position swaps. Stagger 0.03/0.04/0.08s.
-- **Applied**: selection pop on OptionRow/PackageRow/ColorSwatchGroup (`animate-select-pop`, 0.32s) and the reverse on clear (the fill shrinks to 0.4 and fades, `animate-select-out`, 0.2s), both driven by `useCheckPhase` (`./lib/check-phase`, registry item `check-phase`) so nothing moves on first paint; radios need `checked` (controlled) for the clear motion, Stepper active border glides between steps (`layoutId`, `SPRING.snappy`), Reveal entrance, Button press uses `SPRING.snappy`.
+- **Applied**: selection pop on Radio/OptionRow/PackageRow/ColorSwatchGroup (`animate-select-pop`, 0.32s) and a direct shrink on clear (1 → 0.6 and fade, no overshoot, `animate-select-out`, 0.2s, drawn by a ghost copy of the checked look), both driven by `useCheckPhase` (`./lib/check-phase`, registry item `check-phase`) so nothing moves on first paint; works controlled or uncontrolled (uncontrolled radios hear the group through document `change` events). Standalone `Radio` and `Checkbox` are childless `<input>`s, so their clear ghost is drawn on `::before` (and the checkbox tick on `::after`) with the same `animate-select-out`; the input's own `box-shadow`/`border` are never animated because a held animation would override the focus ring and invalid styling, Stepper active border glides between steps (`layoutId`, `SPRING.snappy`), Reveal entrance, Button press uses `SPRING.snappy`.
 - **Rules**: motion marks a state change (select, enter, move, load); no ambient or cursor-following decoration. Move `opacity`/`transform` only. One big flourish per screen. Honour reduced motion live (`useReducedMotion`; CSS gets `motion-reduce:animate-none`). Never Motion + Tailwind `transition-*` on one node, never Motion on a WebGL canvas, pause anything looping when off-screen. Hover scale, shadows and decorative gradients stay out.
+
+### Checkbox
+
+- Native `<input type="checkbox">` with `appearance-none`: 20px, `rounded-md`, `border-border`; checked = `border-primary` + `bg-primary` with a `::after` tick (`border-primary-foreground`, shape not colour). Focus `ring-2 ring-ring ring-offset-2`; invalid → destructive ring; disabled `bg-muted` (never opacity); forced-colors falls back to the native control. No `indeterminate` yet.
+- Motion via `useCheckPhase`: checking pops (`animate-select-pop`, 0.32s); clearing shrinks a `::before` fill and the `::after` tick away (`animate-select-out`, 0.2s). Still on first paint and under reduced motion. Forced-colors hides the pseudo-elements (native control draws itself); a disabled checked tick uses the `background` colour for contrast.
+- Pair with `Label htmlFor`; group with `fieldset` + `legend`.
 
 ## Do's and Don'ts
 

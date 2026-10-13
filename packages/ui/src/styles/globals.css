@@ -77,18 +77,23 @@
 
   --animate-button-loader-dot: button-loader-dot 0.9s ease-in-out infinite;
   --animate-select-pop: select-pop 0.32s var(--ease-out-expo) both;
-  --animate-select-out: select-out 0.2s var(--ease-out-expo) both;
+  --animate-select-out: select-out 0.2s cubic-bezier(0.4, 0, 0.8, 0.4) both;
 }
 
+/* 해제: 커지지 않고 바로 줄어들며 사라진다. 선택 때보다 짧고 빠르게 끝난다. */
 @keyframes select-out {
   0% {
     opacity: 1;
     transform: scale(1);
   }
 
+  60% {
+    opacity: 1;
+  }
+
   100% {
     opacity: 0;
-    transform: scale(0.4);
+    transform: scale(0.6);
   }
 }
 
