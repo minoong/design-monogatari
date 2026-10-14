@@ -15,3 +15,7 @@ metadata:
 - `scrollbar-none` is not a Tailwind 4.3 utility (no match in lib.js); only the `::-webkit-scrollbar` arbitrary variant actually hides it.
 - Two `in-*:` variants (current vs completed) on one element can fight over bg/text colour; check combined states.
 - Docs 접근성 sections tend to overclaim SR wording ("사용할 수 없음을 읽어요") and omit announced-content gaps.
+- `peer-checked:animate-x motion-reduce:animate-none` likely loses on specificity (peer-checked = 0,2,0 vs 0,1,0); use `motion-safe:peer-checked:animate-x`. Same for hover:/focus: + motion-reduce:.
+- CSS keyframes with fill-mode `both` that animate box-shadow/border-color/background (radio-out, checkbox-out) stay applied after ending and beat Tailwind ring/aria-invalid/disabled declarations; use `backwards` or animate a pseudo-element. Dark disabled-checked tick (white on #b2b3bd) is ~2.1:1.
+- `appearance-none` custom marks drawn with `::after` need `forced-colors:after:hidden` when `forced-colors:appearance-auto` restores the native mark (double tick).
+- Motion `whileInView` with `amount: 0.2` never fires for elements taller than 5x viewport; initial opacity 0 is in SSR HTML (invisible without JS/print).

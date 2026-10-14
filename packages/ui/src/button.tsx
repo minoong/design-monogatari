@@ -17,6 +17,7 @@ import {
 } from 'react';
 
 import { cn } from './lib/cn';
+import { SPRING } from './lib/motion';
 
 export const buttonVariants = cva(
   'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-none select-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40 **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
@@ -89,7 +90,7 @@ const GHOST_DIMMER = {
   pressed: { opacity: 0.08 },
 };
 
-const PRESS_SPRING = { type: 'spring' as const, stiffness: 520, damping: 32 };
+const PRESS_SPRING = SPRING.snappy;
 
 type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 

@@ -1,0 +1,73 @@
+---
+title: Reveal
+description: 화면에 들어올 때 아래에서 위로 떠오르며 나타나는 래퍼입니다. 그룹으로 묶으면 차례로 나타납니다.
+---
+
+<ComponentPreview name="reveal/basic" />
+
+## 설치
+
+<InstallTabs name="reveal" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import { Reveal, RevealGroup } from '@/components/ui/reveal';
+
+export function Example() {
+  return (
+    <RevealGroup>
+      <Reveal>첫 번째</Reveal>
+      <Reveal>두 번째</Reveal>
+      <Reveal>세 번째</Reveal>
+    </RevealGroup>
+  );
+}
+```
+
+`RevealGroup`은 안에 있는 `Reveal`들이 화면에 들어올 때 위에서부터 차례로 나타나게 합니다. 한 번만 재생합니다. `RevealGroup` 없이 `Reveal`만 써도 같은 방식으로 혼자 나타납니다.
+
+시간과 곡선은 [모션 토큰](/docs/foundations/motion)(`DURATION.slow`, `EASE.outExpo`, `STAGGER.base`)입니다.
+
+<Callout type="warn" title="첫 화면의 핵심 내용에는 쓰지 마십시오">
+  자바스크립트가 실행되기 전까지는 숨겨진 상태입니다. 서버가 보낸 HTML에는 `opacity: 0`이 들어
+  있어서 자바스크립트를 끈 환경과, 아직 화면에 들어오지 않은 채로 인쇄하는 경우에는 내용이 보이지
+  않습니다. 페이지 위쪽의 제목이나 가격처럼 바로 보여야 하는 내용에는 쓰지 말고, 아래쪽 목록과
+  섹션에 쓰십시오.
+</Callout>
+
+## API 레퍼런스
+
+두 컴포넌트 모두 `motion.div`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/reveal.tsx"
+  name="RevealGroupProps"
+  include={['stagger']}
+  defaults={{ stagger: '0.04' }}
+  descriptions={{ stagger: '항목 사이 지연(초)입니다. 감소 모션에서는 0입니다.' }}
+/>
+
+<PropsTable
+  file="packages/ui/src/reveal.tsx"
+  name="RevealProps"
+  include={['distance']}
+  defaults={{ distance: '12' }}
+  descriptions={{ distance: '아래에서 올라오는 거리(px)입니다. 감소 모션에서는 0입니다.' }}
+/>
+
+## 접근성
+
+- 내용은 처음부터 DOM에 있어서 스크린 리더와 키보드는 움직임과 무관하게 모두 읽고 이동합니다. 보이는 것만 늦게 나타납니다.
+- `prefers-reduced-motion`이면 이동 없이(서버 렌더 직후 한 프레임은 제외) 0.12초 페이드만 하고, 그룹의 순서 지연도 없앱니다. 이 값은 설정이 바뀌면 바로 반영됩니다.
+- 움직이는 속성은 `opacity`와 `transform`뿐이라 레이아웃이 밀리지 않습니다.
+- 키보드로 화면 밖의 `Reveal` 안 컨트롤에 Tab으로 이동하면 브라우저가 화면으로 스크롤하고, 그때부터 나타나기 시작하므로 포커스 링이 잠시(0.45초) 보이지 않을 수 있습니다.
+- 요소의 한 픽셀이라도 화면에 들어오면(아래쪽 10% 여백 안쪽) 시작하므로, 화면보다 아주 큰 요소를 감싸도 영영 숨겨져 있지 않습니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/reveal.tsx" />

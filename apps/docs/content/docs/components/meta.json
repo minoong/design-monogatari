@@ -11,10 +11,12 @@
     "dialog",
     "animated-amount",
     "radio",
+    "checkbox",
     "native-select",
     "option-row",
     "color-swatch-group",
     "package-row",
-    "stepper"
+    "stepper",
+    "reveal"
   ]
 }

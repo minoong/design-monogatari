@@ -1,0 +1,68 @@
+---
+title: 모션
+description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, 감소 모션을 기본으로 지킵니다.
+---
+
+움직임은 장식이 아니라 **상태가 바뀌었다는 알림**입니다. 선택하면 반응하고, 목록이 나타나고, 단계가 이동하는 것을 같은 시간과 곡선으로 보여 줍니다. 값은 `@repo/ui/motion`에 한 곳으로 모아 두었습니다.
+
+<ComponentPreview name="motion/tokens" />
+
+## 시간
+
+| 토큰               | 값    | 쓰임                           |
+| ------------------ | ----- | ------------------------------ |
+| `DURATION.instant` | 0.12s | 감소 모션, 눈에 띄지 않는 전환 |
+| `DURATION.fast`    | 0.18s | 호버, 눌림 같은 즉각 반응      |
+| `DURATION.base`    | 0.28s | 선택, 상태 변화                |
+| `DURATION.slow`    | 0.45s | 목록, 섹션 진입                |
+| `DURATION.hero`    | 0.8s  | 화면당 한 번의 큰 연출         |
+
+## 곡선과 스프링
+
+| 토큰            | 값                               | 쓰임                                      |
+| --------------- | -------------------------------- | ----------------------------------------- |
+| `EASE.outExpo`  | `cubic-bezier(0.22, 1, 0.36, 1)` | 진입과 선택 반응의 기본 (`ease-out-expo`) |
+| `EASE.inOut`    | `cubic-bezier(0.65, 0, 0.35, 1)` | 크기·위치가 오가는 전환                   |
+| `SPRING.snappy` | stiffness 520, damping 32        | 눌림, 단계 활성 표시 이동                 |
+| `SPRING.gentle` | stiffness 260, damping 28        | 패널과 카드 이동                          |
+| `SPRING.bouncy` | stiffness 380, damping 18        | 선택 확정 같은 작은 강조                  |
+| `STAGGER.base`  | 0.04s                            | 목록 항목 사이 지연                       |
+
+## 이미 적용된 곳
+
+- **선택 반응**: `Radio`, `OptionRow`, `PackageRow`, `ColorSwatchGroup`은 선택되는 순간 표시가 0.6배에서 1.12배를 거쳐 1배로 돌아오고(`animate-select-pop`, 0.32초), 해제되면 커지지 않고 바로 0.6배로 줄어들며 사라집니다(`animate-select-out`, 0.2초). 처음 그려질 때는 움직이지 않습니다.바뀐 순간은 `useCheckPhase` 훅이 알려 주며, 제어·비제어 모두 동작합니다. `Radio`와 `Checkbox` 단독은 자식을 둘 수 없는 `<input>`이라 `::before`에 그린 선택된 모습이 줄어들며 사라집니다. 입력 자체의 `box-shadow`와 `border`는 애니메이션하지 않습니다. 끝난 뒤에도 값이 유지되어 포커스 링과 오류 표시를 덮어쓰기 때문입니다.
+- **단계 이동**: [`Stepper`](/docs/components/stepper)의 현재 단계 테두리가 이전 단계에서 새 단계로 미끄러집니다(`SPRING.snappy`).
+- **목록 진입**: [`Reveal`](/docs/components/reveal)이 화면에 들어올 때 차례로 떠오릅니다.
+- **눌림**: `Button`은 `SPRING.snappy`로 눌립니다.
+
+## 규칙
+
+1. **움직임은 상태 변화에 붙입니다.** 선택, 진입, 이동, 로딩입니다. 아무 일도 없을 때 계속 움직이는 장식(배경, 커서 따라다니기)은 쓰지 않습니다.
+2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다.
+3. **화면당 큰 연출은 하나입니다.** `DURATION.hero`와 `SPRING.bouncy`는 한 화면에 한 번만 씁니다.
+4. **감소 모션을 기본으로 지킵니다.** `useReducedMotion()`으로 읽고, 이동은 없애고 짧은 페이드(`DURATION.instant`)만 남깁니다. 설정이 바뀌면 바로 반영되도록 마운트 때 한 번만 읽지 않습니다. CSS 애니메이션은 `motion-safe:`로 감싸서 감소 모션에서는 아예 적용하지 않습니다(`motion-reduce:animate-none`은 `peer-checked:` 같은 변형에 특이도에서 져서 꺼지지 않습니다).
+5. **Motion과 Tailwind `transition-*`을 같은 요소에 쓰지 않습니다.** WebGL 캔버스에는 Motion을 쓰지 않습니다.
+6. **화면 밖에서는 멈춥니다.** 뷰포트 밖이거나 탭이 숨겨진 동안은 계속 도는 애니메이션이 없어야 합니다.
+
+## 사용법
+
+```tsx
+import { motion } from 'motion/react';
+
+import { DURATION, EASE, SPRING } from '@/lib/motion';
+
+<motion.div
+  initial={{ opacity: 0, y: 12 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: DURATION.slow, ease: EASE.outExpo }}
+/>;
+
+<motion.button whileTap={{ scale: 0.96 }} transition={SPRING.snappy} />;
+```
+
+CSS만으로 되는 짧은 반응은 `animate-select-pop`처럼 테마에 정의된 키프레임을 쓰십시오.
+
+<Callout type="info" title="설치">
+  `pnpm dlx shadcn@latest add minoong/design-monogatari/motion`으로 토큰만 따로 설치할 수 있습니다.
+  모션을 쓰는 컴포넌트는 이 항목에 자동으로 의존합니다.
+</Callout>

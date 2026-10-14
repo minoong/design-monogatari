@@ -1,5 +1,15 @@
-import { type ComponentProps, forwardRef, type ReactNode, useId } from 'react';
+'use client';
 
+import {
+  type ComponentProps,
+  forwardRef,
+  type ReactNode,
+  useId,
+  useImperativeHandle,
+  useRef,
+} from 'react';
+
+import { useCheckPhase } from './lib/check-phase';
 import { cn } from './lib/cn';
 
 export type OptionRowProps = Omit<ComponentProps<'input'>, 'type' | 'children'> & {
@@ -37,6 +47,9 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
   },
   ref,
 ) {
+  const innerRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => innerRef.current as HTMLInputElement);
+  const phase = useCheckPhase(props.checked, innerRef);
   const autoId = useId();
   const inputId = id ?? autoId;
   const labelId = `${inputId}-label`;
@@ -58,7 +71,7 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       htmlFor={inputId}
       data-unavailable={unavailableReason ? '' : undefined}
       className={cn(
-        'border-border bg-background text-foreground relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-sans transition-colors motion-reduce:transition-none',
+        'border-border bg-background text-foreground relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-sans transition-[background-color] motion-reduce:transition-none',
         'hover:bg-secondary-hover has-checked:border-primary has-checked:ring-primary has-checked:ring-1',
         'has-focus-visible:outline-ring has-focus-visible:outline-2 has-focus-visible:outline-offset-2',
         'data-unavailable:bg-muted data-unavailable:text-muted-foreground has-disabled:bg-muted has-disabled:text-muted-foreground has-disabled:cursor-not-allowed',
@@ -66,7 +79,7 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       )}
     >
       <input
-        ref={ref}
+        ref={innerRef}
         id={inputId}
         type="radio"
         disabled={disabled}
@@ -78,8 +91,17 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       />
       <span
         aria-hidden
-        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)]"
-      />
+        data-phase={phase}
+        // 선택되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+        className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 size-5 shrink-0 rounded-full border peer-checked:shadow-[inset_0_0_0_4px_var(--color-background)]"
+      >
+        {/* 해제될 때만 보이는 "선택된 모습". 커지지 않고 바로 줄어들며 사라진다(select-out). */}
+        <span
+          aria-hidden
+          data-phase={phase}
+          className="border-primary bg-primary motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute -inset-px rounded-full border opacity-0 shadow-[inset_0_0_0_4px_var(--color-background)]"
+        />
+      </span>
       {media ? <span className="shrink-0">{media}</span> : null}
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span id={labelId} className="flex flex-wrap items-center gap-2 text-sm font-medium">

@@ -18,6 +18,33 @@
       ]
     },
     {
+      "name": "motion",
+      "type": "registry:lib",
+      "title": "Motion tokens",
+      "description": "Duration, easing, spring and stagger tokens shared by animated components.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "packages/ui/src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        }
+      ]
+    },
+    {
+      "name": "check-phase",
+      "type": "registry:lib",
+      "title": "Check phase hook",
+      "description": "Tells a checkbox or radio whether it was just selected or just cleared, so enter and exit motion skips the first paint.",
+      "files": [
+        {
+          "path": "packages/ui/src/lib/check-phase.ts",
+          "type": "registry:lib",
+          "target": "@lib/check-phase.ts"
+        }
+      ]
+    },
+    {
       "name": "theme",
       "type": "registry:theme",
       "title": "Design Monogatari theme",
@@ -35,7 +62,10 @@
           "radius-md": "11px",
           "radius-lg": "18px",
           "radius-pill": "9999px",
-          "animate-button-loader-dot": "button-loader-dot 0.9s ease-in-out infinite"
+          "ease-out-expo": "cubic-bezier(0.22, 1, 0.36, 1)",
+          "animate-button-loader-dot": "button-loader-dot 0.9s ease-in-out infinite",
+          "animate-select-pop": "select-pop 0.32s var(--ease-out-expo) both",
+          "animate-select-out": "select-out 0.2s cubic-bezier(0.4, 0, 0.8, 0.4) both"
         },
         "light": {
           "neutral-50": "#ffffff",
@@ -98,6 +128,30 @@
         }
       },
       "css": {
+        "@keyframes select-out": {
+          "0%": {
+            "opacity": "1",
+            "transform": "scale(1)"
+          },
+          "60%": {
+            "opacity": "1"
+          },
+          "100%": {
+            "opacity": "0",
+            "transform": "scale(0.6)"
+          }
+        },
+        "@keyframes select-pop": {
+          "0%": {
+            "transform": "scale(0.6)"
+          },
+          "60%": {
+            "transform": "scale(1.12)"
+          },
+          "100%": {
+            "transform": "scale(1)"
+          }
+        },
         "@keyframes button-loader-dot": {
           "0%, 80%, 100%": {
             "opacity": "0.24"
@@ -150,7 +204,11 @@
         "motion",
         "tailwind-merge"
       ],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/motion"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/button.tsx",
@@ -253,7 +311,11 @@
       "title": "Dialog",
       "description": "Modal dialog with Radix a11y and Motion enter/exit animation.",
       "dependencies": ["@radix-ui/react-dialog", "clsx", "motion", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/motion"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/dialog.tsx",
@@ -268,7 +330,11 @@
       "title": "Radio",
       "description": "Native radio input styled with design-monogatari tokens.",
       "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/check-phase"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/radio.tsx",
@@ -298,7 +364,11 @@
       "title": "OptionRow",
       "description": "Single-choice option row with description, price and an inline unavailable reason.",
       "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/check-phase"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/option-row.tsx",
@@ -313,7 +383,11 @@
       "title": "ColorSwatchGroup",
       "description": "Colour chip radio group with grouped headings and a live caption.",
       "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/check-phase"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/color-swatch-group.tsx",
@@ -328,7 +402,11 @@
       "title": "PackageRow",
       "description": "Checkbox package row that expands to show what it includes.",
       "dependencies": ["@radix-ui/react-accordion", "clsx", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/check-phase"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/package-row.tsx",
@@ -343,12 +421,50 @@
       "title": "Stepper",
       "description": "Linked step navigation with aria-current, completed steps and auto-centred current step.",
       "dependencies": ["@radix-ui/react-slot", "clsx", "motion", "tailwind-merge"],
-      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/motion"
+      ],
       "files": [
         {
           "path": "registry/design-monogatari/stepper.tsx",
           "type": "registry:ui",
           "target": "@ui/stepper.tsx"
+        }
+      ]
+    },
+    {
+      "name": "reveal",
+      "type": "registry:ui",
+      "title": "Reveal",
+      "description": "Scroll-in reveal with staggered groups; honours reduced motion.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["minoong/design-monogatari/motion"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/reveal.tsx",
+          "type": "registry:ui",
+          "target": "@ui/reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Native checkbox styled with design-monogatari tokens, with select and clear motion.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/check-phase",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/checkbox.tsx"
         }
       ]
     }

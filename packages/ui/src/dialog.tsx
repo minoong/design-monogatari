@@ -15,6 +15,7 @@ import {
 } from 'react';
 
 import { cn } from './lib/cn';
+import { DURATION, EASE } from './lib/motion';
 
 const DialogOpenContext = createContext(false);
 
@@ -59,8 +60,10 @@ export const DialogOverlay = forwardRef<
         className={cn(overlayClasses, className)}
         initial={shouldReduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-        transition={{ duration: 0.15 }}
+        exit={
+          shouldReduceMotion ? undefined : { opacity: 0, transition: { duration: DURATION.fast } }
+        }
+        transition={{ duration: DURATION.base, ease: EASE.outExpo }}
       />
     </DialogPrimitive.Overlay>
   );
@@ -82,10 +85,14 @@ export const DialogContent = forwardRef<
           <DialogPrimitive.Content ref={ref} key="dialog-content" asChild forceMount {...props}>
             <motion.div
               className={cn(contentClasses, className)}
-              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.15 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={
+                shouldReduceMotion
+                  ? undefined
+                  : { opacity: 0, scale: 0.98, transition: { duration: DURATION.fast } }
+              }
+              transition={{ duration: DURATION.base, ease: EASE.outExpo }}
             >
               {children}
             </motion.div>
