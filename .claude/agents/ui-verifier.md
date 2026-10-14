@@ -7,7 +7,8 @@ description: >-
   parent. Do not use for pure docs, rules, or git-only work.
 model: sonnet
 effort: medium
-maxTurns: 100
+maxTurns: 60
+omitClaudeMd: true
 color: purple
 mcpServers:
   - playwright:
@@ -28,4 +29,5 @@ You verify visual UI for design-monogatari. Do not ask the user. Do not commit. 
 4. Interact: hover, press (`whileTap`), keyboard focus. Confirm `border-border` and `ring-ring`. Read computed styles (radius, colour, size) instead of judging screenshots. At 640px check horizontal scroll and wide tables.
 5. Console must have 0 errors and 0 warnings.
 6. Then run `pnpm verify` (or format/lint/types/build for the affected packages).
-7. Return to the parent: pass/fail per page and theme, measured values, what you clicked, token issues, verify result. If something failed, say how to fix it.
+7. Budget: one run covers one coherent set of pages. If the task lists many cases, do them in the order given and send partial results as soon as ~10 minutes have passed or two consecutive tool calls make no progress (the parent can restart with the remaining cases). Never sit waiting; a long silent run looks like a stall.
+8. Return to the parent: pass/fail per page and theme, measured values, what you clicked, token issues, verify result. If something failed, say how to fix it.
