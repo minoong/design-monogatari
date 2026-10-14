@@ -77,6 +77,27 @@ const TOPICS = {
     advice:
       'https://www.radix-ui.com/primitives/docs 의 해당 컴포넌트 문서를 읽거나 docs-researcher로 확인하십시오.',
   },
+  storybook: {
+    label: 'Storybook',
+    editPath: /(?:\.stories\.tsx$|(?:^|\/)\.storybook\/)/,
+    editContent: /from ['"]@storybook\//,
+    skills: [],
+    hosts: [/(?:^|\.)storybook\.js\.org$/],
+    mcp: [/^mcp__storybook__/],
+    keyword: /storybook|story|stories/i,
+    advice:
+      '스토리를 만들거나 고치기 전에 Storybook MCP의 `get-storybook-story-instructions`(`docs-list`/`docs-show`)를 호출하거나 https://storybook.js.org/docs 의 해당 페이지를 확인하십시오(CLAUDE.md).',
+  },
+  react: {
+    label: 'React',
+    editPath: null,
+    editContent: /from ['"]react(?:-dom)?['"]/,
+    skills: [/^vercel-react-best-practices$/],
+    hosts: [/(?:^|\.)react\.dev$/],
+    keyword: /react(?!-?native)/i,
+    advice:
+      '`vercel-react-best-practices` 스킬을 호출하거나 https://react.dev 의 해당 API(React 19: ref, use, useActionState 등)를 확인하십시오.',
+  },
   tailwind: {
     label: 'Tailwind v4',
     editPath: /(?:^|\/)globals\.css$/,
@@ -168,6 +189,8 @@ if (event === 'PostToolUse') {
       hit =
         toolInput.subagent_type === 'docs-researcher' &&
         spec.keyword.test(String(toolInput.prompt || ''));
+    } else if (tool.startsWith('mcp__')) {
+      hit = (spec.mcp || []).some((pattern) => pattern.test(tool));
     } else if (tool === 'Read') {
       hit = (spec.reads || []).some((pattern) => pattern.test(String(toolInput.file_path || '')));
     } else if (tool === 'Bash') {

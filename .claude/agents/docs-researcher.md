@@ -2,7 +2,7 @@
 name: docs-researcher
 description: >-
   Read-only lookup of official library documentation. Use proactively before implementing or changing code that
-  depends on an external API (Turborepo, Next.js, Motion, GSAP, Radix, Tailwind v4, Storybook, shadcn registry,
+  depends on an external API (Turborepo, Next.js, React, Motion, GSAP, Radix, Tailwind v4, Storybook, shadcn registry,
   Fumadocs, Vitest, Claude Code). Pass one concrete question and the installed version if known; it returns a
   short cited answer so long doc pages do not flood the main context.
 tools: WebFetch, WebSearch, Read, Grep, Glob

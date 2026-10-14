@@ -55,7 +55,7 @@
         ]
       },
       {
-        "matcher": "Skill|WebFetch|Agent|Read",
+        "matcher": "Skill|WebFetch|Agent|Read|mcp__storybook__.*",
         "hooks": [
           {
             "type": "command",

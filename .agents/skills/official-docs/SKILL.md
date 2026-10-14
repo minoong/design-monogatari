@@ -21,20 +21,20 @@ paths:
 
 ## 어디서 확인하는가
 
-| 주제              | 먼저                                                                | 그다음                                                         |
-| ----------------- | ------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Next.js           | `node_modules/next/dist/docs/`의 해당 가이드 (`apps/web/AGENTS.md`) | https://nextjs.org/docs                                        |
-| Turborepo         | `turborepo` 스킬, `turbo docs "<질문>"`                             | https://turborepo.dev/docs                                     |
-| Motion            | `motion-react` 스킬                                                 | https://motion.dev/llms.txt 의 해당 페이지                     |
-| GSAP              | `gsap-*` 스킬 (react, scrolltrigger, timeline)                      | https://gsap.com/docs/v3/                                      |
-| Tailwind v4       | `styling.md` 규칙                                                   | https://tailwindcss.com/docs (theme, variants)                 |
-| Radix             | —                                                                   | https://www.radix-ui.com/primitives/docs                       |
-| shadcn 레지스트리 | `shadcn-registry.md` 규칙                                           | https://ui.shadcn.com/docs/registry                            |
-| Storybook         | —                                                                   | https://storybook.js.org/docs                                  |
-| Fumadocs          | `apps/docs/AGENTS.md`                                               | https://www.fumadocs.dev/docs                                  |
-| React             | `vercel-react-best-practices` 스킬                                  | https://react.dev                                              |
-| Vitest            | —                                                                   | https://vitest.dev                                             |
-| Claude Code       | —                                                                   | https://code.claude.com/docs/llms.txt (한국어: `/docs/ko/...`) |
+| 주제              | 먼저                                                                                          | 그다음                                                             |
+| ----------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Next.js           | `node_modules/next/dist/docs/`의 해당 가이드 (`apps/web/AGENTS.md`)                           | https://nextjs.org/docs                                            |
+| Turborepo         | `turborepo` 스킬, `turbo docs "<질문>"`                                                       | https://turborepo.dev/docs                                         |
+| Motion            | `motion-react` 스킬                                                                           | https://motion.dev/llms.txt 의 해당 페이지                         |
+| GSAP              | `gsap-*` 스킬 (react, scrolltrigger, timeline)                                                | https://gsap.com/docs/v3/                                          |
+| Tailwind v4       | `styling.md` 규칙                                                                             | https://tailwindcss.com/docs (theme, variants)                     |
+| Radix             | —                                                                                             | https://www.radix-ui.com/primitives/docs                           |
+| shadcn 레지스트리 | `shadcn-registry.md` 규칙                                                                     | https://ui.shadcn.com/docs/registry                                |
+| Storybook         | Storybook MCP `get-storybook-story-instructions`, `docs-list`/`docs-show` (서버가 떠 있을 때) | https://storybook.js.org/docs                                      |
+| Fumadocs          | `apps/docs/AGENTS.md`                                                                         | https://www.fumadocs.dev/docs                                      |
+| React 19          | `vercel-react-best-practices` 스킬                                                            | https://react.dev (ref as prop, `use`, `useActionState`, Compiler) |
+| Vitest            | —                                                                                             | https://vitest.dev                                                 |
+| Claude Code       | —                                                                                             | https://code.claude.com/docs/llms.txt (한국어: `/docs/ko/...`)     |
 
 ## 방법
 
