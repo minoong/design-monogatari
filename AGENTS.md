@@ -28,7 +28,7 @@ Alternative libraries require **AskUserQuestion** + user approval (see `.claude/
 | CLAUDE.md  | repo root + `apps/web`, `packages/ui`      | Project instructions. Nested files import their folder's `AGENTS.md`                                      |
 | Rules      | `.claude/rules/*.md`                       | Always-on, or scoped with `paths:` frontmatter                                                            |
 | Agent loop | `.claude/rules/agent-loop.md`              | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                    |
-| Hooks      | `.claude/settings.json` → `.claude/hooks/` | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop)                                  |
+| Hooks      | `.claude/settings.json` → `.claude/hooks/` | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop), docs-consult (PreToolUse nudge) |
 | Skills     | `.agents/skills/`                          | Deep workflows. `.claude/skills/<name>` are symlinks to them                                              |
 | Subagents  | `.claude/agents/`                          | Isolated verify (`ui-verifier`)                                                                           |
 | MCP        | `.mcp.json`                                | `lucide-animated`, `storybook` (needs the dev server). Playwright is defined inline in `ui-verifier` only |
@@ -58,6 +58,8 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 | UI verifier       | `.claude/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
 | A11y reviewer     | `.claude/agents/a11y-reviewer.md`             | 읽기 전용 접근성 리뷰 (컴포넌트 변경 후)     |
 | Verify            | `.agents/skills/verify/`                      | UI 끝나면, 커밋 직전에 verify                |
+| Official docs     | `.agents/skills/official-docs/`               | 외부 API 코드를 쓰기 전 공식 문서 확인 절차  |
+| Docs researcher   | `.claude/agents/docs-researcher.md`           | 공식 문서 한 질문을 요약·출처와 함께 답한다  |
 | Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤      |
 
 Install updates: `npx skills add <owner/repo> --skill <name>`

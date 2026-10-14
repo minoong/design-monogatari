@@ -27,11 +27,21 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|mcp__playwright__.*",
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|mcp__playwright__.*",
         "hooks": [
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/ui-verify.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/ui-verify.mjs\"",
+            "if": "Bash(pnpm *)"
           }
         ]
       },
@@ -41,6 +51,25 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/component-check.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Skill|WebFetch|Agent|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/docs-consult.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/docs-consult.mjs\"",
+            "if": "Bash(*turbo docs*)"
           }
         ]
       }
@@ -71,6 +100,17 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/instructions-log.mjs\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/docs-consult.mjs\""
           }
         ]
       }
