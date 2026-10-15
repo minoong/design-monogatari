@@ -1,7 +1,6 @@
----
-title: 문서 프레임워크는 Fumadocs
-description: Nextra 대신 Fumadocs를 고른 이유와, 이 레포에서 직접 측정한 결과입니다.
----
+# 문서 프레임워크는 Fumadocs
+
+> Nextra 대신 Fumadocs를 고른 이유와, 이 레포에서 직접 측정한 결과입니다.
 
 ## 결정
 
