@@ -4,7 +4,11 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs', '@storybook/addon-mcp'],
   features: { componentsManifest: true },
-  staticDirs: [{ from: './public', to: '/' }],
+  staticDirs: [
+    { from: './public', to: '/' },
+    // 앱이 커밋한 웹용 X5 모델을 그대로 서빙한다. 정적 빌드에서는 prune-storybook-models.mjs 가 지운다.
+    { from: '../../../apps/web/public/models/g05-web', to: '/models/g05-web' },
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},

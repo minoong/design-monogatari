@@ -7,13 +7,17 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
-import { applyThreePaint, enableThreeShadows, threePaintFromSwatch } from './apply-three-paint';
+import {
+  applyThreePaint,
+  enableThreeShadows,
+  restoreThreePaint,
+  threePaintFromSwatch,
+} from './apply-three-paint';
 import { assembleG05Three } from './assemble-g05-three';
 import { GROUND_Y, STUDIO_CAMERA } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
 import type { PaintSwatch } from './paints';
 import { ThreeStudio } from './three-studio';
-import { ThreeYawGroup } from './three-yaw';
 import { vehicleById, type VehicleId } from './vehicles';
 
 export { type InspectHandle } from './inspect-controls';
@@ -58,12 +62,11 @@ function GltfModel({
   files,
   paint,
   front,
-  oem = false,
 }: {
   files: readonly string[];
+  /** 없으면 모델 원래 색 */
   paint?: PaintSwatch;
   front?: VehicleFront;
-  oem?: boolean;
 }) {
   const [model, setModel] = useState<Object3D | null>(null);
   const invalidate = useThree((state) => state.invalidate);
@@ -86,9 +89,6 @@ function GltfModel({
         alignVehicleHeading(root, front);
         fitObject(root);
         enableThreeShadows(root);
-        if (!oem && paint) {
-          applyThreePaint(root, threePaintFromSwatch(paint));
-        }
         setModel(root);
         invalidate();
       })
@@ -101,17 +101,21 @@ function GltfModel({
     return () => {
       cancelled = true;
     };
-    // Paint is applied in a later effect so a color change does not reload the GLB.
+    // 도장은 아래 효과에서 따로 적용해서, 색을 바꿔도 GLB 를 다시 불러오지 않는다.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per file set
-  }, [fileKey, invalidate, oem]);
+  }, [fileKey, invalidate]);
 
   useEffect(() => {
-    if (!model || oem || !paint) {
+    if (!model) {
       return;
     }
-    applyThreePaint(model, threePaintFromSwatch(paint));
+    if (paint) {
+      applyThreePaint(model, threePaintFromSwatch(paint));
+    } else {
+      restoreThreePaint(model);
+    }
     invalidate();
-  }, [invalidate, model, oem, paint]);
+  }, [invalidate, model, paint]);
 
   if (!model) {
     return null;
@@ -122,13 +126,9 @@ function GltfModel({
 
 export type VehicleCanvasProps = {
   vehicleId?: VehicleId;
-  /**
-   * `paint`: 도장 색을 `paint` 로 교체하고 모델을 `progressRef`(0~1)에 맞춰 돌린다.
-   * `inspect`: 원본 머티리얼 + OrbitControls (`inspectRef` 로 reset/zoom 제어).
-   */
-  mode: 'paint' | 'inspect';
+  /** 도장 색. 없으면 모델 원래 색입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   paint?: PaintSwatch;
-  progressRef?: RefObject<number>;
+  /** 줌 인·아웃과 리셋을 호스트가 제어할 때 넘깁니다. 드래그 회전과 휠 줌은 항상 켜져 있습니다. */
   inspectRef?: RefObject<InspectHandle | null>;
   /** `useModelAvailable` 의 결과. true 일 때만 모델을 불러온다 */
   available: boolean | null;
@@ -137,20 +137,17 @@ export type VehicleCanvasProps = {
 };
 
 /**
- * 차량 3D 캔버스. 스튜디오 조명과 그림자, 모델 로딩·조립·정렬을 모두 포함한다.
+ * 차량 3D 캔버스. 스튜디오 조명과 그림자, 모델 로딩·조립·정렬을 모두 포함한다. 드래그로 돌리고 휠로 확대한다.
  * 호스트(Storybook, 앱)가 크기와 오버레이를 정한다. Motion 을 이 캔버스에 쓰지 않는다.
  */
 export function VehicleCanvas({
   vehicleId = 'x5',
-  mode,
   paint,
-  progressRef,
   inspectRef,
   available,
   className,
 }: VehicleCanvasProps) {
   const vehicle = vehicleById(vehicleId);
-  const oem = mode === 'inspect';
 
   return (
     <Canvas
@@ -161,22 +158,9 @@ export function VehicleCanvas({
       shadows
     >
       <ThreeStudio />
-      {oem && inspectRef ? <InspectControls handleRef={inspectRef} /> : null}
-      {oem ? (
-        available ? (
-          <GltfModel key={`${vehicle.id}:oem`} files={vehicle.files} front={vehicle.front} oem />
-        ) : null
-      ) : progressRef ? (
-        <ThreeYawGroup progressRef={progressRef}>
-          {available ? (
-            <GltfModel
-              key={`${vehicle.id}:paint`}
-              files={vehicle.files}
-              front={vehicle.front}
-              paint={paint}
-            />
-          ) : null}
-        </ThreeYawGroup>
+      {inspectRef ? <InspectControls handleRef={inspectRef} /> : null}
+      {available ? (
+        <GltfModel key={vehicle.id} files={vehicle.files} front={vehicle.front} paint={paint} />
       ) : null}
     </Canvas>
   );
