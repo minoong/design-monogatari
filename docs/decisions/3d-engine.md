@@ -1,7 +1,6 @@
----
-title: 3D는 Three.js를 유지합니다
-description: Babylon.js로 바꾸는 안을 측정해 보고 Three.js를 그대로 쓰기로 한 이유입니다.
----
+# 3D는 Three.js를 유지합니다
+
+> Babylon.js로 바꾸는 안을 측정해 보고 Three.js를 그대로 쓰기로 한 이유입니다.
 
 ## 결정
 
