@@ -4,6 +4,7 @@ import { type ReactNode, type RefObject, useRef, useState } from 'react';
 import { AnimatedAmount } from './animated-amount';
 import { Button } from './button';
 import { StoryReplay } from './story-replay';
+import { noControls } from './storybook/arg-types';
 
 const SCROLL_IN_VIEW_AMOUNT = 'all';
 
@@ -151,6 +152,7 @@ const meta = {
     inViewAmount: { control: { type: 'text' } },
     inViewMargin: { control: { type: 'text' } },
     inViewRoot: { control: false },
+    ...noControls('locales', 'format'),
     reserveWidth: { control: { type: 'boolean' } },
     prefix: { control: { type: 'text' } },
     suffix: { control: { type: 'text' } },

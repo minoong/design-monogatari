@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Button } from './button';
+import { noControls } from './storybook/arg-types';
 import { ToastProvider, useToast } from './toast';
 
 function Demo() {
@@ -59,6 +60,9 @@ const meta = {
     },
   },
   args: { children: null },
+  argTypes: {
+    ...noControls('children', 'hotkey'),
+  },
 } satisfies Meta<typeof ToastProvider>;
 
 export default meta;

@@ -20,6 +20,16 @@ const meta = {
     children: '다음에 하기',
     variant: 'secondary',
   },
+  // react-docgen이 CVA 옵션을 읽지 못하므로 컨트롤을 직접 정한다.
+  argTypes: {
+    children: { control: 'text' },
+    variant: { control: 'inline-radio', options: ['primary', 'secondary', 'clear'] },
+    size: { control: 'inline-radio', options: ['small', 'medium', 'large', 'xlarge'] },
+    radius: { control: 'inline-radio', options: ['md', 'lg', 'pill'] },
+    icon: { control: 'boolean' },
+    type: { control: 'inline-radio', options: ['button', 'submit', 'reset'] },
+    display: { control: 'inline-radio', options: ['inline', 'block', 'full'] },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;

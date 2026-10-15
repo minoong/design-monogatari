@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ComponentProps, useState } from 'react';
 
 import { ColorSwatchGroup, type ColorSwatchOption } from './color-swatch-group';
+import { noControls, textControls } from './storybook/arg-types';
 
 // 데모용 색이다. 컴포넌트는 색을 정하지 않고 호출하는 쪽이 `color`로 넘긴다.
 const options: ColorSwatchOption[] = [
@@ -52,6 +53,10 @@ const meta = {
     onValueChange: () => {},
   },
   render: (args) => <ControlledSwatches {...args} />,
+  argTypes: {
+    ...textControls('legend', 'unavailableHint'),
+    ...noControls('onValueChange', 'options'),
+  },
 } satisfies Meta<typeof ColorSwatchGroup>;
 
 export default meta;

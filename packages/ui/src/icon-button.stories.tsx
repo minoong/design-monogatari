@@ -21,6 +21,12 @@ const meta = {
     'aria-label': '관심 차량 담기',
     children: <HeartIcon />,
   },
+  argTypes: {
+    children: { control: false },
+    variant: { control: 'inline-radio', options: ['primary', 'secondary', 'clear'] },
+    size: { control: 'inline-radio', options: ['small', 'medium', 'large', 'xlarge'] },
+    radius: { control: 'inline-radio', options: ['md', 'lg', 'pill'] },
+  },
 } satisfies Meta<typeof IconButton>;
 
 export default meta;

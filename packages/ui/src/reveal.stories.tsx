@@ -41,6 +41,9 @@ const meta = {
       },
     },
   },
+  argTypes: {
+    distance: { control: 'number' },
+  },
 } satisfies Meta<typeof Reveal>;
 
 export default meta;
