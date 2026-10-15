@@ -1,4 +1,4 @@
 {
   "title": "design-monogatari",
-  "pages": ["index", "foundations", "components", "utilities"]
+  "pages": ["index", "agents", "foundations", "components", "utilities"]
 }
