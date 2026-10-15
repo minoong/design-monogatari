@@ -144,6 +144,9 @@ const expanders: Record<string, (node: Node) => Promise<string>> = {
     for (const file of files) {
       sections.push(await repoFile(file.path, undefined, file.title));
     }
+    sections.push(
+      '설치하기 전에 [빠른 설치](/docs#빠른-설치)의 준비 사항(Tailwind CSS v4, Radix 기반 shadcn 프로젝트: `shadcn init -b radix`)을 확인하십시오.',
+    );
     return sections.join('\n\n');
   },
 

@@ -141,10 +141,6 @@ description: ${TODO} 한 문장으로 무엇을 하는 컴포넌트인지 쓴다
 
 <InstallTabs name="${name}" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
-  \`shadcn init -b radix\`로 초기화한 프로젝트에서 설치합니다.
-</Callout>
-
 ## 사용법
 
 ${TODO} import 와 최소 사용 코드, 언제 쓰고 언제 쓰지 말지.
