@@ -66,7 +66,7 @@ export function AnimatedAmount({
   return (
     <span ref={ref} className={cn('inline-flex items-baseline tabular-nums', className)}>
       <span className={cn('inline-flex items-baseline', waitingForView && 'invisible')}>
-        {reserveWidth && prefix ? prefix : null}
+        {reserveWidth && prefix ? <span className="whitespace-pre">{prefix}</span> : null}
         {reserveWidth ? (
           // 숨은 글자와 숫자를 같은 칸에 겹쳐 둔다. 절대 위치로 띄우면 숫자가 칸 맨 위에 붙어 접미사와 기준선이 글자 크기마다
           // 달라지므로, 격자에서 기준선을 맞춘다. 폭은 숨은 글자가 잡고 숫자는 오른쪽에 붙는다.
@@ -99,7 +99,7 @@ export function AnimatedAmount({
             value={shown}
           />
         )}
-        {reserveWidth && suffix ? suffix : null}
+        {reserveWidth && suffix ? <span className="whitespace-pre">{suffix}</span> : null}
       </span>
     </span>
   );
