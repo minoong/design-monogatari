@@ -229,15 +229,15 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 - Pin + scrub a viewport panel; map scroll progress to `frames` URLs (consumer-owned). Draw on canvas — do not `setState` per frame.
 - GSAP ScrollTrigger only. Do not put Motion or Tailwind `transition-*` on the canvas.
-- Overlay copy is `children` (accessible). Canvas is `aria-hidden`. `prefers-reduced-motion`: first frame, no pin.
+- Overlay copy is `children` (accessible). Canvas is `aria-hidden`. `prefers-reduced-motion`: first frame.
 - Not in the shadcn registry. Prototype exterior stills stay in `apps/web/public/exterior/` (gitignored).
 
 ### Storybook 3D (not public API)
 
 - **Image sequence** = 2D frames (`ScrollImageSequence`). **3D model** = GLTF or mesh, rotated by scroll.
-- Storybook `컴포넌트/스크롤3D` uses Three.js through `@repo/vehicle-3d` (`three`, `@react-three/fiber` are that package's dependencies). The paint story uses GSAP pin/scrub. OEM inspect stories use OrbitControls (drag to orbit, wheel to zoom). No Motion on the WebGL canvas.
+- Storybook `컴포넌트/차량 3D` uses Three.js through `@repo/vehicle-3d` (`three`, `@react-three/fiber` are that package's dependencies). The 3D stories do not use page scroll: drag rotates, the wheel zooms (OrbitControls (drag to orbit, wheel to zoom). No Motion on the WebGL canvas.
 - Studio look (IBL, clearcoat paint, ground shadow, OEM paint chips) is for Storybook. Chip hex lives in `packages/vehicle-3d/src/paints.ts` and stays the same in light and dark — it is not a semantic token. Bumper plastics follow a paired hex per chip. Do not vendor Renault / Plus360 meshes. BMW X5 G05 is the BMW Car IT CC BY 4.0 release, not a scrape. Doors, hood, and seats in that kit are half-meshes and are mirrored on Z in the Storybook assembler. The cabin also loads interior trim and the steering wheel. Dark windshield glass is made transmissive so the cabin is visible. `X5 원본` skips paint chips. Only openly licensed models are used (no EULA-restricted meshes). The CC BY 4.0 notice (creator, source, license, warranty disclaimer, modifications, trademark) lives in `vehicles.ts` `credit`, is shown in the story overlay, and is spelled out in `.storybook/public/models/README.md`.
-- Fullscreen 3D stories skip the default Storybook canvas padding. The pin stage is the first paint in the iframe; the overlay stays compact at the top-left so the car is not covered.
+- Fullscreen 3D stories skip the default Storybook canvas padding. The stage is the first paint in the iframe; the overlay stays compact at the top-left so the car is not covered.
 - Not exported from `@repo/ui/*`. Not in the registry. Storybook's sample `g05/` originals (BMW X5 G05, CC BY 4.0) and its `studio.hdr` copy are gitignored (`pnpm --filter @repo/ui copy:car`); only the optimized `g05-web/*.glb` (no emblem) and the CC0 `studio.hdr` are committed under `apps/web/public/models/`, with third-party terms in the root `NOTICE`.
 
 ### Radio

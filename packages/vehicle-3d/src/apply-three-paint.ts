@@ -133,6 +133,24 @@ export function applyThreePaint(root: Object3D, paint: ThreePaint) {
   });
 }
 
+/** 도장을 걷어 내고 모델 원래의 머티리얼로 되돌린다. 도장으로 만든 복제 머티리얼은 해제한다. */
+export function restoreThreePaint(root: Object3D) {
+  root.traverse((node) => {
+    const mesh = node as Mesh;
+    const source = mesh.isMesh
+      ? (mesh.userData[ORIGINAL_KEY] as Material[] | undefined)
+      : undefined;
+    if (!source) {
+      return;
+    }
+    const current = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    for (const material of current) {
+      disposeIfClone(material, source);
+    }
+    mesh.material = Array.isArray(mesh.material) ? [...source] : (source[0] ?? mesh.material);
+  });
+}
+
 export function enableThreeShadows(root: Object3D) {
   root.traverse((node) => {
     const mesh = node as Mesh;

@@ -17,7 +17,7 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 | Docs              | Storybook (`@repo/ui`), Fumadocs (`apps/docs`) | active |
 | ESLint / Prettier | `@repo/eslint-config`, `@repo/prettier-config` | active |
 
-UI 모션은 Motion. 스크롤·핀·스크럽은 GSAP (`ScrollImageSequence`, 견적 외장, Storybook 도장 yaw). Storybook 원본 검사는 OrbitControls. 같은 요소에 Motion과 GSAP를 섞지 마세요. WebGL 캔버스에 Motion을 넣지 마세요. `three`는 `@repo/vehicle-3d`에만 — `@repo/ui`·`apps/web`·`apps/docs`에서 직접 import 금지(앱은 `@repo/vehicle-3d/viewer`를 클라이언트 전용으로). 세부: `packages/ui/AGENTS.md`, [DESIGN.md](DESIGN.md).
+UI 모션은 Motion. 스크롤·핀·스크럽은 GSAP (`ScrollImageSequence`, 견적 외장). 3D 차량은 스크롤과 연동하지 않고 OrbitControls로 드래그 회전·휠 줌. 같은 요소에 Motion과 GSAP를 섞지 마세요. WebGL 캔버스에 Motion을 넣지 마세요. `three`는 `@repo/vehicle-3d`에만 — `@repo/ui`·`apps/web`·`apps/docs`에서 직접 import 금지(앱은 `@repo/vehicle-3d/viewer`를 클라이언트 전용으로). 세부: `packages/ui/AGENTS.md`, [DESIGN.md](DESIGN.md).
 
 Alternative libraries require **AskUserQuestion** + user approval (see `.claude/rules/stack-guardrails.md`).
 
@@ -77,7 +77,7 @@ pnpm --filter @repo/ui build-storybook
 pnpm --filter @repo/ui copy:car   # g05 / HDR (gitignored)
 ```
 
-Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `globalTypes.theme` + `ThemeDecorator` in `packages/ui/.storybook/preview.tsx` (`html.light` / `html.dark`). Fullscreen 스토리는 ThemeDecorator `p-8`을 건너뜁니다. 3D 차량 스토리는 `src/storybook/scroll-3d/`(크롬만), 엔진은 `packages/vehicle-3d` — public `@repo/ui/*` 아님. Not included in `pnpm verify`.
+Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/src/foundations/*.stories.tsx` (사이드바 **파운데이션** / **컴포넌트**, 카피 한글). Theme toolbar: `globalTypes.theme` + `ThemeDecorator` in `packages/ui/.storybook/preview.tsx` (`html.light` / `html.dark`). Fullscreen 스토리는 ThemeDecorator `p-8`을 건너뜁니다. 3D 차량 스토리는 `src/storybook/vehicle-3d/`(크롬만), 엔진은 `packages/vehicle-3d` — public `@repo/ui/*` 아님. Not included in `pnpm verify`.
 
 ## Motion for React (official)
 

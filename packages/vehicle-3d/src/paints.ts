@@ -1,9 +1,3 @@
-'use client';
-
-import { useState } from 'react';
-
-export const PAINT_CHECK = '#3EC6E8';
-
 export const PAINT_SWATCHES = [
   {
     id: 'red',
@@ -84,11 +78,4 @@ export type PaintSwatch = (typeof PAINT_SWATCHES)[number];
 
 export function paintById(id: PaintId) {
   return PAINT_SWATCHES.find((item) => item.id === id) ?? PAINT_SWATCHES[0];
-}
-
-export function usePaintSelection() {
-  const [paintId, setPaintId] = useState<PaintId>('red');
-  const paint = paintById(paintId);
-
-  return { paintId, setPaintId, paint };
 }

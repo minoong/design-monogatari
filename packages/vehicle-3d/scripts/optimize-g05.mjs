@@ -8,12 +8,12 @@
  * meshopt(EXT_meshopt_compression). 형상을 줄이는 simplify 는 하지 않는다.
  * 엠블럼 부품(O_G05_Emblem)은 상표라서 출력에서 뺀다.
  *
- * 입력은 `pnpm --filter @repo/ui copy:car` 가 받은 원본(CC BY 4.0, BMW Car IT)이다. 출력은 gitignore 된
- * Storybook models 폴더이며, 확인한 뒤에 앱의 public 으로 옮겨 커밋한다.
+ * 입력은 `pnpm --filter @repo/ui copy:car` 가 받은 원본(CC BY 4.0, BMW Car IT)이다. 출력은 앱이 커밋하는
+ * `apps/web/public/models/g05-web/` 이고(Storybook 도 이 폴더를 서빙한다), 원본의 LICENSE.txt 도 함께 복사한다.
  */
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -27,7 +27,7 @@ const option = (name, fallback) => {
   return index >= 0 ? resolve(args[index + 1]) : fallback;
 };
 const src = option('--src', join(MODELS, 'g05'));
-const out = option('--out', join(MODELS, 'g05-web'));
+const out = option('--out', resolve(HERE, '../../../apps/web/public/models/g05-web'));
 const bin = resolve(HERE, '../node_modules/.bin/gltf-transform');
 
 if (!existsSync(src)) {
@@ -37,6 +37,8 @@ if (!existsSync(src)) {
   process.exit(1);
 }
 mkdirSync(out, { recursive: true });
+if (existsSync(join(src, 'LICENSE.txt')))
+  copyFileSync(join(src, 'LICENSE.txt'), join(out, 'LICENSE.txt'));
 
 const run = (...cliArgs) => execFileSync(bin, cliArgs, { stdio: ['ignore', 'ignore', 'inherit'] });
 const mb = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)}MB`;
