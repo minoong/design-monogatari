@@ -1,0 +1,95 @@
+---
+title: PriceBar
+description: 견적 총액, 요약 열기 버튼, 이전·다음 버튼을 한 줄에 모은 막대입니다. 항목별 금액 목록(PriceBreakdown)을 함께 제공합니다.
+---
+
+<ComponentPreview name="price-bar/basic" />
+
+## 설치
+
+<InstallTabs name="price-bar" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import { Button } from '@/components/ui/button';
+import { PriceBar, PriceBarActions, PriceBarTotal } from '@/components/ui/price-bar';
+
+export function Example() {
+  return (
+    <PriceBar fixed>
+      <PriceBarTotal amount={82_900_000} note="취득세와 부대비용 별도" />
+      <PriceBarActions>
+        <Button variant="secondary">이전</Button>
+        <Button variant="primary">다음 단계</Button>
+      </PriceBarActions>
+    </PriceBar>
+  );
+}
+```
+
+`fixed`를 주면 화면 아래에 붙습니다. 본문이 가려지지 않도록 페이지 아래쪽에 막대 높이만큼 여백(`padding-bottom`)과 `scroll-padding-bottom`을 두십시오. 키보드로 이동한 컨트롤이 막대 뒤로 숨지 않게 합니다. 탭 순서가 화면 순서와 맞도록 막대는 DOM의 맨 끝(본문 뒤)에 놓으십시오. 요약 열기 버튼은 [`Sheet`](/docs/components/sheet)와 함께 씁니다.
+
+## 예시
+
+### 항목별 금액
+
+`PriceBreakdown`과 `PriceRow`는 항목과 금액의 목록입니다. 숫자는 원 단위로 서식을 맞추고, `signed`를 주면 `+`/`−`를 붙입니다. 문자("기본 포함")도 넘길 수 있고, `total`은 합계 줄입니다. `action`에는 항목을 바꾸러 가는 링크를 놓습니다.
+
+<ComponentPreview name="price-bar/breakdown" />
+
+## API 레퍼런스
+
+`PriceBar`는 `<div>`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/price-bar.tsx"
+  name="PriceBarProps"
+  include={['fixed']}
+  defaults={{ fixed: 'false' }}
+  descriptions={{
+    fixed: '화면 아래에 붙이고 기기의 하단 안전 영역을 비웁니다.',
+  }}
+/>
+
+<PropsTable
+  file="packages/ui/src/price-bar.tsx"
+  name="PriceBarTotalProps"
+  include={['label', 'amount', 'note']}
+  defaults={{ label: '"예상 견적 금액"' }}
+  descriptions={{
+    label: '총액 위에 보이는 이름이자, 스크린 리더가 금액 앞에 읽는 이름입니다.',
+    amount: '원 단위 정수 금액입니다.',
+    note: '총액 아래 보조 문구입니다.',
+  }}
+/>
+
+<PropsTable
+  file="packages/ui/src/price-bar.tsx"
+  name="PriceRowProps"
+  include={['label', 'amount', 'signed', 'action', 'total']}
+  defaults={{ signed: 'false', total: 'false' }}
+  descriptions={{
+    label: '항목 이름입니다.',
+    amount: '숫자면 원 단위로 서식을 맞추고, 그 밖의 값은 그대로 보입니다.',
+    signed: '숫자 금액 앞에 부호를 붙입니다.',
+    action: '라벨 옆에 놓는 동작입니다. 어떤 항목인지 aria-label로 알리십시오.',
+    total: '합계 줄입니다.',
+  }}
+/>
+
+## 접근성
+
+- `PriceBar`는 `role="region"`이고 이름은 "견적 요약"입니다. 한 화면에 막대가 둘 이상이면 `aria-label`을 서로 다르게 주십시오. `PriceBreakdown`의 `title`도 이 이름과 겹치지 않게 쓰십시오.
+- 눈에 보이는 총액은 스크린 리더에서 숨기고, 조용한 알림(`role="status"`)이 "예상 견적 금액 87,900,000원"을 읽어 줍니다. 금액이 연달아 바뀌면 0.5초 동안 멈춘 뒤 최종 금액만 알려서 중간 값이 쌓여 읽히지 않습니다. 처음 그려질 때는 알리지 않습니다.
+- 숫자는 `tabular-nums`라 자릿수가 흔들리지 않습니다. 숫자 애니메이션은 NumberFlow의 기본 동작에 따라 `prefers-reduced-motion`을 켜면 멈춥니다.
+- `PriceBreakdown`은 `dl`입니다. 제목을 주면 그 이름의 그룹으로 읽히고, 제목이 없으면 그룹 역할을 달지 않습니다. 행 안의 `action`이 여러 개이므로 각각 `aria-label`로 항목을 구분하고, 링크는 색만으로 구분되지 않도록 밑줄을 두십시오.
+- 부호는 색이 아니라 글자(`+`, `−`)로 구분합니다. 스크린 리더가 `−`를 어떻게 읽는지는 확인하지 못했습니다. 중요한 곳에서는 "할인"처럼 말로 된 항목 이름을 함께 쓰십시오.
+
+## 소스
+
+<RepoFile path="packages/ui/src/price-bar.tsx" />

@@ -18,4 +18,8 @@ metadata:
 - `peer-checked:animate-x motion-reduce:animate-none` likely loses on specificity (peer-checked = 0,2,0 vs 0,1,0); use `motion-safe:peer-checked:animate-x`. Same for hover:/focus: + motion-reduce:.
 - CSS keyframes with fill-mode `both` that animate box-shadow/border-color/background (radio-out, checkbox-out) stay applied after ending and beat Tailwind ring/aria-invalid/disabled declarations; use `backwards` or animate a pseudo-element. Dark disabled-checked tick (white on #b2b3bd) is ~2.1:1.
 - `appearance-none` custom marks drawn with `::after` need `forced-colors:after:hidden` when `forced-colors:appearance-auto` restores the native mark (double tick).
+- `overflow-wrap: break-word` (Tailwind `wrap-break-word`) does not shrink table min-content; with `overflow-hidden` wrapper (DataTable) cells can clip at 320px. Use `wrap-anywhere`. Docs then overclaim "no horizontal scroll".
+- Fixed bottom bars (PriceBar `fixed`) need page `scroll-padding-bottom` or focused items hide under them (WCAG 2.4.11); docs only mention content margin.
+- `text-primary` links in dark mode (#003cff on black) are ~3:1, below 4.5:1 for caption-size text; muted-foreground dt next to it gives no non-colour link cue (no underline).
+- Live region fed straight from a prop (PriceBarTotal status) has no debounce; rapid changes queue stale values.
 - Motion `whileInView` with `amount: 0.2` never fires for elements taller than 5x viewport; initial opacity 0 is in SSR HTML (invisible without JS/print).

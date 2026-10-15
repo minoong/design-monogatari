@@ -537,6 +537,40 @@
           "target": "@ui/toast.tsx"
         }
       ]
+    },
+    {
+      "name": "price-bar",
+      "type": "registry:ui",
+      "title": "PriceBar",
+      "description": "Bottom price bar with an animated total, plus a price breakdown list.",
+      "dependencies": ["@number-flow/react", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/animated-amount",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/price-bar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/price-bar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "DataTable",
+      "description": "Semantic data table with a required caption, numeric columns and an optional footer row.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/data-table.tsx",
+          "type": "registry:ui",
+          "target": "@ui/data-table.tsx"
+        }
+      ]
     }
   ]
 }

@@ -318,6 +318,14 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 - `ToastProvider` + `useToast().toast({ title, description?, variant?, duration?, action? })`. Announcing is done by two always-mounted sr-only live regions (`role="status"` polite, `role="alert"` for `variant="error"`, prefixed "오류: "); the visible cards are plain list items inside a fixed `role="region"` (label + hotkey) and are for keyboard reach, not reading. Card: `bg-card border-border rounded-lg`, error `border-2 border-destructive`; no shadow; focus ring on the card.
 - F8 (configurable, ignores repeat/modifiers) focuses the oldest card and does nothing when empty; focus returns to where it was when the card is dismissed. Auto-dismiss 5000ms for plain toasts (hover / focus-within / hidden window each hold the timer; the remaining time resumes only when none hold it); toasts with an `action` or `variant="error"` stay until dismissed. Esc on a focused card dismisses; the close button always exists. Never use inside a modal (the rest of the page is inert while a Dialog/Sheet is open). Enter/exit via Motion (`DURATION.base` up from 16px, `DURATION.fast` out); none under reduced motion.
 
+### PriceBar
+
+- Compound: `PriceBar` (`role="region"`, label "견적 요약", `fixed` pins to the bottom with safe-area padding), `PriceBarTotal` (label + `AnimatedAmount`; the visible number is `aria-hidden`, a `role="status"` sr-only line announces "label amount" 500ms after the amount stops changing and stays silent on first render), `PriceBarActions`, `PriceBreakdown` (`dl`; `role="group"` only when it has a `title`), `PriceRow` (number → `1,000,000원`, `signed` adds `+`/`−`, `total` row has a top hairline, `action` slot). `bg-background border-t border-border`, no shadow. Count-up comes from `AnimatedAmount` (NumberFlow honours `prefers-reduced-motion`); no extra motion. Row links need a non-colour cue (underline) and their own `aria-label`; use distinct `aria-label`s when several bars exist and place a `fixed` bar last in the DOM.
+
+### DataTable
+
+- Generic `DataTable<Row>` with `columns` (`key`, `header`, `cell?`, `numeric?`, `rowHeader?`), `rows`, `getRowKey`, optional `footer`. `caption` is required (`captionHidden` makes it sr-only; the table then also gets `aria-labelledby`). `th scope="col"` / `scope="row"`; numeric columns are right-aligned, `tabular-nums` and never wrap; text cells wrap. The wrapper is a focusable `role="region"` (`tabIndex=0`, named by the caption) that scrolls horizontally when the table overflows (WCAG 1.4.10 data-table exception). A footer cell for a `rowHeader` column without a value renders as `td`. `bg-card border-border rounded-lg`, header `bg-muted`.
+
 ### Do
 
 - Use `primary` for every “click me” fill or link on light surfaces.
