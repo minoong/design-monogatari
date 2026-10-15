@@ -21,6 +21,8 @@
     "sheet",
     "change-diff",
     "notice",
-    "toast"
+    "toast",
+    "price-bar",
+    "data-table"
   ]
 }

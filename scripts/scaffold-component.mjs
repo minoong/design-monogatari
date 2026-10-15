@@ -141,7 +141,7 @@ description: ${TODO} 한 문장으로 무엇을 하는 컴포넌트인지 쓴다
 
 <InstallTabs name="${name}" />
 
-<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요해요">
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
   \`shadcn init -b radix\`로 초기화한 프로젝트에서 설치합니다.
 </Callout>
 
@@ -212,7 +212,8 @@ process.stdout.write('  고침: registry.json\n');
 // DESIGN.md
 const designPath = join(ROOT, 'DESIGN.md');
 const design = readFileSync(designPath, 'utf8');
-const marker = "## Do's and Don'ts";
+// Components 절 맨 끝: "### Do" 소제목 바로 앞에 넣는다.
+const marker = '### Do\n';
 if (!design.includes(marker)) {
   fail('DESIGN.md 에서 삽입 위치를 찾지 못했습니다');
 }
