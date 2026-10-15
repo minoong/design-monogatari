@@ -1,5 +1,3 @@
-export const PAINT_CHECK = '#3EC6E8';
-
 export const PAINT_SWATCHES = [
   {
     id: 'red',

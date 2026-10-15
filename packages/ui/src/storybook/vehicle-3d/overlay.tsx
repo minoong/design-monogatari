@@ -1,24 +1,27 @@
 'use client';
 
-import { PAINT_CHECK, PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
+import { PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
 import { vehicleById, type VehicleId } from '@repo/vehicle-3d/vehicles';
 import { useState } from 'react';
 
 import { Button } from '../../button';
+import { ColorSwatchGroup, type ColorSwatchOption } from '../../color-swatch-group';
 
-function PaintCheckIcon() {
-  return (
-    <svg aria-hidden className="size-3" fill="none" viewBox="0 0 12 12">
-      <path
-        d="M2.2 6.2 4.8 8.7 9.8 3.3"
-        stroke="white"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
+const ORIGINAL_PAINT = 'original';
+
+const PAINT_OPTIONS: readonly ColorSwatchOption[] = [
+  // 모델이 원래 가진 색. 칠하지 않은 상태라 고정 색 대신 테마 전경색을 반쯤 섞은 중간 회색으로 표시한다. 흰색·검정 칩과 겹쳐 보이지 않게 한다.
+  {
+    value: ORIGINAL_PAINT,
+    label: '원본 색',
+    color: 'color-mix(in srgb, var(--color-foreground) 50%, transparent)',
+  },
+  ...PAINT_SWATCHES.map((swatch) => ({
+    value: swatch.id,
+    label: swatch.label,
+    color: swatch.hex,
+  })),
+];
 
 /**
  * CC BY 4.0 notice for the vehicle model (see `vehicles.ts` `credit`). One line is always
@@ -123,59 +126,16 @@ export function SequenceOverlay({
           </Button>
         </div>
       </div>
-      <div className="mt-3" role="radiogroup" aria-label="도장">
-        <p className="text-muted-foreground text-caption mb-2">도장</p>
-        <div className="flex max-w-56 flex-wrap items-center gap-1.5">
-          <Button
-            size="small"
-            type="button"
-            role="radio"
-            aria-checked={paintId === null}
-            variant={paintId === null ? 'primary' : 'secondary'}
-            onClick={() => onPaintId(null)}
-          >
-            원본 색
-          </Button>
-          {PAINT_SWATCHES.map((swatch) => {
-            const selected = swatch.id === paintId;
-
-            return (
-              <button
-                key={swatch.id}
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                aria-label={swatch.label}
-                className="focus-visible:ring-ring relative size-8 shrink-0 overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
-                onClick={() => {
-                  onPaintId(swatch.id);
-                }}
-              >
-                <span
-                  className="border-border absolute inset-0 overflow-hidden rounded-sm border"
-                  style={{ backgroundColor: swatch.hex }}
-                >
-                  <span
-                    className="pointer-events-none absolute inset-0"
-                    style={{
-                      backgroundImage:
-                        'linear-gradient(135deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.22) 100%)',
-                    }}
-                  />
-                </span>
-                {selected ? (
-                  <span
-                    className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full"
-                    style={{ backgroundColor: PAINT_CHECK }}
-                  >
-                    <PaintCheckIcon />
-                  </span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <ColorSwatchGroup
+        className="mt-3 max-w-56"
+        legend="도장"
+        name="vehicle-paint"
+        options={PAINT_OPTIONS}
+        value={paintId ?? ORIGINAL_PAINT}
+        onValueChange={(value) => {
+          onPaintId(value === ORIGINAL_PAINT ? null : (value as PaintId));
+        }}
+      />
     </>
   );
 }
