@@ -20,7 +20,8 @@ Three.js vehicle viewer (BMW X5 G05) as a JIT internal package: no build step, `
 `VehicleCanvas` fetches `/models/<file>` and `/models/studio.hdr` from the host app. The host decides how they get there:
 
 - Storybook: `pnpm --filter @repo/ui copy:car` downloads the BMW X5 G05 parts (CC BY 4.0, BMW Car IT) and the Poly Haven HDR (CC0) into `packages/ui/.storybook/public/models/` (gitignored). `build-storybook` removes `storybook-static/models/` afterwards (`packages/ui/scripts/prune-storybook-models.mjs`, fails if any 3D asset remains), so meshes and the HDR never ship in a static Storybook.
-- An app that ships the model must carry the CC BY 4.0 notice (see below) and decide size/compression (not done yet).
+- Apps ship the **optimized** model: `apps/web/public/models/g05-web/*.glb` (13 parts, 6.5MB, meshopt-compressed, **no emblem part**) with its `LICENSE.txt`, plus `public/models/studio.hdr` (CC0). Regenerate with `pnpm --filter @repo/vehicle-3d optimize:g05` (reads the `copy:car` originals, writes the gitignored `…/models/g05-web/`; copy the result into the app). The vehicle id is `x5-web`; `x5` is the original for Storybook only. Third-party terms live in the root `NOTICE`. Never commit the 40MB originals.
+- `VehicleCanvas` loads `.glb` with `GLTFLoader` + `MeshoptDecoder` (inlined in three, no extra files).
 
 ## Model notes
 

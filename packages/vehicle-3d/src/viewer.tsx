@@ -3,6 +3,7 @@
 import { Canvas, useThree } from '@react-three/fiber';
 import { type RefObject, useEffect, useState } from 'react';
 import { Box3, type Object3D, Vector3 } from 'three';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
@@ -39,7 +40,9 @@ function fitObject(root: Object3D, size = 4.2) {
 
 /** 모델 파일은 호스트 앱이 `/models/<file>` 로 서빙한다 (이 패키지는 에셋을 싣지 않는다) */
 function loadVehicleFile(file: string) {
-  return new GLTFLoader().loadAsync(`/models/${file}`).then((gltf) => gltf.scene);
+  // 웹용 최적화 모델(.glb)은 EXT_meshopt_compression 으로 압축돼 있다. 디코더는 three 안에 들어 있다.
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  return loader.loadAsync(`/models/${file}`).then((gltf) => gltf.scene);
 }
 
 function hideUtilityMeshes(root: Object3D) {

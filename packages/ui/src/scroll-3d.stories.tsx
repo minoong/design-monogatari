@@ -53,3 +53,21 @@ export const X5원본: Story = {
     </StoryShell>
   ),
 };
+
+export const 웹용최적화도장: Story = {
+  name: 'X5 웹용 최적화본 (도장)',
+  render: () => (
+    <StoryShell>
+      <ThreeGltfDemo vehicleId="x5-web" />
+    </StoryShell>
+  ),
+};
+
+export const 웹용최적화원본: Story = {
+  name: 'X5 웹용 최적화본 (원본 색)',
+  render: () => (
+    <StoryShell>
+      <ThreeGltfDemo oem vehicleId="x5-web" />
+    </StoryShell>
+  ),
+};

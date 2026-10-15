@@ -14,11 +14,11 @@ export function isG05DoorFile(file: string) {
 }
 
 export function isG05HoodFile(file: string) {
-  return /(?:^|\/)O_G05_Hood\.gltf$/.test(file);
+  return /(?:^|\/)O_G05_Hood\.(?:gltf|glb)$/.test(file);
 }
 
 export function isG05SeatsFile(file: string) {
-  return /(?:^|\/)O_G05_Seats\.gltf$/.test(file);
+  return /(?:^|\/)O_G05_Seats\.(?:gltf|glb)$/.test(file);
 }
 
 export function isG05MirroredFile(file: string) {
