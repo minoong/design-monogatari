@@ -1,4 +1,3 @@
-import { Step, Steps } from '@fumadocs/base-ui/components/steps';
 import defaultMdxComponents from '@fumadocs/base-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
@@ -19,8 +18,6 @@ export function getMDXComponents(components?: MDXComponents) {
     PropsTable,
     RadiusScale,
     RepoFile,
-    Step,
-    Steps,
     TypeScale,
     ...components,
   } satisfies MDXComponents;

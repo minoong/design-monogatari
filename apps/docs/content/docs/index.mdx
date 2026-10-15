@@ -24,10 +24,7 @@ design-monogatari는 Apple에서 영감을 받은 디자인 시스템입니다. 
   레지스트리와 `shadcn` 명령은 [shadcn 문서](https://ui.shadcn.com/docs)에 설명되어 있습니다.
 </Callout>
 
-<Steps>
-<Step>
-
-### 프로젝트 준비
+### 프로젝트 준비 [step]
 
 **Tailwind CSS v4**를 쓰는 프로젝트가 필요합니다. `shadcn`은 **Radix 기반**으로 초기화해야 합니다.
 
@@ -40,10 +37,7 @@ pnpm dlx shadcn@latest init -b radix
   `render=`로 바꿔서 `Dialog`가 깨집니다.
 </Callout>
 
-</Step>
-<Step>
-
-### 컴포넌트 설치
+### 컴포넌트 설치 [step]
 
 필요한 컴포넌트를 하나씩 추가합니다. 의존하는 컴포넌트와 테마는 함께 설치됩니다.
 
@@ -51,10 +45,7 @@ pnpm dlx shadcn@latest init -b radix
 pnpm dlx shadcn@latest add minoong/design-monogatari/badge
 ```
 
-</Step>
-<Step>
-
-### 사용
+### 사용 [step]
 
 설치된 파일은 프로젝트의 `ui` 경로(기본 `@/components/ui`)에 있습니다.
 
@@ -65,9 +56,6 @@ export default function Page() {
   return <Badge>견적 저장 완료</Badge>;
 }
 ```
-
-</Step>
-</Steps>
 
 ## AI & LLMs
 
