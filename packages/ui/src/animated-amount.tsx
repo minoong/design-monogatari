@@ -66,24 +66,24 @@ export function AnimatedAmount({
   return (
     <span ref={ref} className={cn('inline-flex items-baseline tabular-nums', className)}>
       <span className={cn('inline-flex items-baseline', waitingForView && 'invisible')}>
-        {reserveWidth && prefix ? prefix : null}
+        {reserveWidth && prefix ? <span className="whitespace-pre">{prefix}</span> : null}
         {reserveWidth ? (
-          <span className="relative inline-block">
-            <span aria-hidden className="invisible whitespace-nowrap">
+          // 숨은 글자와 숫자를 같은 칸에 겹쳐 둔다. 절대 위치로 띄우면 숫자가 칸 맨 위에 붙어 접미사와 기준선이 글자 크기마다
+          // 달라지므로, 격자에서 기준선을 맞춘다. 폭은 숨은 글자가 잡고 숫자는 오른쪽에 붙는다.
+          <span className="inline-grid items-baseline justify-items-end">
+            <span aria-hidden className="invisible whitespace-nowrap [grid-area:1/1]">
               {digitText}
             </span>
-            <span className="absolute inset-0 flex justify-end overflow-hidden">
-              <NumberFlow
-                animated={animate && !waitingForView}
-                className="tabular-nums [--number-flow-mask-width:0em]"
-                format={format}
-                locales={locales}
-                opacityTiming={SNAP_OPACITY_TIMING}
-                spinTiming={SPIN_TIMING}
-                transformTiming={SNAP_TRANSFORM_TIMING}
-                value={shown}
-              />
-            </span>
+            <NumberFlow
+              animated={animate && !waitingForView}
+              className="my-[-0.2857em] tabular-nums [--number-flow-mask-width:0em] [grid-area:1/1]"
+              format={format}
+              locales={locales}
+              opacityTiming={SNAP_OPACITY_TIMING}
+              spinTiming={SPIN_TIMING}
+              transformTiming={SNAP_TRANSFORM_TIMING}
+              value={shown}
+            />
           </span>
         ) : (
           <NumberFlow
@@ -99,7 +99,7 @@ export function AnimatedAmount({
             value={shown}
           />
         )}
-        {reserveWidth && suffix ? suffix : null}
+        {reserveWidth && suffix ? <span className="whitespace-pre">{suffix}</span> : null}
       </span>
     </span>
   );
