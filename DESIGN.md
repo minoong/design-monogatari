@@ -299,7 +299,24 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 - Motion via `useCheckPhase`: checking pops (`animate-select-pop`, 0.32s); clearing shrinks a `::before` fill and the `::after` tick away (`animate-select-out`, 0.2s). Still on first paint and under reduced motion. Forced-colors hides the pseudo-elements (native control draws itself); a disabled checked tick uses the `background` colour for contrast.
 - Pair with `Label htmlFor`; group with `fieldset` + `legend`.
 
-## Do's and Don'ts
+### Sheet
+
+- Same Radix dialog as `Dialog` (shared parts: `Sheet`, `SheetTrigger`, `SheetClose`, `SheetHeader`, `SheetTitle`, `SheetDescription`, `SheetFooter`); only `SheetContent` differs. `side` = `right | left | top | bottom` (summary on mobile = `bottom`, desktop slide-over = `right`). `bg-card`, `border-border` on the inner edge, no shadow; `rounded-t-lg`/`rounded-b-lg` only for bottom/top. Width `calc(100%-2rem)` up to `max-w-md`.
+- Motion: slides in from its edge with opacity (`DURATION.base` + `EASE.outExpo`), out in `DURATION.fast`; none under reduced motion. The overlay is rendered by `SheetContent` (shared `DialogOverlay`). **`SheetTitle` is required.**
+
+### ChangeDiff
+
+- Semantic table: `caption` (sr-only), `scope="col"` headers (항목 / 이전 선택 / 변경 후), `scope="row"` item names. Added/removed/changed is a **text tag** under the item name (`rounded-full border-border bg-muted text-xs`), never colour alone; empty cell = `—` plus sr-only "없음".
+- Surface `bg-card border-border rounded-lg`; header row `bg-muted text-muted-foreground`; optional summary row (`bg-muted`, tabular numbers). Prices are caller-formatted. Use inside a confirmation `Dialog`; nothing changes until confirmed.
+
+### Notice
+
+- Compound: `Notice`, `NoticeTitle`, `NoticeDescription`. `variant` `info` (`bg-muted border-border`, `role="status"`) or `error` (`border-2 border-destructive`, title `text-destructive`, body `text-foreground`, `role="alert"`). Role is overridable. In-flow content that stays; transient messages are `Toast`.
+
+### Toast
+
+- `ToastProvider` + `useToast().toast({ title, description?, variant?, duration?, action? })`. Announcing is done by two always-mounted sr-only live regions (`role="status"` polite, `role="alert"` for `variant="error"`, prefixed "오류: "); the visible cards are plain list items inside a fixed `role="region"` (label + hotkey) and are for keyboard reach, not reading. Card: `bg-card border-border rounded-lg`, error `border-2 border-destructive`; no shadow; focus ring on the card.
+- F8 (configurable, ignores repeat/modifiers) focuses the oldest card and does nothing when empty; focus returns to where it was when the card is dismissed. Auto-dismiss 5000ms for plain toasts (hover / focus-within / hidden window each hold the timer; the remaining time resumes only when none hold it); toasts with an `action` or `variant="error"` stay until dismissed. Esc on a focused card dismisses; the close button always exists. Never use inside a modal (the rest of the page is inert while a Dialog/Sheet is open). Enter/exit via Motion (`DURATION.base` up from 16px, `DURATION.fast` out); none under reduced motion.
 
 ### Do
 

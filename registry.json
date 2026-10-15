@@ -467,6 +467,76 @@
           "target": "@ui/checkbox.tsx"
         }
       ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "Edge-sliding panel built on the Dialog parts, with Motion slide in and out.",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/dialog",
+        "minoong/design-monogatari/motion",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/sheet.tsx",
+          "type": "registry:ui",
+          "target": "@ui/sheet.tsx"
+        }
+      ]
+    },
+    {
+      "name": "change-diff",
+      "type": "registry:ui",
+      "title": "ChangeDiff",
+      "description": "Two-column before and after table that shows what an option change affects.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/change-diff.tsx",
+          "type": "registry:ui",
+          "target": "@ui/change-diff.tsx"
+        }
+      ]
+    },
+    {
+      "name": "notice",
+      "type": "registry:ui",
+      "title": "Notice",
+      "description": "Inline info and error message with status and alert roles.",
+      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/notice.tsx",
+          "type": "registry:ui",
+          "target": "@ui/notice.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Provider and hook for transient live-region notifications with pause on hover and focus.",
+      "dependencies": ["clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/button",
+        "minoong/design-monogatari/motion",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/toast.tsx",
+          "type": "registry:ui",
+          "target": "@ui/toast.tsx"
+        }
+      ]
     }
   ]
 }

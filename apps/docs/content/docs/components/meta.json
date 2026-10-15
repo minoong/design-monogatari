@@ -17,6 +17,10 @@
     "color-swatch-group",
     "package-row",
     "stepper",
-    "reveal"
+    "reveal",
+    "sheet",
+    "change-diff",
+    "notice",
+    "toast"
   ]
 }

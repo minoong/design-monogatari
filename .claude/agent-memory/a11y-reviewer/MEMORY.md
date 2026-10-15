@@ -1,1 +1,2 @@
 - [Recurring a11y issues](recurring-issues.md) — sr-only input rows, Radix accordion ids, forced-colors focus, price not announced
+- [Overlay/feedback issues](overlay-feedback-issues.md) — toast live regions, modal inertness, timer pause bugs, notice status
