@@ -326,6 +326,18 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 - Generic `DataTable<Row>` with `columns` (`key`, `header`, `cell?`, `numeric?`, `rowHeader?`), `rows`, `getRowKey`, optional `footer`. `caption` is required (`captionHidden` makes it sr-only; the table then also gets `aria-labelledby`). `th scope="col"` / `scope="row"`; numeric columns are right-aligned, `tabular-nums` and never wrap; text cells wrap. The wrapper is a focusable `role="region"` (`tabIndex=0`, named by the caption) that scrolls horizontally when the table overflows (WCAG 1.4.10 data-table exception). A footer cell for a `rowHeader` column without a value renders as `td`. `bg-card border-border rounded-lg`, header `bg-muted`.
 
+### Skeleton
+
+- Compound: `Skeleton` (`bg-muted rounded-md`, `aria-hidden`, `motion-safe:animate-pulse`, paused off-screen via `useInView`; size and shape come from `className`) and `SkeletonGroup` (plain wrapper with an sr-only `label`; no `role="status"`/`aria-busy`, which suppress announcements in some screen readers; announce completion from an always-mounted status line owned by the consumer). Loading placeholder only; use `Progress` when the amount done is known.
+
+### Progress
+
+- `Progress` (`role="progressbar"`, `aria-valuemin/max/now/valuetext`, name from required `label` via `aria-labelledby`, `labelHidden` makes it sr-only). Value text defaults to a percentage and can be replaced by `valueText`; the visible text is `aria-hidden` because `aria-valuetext` carries it. Track `bg-muted` with an inset `border` ring (so its extent is visible), fill `bg-primary` (`primary-on-dark` in dark, ≥3:1 on the track; `Highlight`/`ButtonText` in forced colors) moved with `transform` only (`duration-450` ≈ `DURATION.slow`, `--ease-out-expo`, none under reduced motion). The default percent text is an `AnimatedAmount` (suffix `%`) so the number rolls with the bar; a custom `valueText` is plain text.
+
+### CopyButton
+
+- `CopyButton` wraps `Button` (default `secondary`, `medium`). `value`, `label` / `copiedLabel` / `failedLabel`, `resetDelay` (2000ms), `onCopy`, `onCopyError`. All labels are stacked in one grid cell so the width never changes; always-mounted sr-only regions announce the result: `role="status"` for success and `role="alert"` for failure, re-rendered with a counter key so repeats are read again. `aria-label` is not accepted (it would freeze the state label); the regions are siblings, so avoid `space-*`/`divide-*`/`:last-child` styled groups. Falls back to the failed label when `navigator.clipboard` is unavailable.
+
 ### Do
 
 - Use `primary` for every “click me” fill or link on light surfaces.

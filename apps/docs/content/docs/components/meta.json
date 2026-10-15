@@ -23,6 +23,9 @@
     "notice",
     "toast",
     "price-bar",
-    "data-table"
+    "data-table",
+    "skeleton",
+    "progress",
+    "copy-button"
   ]
 }

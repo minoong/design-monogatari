@@ -571,6 +571,59 @@
           "target": "@ui/data-table.tsx"
         }
       ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Loading placeholder blocks with a status group that announces the busy state.",
+      "dependencies": ["clsx", "motion", "tailwind-merge"],
+      "registryDependencies": ["minoong/design-monogatari/cn", "minoong/design-monogatari/theme"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/skeleton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Determinate progress bar with a required name, value text and transform-only motion.",
+      "dependencies": ["@number-flow/react", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/animated-amount",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/progress.tsx",
+          "type": "registry:ui",
+          "target": "@ui/progress.tsx"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "CopyButton",
+      "description": "Button that copies text and announces the result without changing its width.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/button",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/copy-button.tsx"
+        }
+      ]
     }
   ]
 }
