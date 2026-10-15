@@ -19,6 +19,11 @@ import { DURATION, EASE } from '@/lib/motion';
 
 const DialogOpenContext = createContext(false);
 
+/** `Dialog`/`Sheet` 안에서 지금 열려 있는지. 내용 부분이 퇴장 애니메이션을 직접 그릴 때 쓴다. */
+export function useDialogOpen() {
+  return useContext(DialogOpenContext);
+}
+
 type DialogProps = ComponentProps<typeof DialogPrimitive.Root>;
 
 export function Dialog({ open: openProp, defaultOpen, onOpenChange, ...props }: DialogProps) {

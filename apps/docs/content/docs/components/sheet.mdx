@@ -1,0 +1,85 @@
+---
+title: Sheet
+description: 화면 가장자리에서 밀려 나오는 패널입니다. 견적 요약처럼 지금 화면을 유지한 채 보조 내용을 보여 줍니다.
+---
+
+<ComponentPreview name="sheet/basic" />
+
+## 설치
+
+<InstallTabs name="sheet" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+
+export function Example() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <button>견적 요약 보기</button>
+      </SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>견적 요약</SheetTitle>
+          <SheetDescription>선택하신 항목과 금액입니다.</SheetDescription>
+        </SheetHeader>
+        <SheetClose asChild>
+          <button>닫기</button>
+        </SheetClose>
+      </SheetContent>
+    </Sheet>
+  );
+}
+```
+
+`Sheet`는 [`Dialog`](/docs/components/dialog)와 같은 Radix 대화상자라서 `Sheet`, `SheetTrigger`, `SheetClose`, `SheetHeader`, `SheetTitle`, `SheetDescription`, `SheetFooter`는 `Dialog`의 같은 부품입니다. 다른 것은 `SheetContent`뿐이고, `side`로 어느 가장자리에서 나올지 정합니다.
+
+<Callout type="warn" title="SheetTitle은 필수입니다">
+  `SheetContent` 안에 `SheetTitle`이 없으면 접근 가능한 이름이 없습니다. 오버레이는 `SheetContent`가
+  함께 그리니 따로 넣지 마십시오.
+</Callout>
+
+## 예시
+
+### 아래에서 열기
+
+모바일에서는 `side="bottom"`으로 요약을 보여 주고, 데스크톱에서는 `side="right"`로 엽니다.
+
+<ComponentPreview name="sheet/bottom" />
+
+## API 레퍼런스
+
+`SheetContent`는 Radix `Dialog.Content`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/sheet.tsx"
+  name="SheetContentProps"
+  include={['side']}
+  defaults={{ side: '"right"' }}
+  descriptions={{ side: '어느 가장자리에서 나오는지입니다: right, left, top, bottom.' }}
+/>
+
+## 접근성
+
+- Radix Dialog가 포커스를 맡습니다. 열리면 포커스가 패널 안으로 들어가고 열려 있는 동안 Tab이 패널 안에서만 돌며, Esc로 닫히고 닫히면 포커스가 연 버튼으로 돌아옵니다.
+- `SheetTitle`이 이름(`aria-labelledby`), `SheetDescription`이 설명(`aria-describedby`)입니다.
+- 열릴 때 0.28초, 닫힐 때 0.18초 동안 가장자리에서 밀려 나옵니다. `prefers-reduced-motion`이면 움직이지 않고 바로 나타납니다.
+- 오버레이를 누르면 닫힙니다. 시트에는 닫기 버튼이 따로 없으니 `SheetClose`로 닫기 버튼을 넣으십시오(터치 사용자는 오버레이를 누르거나 이 버튼으로 닫습니다). 왼쪽·오른쪽 시트의 폭은 화면보다 2rem 좁아서 모바일에서도 뒤 화면이 조금 보이고, 위·아래 시트는 화면 폭 전체입니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/sheet.tsx" />

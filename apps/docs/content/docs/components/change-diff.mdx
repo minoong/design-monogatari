@@ -1,0 +1,91 @@
+---
+title: ChangeDiff
+description: 선택을 바꾸면 무엇이 달라지는지 이전 선택과 변경 후를 두 열로 보여 줍니다. 확인 모달 안에 넣어 씁니다.
+---
+
+<ComponentPreview name="change-diff/basic" />
+
+## 설치
+
+<InstallTabs name="change-diff" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import { ChangeDiff } from '@/components/ui/change-diff';
+
+export function Example() {
+  return (
+    <ChangeDiff
+      rows={[
+        { label: '휠', before: '20인치 알로이 휠', after: '19인치 기본 휠' },
+        { label: '선택 품목', before: '스카이 라운지 루프', after: undefined },
+        { label: '액세서리', before: undefined, after: '빌트인 블랙박스' },
+      ]}
+      summary="-2,800,000원"
+    />
+  );
+}
+```
+
+`before`가 없으면 추가, `after`가 없으면 삭제, 둘 다 있으면 변경입니다. 가격 형식은 호출하는 쪽이 정하고 `summary`에 넘깁니다.
+
+## 예시
+
+### 확인 모달 안에서
+
+파워트레인이나 트림처럼 상위 선택을 바꾸면 다른 선택이 함께 바뀝니다. [`Dialog`](/docs/components/dialog) 안에서 보여 주고, 확인하기 전까지는 선택과 가격을 바꾸지 마십시오.
+
+<ComponentPreview name="change-diff/in-dialog" />
+
+## API 레퍼런스
+
+`<div>`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/change-diff.tsx"
+  name="ChangeDiffProps"
+  include={[
+    'rows',
+    'caption',
+    'itemLabel',
+    'beforeLabel',
+    'afterLabel',
+    'summary',
+    'summaryLabel',
+    'statusLabels',
+  ]}
+  defaults={{
+    caption: '"변경 내용"',
+    itemLabel: '"항목"',
+    beforeLabel: '"이전 선택"',
+    afterLabel: '"변경 후"',
+    summaryLabel: '"가격 변동"',
+  }}
+  descriptions={{
+    rows: '변경되는 항목 목록입니다. label은 필수이고 before, after는 선택입니다.',
+    caption: '스크린 리더용 표 이름입니다.',
+    itemLabel: '첫 열의 제목입니다.',
+    beforeLabel: '이전 선택 열의 제목입니다.',
+    afterLabel: '변경 후 열의 제목입니다.',
+    summary: '합계 줄에 보일 값입니다. 없으면 합계 줄을 그리지 않습니다.',
+    summaryLabel: '합계 줄의 이름입니다.',
+    statusLabels: '추가, 삭제, 변경 표식과 빈 칸에 쓰는 글자입니다.',
+  }}
+/>
+
+## 접근성
+
+- 시맨틱 `table`입니다. `caption`(화면에는 숨김)이 표의 이름이고, 열 제목은 `scope="col"`, 항목 이름은 `scope="row"`라서 표 탐색 모드에서 스크린 리더가 셀마다 행과 열 이름을 함께 읽습니다(읽는 방식은 스크린 리더에 따라 다릅니다).
+- 추가, 삭제, 변경은 색이 아니라 항목 이름 아래의 글자 표식으로 구분합니다.
+- 비어 있는 칸은 화면에는 "—", 스크린 리더에는 "없음"으로 읽힙니다.
+- 합계는 표의 마지막 줄(`tfoot`)이라 표 의미 안에 있습니다.
+- 좁은 화면에서는 열이 줄어들고 긴 글자는 줄바꿈됩니다. 가로 스크롤이 생기지 않으며, 320px에서도 잘리지 않는 것을 확인했습니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/change-diff.tsx" />

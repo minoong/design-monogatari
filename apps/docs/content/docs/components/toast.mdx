@@ -1,0 +1,94 @@
+---
+title: Toast
+description: 화면 아래에 잠깐 떠서 방금 한 일의 결과를 알리는 알림입니다. 라이브 리전으로 읽히고 자동으로 닫힙니다.
+---
+
+<ComponentPreview name="toast/basic" />
+
+## 설치
+
+<InstallTabs name="toast" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import { ToastProvider, useToast } from '@/components/ui/toast';
+
+function CopyButton() {
+  const { toast } = useToast();
+
+  return <button onClick={() => toast({ title: '링크를 복사했습니다' })}>링크 복사</button>;
+}
+
+export function App() {
+  return (
+    <ToastProvider>
+      <CopyButton />
+    </ToastProvider>
+  );
+}
+```
+
+앱 한 곳을 `ToastProvider`로 감싸면 어디서든 `useToast()`로 알림을 띄웁니다. 응답이 꼭 필요한 일에는 쓰지 말고 [`Dialog`](/docs/components/dialog)를 쓰십시오. 사라지면 안 되는 안내는 [`Notice`](/docs/components/notice)입니다.
+
+## API 레퍼런스
+
+### ToastProvider
+
+<PropsTable
+  file="packages/ui/src/toast.tsx"
+  name="ToastProviderProps"
+  include={['label', 'hotkey', 'limit', 'dismissLabel', 'errorPrefix']}
+  defaults={{
+    label: '"알림"',
+    hotkey: '"F8"',
+    limit: '3',
+    dismissLabel: '"알림 닫기"',
+    errorPrefix: '"오류: "',
+  }}
+  descriptions={{
+    label: '알림 영역의 이름(스크린 리더용)입니다. 단축키가 있으면 뒤에 괄호로 붙습니다.',
+    hotkey: '누르면 알림 영역으로 포커스가 오는 키(KeyboardEvent.key)입니다. 끄려면 null.',
+    limit: '동시에 보여 줄 최대 개수입니다. 넘치면 오래된 것부터 닫힙니다.',
+    dismissLabel: '닫기 버튼의 이름입니다.',
+    errorPrefix: '오류 알림을 스크린 리더가 읽을 때 앞에 붙는 말입니다.',
+  }}
+/>
+
+### toast(options)
+
+<PropsTable
+  file="packages/ui/src/toast.tsx"
+  name="ToastOptions"
+  include={['title', 'description', 'variant', 'duration', 'action']}
+  defaults={{ variant: '"default"', duration: '5000' }}
+  descriptions={{
+    title: '알림의 제목입니다.',
+    description: '보조 설명입니다.',
+    variant:
+      'error는 즉시 읽히고(assertive) 굵은 테두리로 보입니다. 기본은 조용히 읽힙니다(polite).',
+    duration:
+      '자동으로 닫히기까지의 시간(ms)입니다. 기본 5000이고, 동작이 있거나 오류면 자동으로 닫지 않습니다(Infinity). 호버·포커스·창이 가려진 동안에는 멈춥니다.',
+    action: '알림 안의 동작입니다. 사라져도 같은 일을 할 다른 길이 있는 동작에만 쓰십시오.',
+  }}
+/>
+
+`toast()`는 알림의 id를 돌려주고, `useToast()`의 `dismiss(id)`로 닫습니다.
+
+## 접근성
+
+- 스크린 리더에 읽어 주는 일은 화면에 보이지 않는 라이브 리전이 맡습니다. 조용히 읽는 영역(`role="status"`)과 즉시 읽는 영역(`role="alert"`, 오류용)이 항상 DOM에 있고, 새 알림이 올 때마다 제목과 설명이 들어가서 읽힙니다. 오류는 앞에 "오류: "가 붙어서 읽힙니다(`errorPrefix`). 화면의 알림 카드는 읽기를 맡지 않고 키보드로 닿는 용도입니다.
+- F8(바꿀 수 있습니다)을 누르면 가장 오래된 알림 카드로 포커스가 와서 닫기나 동작을 쓸 수 있습니다. 알림이 없으면 아무 일도 하지 않고, 사라지면 F8을 누르기 전의 자리로 포커스가 돌아갑니다. 맥에서는 F8이 미디어 키라 Fn을 함께 눌러야 할 수 있으니 필요하면 `hotkey`를 바꾸십시오.
+- 일반 알림은 5초 뒤에 닫힙니다. 마우스를 올리거나, 포커스가 알림 안에 있거나, 창이 가려져 있는 동안에는 멈추고, 셋이 모두 풀리면 남은 시간부터 이어서 셉니다. 동작이 있거나 오류인 알림은 자동으로 닫히지 않고 닫기 버튼으로 닫습니다(`duration`으로 바꿀 수 있습니다).
+- 알림 카드에 포커스가 있을 때 Esc로 닫을 수 있고, 닫기 버튼에는 이름이 있습니다.
+- 동작이 있는 알림은 사라져도 같은 일을 할 다른 길이 있어야 합니다. 응답이 꼭 필요하면 `Dialog`를 쓰십시오.
+- **모달 안에서 띄우지 마십시오.** `Dialog`나 `Sheet`가 열려 있는 동안에는 뒤 화면이 스크린 리더와 키보드에서 가려져 알림에 닿지 못합니다. 모달 안에서는 [`Notice`](/docs/components/notice)를 쓰거나 모달을 닫은 뒤에 `toast()`를 호출하십시오.
+- 열릴 때 0.28초 동안 아래에서 떠오르고, 닫힐 때 0.18초입니다. `prefers-reduced-motion`이면 움직이지 않습니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/toast.tsx" />
