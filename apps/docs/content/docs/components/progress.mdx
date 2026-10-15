@@ -1,0 +1,69 @@
+---
+title: Progress
+description: 끝이 정해진 작업의 진행률 막대입니다. 이름이 필수이고, 값 문구를 바꿀 수 있습니다.
+---
+
+<ComponentPreview name="progress/basic" />
+
+## 설치
+
+<InstallTabs name="progress" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import { Progress } from '@/components/ui/progress';
+
+export function Example({ loaded }: { loaded: number }) {
+  return <Progress label="모델 불러오는 중" value={loaded} />;
+}
+```
+
+`value`는 0 이상 `max`(기본 100) 이하로 맞춰 그립니다. 막대는 부드럽게 길어지고, 오른쪽 백분율 숫자는 [`AnimatedAmount`](/docs/components/animated-amount)처럼 굴러가며 바뀝니다. 언제 끝날지 모르는 작업에는 [`Skeleton`](/docs/components/skeleton)을 쓰십시오.
+
+## 예시
+
+### 값 문구
+
+백분율 대신 "4 / 13 부품"처럼 작업에 맞는 문구를 `valueText`로 보여 줍니다. 같은 문구를 스크린 리더도 읽습니다. 직접 준 문구는 숫자를 굴리지 않고 그대로 바뀝니다.
+
+<ComponentPreview name="progress/value-text" />
+
+## API 레퍼런스
+
+`<div>`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/progress.tsx"
+  name="ProgressProps"
+  include={['value', 'max', 'label', 'labelHidden', 'valueText', 'showValue']}
+  defaults={{ max: '100', labelHidden: 'false', showValue: 'true' }}
+  descriptions={{
+    value: '현재 값입니다. 0 이상 max 이하로 맞춰 그립니다.',
+    max: '끝 값입니다.',
+    label: '진행 막대의 이름입니다. 필수입니다.',
+    labelHidden: '이름을 화면에서 숨기고 스크린 리더에만 읽힙니다.',
+    valueText: '읽어 주고 보여 줄 값 문구입니다. 없으면 백분율입니다.',
+    showValue: '오른쪽에 값 문구를 보입니다.',
+  }}
+/>
+
+## 접근성
+
+- `role="progressbar"`에 `aria-valuemin`, `aria-valuemax`, `aria-valuenow`와 `aria-valuetext`(값 문구)를 답니다. 이름은 `label`을 `aria-labelledby`로 연결합니다.
+- 화면의 값 문구는 `aria-hidden`입니다. 같은 문구를 `aria-valuetext`로 읽기 때문입니다.
+- 막대는 `transform`으로만 움직이고 감소 모션에서는 바로 바뀝니다. 진행 정도는 색이 아니라 막대 길이와 글자로 전달합니다.
+- 채움은 라이트에서 `primary`, 다크에서 `primary-on-dark`입니다. 트랙(`muted`)에는 `border` 색 안쪽 테두리를 둬서 막대의 전체 길이가 보이게 했습니다. 진행 정도는 막대 길이와 값 문구로 함께 전달합니다.
+- 고대비(forced-colors) 모드에서는 트랙에 테두리, 채움에 `Highlight` 색을 씁니다.
+- 막대와 숫자는 감소 모션을 켜면 움직임이 줄어듭니다(막대는 바로 바뀌고, 숫자는 `AnimatedAmount`가 따릅니다).
+- `labelHidden`은 이름만 숨깁니다. 값 문구는 `showValue`가 켜져 있으면 오른쪽에 보입니다.
+- `aria-describedby` 같은 속성은 막대가 아니라 바깥 `div`에 붙습니다.
+- 값이 바뀔 때 스크린 리더가 자동으로 읽어 주지는 않습니다. `aria-valuetext`는 막대에 초점이 가거나 읽을 때 쓰입니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/progress.tsx" />

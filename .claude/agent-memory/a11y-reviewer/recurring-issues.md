@@ -22,4 +22,7 @@ metadata:
 - Fixed bottom bars (PriceBar `fixed`) need page `scroll-padding-bottom` or focused items hide under them (WCAG 2.4.11); docs only mention content margin.
 - `text-primary` links in dark mode (#003cff on black) are ~3:1, below 4.5:1 for caption-size text; muted-foreground dt next to it gives no non-colour link cue (no underline).
 - Live region fed straight from a prop (PriceBarTotal status) has no debounce; rapid changes queue stale values.
+- Dark `bg-primary` (#003cff) on `bg-muted` (#121315) is ~2.7:1 (<3:1 non-text); light/dark `bg-muted` tracks are ~1.1:1 vs background and vanish in forced-colors (Progress). Add forced-colors:bg-[Highlight]/border.
+- Live regions whose text stays the same on a repeat action (CopyButton copied twice in 2s) announce nothing; key the child. `role=status aria-busy=true` on a never-completing loader group (SkeletonGroup) can suppress its own sr-only label.
+- Fragment-returned sr-only sibling next to a Button breaks `space-x-*`, `divide-*`, `:last-child` radius in groups (gap is fine since sr-only is absolute).
 - Motion `whileInView` with `amount: 0.2` never fires for elements taller than 5x viewport; initial opacity 0 is in SSR HTML (invisible without JS/print).

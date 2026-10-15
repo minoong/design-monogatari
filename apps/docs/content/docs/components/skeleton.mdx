@@ -1,0 +1,64 @@
+---
+title: Skeleton
+description: 불러오는 중인 자리를 채우는 회색 막대입니다. 묶음 전체의 "불러오는 중" 안내는 SkeletonGroup이 맡습니다.
+---
+
+<ComponentPreview name="skeleton/basic" />
+
+## 설치
+
+<InstallTabs name="skeleton" />
+
+<Callout type="warn" title="Radix 기반 shadcn 프로젝트가 필요합니다">
+  `shadcn init -b radix`로 초기화한 프로젝트에서 설치합니다.
+</Callout>
+
+## 사용법
+
+```tsx
+import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+
+export function Example() {
+  return (
+    <SkeletonGroup label="견적을 불러오는 중입니다" className="flex flex-col gap-3">
+      <Skeleton className="h-6 w-1/2" />
+      <Skeleton className="h-4 w-full" />
+    </SkeletonGroup>
+  );
+}
+```
+
+크기와 모양은 `className`으로 실제 내용에 맞추십시오. 내용이 도착하면 `SkeletonGroup`을 지우고 실제 내용으로 바꿉니다. 진행 정도를 알 수 있는 작업은 [`Progress`](/docs/components/progress)를 쓰십시오.
+
+## 예시
+
+### 옵션 행 자리
+
+옵션 목록을 불러오는 동안 [`OptionRow`](/docs/components/option-row)와 같은 높이의 자리를 미리 잡아 두면 내용이 도착해도 화면이 밀리지 않습니다.
+
+<ComponentPreview name="skeleton/option-rows" />
+
+## API 레퍼런스
+
+`Skeleton`은 `<div>`의 모든 속성을 받습니다. `SkeletonGroup`도 `<div>`의 모든 속성을 받습니다.
+
+<PropsTable
+  file="packages/ui/src/skeleton.tsx"
+  name="SkeletonGroupProps"
+  include={['label']}
+  defaults={{ label: '"불러오는 중입니다"' }}
+  descriptions={{
+    label: '스크린 리더가 읽는 안내입니다. 무엇을 불러오는지 적으십시오.',
+  }}
+/>
+
+## 접근성
+
+- `Skeleton`은 장식이라 `aria-hidden`입니다. 스크린 리더는 막대를 읽지 않습니다.
+- `SkeletonGroup`은 화면에서 숨긴 `label`을 담은 일반 `div`입니다. 스크린 리더가 페이지를 훑을 때 "견적을 불러오는 중입니다"를 읽지만, 내용이 도착하는 순간을 알려 주지는 않습니다. `role="status"`와 `aria-busy`는 일부 스크린 리더에서 오히려 알림을 막으므로 달지 않았습니다. 도착을 알리려면 호출하는 쪽에 항상 그려 둔 `role="status"` 문구를 두고 그 글자를 바꾸십시오("견적을 불러왔습니다").
+- 깜빡임은 `motion-safe`에서만 일어나므로 감소 모션을 켜면 정지한 회색 막대입니다. 화면 밖으로 나가면 깜빡임을 멈춥니다.
+- 막대의 색은 `muted` 면입니다. 정보를 담지 않는 자리 표시라 대비 기준 대상이 아닙니다. 고대비(forced-colors) 모드에서는 막대가 보이지 않을 수 있습니다.
+
+## 소스
+
+<RepoFile path="packages/ui/src/skeleton.tsx" />
