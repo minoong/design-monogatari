@@ -57,6 +57,7 @@ packages/ui/.storybook/public/models/*.glb
 packages/ui/.storybook/public/models/*.hdr
 packages/ui/.storybook/public/models/Textures/
 packages/ui/.storybook/public/models/g05/
+packages/ui/.storybook/public/models/g05-web/
 packages/ui/.storybook/public/models/carla/
 
 # Misc

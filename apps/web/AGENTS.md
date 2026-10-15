@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## design-monogatari web
 
-Next.js demo (port **3000**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`. Home is the estimate demo. The estimate rules live in `src/_pages/estimate/model/` as pure TypeScript (catalog data, `resolveSelection`, `calculateQuote`, URL codec) with vitest tests (`pnpm --filter web test`); rule `.claude/rules/estimate-domain.md`. Exterior stills: `pnpm --filter web copy:exterior` (gitignored `public/exterior/`).
+Next.js demo (port **3000**). FSD in `src/` (`_app` + `_pages/home`). Next `app/` only re-exports. UI from `@repo/ui/*`. Theme: `next-themes` + `html.light` / `html.dark`. Home is the estimate demo. The estimate rules live in `src/_pages/estimate/model/` as pure TypeScript (catalog data, `resolveSelection`, `calculateQuote`, URL codec) with vitest tests (`pnpm --filter web test`); rule `.claude/rules/estimate-domain.md`. 3D assets: `public/models/g05-web/*.glb` (optimized X5 parts, no emblem) + `public/models/studio.hdr`; terms in the root `NOTICE`. Exterior stills: `pnpm --filter web copy:exterior` (gitignored `public/exterior/`).
 
 Skill: `.agents/skills/feature-sliced-design/SKILL.md`. Rule: `.claude/rules/fsd-apps.md`.
 
