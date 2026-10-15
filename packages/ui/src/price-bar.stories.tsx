@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Button } from './button';
 import { PriceBar, PriceBarActions, PriceBarTotal, PriceBreakdown, PriceRow } from './price-bar';
+import { textControls } from './storybook/arg-types';
 
 const meta = {
   title: '컴포넌트/가격 막대',
@@ -24,6 +25,10 @@ const meta = {
       </div>
     ),
   ],
+  argTypes: {
+    fixed: { control: 'boolean' },
+    ...textControls('aria-label'),
+  },
 } satisfies Meta<typeof PriceBar>;
 
 export default meta;

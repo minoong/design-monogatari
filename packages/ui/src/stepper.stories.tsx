@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 import { Stepper, StepperItem } from './stepper';
+import { textControls } from './storybook/arg-types';
 
 const STEPS = [
   { value: 'model', label: '모델' },
@@ -59,6 +60,9 @@ const meta = {
     },
   },
   args: { 'aria-label': '견적 단계' },
+  argTypes: {
+    ...textControls('aria-label', 'value'),
+  },
 } satisfies Meta<typeof Stepper>;
 
 export default meta;

@@ -21,6 +21,9 @@ const meta = {
       </div>
     ),
   ],
+  argTypes: {
+    variant: { control: 'inline-radio', options: ['info', 'error'] },
+  },
 } satisfies Meta<typeof Notice>;
 
 export default meta;

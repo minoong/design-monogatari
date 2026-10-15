@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 import { OptionGroup, OptionRow } from './option-row';
+import { noControls, textControls } from './storybook/arg-types';
 
 const meta = {
   title: '컴포넌트/옵션 행',
@@ -20,6 +21,10 @@ const meta = {
     label: '19인치 기본 휠',
     description: '모든 트림에 기본으로 들어갑니다.',
     price: '기본 포함',
+  },
+  argTypes: {
+    ...textControls('label', 'description', 'price', 'badge', 'unavailableReason'),
+    ...noControls('media'),
   },
 } satisfies Meta<typeof OptionRow>;
 

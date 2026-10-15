@@ -19,6 +19,12 @@ const meta = {
     placeholder: '모델명 또는 트림 검색',
     type: 'email',
   },
+  argTypes: {
+    type: {
+      control: 'select',
+      options: ['text', 'email', 'number', 'password', 'search', 'tel', 'url'],
+    },
+  },
 } satisfies Meta<typeof Input>;
 
 export default meta;

@@ -17,6 +17,9 @@ const meta = {
   args: {
     children: '견적 저장 완료',
   },
+  argTypes: {
+    variant: { control: 'inline-radio', options: ['default', 'secondary', 'destructive'] },
+  },
 } satisfies Meta<typeof Badge>;
 
 export default meta;

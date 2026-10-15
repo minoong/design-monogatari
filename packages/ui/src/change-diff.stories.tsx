@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ChangeDiff } from './change-diff';
+import { noControls, textControls } from './storybook/arg-types';
 
 const meta = {
   title: '컴포넌트/변경 비교',
@@ -30,6 +31,10 @@ const meta = {
       </div>
     ),
   ],
+  argTypes: {
+    ...textControls('summary'),
+    ...noControls('rows', 'statusLabels'),
+  },
 } satisfies Meta<typeof ChangeDiff>;
 
 export default meta;

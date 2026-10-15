@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ComponentProps, useState } from 'react';
 
 import { PackageRow } from './package-row';
+import { noControls, textControls } from './storybook/arg-types';
 
 const meta = {
   title: '컴포넌트/패키지 행',
@@ -28,6 +29,10 @@ const meta = {
       </div>
     ),
   ],
+  argTypes: {
+    ...textControls('label', 'description', 'price', 'includedIn'),
+    ...noControls('items'),
+  },
 } satisfies Meta<typeof PackageRow>;
 
 export default meta;

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { DataTable, type DataTableColumn } from './data-table';
+import { noControls } from './storybook/arg-types';
 
 type Fee = { region: string; delivery: number; registration: number };
 
@@ -43,6 +44,10 @@ const meta = {
       </div>
     ),
   ],
+  argTypes: {
+    ...noControls('columns', 'rows', 'getRowKey', 'footer'),
+    caption: { control: 'text' },
+  },
 } satisfies Meta<typeof DataTable<Fee>>;
 
 export default meta;
