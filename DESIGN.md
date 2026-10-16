@@ -274,9 +274,9 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ### Stepper
 
 - Compound: `Stepper` (`nav` + numbered `ol`, needs `aria-label`) and `StepperItem` (`li` + link). `Stepper value` equal to an item's `value` marks the current step with `aria-current="step"`. Links via `href` or `asChild` (Next `Link`); all steps are reachable in any order.
-- Item: 44px min height, `rounded-full`, hairline transparent until current. Current = `border-primary`, `text-foreground`, semibold, filled `bg-primary` number badge. Completed (`completed`) = check mark badge on `bg-muted` plus visually hidden "(완료)".
+- Item: 44px min height, `rounded-md`, no border. Current = a 2px `bg-primary` underline (`layoutId` glider), `text-foreground`, semibold, filled `bg-primary` number badge. Completed (`completed`) = check mark badge on `bg-muted` plus visually hidden "(완료)".
 - Numbers come from CSS counters (decorative, `aria-hidden`); the list supplies order to assistive tech.
-- The list scrolls horizontally with the scrollbar hidden; the current step is centred on change (instant under reduced motion). Hover = `bg-secondary-hover`; focus = 2px `outline-ring`, offset 2px. No scale.
+- The list scrolls horizontally with the scrollbar hidden; the current step is centred on change (instant under reduced motion). When the list overflows the clipped edge fades out (`mask`, driven by `data-edge` = `start` | `middle` | `end` on the `nav`). Hover = `bg-secondary-hover`; focus = 2px `outline-ring`, offset 2px. No scale.
 
 ### Reveal
 

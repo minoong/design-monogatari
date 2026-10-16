@@ -11,7 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@repo/ui/sheet';
-import { Stepper, StepperItem } from '@repo/ui/stepper';
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 
 import { CATALOG } from '../model/catalog';
@@ -21,6 +20,7 @@ import { calculateQuote } from '../model/quote';
 import { neighborStep, type StepId, STEPS } from '../model/steps';
 import { wizardReducer, type WizardState } from '../model/wizard';
 import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-dialogs';
+import { EstimateHeader } from './estimate-header';
 import {
   AccessoriesStep,
   ExteriorStep,
@@ -32,7 +32,6 @@ import {
   WheelStep,
 } from './step-panels';
 import { SummaryList } from './summary';
-import { ThemeToggle } from './theme-toggle';
 import { VehicleStage } from './vehicle-stage';
 
 const STEP_INTRO: Record<StepId, string> = {
@@ -103,52 +102,67 @@ export function EstimateApp({
   const currentLabel = STEPS[stepIndex]?.label ?? '';
   const panelProps = { state, dispatch };
 
+  const isDesktop = useIsDesktop();
+  const colorLabel = CATALOG.color.find((item) => item.id === state.selection.color)!.label;
+
+  const summaryTrigger = (
+    <Sheet open={summaryOpen} onOpenChange={setSummaryOpen}>
+      <SheetTrigger asChild>
+        <Button size="small" variant="secondary">
+          견적 요약
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        side={isDesktop ? 'right' : 'bottom'}
+        onCloseAutoFocus={(event) => {
+          // 시트의 "변경"으로 단계를 옮겼으면 닫힌 뒤 초점이 트리거로 돌아가지 않고 새 단계 제목으로 간다.
+          if (focusHeadingOnClose.current) {
+            event.preventDefault();
+            focusHeadingOnClose.current = false;
+            headingRef.current?.focus();
+          }
+        }}
+      >
+        <SheetHeader>
+          <SheetTitle>견적 요약</SheetTitle>
+          <SheetDescription>선택한 항목과 금액입니다.</SheetDescription>
+        </SheetHeader>
+        <SummaryList
+          quote={quote}
+          dispatch={dispatch}
+          onNavigate={() => {
+            focusHeadingOnClose.current = true;
+            setSummaryOpen(false);
+          }}
+        />
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
-    <div className="bg-background text-foreground min-h-dvh pb-52 font-sans lg:pb-32">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 p-4">
-        <div className="flex flex-col">
-          <h1 className="text-body font-semibold tracking-tight">X5 견적</h1>
-          <p className="text-muted-foreground text-caption">
-            비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다.
-          </p>
+    <div className="bg-background text-foreground min-h-dvh font-sans lg:flex lg:h-dvh lg:flex-col">
+      <EstimateHeader
+        dispatch={dispatch}
+        query={query}
+        step={state.step}
+        stepIndex={stepIndex}
+        summary={summaryTrigger}
+      />
+
+      <main className="lg:flex lg:min-h-0 lg:flex-1">
+        <div className="min-w-0 p-4 lg:flex lg:flex-1 lg:flex-col lg:p-6">
+          <VehicleStage
+            color={state.selection.color}
+            colorLabel={colorLabel}
+            wheel={state.selection.wheel}
+          />
         </div>
-        <ThemeToggle />
-      </header>
 
-      <main className="mx-auto w-full max-w-6xl px-4">
-        <Stepper aria-label="견적 단계" value={state.step} className="mb-6">
-          {STEPS.map((step, index) => (
-            <StepperItem
-              key={step.id}
-              value={step.id}
-              completed={index < stepIndex}
-              href={`?${query}&step=${step.id}`}
-              onClick={(event) => {
-                event.preventDefault();
-                dispatch({ type: 'go', step: step.id });
-              }}
-            >
-              {step.label}
-            </StepperItem>
-          ))}
-        </Stepper>
-
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
-          <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-6 lg:max-h-[calc(100dvh-9rem)] lg:self-start lg:overflow-y-auto">
-            <VehicleStage
-              color={state.selection.color}
-              colorLabel={CATALOG.color.find((item) => item.id === state.selection.color)!.label}
-              wheel={state.selection.wheel}
-            />
-            <aside
-              aria-label="선택 요약"
-              className="border-border bg-card hidden rounded-lg border p-5 lg:block"
-            >
-              <SummaryList quote={quote} dispatch={dispatch} />
-            </aside>
-          </div>
-
-          <section aria-labelledby="step-title" className="flex min-w-0 flex-col gap-6">
+        <section
+          aria-labelledby="step-title"
+          className="border-border flex min-w-0 flex-col lg:min-h-0 lg:w-120 lg:shrink-0 lg:border-l 2xl:w-136"
+        >
+          <div className="flex flex-col gap-6 p-4 pb-32 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:p-8">
             <div>
               <h2
                 id="step-title"
@@ -212,81 +226,73 @@ export function EstimateApp({
             {state.step === 'result' ? (
               <ResultStep {...panelProps} quote={quote} shareUrl={shareUrl} />
             ) : null}
-          </section>
-        </div>
-      </main>
+          </div>
 
-      <PriceBar
-        fixed
-        aria-label="견적 금액과 단계 이동"
-        className="px-[max(1rem,calc((100%-72rem)/2+1rem))]"
-      >
-        {state.step === 'result' ? (
-          <PriceBarTotal
-            label="예상 총 비용"
-            amount={quote.total}
-            note="취득세와 부대비용을 포함한 금액입니다"
-          />
-        ) : (
-          <PriceBarTotal amount={quote.listPrice} note="취득세와 부대비용은 별도입니다" />
-        )}
-        <PriceBarActions className="ml-auto">
-          <Sheet open={summaryOpen} onOpenChange={setSummaryOpen}>
-            <SheetTrigger asChild>
-              <Button variant="secondary" className="lg:hidden">
-                견적 요약
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="bottom"
-              onCloseAutoFocus={(event) => {
-                // 시트의 "변경"으로 단계를 옮겼으면 닫힌 뒤 초점이 트리거로 돌아가지 않고 새 단계 제목으로 간다.
-                if (focusHeadingOnClose.current) {
-                  event.preventDefault();
-                  focusHeadingOnClose.current = false;
-                  headingRef.current?.focus();
-                }
-              }}
-            >
-              <SheetHeader>
-                <SheetTitle>견적 요약</SheetTitle>
-                <SheetDescription>선택한 항목과 금액입니다.</SheetDescription>
-              </SheetHeader>
-              <SummaryList
-                quote={quote}
-                dispatch={dispatch}
-                onNavigate={() => {
-                  focusHeadingOnClose.current = true;
-                  setSummaryOpen(false);
-                }}
-              />
-            </SheetContent>
-          </Sheet>
-          <Button
-            variant="secondary"
-            disabled={previous === null}
-            onClick={() => {
-              if (previous) dispatch({ type: 'go', step: previous });
-            }}
+          <PriceBar
+            aria-label="견적 금액과 단계 이동"
+            className="fixed inset-x-0 bottom-0 z-40 flex-nowrap gap-x-3 gap-y-0 py-3 lg:static lg:z-auto lg:flex-wrap lg:gap-y-4 lg:px-8 lg:py-5"
           >
-            이전
-          </Button>
-          {next ? (
-            <Button
-              variant="primary"
-              onClick={() => {
-                dispatch({ type: 'go', step: next });
-              }}
-            >
-              다음
-            </Button>
-          ) : null}
-        </PriceBarActions>
-      </PriceBar>
+            {state.step === 'result' ? (
+              <PriceBarTotal
+                amount={quote.total}
+                label="예상 총 비용"
+                note={
+                  <span className="hidden lg:inline">취득세와 부대비용을 포함한 금액입니다</span>
+                }
+              />
+            ) : (
+              <PriceBarTotal
+                amount={quote.listPrice}
+                note={<span className="hidden lg:inline">취득세와 부대비용은 별도입니다</span>}
+              />
+            )}
+            <PriceBarActions className="ml-auto flex-nowrap lg:ml-0 lg:w-full [&>button]:lg:flex-1">
+              <Button
+                disabled={previous === null}
+                variant="secondary"
+                onClick={() => {
+                  if (previous) dispatch({ type: 'go', step: previous });
+                }}
+              >
+                이전
+              </Button>
+              {next ? (
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    dispatch({ type: 'go', step: next });
+                  }}
+                >
+                  다음
+                </Button>
+              ) : null}
+            </PriceBarActions>
+          </PriceBar>
+        </section>
+      </main>
 
       <ConfirmChangeDialog {...panelProps} returnFocusRef={headingRef} />
       <BlockedDialog {...panelProps} returnFocusRef={headingRef} />
       <SuggestionDialog {...panelProps} returnFocusRef={headingRef} />
     </div>
+  );
+}
+
+const DESKTOP_QUERY = '(min-width: 1024px)';
+
+function subscribeDesktop(onChange: () => void) {
+  const media = window.matchMedia(DESKTOP_QUERY);
+  media.addEventListener('change', onChange);
+  return () => {
+    media.removeEventListener('change', onChange);
+  };
+}
+
+/** 큰 화면(1024px 이상)인지. 요약 시트가 오른쪽에서 열릴지 아래에서 열릴지 정한다. 서버에서는 false다. */
+function useIsDesktop() {
+  return useSyncExternalStore(
+    subscribeDesktop,
+    () => window.matchMedia(DESKTOP_QUERY).matches,
+    () => false,
   );
 }

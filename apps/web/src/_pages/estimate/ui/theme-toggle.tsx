@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes';
 import { useSyncExternalStore } from 'react';
 
 const toggleClasses =
-  'border-border text-foreground hover:bg-secondary-hover focus-visible:ring-ring inline-flex h-12 shrink-0 whitespace-nowrap cursor-pointer appearance-none items-center justify-center rounded-pill border bg-transparent px-5 font-sans text-base leading-5 font-medium focus-visible:ring-2 max-[600px]:h-10 max-[600px]:px-4 max-[600px]:text-sm';
+  'border-border text-foreground hover:bg-secondary-hover focus-visible:ring-ring inline-flex h-8 shrink-0 whitespace-nowrap cursor-pointer appearance-none items-center justify-center rounded-pill border bg-transparent px-3 font-sans text-sm leading-4 font-medium focus-visible:ring-2 ';
 
 const emptySubscribe = () => () => {};
 

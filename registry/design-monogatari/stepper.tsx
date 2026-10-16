@@ -2,7 +2,15 @@
 
 import { Slot, Slottable } from '@radix-ui/react-slot';
 import { motion, useReducedMotion } from 'motion/react';
-import { type ComponentProps, createContext, useContext, useEffect, useId, useRef } from 'react';
+import {
+  type ComponentProps,
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 
 import { cn } from '@/lib/utils';
 import { SPRING } from '@/lib/motion';
@@ -23,6 +31,28 @@ export function Stepper({ value, className, children, ...props }: StepperProps) 
   const listRef = useRef<HTMLOListElement>(null);
   const reduceMotion = useReducedMotion();
   const gliderId = useId();
+  // 목록이 넘칠 때 잘리는 쪽 가장자리를 흐리게 해서 더 있다는 것을 알린다.
+  const [edge, setEdge] = useState<'none' | 'start' | 'middle' | 'end'>('none');
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const update = () => {
+      const max = list.scrollWidth - list.clientWidth;
+      if (max <= 1) setEdge('none');
+      else if (list.scrollLeft <= 1) setEdge('start');
+      else if (list.scrollLeft >= max - 1) setEdge('end');
+      else setEdge('middle');
+    };
+    update();
+    list.addEventListener('scroll', update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(list);
+    return () => {
+      list.removeEventListener('scroll', update);
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const list = listRef.current;
@@ -34,13 +64,13 @@ export function Stepper({ value, className, children, ...props }: StepperProps) 
 
   return (
     <StepperContext.Provider value={{ value, gliderId }}>
-      <nav className={cn('font-sans', className)} {...props}>
+      <nav className={cn('font-sans', className)} data-edge={edge} {...props}>
         {/* list-style: none 이면 Safari/VoiceOver 가 목록 역할을 버리므로 role 을 명시한다 */}
         {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
         <ol
           ref={listRef}
           role="list"
-          className="scrollbar-none relative m-0 flex scroll-px-2 list-none gap-1 overflow-x-auto p-1 [counter-reset:step] [&::-webkit-scrollbar]:hidden"
+          className="scrollbar-none relative m-0 flex scroll-px-2 list-none gap-1 overflow-x-auto p-1 [counter-reset:step] in-data-[edge=end]:mask-[linear-gradient(to_right,transparent,#000_2rem)] in-data-[edge=middle]:mask-[linear-gradient(to_right,transparent,#000_2rem,#000_calc(100%-2rem),transparent)] in-data-[edge=start]:mask-[linear-gradient(to_right,#000_calc(100%-2rem),transparent)] [&::-webkit-scrollbar]:hidden"
         >
           {children}
         </ol>
@@ -91,7 +121,7 @@ export function StepperItem({
         }}
         data-completed={completed ? '' : undefined}
         className={cn(
-          'text-muted-foreground hover:bg-secondary-hover hover:text-foreground relative flex min-h-11 items-center gap-2 rounded-full border border-transparent px-3 text-sm font-medium whitespace-nowrap no-underline transition-[background-color,border-color,color] motion-reduce:transition-none',
+          'text-muted-foreground hover:bg-secondary-hover hover:text-foreground relative flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium whitespace-nowrap no-underline transition-[background-color,color] motion-reduce:transition-none',
           'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2',
           'aria-[current=step]:text-foreground aria-[current=step]:font-semibold',
           'data-completed:text-foreground',
@@ -128,11 +158,11 @@ export function StepperItem({
         <Slottable>{children}</Slottable>
         {completed ? <span className="sr-only">({completedLabel})</span> : null}
         {current ? (
-          // 현재 단계의 테두리. 단계가 바뀌면 이전 항목에서 새 항목으로 미끄러진다.
+          // 현재 단계의 밑줄. 단계가 바뀌면 이전 항목에서 새 항목으로 미끄러진다.
           <motion.span
             aria-hidden
             layoutId={`${gliderId}-glider`}
-            className="border-primary pointer-events-none absolute -inset-px rounded-full border"
+            className="bg-primary pointer-events-none absolute inset-x-3 -bottom-px h-0.5 rounded-full"
             transition={reduceMotion ? { duration: 0 } : SPRING.snappy}
           />
         ) : null}

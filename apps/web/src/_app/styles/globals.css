@@ -20,7 +20,10 @@ body {
   padding: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* 레이어 밖에 두면 Tailwind 유틸리티(text-muted-foreground 등)보다 우선해 링크의 색 지정이 먹지 않는다. */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }

@@ -6,6 +6,7 @@ import { Box3, type Object3D, Vector3 } from 'three';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { AdaptiveFov } from './adaptive-fov';
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
 import {
   applyThreePaint,
@@ -182,6 +183,7 @@ export function VehicleCanvas({
       gl={{ alpha: true, antialias: true }}
       shadows
     >
+      <AdaptiveFov />
       <ThreeStudio />
       {inspectRef ? <InspectControls handleRef={inspectRef} wheelZoom={wheelZoom} /> : null}
       {available ? (
