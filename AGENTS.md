@@ -38,29 +38,30 @@ Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (
 
 ## Skill catalog
 
-| Skill             | Path                                          | When                                         |
-| ----------------- | --------------------------------------------- | -------------------------------------------- |
-| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages         |
-| Git commit / PR   | `.agents/skills/git-commit/`                  | 커밋·PR·머지했어 (한글, 묻지 말고 실행)      |
-| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching             |
-| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                                   |
-| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                         |
-| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                          |
-| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                                |
-| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                                  |
-| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit            |
-| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning                    |
-| GSAP (7)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP                 |
-| Create component  | `.agents/skills/create-component/`            | new/changed `@repo/ui` component (full loop) |
-| Feature-Sliced    | `.agents/skills/feature-sliced-design/`       | `apps/web`·`apps/docs` 구조 (UI 패키지 제외) |
-| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치                   |
-| Playwright MCP    | `.claude/agents/ui-verifier.md` (inline)      | UI 변경 후 라이트/다크 자동 확인             |
-| UI verifier       | `.claude/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리      |
-| A11y reviewer     | `.claude/agents/a11y-reviewer.md`             | 읽기 전용 접근성 리뷰 (컴포넌트 변경 후)     |
-| Verify            | `.agents/skills/verify/`                      | UI 끝나면, 커밋 직전에 verify                |
-| Official docs     | `.agents/skills/official-docs/`               | 외부 API 코드를 쓰기 전 공식 문서 확인 절차  |
-| Docs researcher   | `.claude/agents/docs-researcher.md`           | 공식 문서 한 질문을 요약·출처와 함께 답한다  |
-| Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤      |
+| Skill             | Path                                          | When                                                  |
+| ----------------- | --------------------------------------------- | ----------------------------------------------------- |
+| Turborepo         | `.agents/skills/turborepo/`                   | turbo.json, tasks, caching, packages                  |
+| Git commit / PR   | `.agents/skills/git-commit/`                  | 커밋·PR·머지했어 (한글, 묻지 말고 실행)               |
+| React / Next perf | `.agents/skills/vercel-react-best-practices/` | components, pages, data fetching                      |
+| Accessibility     | `.agents/skills/accessibility/`               | a11y, WCAG                                            |
+| Fix a11y          | `.agents/skills/fixing-accessibility/`        | component a11y fixes                                  |
+| Web performance   | `.agents/skills/performance/`                 | Lighthouse, loading                                   |
+| Core Web Vitals   | `.agents/skills/core-web-vitals/`             | LCP, INP, CLS                                         |
+| UI review         | `.agents/skills/web-design-guidelines/`       | UI/UX audit                                           |
+| Motion for React  | `.agents/skills/motion-react/`                | UI motion, gestures, layout, exit                     |
+| Motion perf       | `.agents/skills/fixing-motion-performance/`   | motion performance tuning                             |
+| GSAP (7)          | `.agents/skills/gsap-*/`                      | scroll, timeline, React GSAP                          |
+| Create component  | `.agents/skills/create-component/`            | new/changed `@repo/ui` component (full loop)          |
+| Feature-Sliced    | `.agents/skills/feature-sliced-design/`       | `apps/web`·`apps/docs` 구조 (UI 패키지 제외)          |
+| lucide-animated   | https://lucide-animated.com/mcp               | Button 등 아이콘 검색·설치                            |
+| Playwright MCP    | `.claude/agents/ui-verifier.md` (inline)      | UI 변경 후 라이트/다크 자동 확인                      |
+| UI verifier       | `.claude/agents/ui-verifier.md`               | Playwright 노이즈를 서브에이전트에 격리               |
+| A11y reviewer     | `.claude/agents/a11y-reviewer.md`             | 읽기 전용 접근성 리뷰 (컴포넌트 변경 후)              |
+| Design reviewer   | `.claude/agents/design-reviewer.md`           | 읽기 전용 일관성 리뷰 (기본값, 형제 크기, 토큰, 간격) |
+| Verify            | `.agents/skills/verify/`                      | UI 끝나면, 커밋 직전에 verify                         |
+| Official docs     | `.agents/skills/official-docs/`               | 외부 API 코드를 쓰기 전 공식 문서 확인 절차           |
+| Docs researcher   | `.claude/agents/docs-researcher.md`           | 공식 문서 한 질문을 요약·출처와 함께 답한다           |
+| Sync project docs | `.agents/skills/sync-project-docs/`           | 구조·API·토큰 바뀌면 README/DESIGN 맞춤               |
 
 Install updates: `npx skills add <owner/repo> --skill <name>`
 

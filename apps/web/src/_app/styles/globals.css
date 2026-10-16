@@ -20,6 +20,33 @@ body {
   padding: 0;
 }
 
+/*
+ * 스크롤바: 기본의 두껍고 회색인 것 대신 얇게 하고 테마 색을 쓴다. 표준 속성이 없는 브라우저(예전 Safari)는 -webkit- 규칙으로 맞춘다.
+ * 스크롤하지 않을 때는 거의 보이지 않고, 라이트와 다크 모두 같은 토큰에서 색을 얻는다.
+ */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 75%, transparent) transparent;
+  }
+
+  @supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--muted-foreground) 75%, transparent);
+      border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  }
+}
+
 /* 레이어 밖에 두면 Tailwind 유틸리티(text-muted-foreground 등)보다 우선해 링크의 색 지정이 먹지 않는다. */
 @layer base {
   a {

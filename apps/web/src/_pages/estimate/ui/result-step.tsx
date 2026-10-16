@@ -177,8 +177,9 @@ export function ResultStep({
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center gap-2 print:hidden">
+      <div className="grid grid-cols-2 gap-2 print:hidden">
         <CopyButton
+          className="w-full"
           label="견적 링크 복사"
           value={shareUrl}
           variant="primary"
@@ -197,15 +198,17 @@ export function ResultStep({
           }}
         />
         <Button
+          className="w-full"
           variant="secondary"
           onClick={() => {
             window.print();
           }}
         >
-          인쇄 또는 PDF 저장
+          인쇄 · PDF 저장
         </Button>
         <Button
           ref={resetButtonRef}
+          className="col-span-2 w-full"
           variant="clear"
           onClick={() => {
             setResetOpen(true);

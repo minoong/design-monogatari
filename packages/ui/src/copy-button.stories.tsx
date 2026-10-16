@@ -38,6 +38,25 @@ export const 주요: Story = {
   args: { variant: 'primary', label: '견적 링크 복사' },
 };
 
+export const 아이콘만: Story = {
+  name: '아이콘만',
+  args: {
+    iconOnly: true,
+    variant: 'secondary',
+    label: '견적 코드 복사',
+    value: 'GCW95KC',
+    size: 'small',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`iconOnly`는 글자 없이 정사각형 아이콘 버튼으로 보입니다. 문구는 화면에서만 숨기고 접근성 이름으로는 그대로 쓰므로 복사하면 "복사했습니다"로 바뀌어 읽힙니다.',
+      },
+    },
+  },
+};
+
 export const 작은크기: Story = {
   name: '작은 크기',
   args: { size: 'small', variant: 'clear', label: '코드 복사', value: 'GCW95KC' },

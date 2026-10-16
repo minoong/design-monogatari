@@ -127,7 +127,7 @@ export type PriceRowProps = Omit<ComponentProps<'div'>, 'children'> & {
   amount: ReactNode;
   /** 숫자 금액 앞에 부호를 붙입니다 (옵션 가격 변동 등). */
   signed?: boolean;
-  /** 라벨 옆에 놓는 동작 (예: "변경" 링크). 어떤 항목인지 `aria-label`로 알리십시오. */
+  /** 라벨과 금액 사이의 오른쪽 끝에 놓는 동작 (예: "변경" 링크). 어떤 항목인지 `aria-label`로 알리십시오. */
   action?: ReactNode;
   /** 합계 줄. 굵게 보이고 위에 선이 그어집니다. */
   total?: boolean;
@@ -151,9 +151,14 @@ export function PriceRow({
       )}
       {...props}
     >
-      <dt className={cn('flex min-w-0 items-baseline gap-2', !total && 'text-muted-foreground')}>
+      <dt
+        className={cn(
+          'flex min-w-0 flex-1 items-baseline justify-between gap-2',
+          !total && 'text-muted-foreground',
+        )}
+      >
         <span className="wrap-break-word">{label}</span>
-        {action}
+        {action ? <span className="shrink-0">{action}</span> : null}
       </dt>
       <dd className="m-0 shrink-0 text-right tabular-nums">
         {typeof amount === 'number' ? formatWon(amount, signed) : amount}

@@ -28,7 +28,7 @@ allowed-tools: Bash(pnpm component:new *) Bash(pnpm components:check *) Bash(pnp
 6. **DESIGN.md**: 계약(variant, 접근성, 토큰)을 적는다.
 7. **레지스트리**: `registry.json` 항목의 title·description·의존성을 채우고 `pnpm registry:sync`. 복사본은 생성물이라 손으로 고치지 않는다.
 8. **누락 검사**: `pnpm components:check`가 통과해야 한다(`TODO(scaffold)`가 하나라도 남으면 실패). `pnpm verify`에도 포함돼 있다.
-9. **접근성 리뷰**: `a11y-reviewer` 서브에이전트에 바뀐 파일 경로를 알려 읽기 전용 리뷰를 받고 지적을 고친다.
+9. **일관성·접근성 리뷰**: `design-reviewer`(래퍼의 기본값이 감싼 컴포넌트와 같은지, 나란히 놓이는 컨트롤의 크기·모양, 토큰, 간격, 문서와 코드의 일치)와 `a11y-reviewer` 서브에이전트에 바뀐 파일 경로를 알려 읽기 전용 리뷰를 받고 지적을 고친다.
 10. **검증**: `ui-verifier`(Storybook과 문서 페이지, 라이트/다크) → `verify` 스킬(`pnpm verify`). 소비자 설치는 CI의 `registry.yml`이 확인한다.
 
 ## 기존 컴포넌트 변경

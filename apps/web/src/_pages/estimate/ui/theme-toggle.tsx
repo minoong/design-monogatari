@@ -1,13 +1,12 @@
 'use client';
 
+import { Button } from '@repo/ui/button';
 import { useTheme } from 'next-themes';
 import { useSyncExternalStore } from 'react';
 
-const toggleClasses =
-  'border-border text-foreground hover:bg-secondary-hover focus-visible:ring-ring inline-flex h-8 shrink-0 whitespace-nowrap cursor-pointer appearance-none items-center justify-center rounded-pill border bg-transparent px-3 font-sans text-sm leading-4 font-medium focus-visible:ring-2 ';
-
 const emptySubscribe = () => () => {};
 
+/** 라이트와 다크를 바꾸는 버튼. 옆의 다른 버튼과 같은 `Button`(작은 크기, 보조)이라 높이와 모서리가 같다. */
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useSyncExternalStore(
@@ -17,24 +16,33 @@ export function ThemeToggle() {
   );
 
   if (!mounted) {
+    // 테마를 알기 전에도 자리를 같은 폭으로 잡아 둔다.
     return (
-      <span className={`${toggleClasses} invisible`} aria-hidden>
-        테마
-      </span>
+      <Button
+        aria-hidden
+        className="invisible"
+        disabled
+        size="small"
+        tabIndex={-1}
+        variant="secondary"
+      >
+        라이트
+      </Button>
     );
   }
 
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <button
-      type="button"
-      className={toggleClasses}
-      aria-pressed={isDark}
+    <Button
       aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      size="small"
+      variant="secondary"
+      onClick={() => {
+        setTheme(isDark ? 'light' : 'dark');
+      }}
     >
       {isDark ? '라이트' : '다크'}
-    </button>
+    </Button>
   );
 }
