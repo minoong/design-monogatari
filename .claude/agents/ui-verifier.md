@@ -70,6 +70,54 @@ You verify visual UI for design-monogatari. Do not ask the user. Do not commit. 
    })();
    ```
 
+   Add an **inside-the-control check** for every button and link that contains an icon (svg): for icon-only controls (width ≈ height) the svg centre must equal the control's centre (|dx|, |dy| ≤ 0.5px; an icon-only control must have symmetric padding); for icon + text controls report the gap between the svg's right edge and the text's left edge (expected ≈ the control's `gap`, never a wide empty space) and `leftSpace` / `rightSpace` of the icon+text group (they must differ by ≤ 1px unless the design says otherwise; `dx` is only meaningful for icon-only controls). Hidden text (`visibility: hidden`, `display: none`, `.sr-only`) is skipped. Run it with:
+
+   ```js
+   (() => {
+     const hidden = (n) => {
+       for (let e = n.nodeType === 3 ? n.parentElement : n; e; e = e.parentElement) {
+         const c = getComputedStyle(e);
+         if (c.visibility === 'hidden' || c.display === 'none' || e.classList.contains('sr-only'))
+           return true;
+       }
+       return false;
+     };
+     return [...document.querySelectorAll('button, a')]
+       .filter((e) => e.querySelector('svg') && e.getClientRects().length)
+       .map((e) => {
+         const b = e.getBoundingClientRect();
+         const c = getComputedStyle(e);
+         const svg = [...e.querySelectorAll('svg')].find((n) => !hidden(n));
+         if (!svg) return null;
+         const s = svg.getBoundingClientRect();
+         const walker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+         let t = null;
+         for (let n = walker.nextNode(); n && !t; n = walker.nextNode()) {
+           if (n.textContent.trim() && !hidden(n)) {
+             const r = document.createRange();
+             r.selectNodeContents(n);
+             t = r.getBoundingClientRect();
+           }
+         }
+         const left = Math.min(s.left, t ? t.left : s.left);
+         const right = Math.max(s.right, t ? t.right : s.right);
+         return {
+           name: (e.innerText || e.getAttribute('aria-label') || '').trim().slice(0, 20),
+           w: Math.round(b.width),
+           h: Math.round(b.height),
+           dx: +(s.left + s.width / 2 - (b.left + b.width / 2)).toFixed(1),
+           dy: +(s.top + s.height / 2 - (b.top + b.height / 2)).toFixed(1),
+           padding: c.padding,
+           iconTextGap: t ? +(t.left - s.right).toFixed(1) : null,
+           gap: c.columnGap,
+           leftSpace: +(left - b.left).toFixed(1),
+           rightSpace: +(b.right - right).toFixed(1),
+         };
+       })
+       .filter(Boolean);
+   })();
+   ```
+
    Also compare controls that are neighbours but not siblings (a `Button` next to a wrapper component's button), scrollbars (enumerate elements with scrollHeight > clientHeight and overflow auto/scroll, plus the document), and `position: absolute` elements (sr-only included) that escape an `overflow` scroller.
 
 6. Console must have 0 errors and 0 warnings.

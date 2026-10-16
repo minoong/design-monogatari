@@ -24,11 +24,14 @@ export type CopyButtonProps = Omit<
   onCopyError?: (error: unknown) => void;
 };
 
+/**
+ * 아이콘에는 `data-icon`(Button이 글자 옆 아이콘으로 보고 한쪽 여백을 줄이는 표식)을 달지 않는다. 아이콘과 문구를 한 묶음으로
+ * 가운데에 두므로 좌우 여백이 같아야 하고, 아이콘만 있는 버튼에서는 정중앙에 와야 한다.
+ */
 function CopyIcon() {
   return (
     <svg
       aria-hidden
-      data-icon="inline-start"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -46,7 +49,6 @@ function CheckIcon() {
   return (
     <svg
       aria-hidden
-      data-icon="inline-start"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -131,15 +133,29 @@ export function CopyButton({
         }}
         {...props}
       >
-        {state === 'copied' ? <CheckIcon /> : <CopyIcon />}
-        {/* 모든 문구를 겹쳐 두고 현재 것만 보여서, 문구가 바뀌어도 너비가 변하지 않는다. */}
-        <span className={cn('inline-grid justify-items-center', iconOnly && 'sr-only')}>
-          {(Object.keys(labels) as CopyState[]).map((key) => (
-            <span key={key} className={cn('col-start-1 row-start-1', key !== state && 'invisible')}>
-              {labels[key]}
-            </span>
-          ))}
-        </span>
+        {iconOnly ? (
+          <>
+            {state === 'copied' ? <CheckIcon /> : <CopyIcon />}
+            <span className="sr-only">{labels[state]}</span>
+          </>
+        ) : (
+          // 모든 상태의 (아이콘 + 문구)를 한 칸에 겹쳐 두고 현재 것만 보여서, 문구가 바뀌어도 너비가 변하지 않는다.
+          // 아이콘은 문구와 함께 가운데에 모여 있어서 짧은 문구에서도 아이콘과 글자 사이가 벌어지지 않는다.
+          <span className="inline-grid">
+            {(Object.keys(labels) as CopyState[]).map((key) => (
+              <span
+                key={key}
+                className={cn(
+                  'col-start-1 row-start-1 inline-flex items-center justify-center gap-1.5',
+                  key !== state && 'invisible',
+                )}
+              >
+                {key === 'copied' ? <CheckIcon /> : <CopyIcon />}
+                {labels[key]}
+              </span>
+            ))}
+          </span>
+        )}
       </Button>
       <span role="status" className="sr-only">
         {state === 'copied' ? <span key={announceId}>{labels.copied}</span> : null}
