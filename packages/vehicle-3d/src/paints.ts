@@ -6,6 +6,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#141416',
     metalness: 0.84,
     roughness: 0.22,
+    clearcoat: 1,
   },
   {
     id: 'black',
@@ -14,6 +15,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#2A2A2C',
     metalness: 0.72,
     roughness: 0.28,
+    clearcoat: 1,
   },
   {
     id: 'charcoal',
@@ -22,6 +24,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#1A1B1D',
     metalness: 0.86,
     roughness: 0.24,
+    clearcoat: 1,
   },
   {
     id: 'taupe',
@@ -30,6 +33,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#2A2622',
     metalness: 0.78,
     roughness: 0.26,
+    clearcoat: 1,
   },
   {
     id: 'silver',
@@ -38,6 +42,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#2C3036',
     metalness: 0.9,
     roughness: 0.2,
+    clearcoat: 1,
   },
   {
     id: 'green',
@@ -46,6 +51,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#121614',
     metalness: 0.8,
     roughness: 0.26,
+    clearcoat: 1,
   },
   {
     id: 'white',
@@ -54,6 +60,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#1A1A1C',
     metalness: 0.38,
     roughness: 0.16,
+    clearcoat: 1,
   },
   {
     id: 'navy',
@@ -62,6 +69,7 @@ export const PAINT_SWATCHES = [
     bumperHex: '#10141C',
     metalness: 0.7,
     roughness: 0.24,
+    clearcoat: 1,
   },
   {
     id: 'anthracite',
@@ -70,6 +78,27 @@ export const PAINT_SWATCHES = [
     bumperHex: '#1A1B1D',
     metalness: 0.74,
     roughness: 0.3,
+    clearcoat: 1,
+  },
+  {
+    // 따뜻한 흰색 진주빛. 화이트보다 살짝 어둡고 금속감이 있어 둘이 나란히 놓여도 구분된다.
+    id: 'pearl',
+    label: '펄 화이트',
+    hex: '#E6DFCF',
+    bumperHex: '#1A1A1C',
+    metalness: 0.55,
+    roughness: 0.22,
+    clearcoat: 1,
+  },
+  {
+    // 광택층 없이 거친 무광 마감. 앤트러사이트(광택)와 구분된다.
+    id: 'matte-gray',
+    label: '무광 그레이',
+    hex: '#5B5F64',
+    bumperHex: '#1A1B1D',
+    metalness: 0.18,
+    roughness: 0.8,
+    clearcoat: 0,
   },
 ] as const;
 

@@ -9,9 +9,9 @@ export const COLOR_PAINT: Record<ColorId, PaintId> = {
   gray: 'charcoal',
   blue: 'navy',
   green: 'green',
-  pearl: 'silver',
+  pearl: 'pearl',
   bronze: 'taupe',
-  'matte-gray': 'anthracite',
+  'matte-gray': 'matte-gray',
 };
 
 export function paintOf(color: ColorId) {

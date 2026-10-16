@@ -8,7 +8,8 @@ import dynamic from 'next/dynamic';
 import { Component, type ReactNode, useRef, useState } from 'react';
 
 import { paintOf } from '../model/paint-map';
-import type { ColorId } from '../model/types';
+import type { ColorId, WheelId } from '../model/types';
+import { WHEEL_INCH } from '../model/wheel-map';
 
 const VEHICLE = vehicleById('x5-web');
 
@@ -65,7 +66,15 @@ class ViewerBoundary extends Component<
  * 선택한 외장 색을 입힌 3D 차량. 모델에는 외장 색만 반영되고 휠·시트·내장은 반영되지 않는다.
  * 휠 확대는 캔버스가 페이지 스크롤을 가로채지 않도록 버튼으로 한다.
  */
-export function VehicleStage({ color, colorLabel }: { color: ColorId; colorLabel: string }) {
+export function VehicleStage({
+  color,
+  colorLabel,
+  wheel,
+}: {
+  color: ColorId;
+  colorLabel: string;
+  wheel: WheelId;
+}) {
   const inspectRef = useRef<InspectHandle | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -75,8 +84,8 @@ export function VehicleStage({ color, colorLabel }: { color: ColorId; colorLabel
   const fallback = <StageFallback hex={paint.hex} label={colorLabel} />;
 
   return (
-    <figure className="m-0 flex flex-col gap-2">
-      <div className="border-border bg-card relative aspect-16/10 w-full overflow-hidden rounded-lg border">
+    <figure className="m-0 flex flex-col gap-2 lg:min-h-0 lg:flex-1">
+      <div className="border-border bg-card relative h-[38dvh] min-h-56 w-full overflow-hidden rounded-lg border lg:h-auto lg:min-h-0 lg:flex-1">
         {showFallback ? (
           fallback
         ) : (
@@ -95,6 +104,7 @@ export function VehicleStage({ color, colorLabel }: { color: ColorId; colorLabel
                 setUnavailable(true);
               }}
               paint={paint}
+              wheelInch={WHEEL_INCH[wheel]}
             />
             {/* 모델 부품을 불러오는 동안 빈 캔버스 대신 보인다. */}
             {!ready ? <StageLoading /> : null}
@@ -134,8 +144,9 @@ export function VehicleStage({ color, colorLabel }: { color: ColorId; colorLabel
       ) : null}
       <figcaption className="text-muted-foreground text-caption flex flex-col gap-1">
         <span>
-          드래그해서 돌려 볼 수 있습니다. 3D 모델에는 외장 색상만 반영되고 휠, 시트, 내장은 반영되지
-          않습니다.
+          비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서
+          돌려 볼 수 있고, 3D 모델에는 외장 색상과 휠 크기만 반영되고 시트와 내장은 반영되지
+          않습니다. 휠 모양은 한 가지입니다.
         </span>
         <details>
           <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
