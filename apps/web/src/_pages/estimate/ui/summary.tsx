@@ -12,11 +12,14 @@ export function SummaryList({
   quote,
   dispatch,
   onNavigate,
+  readOnly = false,
 }: {
   quote: Quote;
   dispatch: Dispatch<WizardAction>;
   /** 단계로 이동한 뒤 호출한다 (시트를 닫는 데 쓴다). */
   onNavigate?: () => void;
+  /** 인쇄용: "변경" 버튼을 그리지 않는다. */
+  readOnly?: boolean;
 }) {
   return (
     <PriceBreakdown title="선택 내역">
@@ -29,7 +32,7 @@ export function SummaryList({
             amount={line.amount === 0 ? '기본 포함' : line.amount}
             signed={!isBase}
             action={
-              isBase ? undefined : (
+              isBase || readOnly ? undefined : (
                 <button
                   type="button"
                   aria-label={`${line.label} 변경`}

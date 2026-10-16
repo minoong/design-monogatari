@@ -83,6 +83,13 @@ describe('wizardReducer', () => {
     expect(state.notices).toEqual(decoded.effects);
   });
 
+  it('처음부터 다시 하면 기본 선택과 첫 단계로 돌아간다', () => {
+    let state = wizardReducer(start(), set('color', 'blue'));
+    state = wizardReducer(state, { type: 'quote-options', options: { region: 'jeju' } });
+    state = wizardReducer(state, { type: 'go', step: 'result' });
+    expect(wizardReducer(state, { type: 'reset' })).toEqual(start());
+  });
+
   it('단계 이동과 견적 옵션 변경', () => {
     let state = wizardReducer(start(), { type: 'go', step: 'wheel' });
     state = wizardReducer(state, { type: 'quote-options', options: { region: 'jeju' } });

@@ -27,7 +27,7 @@ export function EstimateHeader({
   summary: ReactNode;
 }) {
   return (
-    <header className="border-border bg-background sticky top-0 z-30 flex flex-wrap items-center gap-x-4 border-b px-4 lg:h-16 lg:flex-nowrap lg:px-6">
+    <header className="border-border bg-background sticky top-0 z-30 flex flex-wrap items-center gap-x-4 border-b px-4 lg:h-16 lg:flex-nowrap lg:px-6 print:hidden">
       <div className="flex h-14 min-w-0 flex-1 items-center gap-3 lg:h-auto lg:flex-none">
         <h1 className="text-body shrink-0 font-semibold tracking-tight">X5 견적</h1>
         <Badge

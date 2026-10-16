@@ -24,6 +24,11 @@ export interface Quote {
   total: Won;
 }
 
+/** 부가세가 포함된 소비자가에서 부가세를 뺀 공급가액. 원 미만 버림. */
+export function supplyValueOf(listPrice: Won, catalog: Catalog = CATALOG): Won {
+  return Math.floor((listPrice * 100) / (100 + catalog.tax.vatPercent));
+}
+
 /** 모든 세금 계산의 반올림은 여기 한 곳이다: 원 미만 버림. */
 function percentOf(amount: Won, percent: number): Won {
   return Math.floor((amount * percent) / 100);
@@ -64,7 +69,7 @@ export function calculateQuote(
   }
 
   const listPrice = lines.reduce((sum, line) => sum + line.amount, 0);
-  const supplyValue = Math.floor((listPrice * 100) / (100 + catalog.tax.vatPercent));
+  const supplyValue = supplyValueOf(listPrice, catalog);
   const vatExemption = options.taxType === 'exempt' ? listPrice - supplyValue : 0;
   const vehiclePrice = listPrice - vatExemption;
   const acquisitionTax = percentOf(supplyValue, catalog.tax.acquisitionPercent);

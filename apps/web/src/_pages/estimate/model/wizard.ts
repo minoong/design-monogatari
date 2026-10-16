@@ -35,6 +35,7 @@ export type WizardAction =
   | { type: 'dismiss-notices' }
   | { type: 'dismiss-suggestion' }
   | { type: 'accept-suggestion' }
+  | { type: 'reset' }
   | { type: 'go'; step: StepId }
   | { type: 'quote-options'; options: Partial<QuoteOptions> };
 
@@ -113,6 +114,8 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         { type: 'intent', intent: state.suggestion.intent },
       );
     }
+    case 'reset':
+      return createWizardState(null);
     case 'go':
       return { ...state, step: action.step };
     case 'quote-options':
