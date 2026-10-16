@@ -15,8 +15,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Kite Coupe 견적',
-  description: '스크롤하면 차체가 각도를 바꾸는 Kite Coupe 견적 데모.',
+  title: 'X5 견적 (비공식 포트폴리오)',
+  description:
+    '단계별로 고르면 규칙과 가격이 바로 반영되는 가상의 X5 견적입니다. BMW와 무관합니다.',
 };
 
 export default function RootLayout({

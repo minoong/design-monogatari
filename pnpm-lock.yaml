@@ -93,15 +93,12 @@ importers:
 
   apps/web:
     dependencies:
-      '@gsap/react':
-        specifier: ^2.1.2
-        version: 2.1.2(gsap@3.15.0)(react@19.3.0)
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      gsap:
-        specifier: ^3.15.0
-        version: 3.15.0
+      '@repo/vehicle-3d':
+        specifier: workspace:*
+        version: link:../../packages/vehicle-3d
       next:
         specifier: 16.4.0
         version: 16.4.0(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.5)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)

@@ -15,7 +15,14 @@ export type InspectHandle = {
 
 const TARGET = new Vector3(0, 0.55, 0);
 
-export function InspectControls({ handleRef }: { handleRef: RefObject<InspectHandle | null> }) {
+export function InspectControls({
+  handleRef,
+  wheelZoom = true,
+}: {
+  handleRef: RefObject<InspectHandle | null>;
+  /** false 이면 휠·핀치 확대를 끈다. 스크롤되는 페이지 안에서 휠이 페이지 스크롤을 가로채지 않게 한다(확대는 `handleRef`로). */
+  wheelZoom?: boolean;
+}) {
   const camera = useThree((state) => state.camera);
   const gl = useThree((state) => state.gl);
   const invalidate = useThree((state) => state.invalidate);
@@ -26,6 +33,11 @@ export function InspectControls({ handleRef }: { handleRef: RefObject<InspectHan
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.enablePan = false;
+    controls.enableZoom = wheelZoom;
+    // 확대를 끈 쪽은 스크롤되는 페이지 안이다. 세로로 쓸어 넘기는 터치는 페이지 스크롤에 내주고, 가로 드래그만 회전에 쓴다.
+    const canvasElement = gl.domElement;
+    const previousTouchAction = canvasElement.style.getPropertyValue('touch-action');
+    if (!wheelZoom) canvasElement.style.setProperty('touch-action', 'pan-y');
     controls.minDistance = 2.4;
     controls.maxDistance = 14;
     controls.minPolarAngle = 0.18;
@@ -70,9 +82,10 @@ export function InspectControls({ handleRef }: { handleRef: RefObject<InspectHan
       handleRef.current = null;
       controls.removeEventListener('change', onChange);
       controls.dispose();
+      canvasElement.style.setProperty('touch-action', previousTouchAction);
       controlsRef.current = null;
     };
-  }, [camera, gl, handleRef, invalidate]);
+  }, [camera, gl, handleRef, invalidate, wheelZoom]);
 
   useFrame(() => {
     controlsRef.current?.update();
