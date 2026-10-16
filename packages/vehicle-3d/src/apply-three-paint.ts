@@ -16,6 +16,8 @@ export type ThreePaint = {
   bumper: string;
   metalness: number;
   roughness: number;
+  /** 0이면 광택층 없는 무광 */
+  clearcoat: number;
 };
 
 export function threePaintFromSwatch(paint: PaintSwatch): ThreePaint {
@@ -24,6 +26,7 @@ export function threePaintFromSwatch(paint: PaintSwatch): ThreePaint {
     bumper: paint.bumperHex,
     metalness: paint.metalness,
     roughness: paint.roughness,
+    clearcoat: paint.clearcoat,
   };
 }
 
@@ -81,7 +84,7 @@ function toBodyMaterial(source: Material, paint: ThreePaint) {
     color: paint.body,
     metalness: paint.metalness,
     roughness: paint.roughness,
-    clearcoat: 1,
+    clearcoat: paint.clearcoat,
     clearcoatRoughness: 0.08,
     vertexColors: false,
     side: source instanceof MeshStandardMaterial ? source.side : undefined,

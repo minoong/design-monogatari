@@ -138,6 +138,7 @@ export function EstimateApp({
             <VehicleStage
               color={state.selection.color}
               colorLabel={CATALOG.color.find((item) => item.id === state.selection.color)!.label}
+              wheel={state.selection.wheel}
             />
             <aside
               aria-label="선택 요약"

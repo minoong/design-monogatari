@@ -13,11 +13,13 @@ const VEHICLE = vehicleById('x5-web');
  */
 export default function VehicleViewer({
   paint,
+  wheelInch,
   inspectRef,
   onUnavailable,
   onReady,
 }: {
   paint: PaintSwatch;
+  wheelInch: number;
   inspectRef: RefObject<InspectHandle | null>;
   onUnavailable: () => void;
   onReady: () => void;
@@ -38,6 +40,7 @@ export default function VehicleViewer({
       onReady={onReady}
       paint={paint}
       vehicleId="x5-web"
+      wheelInch={wheelInch}
       wheelZoom={false}
     />
   );

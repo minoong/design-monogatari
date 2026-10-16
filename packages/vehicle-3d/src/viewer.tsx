@@ -19,6 +19,7 @@ import { InspectControls, type InspectHandle } from './inspect-controls';
 import type { PaintSwatch } from './paints';
 import { ThreeStudio } from './three-studio';
 import { vehicleById, type VehicleId } from './vehicles';
+import { applyWheelSize, NATIVE_WHEEL_INCH } from './wheel-size';
 
 export { type InspectHandle } from './inspect-controls';
 export { useModelAvailable } from './use-model-available';
@@ -61,12 +62,15 @@ function hideUtilityMeshes(root: Object3D) {
 function GltfModel({
   files,
   paint,
+  wheelInch,
   front,
   onReady,
 }: {
   files: readonly string[];
   /** 없으면 모델 원래 색 */
   paint?: PaintSwatch;
+  /** 휠 크기(인치). 없으면 모델 원래 크기(21인치). 바꿔도 모델을 다시 불러오지 않는다. */
+  wheelInch?: number;
   front?: VehicleFront;
   /** 모든 부품을 불러와 조립을 마쳤을 때 한 번 호출한다. */
   onReady?: () => void;
@@ -121,6 +125,14 @@ function GltfModel({
     invalidate();
   }, [invalidate, model, paint]);
 
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
+    applyWheelSize(model, wheelInch ?? NATIVE_WHEEL_INCH);
+    invalidate();
+  }, [invalidate, model, wheelInch]);
+
   if (!model) {
     return null;
   }
@@ -136,6 +148,8 @@ export type VehicleCanvasProps = {
   inspectRef?: RefObject<InspectHandle | null>;
   /** false 이면 휠·핀치 확대를 끈다. 페이지가 스크롤될 때 휠이 캔버스에 걸리지 않는다. 확대는 `inspectRef`의 `zoomIn`·`zoomOut`으로 합니다. */
   wheelZoom?: boolean;
+  /** 휠 크기(인치). 림 크기와 타이어 옆면 두께가 바뀐다. 없으면 모델 원래 크기(21인치). */
+  wheelInch?: number;
   /** 모델 조립이 끝났을 때 한 번 호출된다. 호스트가 로딩 표시를 걷는 데 쓴다. */
   onReady?: () => void;
   /** `useModelAvailable` 의 결과. true 일 때만 모델을 불러온다 */
@@ -153,6 +167,7 @@ export function VehicleCanvas({
   paint,
   inspectRef,
   wheelZoom,
+  wheelInch,
   onReady,
   available,
   className,
@@ -176,6 +191,7 @@ export function VehicleCanvas({
           front={vehicle.front}
           onReady={onReady}
           paint={paint}
+          wheelInch={wheelInch}
         />
       ) : null}
     </Canvas>
