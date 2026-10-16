@@ -22,7 +22,6 @@ Node **24+** (see `.nvmrc`). With nvm: `nvm use`.
 pnpm install
 pnpm dev              # all apps
 pnpm --filter web dev # single app
-pnpm --filter web copy:exterior      # 견적 외장 프레임 (gitignored)
 pnpm --filter @repo/ui storybook     # port 6006
 pnpm --filter @repo/ui copy:car      # Storybook 3D meshes (gitignored)
 ```

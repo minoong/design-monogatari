@@ -62,11 +62,14 @@ function GltfModel({
   files,
   paint,
   front,
+  onReady,
 }: {
   files: readonly string[];
   /** 없으면 모델 원래 색 */
   paint?: PaintSwatch;
   front?: VehicleFront;
+  /** 모든 부품을 불러와 조립을 마쳤을 때 한 번 호출한다. */
+  onReady?: () => void;
 }) {
   const [model, setModel] = useState<Object3D | null>(null);
   const invalidate = useThree((state) => state.invalidate);
@@ -91,6 +94,7 @@ function GltfModel({
         enableThreeShadows(root);
         setModel(root);
         invalidate();
+        onReady?.();
       })
       .catch(() => {
         if (!cancelled) {
@@ -130,6 +134,10 @@ export type VehicleCanvasProps = {
   paint?: PaintSwatch;
   /** 줌 인·아웃과 리셋을 호스트가 제어할 때 넘깁니다. 드래그 회전과 휠 줌은 항상 켜져 있습니다. */
   inspectRef?: RefObject<InspectHandle | null>;
+  /** false 이면 휠·핀치 확대를 끈다. 페이지가 스크롤될 때 휠이 캔버스에 걸리지 않는다. 확대는 `inspectRef`의 `zoomIn`·`zoomOut`으로 합니다. */
+  wheelZoom?: boolean;
+  /** 모델 조립이 끝났을 때 한 번 호출된다. 호스트가 로딩 표시를 걷는 데 쓴다. */
+  onReady?: () => void;
   /** `useModelAvailable` 의 결과. true 일 때만 모델을 불러온다 */
   available: boolean | null;
   /** 캔버스에 붙는 클래스 (레이아웃은 호스트가 정한다) */
@@ -144,6 +152,8 @@ export function VehicleCanvas({
   vehicleId = 'x5',
   paint,
   inspectRef,
+  wheelZoom,
+  onReady,
   available,
   className,
 }: VehicleCanvasProps) {
@@ -158,9 +168,15 @@ export function VehicleCanvas({
       shadows
     >
       <ThreeStudio />
-      {inspectRef ? <InspectControls handleRef={inspectRef} /> : null}
+      {inspectRef ? <InspectControls handleRef={inspectRef} wheelZoom={wheelZoom} /> : null}
       {available ? (
-        <GltfModel key={vehicle.id} files={vehicle.files} front={vehicle.front} paint={paint} />
+        <GltfModel
+          key={vehicle.id}
+          files={vehicle.files}
+          front={vehicle.front}
+          onReady={onReady}
+          paint={paint}
+        />
       ) : null}
     </Canvas>
   );

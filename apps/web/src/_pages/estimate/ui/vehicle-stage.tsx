@@ -1,0 +1,182 @@
+'use client';
+
+import { Button } from '@repo/ui/button';
+import { Skeleton, SkeletonGroup } from '@repo/ui/skeleton';
+import { vehicleById } from '@repo/vehicle-3d/vehicles';
+import type { InspectHandle } from '@repo/vehicle-3d/viewer';
+import dynamic from 'next/dynamic';
+import { Component, type ReactNode, useRef, useState } from 'react';
+
+import { paintOf } from '../model/paint-map';
+import type { ColorId } from '../model/types';
+
+const VEHICLE = vehicleById('x5-web');
+
+const VehicleViewer = dynamic(() => import('./vehicle-viewer'), {
+  ssr: false,
+  loading: () => <StageLoading />,
+});
+
+function StageLoading() {
+  return (
+    <SkeletonGroup label="차량 모델을 불러오는 중입니다" className="absolute inset-0">
+      <Skeleton className="absolute inset-4 rounded-lg" />
+    </SkeletonGroup>
+  );
+}
+
+/** WebGL을 쓸 수 없거나 모델을 그리다 실패하면 이 안내와 색 견본이 대신 보인다. */
+function StageFallback({ hex, label }: { hex: string; label: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
+      <span
+        aria-hidden
+        className="border-border size-16 rounded-full border"
+        style={{ backgroundColor: hex }}
+      />
+      <p className="text-foreground text-sm font-medium">선택한 색: {label}</p>
+      <p className="text-muted-foreground text-caption">
+        이 환경에서는 3D 차량을 보여 드릴 수 없습니다. 선택과 견적은 그대로 사용할 수 있습니다.
+      </p>
+    </div>
+  );
+}
+
+class ViewerBoundary extends Component<
+  { fallback: ReactNode; children: ReactNode; onError: () => void },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch() {
+    this.props.onError();
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
+/**
+ * 선택한 외장 색을 입힌 3D 차량. 모델에는 외장 색만 반영되고 휠·시트·내장은 반영되지 않는다.
+ * 휠 확대는 캔버스가 페이지 스크롤을 가로채지 않도록 버튼으로 한다.
+ */
+export function VehicleStage({ color, colorLabel }: { color: ColorId; colorLabel: string }) {
+  const inspectRef = useRef<InspectHandle | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
+  const paint = paintOf(color);
+  const showFallback = unavailable || failed;
+  const fallback = <StageFallback hex={paint.hex} label={colorLabel} />;
+
+  return (
+    <figure className="m-0 flex flex-col gap-2">
+      <div className="border-border bg-card relative aspect-16/10 w-full overflow-hidden rounded-lg border">
+        {showFallback ? (
+          fallback
+        ) : (
+          <ViewerBoundary
+            fallback={fallback}
+            onError={() => {
+              setFailed(true);
+            }}
+          >
+            <VehicleViewer
+              inspectRef={inspectRef}
+              onReady={() => {
+                setReady(true);
+              }}
+              onUnavailable={() => {
+                setUnavailable(true);
+              }}
+              paint={paint}
+            />
+            {/* 모델 부품을 불러오는 동안 빈 캔버스 대신 보인다. */}
+            {!ready ? <StageLoading /> : null}
+          </ViewerBoundary>
+        )}
+      </div>
+      {!showFallback ? (
+        <div className="flex flex-wrap justify-end gap-1">
+          <Button
+            aria-label="차량 확대"
+            disabled={!ready}
+            size="small"
+            variant="secondary"
+            onClick={() => inspectRef.current?.zoomIn()}
+          >
+            확대
+          </Button>
+          <Button
+            aria-label="차량 축소"
+            disabled={!ready}
+            size="small"
+            variant="secondary"
+            onClick={() => inspectRef.current?.zoomOut()}
+          >
+            축소
+          </Button>
+          <Button
+            aria-label="차량 시점 처음으로"
+            disabled={!ready}
+            size="small"
+            variant="secondary"
+            onClick={() => inspectRef.current?.reset()}
+          >
+            처음 시점
+          </Button>
+        </div>
+      ) : null}
+      <figcaption className="text-muted-foreground text-caption flex flex-col gap-1">
+        <span>
+          드래그해서 돌려 볼 수 있습니다. 3D 모델에는 외장 색상만 반영되고 휠, 시트, 내장은 반영되지
+          않습니다.
+        </span>
+        <details>
+          <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
+            3D 모델 출처와 고지
+          </summary>
+          <div className="mt-2 flex flex-col gap-1">
+            <p>
+              <a
+                className="underline underline-offset-2"
+                href={VEHICLE.credit.href}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {VEHICLE.credit.work}
+              </a>
+              {' · '}
+              {VEHICLE.credit.by}
+              {' · '}
+              <a
+                className="underline underline-offset-2"
+                href={VEHICLE.credit.licenseHref}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {VEHICLE.credit.license}
+              </a>
+              {' · '}
+              <a
+                className="underline underline-offset-2"
+                href={VEHICLE.credit.disclaimerHref}
+                rel="noreferrer"
+                target="_blank"
+              >
+                보증 부인
+              </a>
+            </p>
+            <p>수정: {VEHICLE.credit.changes}</p>
+            <p>{VEHICLE.credit.trademark}</p>
+          </div>
+        </details>
+      </figcaption>
+    </figure>
+  );
+}

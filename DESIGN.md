@@ -230,7 +230,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - Pin + scrub a viewport panel; map scroll progress to `frames` URLs (consumer-owned). Draw on canvas — do not `setState` per frame.
 - GSAP ScrollTrigger only. Do not put Motion or Tailwind `transition-*` on the canvas.
 - Overlay copy is `children` (accessible). Canvas is `aria-hidden`. `prefers-reduced-motion`: first frame.
-- Not in the shadcn registry. Prototype exterior stills stay in `apps/web/public/exterior/` (gitignored).
+- Not in the shadcn registry.
 
 ### Storybook 3D (not public API)
 

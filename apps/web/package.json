@@ -9,13 +9,11 @@
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
-    "test": "vitest run",
-    "copy:exterior": "bash scripts/copy-exterior-frames.sh"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@gsap/react": "^2.1.2",
     "@repo/ui": "workspace:*",
-    "gsap": "^3.15.0",
+    "@repo/vehicle-3d": "workspace:*",
     "next": "16.4.0",
     "next-themes": "^0.4.6",
     "react": "19.3.0",

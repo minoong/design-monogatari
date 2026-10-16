@@ -14,7 +14,6 @@ pnpm dev                              # all apps (web :3000, docs :3001)
 pnpm --filter web dev                 # one app
 pnpm --filter @repo/ui storybook      # component docs :6006 (not part of verify)
 pnpm --filter @repo/ui copy:car       # Storybook 3D meshes (gitignored, needed for 3D stories)
-pnpm --filter web copy:exterior       # exterior frame stills (gitignored public/exterior/)
 
 pnpm format                           # Prettier write (Tailwind class sort included)
 pnpm lint                             # ESLint, --max-warnings 0
