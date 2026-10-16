@@ -4,7 +4,7 @@ import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import { PMREMGenerator, type Texture } from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 import { GROUND_Y, HDR_URL } from './constants';
 
@@ -38,7 +38,7 @@ export function ThreeStudio() {
       apply(texture);
     };
 
-    const loader = new RGBELoader();
+    const loader = new HDRLoader();
     loader.load(
       HDR_URL,
       (hdr) => {

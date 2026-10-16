@@ -22,7 +22,7 @@ const config: StorybookConfig = {
         '@repo/vehicle-3d > three',
         '@repo/vehicle-3d > three/addons/environments/RoomEnvironment.js',
         '@repo/vehicle-3d > three/addons/loaders/GLTFLoader.js',
-        '@repo/vehicle-3d > three/addons/loaders/RGBELoader.js',
+        '@repo/vehicle-3d > three/addons/loaders/HDRLoader.js',
         '@repo/vehicle-3d > three/addons/controls/OrbitControls.js',
         '@repo/vehicle-3d > @react-three/fiber',
       ],
