@@ -165,6 +165,30 @@ type Story = StoryObj<typeof meta>;
 
 export const 기본: Story = {};
 
+export const 접두사와접미사: Story = {
+  name: '접두사와 접미사',
+  render: () => (
+    <div className="text-body flex flex-col items-center gap-3">
+      <AnimatedAmount value={52_900_000} />
+      <AnimatedAmount prefix="약 " suffix="원부터" value={52_900_000} />
+      <AnimatedAmount
+        format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }}
+        suffix="%"
+        value={4.5}
+      />
+    </div>
+  ),
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          '접두사 `"약 "`처럼 끝에 공백이 있는 문구도 공백이 그대로 남아 숫자와 떨어져 보입니다. 숫자와 접두사·접미사는 같은 기준선에 놓입니다.',
+      },
+    },
+  },
+};
+
 export const 견적헤더: Story = {
   render: () => (
     <EstimateAmountPlayground className="font-sans text-sm font-semibold" initialTrim="sport" />
