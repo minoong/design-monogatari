@@ -1,5 +1,6 @@
 'use client';
 
+import { interiorById, type InteriorId } from '@repo/vehicle-3d/interiors';
 import { paintById, type PaintId } from '@repo/vehicle-3d/paints';
 import {
   vehicleById,
@@ -31,6 +32,7 @@ export function ThreeGltfDemo({
   const available = useModelAvailable(urls[0] ?? '');
   // null 이면 모델 원래 색
   const [paintId, setPaintId] = useState<PaintId | null>(null);
+  const [interiorId, setInteriorId] = useState<InteriorId>('black');
   const [view, setView] = useState<CameraViewId>(initialView);
   const inspectRef = useRef<InspectHandle | null>(null);
   const inside = CAMERA_VIEWS[view].inside;
@@ -45,6 +47,8 @@ export function ThreeGltfDemo({
           engine="Three.js"
           kind={vehicle.kind}
           paintId={paintId}
+          interiorId={interiorId}
+          onInteriorId={setInteriorId}
           view={view}
           onView={setView}
           onPaintId={setPaintId}
@@ -67,6 +71,7 @@ export function ThreeGltfDemo({
         available={available}
         className="absolute inset-0 size-full touch-none"
         inspectRef={inspectRef}
+        interior={interiorById(interiorId)}
         paint={paintId ? paintById(paintId) : undefined}
         vehicleId={vehicleId}
         view={view}

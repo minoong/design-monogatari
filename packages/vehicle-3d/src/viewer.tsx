@@ -7,6 +7,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
+import { applyThreeInterior } from './apply-three-interior';
 import {
   applyThreePaint,
   enableThreeShadows,
@@ -17,6 +18,7 @@ import { assembleG05Three } from './assemble-g05-three';
 import { CAMERA_VIEWS, type CameraViewId, DEFAULT_CAMERA_VIEW } from './camera-views';
 import { GROUND_Y } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
+import { INTERIOR_SWATCHES, type InteriorSwatch } from './interiors';
 import type { PaintSwatch } from './paints';
 import { ThreeStudio } from './three-studio';
 import { vehicleById, type VehicleId } from './vehicles';
@@ -63,6 +65,7 @@ function hideUtilityMeshes(root: Object3D) {
 function GltfModel({
   files,
   paint,
+  interior,
   wheelInch,
   front,
   onReady,
@@ -70,6 +73,8 @@ function GltfModel({
   files: readonly string[];
   /** 없으면 모델 원래 색 */
   paint?: PaintSwatch;
+  /** 없으면 모델 원래 실내(검정) */
+  interior?: InteriorSwatch;
   /** 휠 크기(인치). 없으면 모델 원래 크기(21인치). 바꿔도 모델을 다시 불러오지 않는다. */
   wheelInch?: number;
   front?: VehicleFront;
@@ -130,6 +135,14 @@ function GltfModel({
     if (!model) {
       return;
     }
+    applyThreeInterior(model, interior ?? INTERIOR_SWATCHES[0]);
+    invalidate();
+  }, [interior, invalidate, model]);
+
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
     applyWheelSize(model, wheelInch ?? NATIVE_WHEEL_INCH);
     invalidate();
   }, [invalidate, model, wheelInch]);
@@ -145,6 +158,8 @@ export type VehicleCanvasProps = {
   vehicleId?: VehicleId;
   /** 도장 색. 없으면 모델 원래 색입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   paint?: PaintSwatch;
+  /** 실내 색(시트, 도어 안쪽, 실내 라이닝). 없으면 모델 원래 실내(검정)입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
+  interior?: InteriorSwatch;
   /** 줌 인·아웃과 리셋을 호스트가 제어할 때 넘깁니다. 드래그 회전과 휠 줌은 항상 켜져 있습니다. */
   inspectRef?: RefObject<InspectHandle | null>;
   /**
@@ -171,6 +186,7 @@ export type VehicleCanvasProps = {
 export function VehicleCanvas({
   vehicleId = 'x5',
   paint,
+  interior,
   inspectRef,
   view = DEFAULT_CAMERA_VIEW,
   wheelZoom,
@@ -191,7 +207,12 @@ export function VehicleCanvas({
     >
       <ThreeStudio />
       {inspectRef ? (
-        <InspectControls handleRef={inspectRef} view={view} wheelZoom={wheelZoom} />
+        <InspectControls
+          cabinLight={(interior ?? INTERIOR_SWATCHES[0]).cabinLight}
+          handleRef={inspectRef}
+          view={view}
+          wheelZoom={wheelZoom}
+        />
       ) : null}
       {available ? (
         <GltfModel
@@ -199,6 +220,7 @@ export function VehicleCanvas({
           files={vehicle.files}
           front={vehicle.front}
           onReady={onReady}
+          interior={interior}
           paint={paint}
           wheelInch={wheelInch}
         />
