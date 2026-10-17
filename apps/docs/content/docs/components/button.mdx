@@ -29,6 +29,12 @@ export function Example() {
 
 <ComponentPreview name="button/variants" />
 
+### 토글
+
+켜고 끄는 버튼이나 여러 개 중 하나를 고르는 버튼에는 `aria-pressed`를 줍니다. `secondary`는 켜진 상태를 선택 행과 같은 프라이머리 테두리와 링으로 보입니다. 글자가 상태에 따라 바뀌면 폭이 변하므로, 글자는 그대로 두고 `aria-pressed`만 바꾸십시오.
+
+<ComponentPreview name="button/pressed" />
+
 ### 크기
 
 `small`(32px), `medium`(40px), `large`(48px, 기본값), `xlarge`(56px)가 있습니다.
@@ -103,6 +109,7 @@ export function Example() {
 
 - 기본 요소가 `<button type="button">`이라서 키보드(Tab, Enter, Space)로 조작하고, 폼 안에서 의도치 않게 제출되지 않습니다.
 - 키보드 포커스에서만 링 두 겹이 나타납니다(`focus-visible`). `primary`는 링과 버튼 사이에 배경색 간격이 생깁니다.
+- 토글로 쓰는 버튼은 `aria-pressed`로 상태를 알립니다. `secondary`에서만 켜진 모양(프라이머리 테두리와 링)이 있고, 색만으로 구분하지 않도록 같은 그룹에는 `role="group"`과 `aria-label`을 붙이십시오.
 - `loading` 동안 `aria-busy`가 설정되고 클릭 핸들러가 호출되지 않습니다.
 - `disabled`는 투명도 40%로 흐려지고 포인터 이벤트를 받지 않습니다.
 - 누를 때 줄어드는 움직임은 `prefers-reduced-motion`을 켜면 사라집니다.

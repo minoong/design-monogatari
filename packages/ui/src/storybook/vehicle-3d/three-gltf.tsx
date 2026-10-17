@@ -63,6 +63,7 @@ export function ThreeGltfDemo({
           onView={setView}
           onPaintId={setPaintId}
           onResetView={() => inspectRef.current?.reset()}
+          onRotateBy={(azimuth, polar) => inspectRef.current?.rotateBy(azimuth, polar)}
           onZoomIn={() => inspectRef.current?.zoomIn()}
           onZoomOut={() => inspectRef.current?.zoomOut()}
         />

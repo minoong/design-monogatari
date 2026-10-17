@@ -14,7 +14,7 @@ export const COLOR_PAINT: Record<ColorId, PaintId> = {
   'matte-gray': 'matte-gray',
 };
 
-export function paintOf(color: ColorId) {
+export function paintSwatchOf(color: ColorId) {
   const swatch = PAINT_SWATCHES.find((candidate) => candidate.id === COLOR_PAINT[color]);
   if (!swatch) throw new Error(`도장을 찾을 수 없습니다: ${color}`);
   return swatch;

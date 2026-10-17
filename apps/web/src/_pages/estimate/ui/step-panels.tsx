@@ -3,11 +3,11 @@
 import { ColorSwatchGroup } from '@repo/ui/color-swatch-group';
 import { OptionGroup, OptionRow } from '@repo/ui/option-row';
 import { PackageRow } from '@repo/ui/package-row';
-import type { Dispatch } from 'react';
+import { type Dispatch, useRef } from 'react';
 
 import { CATALOG } from '../model/catalog';
 import { formatWon } from '../model/format';
-import { paintOf } from '../model/paint-map';
+import { paintSwatchOf } from '../model/paint-map';
 import {
   effectivePackages,
   findItem,
@@ -48,6 +48,9 @@ function SlotOptions({
   dispatch,
 }: PanelProps & { slot: SingleSlot; legend: string }) {
   const items = CATALOG[slot] as readonly CatalogItem<string>[];
+  // 방향키로 라디오 사이를 지나는 것도 브라우저는 선택(change)으로 알린다. 고를 수 없는 행을 지날 때마다 안내 창이 열리지 않게,
+  // 방향키로 이동하다 생긴 변경은 무시하고 눌러서(클릭, Space) 고른 것만 안내한다.
+  const arrowNavigation = useRef(false);
   return (
     <OptionGroup legend={legend}>
       {items.map((item) => {
@@ -62,7 +65,13 @@ function SlotOptions({
             description={item.description}
             price={priceLabel(item.price)}
             unavailableReason={availability.available ? undefined : availability.reason}
+            onKeyDown={(event) => {
+              arrowNavigation.current = event.key.startsWith('Arrow');
+            }}
             onChange={() => {
+              const byArrow = arrowNavigation.current;
+              arrowNavigation.current = false;
+              if (byArrow && !availability.available) return;
               dispatch(setIntent(slot, item.id));
             }}
           />
@@ -95,7 +104,7 @@ export function ExteriorStep({ state, dispatch }: PanelProps) {
         return {
           value: item.id,
           label: item.label,
-          color: paintOf(item.id as ColorId).hex,
+          color: paintSwatchOf(item.id as ColorId).hex,
           group: item.group,
           price: priceLabel(item.price),
           unavailableReason: availability.available ? undefined : availability.reason,

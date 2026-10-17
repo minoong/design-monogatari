@@ -26,7 +26,10 @@ export const buttonVariants = cva(
       variant: {
         primary:
           'bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-offset-background focus-visible:ring-offset-2',
-        secondary: 'border-border text-foreground hover:bg-secondary-hover bg-transparent',
+        // 토글로 쓰면(`aria-pressed`) 켜진 상태를 선택 행과 같은 프라이머리 테두리와 링으로 보인다. 켜진 채로 키보드 포커스가 오면
+        // 포커스 링(2px)에 배경색 간격(2px)을 두어 켜짐 링(1px)과 한눈에 구분되게 한다(다크에서 둘 다 파랑이라 두께만으로는 구분이 약했다).
+        secondary:
+          'border-border text-foreground hover:bg-secondary-hover aria-pressed:border-primary aria-pressed:ring-primary aria-pressed:focus-visible:ring-ring aria-pressed:focus-visible:ring-offset-background bg-transparent aria-pressed:ring-1 aria-pressed:focus-visible:ring-2 aria-pressed:focus-visible:ring-offset-2',
         clear: 'text-foreground hover:bg-secondary-hover bg-transparent',
       },
       size: {

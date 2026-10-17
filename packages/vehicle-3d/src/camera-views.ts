@@ -51,3 +51,24 @@ export const DEFAULT_CAMERA_VIEW: CameraViewId = 'exterior';
 export function isInsideView(view: CameraViewId) {
   return CAMERA_VIEWS[view].inside;
 }
+
+/**
+ * 무대 아래 조작의 이름. 웹 앱과 Storybook이 같은 말을 쓰도록 한곳에 둔다(따로 쓰다가 표현이 어긋났었다).
+ * 보이는 글자가 있는 버튼의 접근성 이름은 그 글자를 포함해야 한다.
+ */
+export const CAMERA_CONTROL_LABELS = {
+  viewGroup: '카메라 시점',
+  zoomIn: '확대',
+  zoomOut: '축소',
+  reset: '처음 시점',
+  sunroofOpen: '선루프 열기',
+  rotateGroup: '방향 돌리기',
+  rotateLeft: '왼쪽으로 돌리기',
+  rotateRight: '오른쪽으로 돌리기',
+  rotateUp: '위로 돌리기',
+  rotateDown: '아래로 돌리기',
+} as const;
+
+/** 실내 시점에서 보이는 안내. 확대가 꺼지는 이유도 함께 알린다. */
+export const INSIDE_VIEW_NOTE =
+  '실내 색은 근사값이고 시트 구성과 가니쉬는 반영되지 않습니다. 실내에서는 확대할 수 없습니다.';
