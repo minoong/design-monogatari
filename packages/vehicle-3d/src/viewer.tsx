@@ -20,6 +20,7 @@ import { GROUND_Y } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
 import { INTERIOR_SWATCHES, type InteriorSwatch } from './interiors';
 import type { PaintSwatch } from './paints';
+import { addSunroofPatch, setSunroof } from './sunroof';
 import { ThreeStudio } from './three-studio';
 import { vehicleById, type VehicleId } from './vehicles';
 import { applyWheelSize, NATIVE_WHEEL_INCH } from './wheel-size';
@@ -66,6 +67,7 @@ function GltfModel({
   files,
   paint,
   interior,
+  sunroof = true,
   wheelInch,
   front,
   onReady,
@@ -75,6 +77,8 @@ function GltfModel({
   paint?: PaintSwatch;
   /** 없으면 모델 원래 실내(검정) */
   interior?: InteriorSwatch;
+  /** false 이면 선루프 구멍을 막는다. 기본은 선루프가 있는 모델 그대로. */
+  sunroof?: boolean;
   /** 휠 크기(인치). 없으면 모델 원래 크기(21인치). 바꿔도 모델을 다시 불러오지 않는다. */
   wheelInch?: number;
   front?: VehicleFront;
@@ -101,6 +105,8 @@ function GltfModel({
         hideUtilityMeshes(root);
         alignVehicleHeading(root, front);
         fitObject(root);
+        // 크기와 방향을 맞춘 뒤에 만든다. 위아래 면을 월드 좌표로 가르기 때문이다.
+        addSunroofPatch(root);
         enableThreeShadows(root);
         setModel(root);
         invalidate();
@@ -135,6 +141,14 @@ function GltfModel({
     if (!model) {
       return;
     }
+    setSunroof(model, sunroof);
+    invalidate();
+  }, [invalidate, model, sunroof]);
+
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
     applyThreeInterior(model, interior ?? INTERIOR_SWATCHES[0]);
     invalidate();
   }, [interior, invalidate, model]);
@@ -160,6 +174,8 @@ export type VehicleCanvasProps = {
   paint?: PaintSwatch;
   /** 실내 색(시트, 도어 안쪽, 실내 라이닝). 없으면 모델 원래 실내(검정)입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   interior?: InteriorSwatch;
+  /** false 이면 선루프 구멍을 막은 차를 보여 줍니다(지붕이 막힌 모양). 기본은 선루프가 있는 모델 그대로입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
+  sunroof?: boolean;
   /** 줌 인·아웃과 리셋을 호스트가 제어할 때 넘깁니다. 드래그 회전과 휠 줌은 항상 켜져 있습니다. */
   inspectRef?: RefObject<InspectHandle | null>;
   /**
@@ -187,6 +203,7 @@ export function VehicleCanvas({
   vehicleId = 'x5',
   paint,
   interior,
+  sunroof,
   inspectRef,
   view = DEFAULT_CAMERA_VIEW,
   wheelZoom,
@@ -222,6 +239,7 @@ export function VehicleCanvas({
           onReady={onReady}
           interior={interior}
           paint={paint}
+          sunroof={sunroof}
           wheelInch={wheelInch}
         />
       ) : null}

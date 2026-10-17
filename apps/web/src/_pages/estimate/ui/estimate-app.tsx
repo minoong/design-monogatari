@@ -18,6 +18,7 @@ import { CATALOG } from '../model/catalog';
 import { encodeEstimate } from '../model/codec';
 import { describeEffect } from '../model/describe';
 import { calculateQuote } from '../model/quote';
+import { hasSunroof } from '../model/roof-map';
 import { neighborStep, type StepId, STEPS } from '../model/steps';
 import { wizardReducer, type WizardState } from '../model/wizard';
 import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-dialogs';
@@ -159,6 +160,7 @@ export function EstimateApp({
               colorLabel={colorLabel}
               interior={state.selection.interior}
               step={state.step}
+              sunroof={hasSunroof(state.selection.packages)}
               wheel={state.selection.wheel}
             />
           </div>

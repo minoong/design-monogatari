@@ -101,6 +101,8 @@ export function SequenceOverlay({
   paintId,
   interiorId,
   onInteriorId,
+  sunroof,
+  onSunroof,
   view,
   onView,
   onPaintId,
@@ -114,6 +116,9 @@ export function SequenceOverlay({
   paintId: PaintId | null;
   interiorId: InteriorId;
   onInteriorId: (id: InteriorId) => void;
+  /** false 이면 선루프 구멍을 막은 차 */
+  sunroof: boolean;
+  onSunroof: (sunroof: boolean) => void;
   /** 카메라 시점. 바뀌면 카메라가 부드럽게 옮겨 간다. */
   view: CameraViewId;
   onView: (view: CameraViewId) => void;
@@ -195,6 +200,26 @@ export function SequenceOverlay({
           onInteriorId(value as InteriorId);
         }}
       />
+      <div className="mt-3">
+        <p className="text-muted-foreground text-caption mb-2">선루프</p>
+        <div aria-label="선루프" className="flex flex-wrap gap-1.5" role="group">
+          {([true, false] as const).map((value) => (
+            <Button
+              key={String(value)}
+              aria-pressed={sunroof === value}
+              className={sunroof === value ? 'border-foreground' : undefined}
+              size="small"
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                onSunroof(value);
+              }}
+            >
+              {value ? '있음' : '없음'}
+            </Button>
+          ))}
+        </div>
+      </div>
       {/* 맨 아래에 둔다. 위쪽에 넣으면 나타날 때마다 아래 버튼들이 밀린다. */}
       {CAMERA_VIEWS[view].inside ? (
         <p className="text-caption text-muted-foreground mt-3" role="status">
