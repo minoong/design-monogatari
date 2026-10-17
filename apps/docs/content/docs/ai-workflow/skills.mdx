@@ -1,0 +1,33 @@
+---
+title: 스킬
+description: 작업 절차를 담은 스킬과, 직접 만든 것과 설치한 것을 구분해서 관리하는 방법을 설명합니다.
+---
+
+스킬은 "이 종류의 일은 이 순서로 한다"를 담은 절차서입니다. Claude Code는 설명을 보고 맞는 스킬을 불러옵니다. 이 저장소의 스킬은 22개이고, 직접 만든 것과 설치한 것이 섞여 있습니다.
+
+## 직접 만든 스킬
+
+| 스킬                | 언제                                     | 내용                                                                                              |
+| ------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `create-component`  | 컴포넌트를 만들거나 공개 API를 바꿀 때   | 스캐폴드, 구현, 스토리, 예시와 문서, 레지스트리, 누락 검사, 리뷰, 검증을 한 번에                  |
+| `verify`            | UI 작업이 끝났을 때, 커밋 직전           | `ui-verifier` 후 `pnpm verify`. 이름이 `verify`면 Claude Code가 커밋 직전에 실행하도록 안내합니다 |
+| `git-commit`        | 커밋, push, PR                           | 기능 브랜치, 한글 Conventional Commit, 본문에 배경, 이유, 검증, 한계                              |
+| `sync-project-docs` | 구조, 공개 API, 토큰, 스크립트가 바뀔 때 | README, DESIGN.md, 폴더별 AGENTS.md를 코드와 맞춤                                                 |
+| `official-docs`     | 외부 라이브러리 API를 쓰기 전            | 어떤 라이브러리가 어느 문서에서 확인되는지와 조회 절차                                            |
+
+<RepoFile path=".agents/skills/create-component/SKILL.md" lines="1-12" />
+
+`create-component`는 현재 어떤 컴포넌트가 무엇이 빠졌는지를 스킬을 불러올 때 계산해서(`pnpm components:check`) 보여 줍니다. 빠진 것을 사람이 기억하지 않아도 되도록 한 것입니다.
+
+## 설치한 스킬
+
+디자인 시스템과 웹 작업에 필요한 기술별 스킬을 `npx skills add`로 설치했습니다. 접근성(`accessibility`, `fixing-accessibility`), 성능(`performance`, `core-web-vitals`, `fixing-motion-performance`), 모션과 GSAP(`motion-react`, `gsap-*` 7개), React와 Next(`vercel-react-best-practices`), Turborepo(`turborepo`), 디자인 점검(`web-design-guidelines`), 구조(`feature-sliced-design`)입니다.
+
+## 폴더 구조
+
+스킬의 실제 파일은 `.agents/skills/<이름>/`에 있고, `.claude/skills/<이름>`은 그것을 가리키는 심볼릭 링크입니다. 설치 도구(`npx skills add`)가 `.agents/skills`를 쓰고 `skills-lock.json`으로 버전을 고정하기 때문입니다. 새 스킬은 `.agents/skills/`에 만들고 링크를 걸며, 복사하지 않습니다.
+
+<Callout type="warn" title="스킬 설명은 매 세션 컨텍스트를 씁니다">
+  스킬 목록의 설명은 대화를 시작할 때마다 올라옵니다. 쓰지 않는 스킬은 비용이 되므로, 이 저장소는
+  React 전용이라 Vue와 Svelte용 스킬은 두지 않습니다.
+</Callout>

@@ -1,0 +1,27 @@
+---
+title: MCP
+description: 메인 세션과 서브에이전트가 쓰는 MCP 서버와, 쓰면서 알게 된 주의점을 설명합니다.
+---
+
+MCP 서버는 Claude Code에 외부 도구를 붙입니다. 이 저장소에서는 세 가지를 씁니다.
+
+| 서버              | 선언 위치             | 누가 쓰는가                | 용도                                           |
+| ----------------- | --------------------- | -------------------------- | ---------------------------------------------- |
+| `lucide-animated` | `.mcp.json`           | 메인 세션                  | 움직이는 아이콘 검색과 설치 정보               |
+| `storybook`       | `.mcp.json`           | 메인 세션                  | 실행 중인 Storybook에서 컴포넌트와 스토리 조회 |
+| `playwright`      | `ui-verifier` 정의 안 | `ui-verifier` 서브에이전트 | 브라우저 조작과 계산된 스타일 읽기             |
+
+<RepoFile path=".mcp.json" />
+
+## Playwright는 서브에이전트 안에만 있습니다
+
+브라우저 도구의 긴 출력이 메인 대화를 채우지 않게 하려고, Playwright MCP 서버를 `ui-verifier` 정의 안에만 선언했습니다. 메인 세션에는 없습니다. 권한 설정에는 `mcp__playwright`가 허용 목록에 있어서 서브에이전트가 묻지 않고 쓸 수 있습니다.
+
+## Storybook MCP의 주의점
+
+`storybook` 서버는 `pnpm --filter @repo/ui storybook`이 실행 중일 때만 응답하고, 꺼져 있으면 연결 실패로 표시됩니다.
+
+- 컴포넌트나 스토리를 만들거나 고치기 전에 `get-storybook-story-instructions`를 부르고, 사용법은 소스를 읽는 대신 `docs-list`와 `docs-show`로 찾습니다.
+- 도구가 보여 주는 가져오기 문장은 이 저장소와 맞지 않습니다. `import { Button } from '@repo/ui'`로 나오지만 실제로는 부분 경로(`@repo/ui/button`)를 씁니다(배럴 파일이 없습니다).
+- 속성 표에는 CVA 옵션(`variant`, `size`, `radius`)이 없습니다. `react-docgen`이 `VariantProps`를 풀지 못하기 때문이고, 이 옵션은 스토리의 `argTypes`로 직접 선언했습니다. `react-docgen-typescript`는 TypeScript 7에서 모든 컴포넌트가 오류가 나서 쓰지 않습니다.
+- `test-run` 도구는 없습니다(Vitest 애드온이 없음). 화면 검증은 `ui-verifier`가 맡습니다.

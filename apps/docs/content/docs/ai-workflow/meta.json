@@ -1,0 +1,5 @@
+{
+  "title": "AI 워크플로",
+  "root": true,
+  "pages": ["index", "memory", "subagents", "skills", "hooks", "mcp", "loop", "retrospective"]
+}
