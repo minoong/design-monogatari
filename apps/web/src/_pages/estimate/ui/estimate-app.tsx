@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@repo/ui/sheet';
+import { ToastProvider } from '@repo/ui/toast';
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 
 import { CATALOG } from '../model/catalog';
@@ -21,13 +22,13 @@ import { neighborStep, type StepId, STEPS } from '../model/steps';
 import { wizardReducer, type WizardState } from '../model/wizard';
 import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-dialogs';
 import { EstimateHeader } from './estimate-header';
+import { ResultStep } from './result-step';
 import {
   AccessoriesStep,
   ExteriorStep,
   InteriorStep,
   ModelStep,
   OptionsStep,
-  ResultStep,
   SeatStep,
   WheelStep,
 } from './step-panels';
@@ -103,6 +104,7 @@ export function EstimateApp({
   const panelProps = { state, dispatch };
 
   const isDesktop = useIsDesktop();
+  usePrintLight();
   const colorLabel = CATALOG.color.find((item) => item.id === state.selection.color)!.label;
 
   const summaryTrigger = (
@@ -140,142 +142,180 @@ export function EstimateApp({
   );
 
   return (
-    <div className="bg-background text-foreground min-h-dvh font-sans lg:flex lg:h-dvh lg:flex-col">
-      <EstimateHeader
-        dispatch={dispatch}
-        query={query}
-        step={state.step}
-        stepIndex={stepIndex}
-        summary={summaryTrigger}
-      />
+    <ToastProvider>
+      <div className="bg-background text-foreground min-h-dvh font-sans lg:flex lg:h-dvh lg:flex-col lg:overflow-hidden print:block print:h-auto print:min-h-0">
+        <EstimateHeader
+          dispatch={dispatch}
+          query={query}
+          step={state.step}
+          stepIndex={stepIndex}
+          summary={summaryTrigger}
+        />
 
-      <main className="lg:flex lg:min-h-0 lg:flex-1">
-        <div className="min-w-0 p-4 lg:flex lg:flex-1 lg:flex-col lg:p-6">
-          <VehicleStage
-            color={state.selection.color}
-            colorLabel={colorLabel}
-            wheel={state.selection.wheel}
-          />
-        </div>
-
-        <section
-          aria-labelledby="step-title"
-          className="border-border flex min-w-0 flex-col lg:min-h-0 lg:w-120 lg:shrink-0 lg:border-l 2xl:w-136"
-        >
-          <div className="flex flex-col gap-6 p-4 pb-32 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:p-8">
-            <div>
-              <h2
-                id="step-title"
-                ref={headingRef}
-                tabIndex={-1}
-                className="text-title font-semibold tracking-tight outline-none"
-              >
-                <span className="sr-only">{stepIndex + 1}단계: </span>
-                {currentLabel}
-              </h2>
-              <p className="text-muted-foreground mt-1 text-sm">{STEP_INTRO[state.step]}</p>
-            </div>
-
-            {issuesOpen ? (
-              <Notice variant="error">
-                <NoticeTitle>주소의 일부를 읽지 못했습니다</NoticeTitle>
-                <NoticeDescription>읽을 수 없는 값은 기본 선택으로 되돌렸습니다.</NoticeDescription>
-                <div>
-                  <Button
-                    size="small"
-                    variant="secondary"
-                    onClick={() => {
-                      setIssuesOpen(false);
-                    }}
-                  >
-                    닫기
-                  </Button>
-                </div>
-              </Notice>
-            ) : null}
-
-            {state.notices.length > 0 ? (
-              <Notice>
-                <NoticeTitle>선택이 자동으로 바뀌었습니다</NoticeTitle>
-                <ul className="text-muted-foreground text-caption flex list-disc flex-col gap-1 pl-5">
-                  {state.notices.map((effect, index) => (
-                    <li key={index}>{describeEffect(effect)}</li>
-                  ))}
-                </ul>
-                <div>
-                  <Button
-                    size="small"
-                    variant="secondary"
-                    onClick={() => {
-                      dispatch({ type: 'dismiss-notices' });
-                    }}
-                  >
-                    확인
-                  </Button>
-                </div>
-              </Notice>
-            ) : null}
-
-            {state.step === 'model' ? <ModelStep {...panelProps} /> : null}
-            {state.step === 'exterior' ? <ExteriorStep {...panelProps} /> : null}
-            {state.step === 'wheel' ? <WheelStep {...panelProps} /> : null}
-            {state.step === 'seat' ? <SeatStep {...panelProps} /> : null}
-            {state.step === 'interior' ? <InteriorStep {...panelProps} /> : null}
-            {state.step === 'options' ? <OptionsStep {...panelProps} /> : null}
-            {state.step === 'accessories' ? <AccessoriesStep {...panelProps} /> : null}
-            {state.step === 'result' ? (
-              <ResultStep {...panelProps} quote={quote} shareUrl={shareUrl} />
-            ) : null}
+        <main className="lg:flex lg:min-h-0 lg:flex-1 print:block">
+          <div className="min-w-0 p-4 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:p-6 print:hidden">
+            <VehicleStage
+              color={state.selection.color}
+              colorLabel={colorLabel}
+              wheel={state.selection.wheel}
+            />
           </div>
 
-          <PriceBar
-            aria-label="견적 금액과 단계 이동"
-            className="fixed inset-x-0 bottom-0 z-40 flex-nowrap gap-x-3 gap-y-0 py-3 lg:static lg:z-auto lg:flex-wrap lg:gap-y-4 lg:px-8 lg:py-5"
+          <section
+            aria-labelledby="step-title"
+            className="border-border flex min-w-0 flex-col lg:min-h-0 lg:w-120 lg:shrink-0 lg:border-l 2xl:w-136"
           >
-            {state.step === 'result' ? (
-              <PriceBarTotal
-                amount={quote.total}
-                label="예상 총 비용"
-                note={
-                  <span className="hidden lg:inline">취득세와 부대비용을 포함한 금액입니다</span>
-                }
-              />
-            ) : (
-              <PriceBarTotal
-                amount={quote.listPrice}
-                note={<span className="hidden lg:inline">취득세와 부대비용은 별도입니다</span>}
-              />
-            )}
-            <PriceBarActions className="ml-auto flex-nowrap lg:ml-0 lg:w-full [&>button]:lg:flex-1">
-              <Button
-                disabled={previous === null}
-                variant="secondary"
-                onClick={() => {
-                  if (previous) dispatch({ type: 'go', step: previous });
-                }}
-              >
-                이전
-              </Button>
-              {next ? (
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    dispatch({ type: 'go', step: next });
-                  }}
-                >
-                  다음
-                </Button>
-              ) : null}
-            </PriceBarActions>
-          </PriceBar>
-        </section>
-      </main>
+            <div className="relative lg:flex lg:min-h-0 lg:flex-1 lg:scrollbar-gutter-stable lg:flex-col lg:overflow-y-auto print:overflow-visible">
+              <div className="p-4 pb-32 lg:flex-1 lg:p-8 print:p-0">
+                <div className="flex flex-col gap-6">
+                  <div>
+                    <h2
+                      id="step-title"
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="text-title font-semibold tracking-tight outline-none"
+                    >
+                      <span className="sr-only">{stepIndex + 1}단계: </span>
+                      {currentLabel}
+                    </h2>
+                    <p className="text-muted-foreground mt-1 text-sm">{STEP_INTRO[state.step]}</p>
+                  </div>
 
-      <ConfirmChangeDialog {...panelProps} returnFocusRef={headingRef} />
-      <BlockedDialog {...panelProps} returnFocusRef={headingRef} />
-      <SuggestionDialog {...panelProps} returnFocusRef={headingRef} />
-    </div>
+                  {issuesOpen ? (
+                    <Notice variant="error">
+                      <NoticeTitle>주소의 일부를 읽지 못했습니다</NoticeTitle>
+                      <NoticeDescription>
+                        읽을 수 없는 값은 기본 선택으로 되돌렸습니다.
+                      </NoticeDescription>
+                      <div>
+                        <Button
+                          size="small"
+                          variant="secondary"
+                          onClick={() => {
+                            setIssuesOpen(false);
+                          }}
+                        >
+                          닫기
+                        </Button>
+                      </div>
+                    </Notice>
+                  ) : null}
+
+                  {state.notices.length > 0 ? (
+                    <Notice>
+                      <NoticeTitle>선택이 자동으로 바뀌었습니다</NoticeTitle>
+                      <ul className="text-muted-foreground text-caption flex list-disc flex-col gap-1 pl-5">
+                        {state.notices.map((effect, index) => (
+                          <li key={index}>{describeEffect(effect)}</li>
+                        ))}
+                      </ul>
+                      <div>
+                        <Button
+                          size="small"
+                          variant="secondary"
+                          onClick={() => {
+                            dispatch({ type: 'dismiss-notices' });
+                          }}
+                        >
+                          확인
+                        </Button>
+                      </div>
+                    </Notice>
+                  ) : null}
+
+                  {state.step === 'model' ? <ModelStep {...panelProps} /> : null}
+                  {state.step === 'exterior' ? <ExteriorStep {...panelProps} /> : null}
+                  {state.step === 'wheel' ? <WheelStep {...panelProps} /> : null}
+                  {state.step === 'seat' ? <SeatStep {...panelProps} /> : null}
+                  {state.step === 'interior' ? <InteriorStep {...panelProps} /> : null}
+                  {state.step === 'options' ? <OptionsStep {...panelProps} /> : null}
+                  {state.step === 'accessories' ? <AccessoriesStep {...panelProps} /> : null}
+                  {state.step === 'result' ? (
+                    <ResultStep {...panelProps} quote={quote} shareUrl={shareUrl} />
+                  ) : null}
+                </div>
+              </div>
+
+              <PriceBar
+                aria-label="견적 금액과 단계 이동"
+                className="flex-nowrap gap-x-3 gap-y-0 lg:sticky lg:inset-x-auto lg:bottom-0 lg:z-10 lg:mt-auto lg:flex-wrap lg:gap-y-4 lg:px-8 lg:py-5 print:hidden"
+                fixed
+              >
+                {state.step === 'result' ? (
+                  <PriceBarTotal
+                    amount={quote.total}
+                    label="예상 총 비용"
+                    note={
+                      <span className="hidden lg:inline">
+                        취득세와 부대비용을 포함한 금액입니다
+                      </span>
+                    }
+                  />
+                ) : (
+                  <PriceBarTotal
+                    amount={quote.listPrice}
+                    note={<span className="hidden lg:inline">취득세와 부대비용은 별도입니다</span>}
+                  />
+                )}
+                <PriceBarActions className="ml-auto flex-nowrap lg:ml-0 lg:w-full [&>button]:lg:flex-1">
+                  <Button
+                    disabled={previous === null}
+                    variant="secondary"
+                    onClick={() => {
+                      if (previous) dispatch({ type: 'go', step: previous });
+                    }}
+                  >
+                    이전
+                  </Button>
+                  {next ? (
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        dispatch({ type: 'go', step: next });
+                      }}
+                    >
+                      다음
+                    </Button>
+                  ) : null}
+                </PriceBarActions>
+              </PriceBar>
+            </div>
+          </section>
+        </main>
+
+        <ConfirmChangeDialog {...panelProps} returnFocusRef={headingRef} />
+        <BlockedDialog {...panelProps} returnFocusRef={headingRef} />
+        <SuggestionDialog {...panelProps} returnFocusRef={headingRef} />
+      </div>
+    </ToastProvider>
   );
+}
+
+/**
+ * 인쇄하는 동안만 다크 테마를 풀어 흰 바탕에 어두운 글자로 나오게 한다. 다크 토큰 그대로 인쇄하면 검은 배경이거나
+ * (배경 인쇄를 끄면) 흰 종이에 연한 글자라 읽을 수 없다. 인쇄가 끝나면 원래 테마로 돌린다.
+ */
+function usePrintLight() {
+  useEffect(() => {
+    let wasDark = false;
+    const before = () => {
+      // beforeprint가 afterprint 없이 두 번 오면 두 번째에는 이미 클래스가 없으므로, 처음에 어두웠다는 기억을 덮어쓰지 않는다.
+      if (document.documentElement.classList.contains('dark')) {
+        wasDark = true;
+        document.documentElement.classList.remove('dark');
+      }
+    };
+    const after = () => {
+      if (wasDark) document.documentElement.classList.add('dark');
+      wasDark = false;
+    };
+    window.addEventListener('beforeprint', before);
+    window.addEventListener('afterprint', after);
+    return () => {
+      window.removeEventListener('beforeprint', before);
+      window.removeEventListener('afterprint', after);
+    };
+  }, []);
 }
 
 const DESKTOP_QUERY = '(min-width: 1024px)';

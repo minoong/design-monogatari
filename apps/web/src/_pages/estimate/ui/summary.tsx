@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@repo/ui/button';
 import { PriceBreakdown, PriceRow } from '@repo/ui/price-bar';
 import type { Dispatch } from 'react';
 
@@ -12,11 +13,14 @@ export function SummaryList({
   quote,
   dispatch,
   onNavigate,
+  readOnly = false,
 }: {
   quote: Quote;
   dispatch: Dispatch<WizardAction>;
   /** 단계로 이동한 뒤 호출한다 (시트를 닫는 데 쓴다). */
   onNavigate?: () => void;
+  /** 인쇄용: "변경" 버튼을 그리지 않는다. */
+  readOnly?: boolean;
 }) {
   return (
     <PriceBreakdown title="선택 내역">
@@ -29,11 +33,13 @@ export function SummaryList({
             amount={line.amount === 0 ? '기본 포함' : line.amount}
             signed={!isBase}
             action={
-              isBase ? undefined : (
-                <button
-                  type="button"
+              isBase || readOnly ? undefined : (
+                <Button
                   aria-label={`${line.label} 변경`}
-                  className="text-foreground focus-visible:ring-ring text-caption rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none"
+                  className="-my-1.5 underline underline-offset-2"
+                  radius="md"
+                  size="small"
+                  variant="clear"
                   onClick={() => {
                     if (line.item.slot !== 'base') {
                       dispatch({ type: 'go', step: stepOf(line.item.slot) });
@@ -42,7 +48,7 @@ export function SummaryList({
                   }}
                 >
                   변경
-                </button>
+                </Button>
               )
             }
           />

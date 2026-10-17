@@ -336,7 +336,7 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 ### CopyButton
 
-- `CopyButton` wraps `Button` (default `secondary`, `medium`). `value`, `label` / `copiedLabel` / `failedLabel`, `resetDelay` (2000ms), `onCopy`, `onCopyError`. All labels are stacked in one grid cell so the width never changes; always-mounted sr-only regions announce the result: `role="status"` for success and `role="alert"` for failure, re-rendered with a counter key so repeats are read again. `aria-label` is not accepted (it would freeze the state label); the regions are siblings, so avoid `space-*`/`divide-*`/`:last-child` styled groups. Falls back to the failed label when `navigator.clipboard` is unavailable.
+- `CopyButton` wraps `Button` and inherits its defaults (`variant`, `size`, `radius`): do not set different defaults here, or a copy button placed next to a plain `Button` will look different (it once defaulted to `medium` next to `large` buttons). `value`, `label` / `copiedLabel` / `failedLabel`, `iconOnly` (square icon button like `IconButton`; the label stays as sr-only text so the accessible name still changes with the state), `resetDelay` (2000ms), `onCopy`, `onCopyError`. All labels are stacked in one grid cell so the width never changes; always-mounted sr-only regions announce the result: `role="status"` for success and `role="alert"` for failure, re-rendered with a counter key so repeats are read again. `aria-label` is not accepted (it would freeze the state label); the regions are siblings, so avoid `space-*`/`divide-*`/`:last-child` styled groups. Falls back to the failed label when `navigator.clipboard` is unavailable.
 
 ### Do
 

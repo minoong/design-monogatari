@@ -112,7 +112,7 @@ export function VehicleStage({
         )}
       </div>
       {!showFallback ? (
-        <div className="flex flex-wrap justify-end gap-1">
+        <div className="flex flex-wrap justify-end gap-2">
           <Button
             aria-label="차량 확대"
             disabled={!ready}

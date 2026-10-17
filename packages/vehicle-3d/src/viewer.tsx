@@ -2,7 +2,7 @@
 
 import { Canvas, useThree } from '@react-three/fiber';
 import { type RefObject, useEffect, useState } from 'react';
-import { Box3, type Object3D, Vector3 } from 'three';
+import { Box3, type Object3D, PCFShadowMap, Vector3 } from 'three';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -181,7 +181,7 @@ export function VehicleCanvas({
       className={className}
       camera={{ position: [...STUDIO_CAMERA.position], fov: STUDIO_CAMERA.fov }}
       gl={{ alpha: true, antialias: true }}
-      shadows
+      shadows={{ type: PCFShadowMap }}
     >
       <AdaptiveFov />
       <ThreeStudio />

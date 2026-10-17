@@ -16,17 +16,22 @@ export type CopyButtonProps = Omit<
   label?: string;
   copiedLabel?: string;
   failedLabel?: string;
+  /** 글자 없이 아이콘만 보인다(정사각형). 문구는 화면에서만 숨기고 접근성 이름과 알림으로는 그대로 쓴다. */
+  iconOnly?: boolean;
   /** 복사 결과 문구가 원래 문구로 돌아오기까지 걸리는 시간(ms) */
   resetDelay?: number;
   onCopy?: (value: string) => void;
   onCopyError?: (error: unknown) => void;
 };
 
+/**
+ * 아이콘에는 `data-icon`(Button이 글자 옆 아이콘으로 보고 한쪽 여백을 줄이는 표식)을 달지 않는다. 아이콘과 문구를 한 묶음으로
+ * 가운데에 두므로 좌우 여백이 같아야 하고, 아이콘만 있는 버튼에서는 정중앙에 와야 한다.
+ */
 function CopyIcon() {
   return (
     <svg
       aria-hidden
-      data-icon="inline-start"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -44,7 +49,6 @@ function CheckIcon() {
   return (
     <svg
       aria-hidden
-      data-icon="inline-start"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -69,10 +73,12 @@ export function CopyButton({
   copiedLabel = '복사했습니다',
   failedLabel = '복사하지 못했습니다',
   resetDelay = 2000,
+  iconOnly = false,
   onCopy,
   onCopyError,
-  variant = 'secondary',
-  size = 'medium',
+  variant,
+  size,
+  radius,
   className,
   ...props
 }: CopyButtonProps) {
@@ -118,21 +124,38 @@ export function CopyButton({
         type="button"
         variant={variant}
         size={size}
+        icon={iconOnly}
+        // 아이콘만 보일 때는 IconButton과 같은 모서리(md)가 기본이다. 직접 정하면 그 값을 쓴다.
+        radius={radius ?? (iconOnly ? 'md' : undefined)}
         className={cn(className)}
         onClick={() => {
           void copy();
         }}
         {...props}
       >
-        {state === 'copied' ? <CheckIcon /> : <CopyIcon />}
-        {/* 모든 문구를 겹쳐 두고 현재 것만 보여서, 문구가 바뀌어도 너비가 변하지 않는다. */}
-        <span className="inline-grid justify-items-center">
-          {(Object.keys(labels) as CopyState[]).map((key) => (
-            <span key={key} className={cn('col-start-1 row-start-1', key !== state && 'invisible')}>
-              {labels[key]}
-            </span>
-          ))}
-        </span>
+        {iconOnly ? (
+          <>
+            {state === 'copied' ? <CheckIcon /> : <CopyIcon />}
+            <span className="sr-only">{labels[state]}</span>
+          </>
+        ) : (
+          // 모든 상태의 (아이콘 + 문구)를 한 칸에 겹쳐 두고 현재 것만 보여서, 문구가 바뀌어도 너비가 변하지 않는다.
+          // 아이콘은 문구와 함께 가운데에 모여 있어서 짧은 문구에서도 아이콘과 글자 사이가 벌어지지 않는다.
+          <span className="inline-grid">
+            {(Object.keys(labels) as CopyState[]).map((key) => (
+              <span
+                key={key}
+                className={cn(
+                  'col-start-1 row-start-1 inline-flex items-center justify-center gap-1.5',
+                  key !== state && 'invisible',
+                )}
+              >
+                {key === 'copied' ? <CheckIcon /> : <CopyIcon />}
+                {labels[key]}
+              </span>
+            ))}
+          </span>
+        )}
       </Button>
       <span role="status" className="sr-only">
         {state === 'copied' ? <span key={announceId}>{labels.copied}</span> : null}

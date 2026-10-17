@@ -78,7 +78,10 @@ export function DataTable<Row>({
               <th
                 key={column.key}
                 scope="col"
-                className={cn('px-4 py-2.5 font-medium wrap-break-word', alignment(column))}
+                className={cn(
+                  'px-4 py-2.5 font-medium wrap-break-word break-keep',
+                  alignment(column),
+                )}
               >
                 {column.header}
               </th>
@@ -93,14 +96,17 @@ export function DataTable<Row>({
                   <th
                     key={column.key}
                     scope="row"
-                    className={cn('px-4 py-3 font-medium wrap-break-word', alignment(column))}
+                    className={cn(
+                      'px-4 py-3 font-medium wrap-break-word break-keep',
+                      alignment(column),
+                    )}
                   >
                     {valueOf(row, column)}
                   </th>
                 ) : (
                   <td
                     key={column.key}
-                    className={cn('px-4 py-3 wrap-break-word', alignment(column))}
+                    className={cn('px-4 py-3 wrap-break-word break-keep', alignment(column))}
                   >
                     {valueOf(row, column)}
                   </td>
@@ -117,7 +123,7 @@ export function DataTable<Row>({
                   <th
                     key={column.key}
                     scope="row"
-                    className={cn('px-4 py-3 wrap-break-word', alignment(column))}
+                    className={cn('px-4 py-3 wrap-break-word break-keep', alignment(column))}
                   >
                     {footer[column.key]}
                   </th>
