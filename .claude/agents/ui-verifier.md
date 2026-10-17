@@ -120,6 +120,8 @@ You verify visual UI for design-monogatari. Do not ask the user. Do not commit. 
 
    Also compare controls that are neighbours but not siblings (a `Button` next to a wrapper component's button), scrollbars (enumerate elements with scrollHeight > clientHeight and overflow auto/scroll, plus the document), and `position: absolute` elements (sr-only included) that escape an `overflow` scroller.
 
+   **State-change shift check.** Anything that toggles in place (theme switch, tab or accordion, copy/save buttons whose label changes, price or count that changes length, loading to loaded) must not move its neighbours. Record `getBoundingClientRect()` (x, width, height, top) of the control, its siblings, and the header, toolbar or panel around it before the change, click it, wait for transitions, record again, and click back. Report every element whose x, width, height or top changed, with the pixel delta, zeros included. A label that changes length (for example "다크" to "라이트") shifts a right-aligned group and re-centres anything centred beside it, so measure at the widths where the layout changes (1920, 1440, 1280, 1024, 768, 390), not only one.
+
 6. Console must have 0 errors and 0 warnings.
 7. Then run `pnpm verify` (or format/lint/types/build for the affected packages).
 8. Budget: one run covers one coherent set of pages. If the task lists many cases, do them in the order given and send partial results as soon as ~10 minutes have passed or two consecutive tool calls make no progress (the parent can restart with the remaining cases). Never sit waiting; a long silent run looks like a stall.
