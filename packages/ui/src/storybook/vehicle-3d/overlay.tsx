@@ -1,5 +1,6 @@
 'use client';
 
+import { INTERIOR_SWATCHES, type InteriorId } from '@repo/vehicle-3d/interiors';
 import { PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
 import { vehicleById, type VehicleId } from '@repo/vehicle-3d/vehicles';
 import { CAMERA_VIEW_IDS, CAMERA_VIEWS, type CameraViewId } from '@repo/vehicle-3d/views';
@@ -23,6 +24,12 @@ const PAINT_OPTIONS: readonly ColorSwatchOption[] = [
     color: swatch.hex,
   })),
 ];
+
+const INTERIOR_OPTIONS: readonly ColorSwatchOption[] = INTERIOR_SWATCHES.map((swatch) => ({
+  value: swatch.id,
+  label: swatch.label,
+  color: swatch.hex,
+}));
 
 /**
  * CC BY 4.0 notice for the vehicle model (see `vehicles.ts` `credit`). One line is always
@@ -92,6 +99,8 @@ export function SequenceOverlay({
   engine,
   kind,
   paintId,
+  interiorId,
+  onInteriorId,
   view,
   onView,
   onPaintId,
@@ -103,6 +112,8 @@ export function SequenceOverlay({
   kind: string;
   /** null 이면 모델 원래 색 */
   paintId: PaintId | null;
+  interiorId: InteriorId;
+  onInteriorId: (id: InteriorId) => void;
   /** 카메라 시점. 바뀌면 카메라가 부드럽게 옮겨 간다. */
   view: CameraViewId;
   onView: (view: CameraViewId) => void;
@@ -174,10 +185,20 @@ export function SequenceOverlay({
           onPaintId(value === ORIGINAL_PAINT ? null : (value as PaintId));
         }}
       />
+      <ColorSwatchGroup
+        className="mt-3 max-w-56"
+        legend="내장"
+        name="vehicle-interior"
+        options={INTERIOR_OPTIONS}
+        value={interiorId}
+        onValueChange={(value) => {
+          onInteriorId(value as InteriorId);
+        }}
+      />
       {/* 맨 아래에 둔다. 위쪽에 넣으면 나타날 때마다 아래 버튼들이 밀린다. */}
       {CAMERA_VIEWS[view].inside ? (
         <p className="text-caption text-muted-foreground mt-3" role="status">
-          실내는 모델의 기본 구성이며 도장 색은 반영되지 않습니다.
+          실내는 비슷한 색으로 보여 주는 근사값입니다. 도장 색은 실내에 반영되지 않습니다.
         </p>
       ) : null}
     </>

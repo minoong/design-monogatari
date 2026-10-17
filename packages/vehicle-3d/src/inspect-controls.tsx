@@ -20,7 +20,7 @@ export type InspectHandle = {
 const MOVE_SECONDS = 1.1;
 /** 실내에서는 눈앞 이 거리의 한 점을 조준점으로 삼아 그 둘레를 돈다. 제자리에서 둘러보는 느낌이 된다. */
 const INSIDE_ORBIT_RADIUS = 0.1;
-/** 실내 조명. 지붕이 햇빛과 그림자를 가려서 실내가 검게 보이므로 안쪽에서 보태 준다. */
+/** 기본 실내 조명(검정 실내). 지붕이 햇빛과 그림자를 가려서 실내가 검게 보이므로 안쪽에서 보태 준다. */
 const CABIN_LIGHT = { intensity: 6, environment: 3 };
 
 type Pose = { position: Vector3; target: Vector3; fov: number };
@@ -92,11 +92,14 @@ function openLimits(controls: OrbitControls) {
 export function InspectControls({
   handleRef,
   view,
+  cabinLight = CABIN_LIGHT,
   wheelZoom = true,
 }: {
   handleRef: RefObject<InspectHandle | null>;
   /** 카메라 시점. 바뀌면 현재 위치에서 새 시점까지 부드럽게 움직인다. */
   view: CameraViewId;
+  /** 실내 시점에서 더하는 조명. 실내 색에 맞춰 호스트가 정한다. */
+  cabinLight?: { intensity: number; environment: number };
   /** false 이면 휠·핀치 확대를 끈다. 스크롤되는 페이지 안에서 휠이 페이지 스크롤을 가로채지 않게 한다(확대는 `handleRef`로). */
   wheelZoom?: boolean;
 }) {
@@ -260,9 +263,9 @@ export function InspectControls({
       cabinBlendRef.current = goal;
     }
     if (cabinLightRef.current) {
-      cabinLightRef.current.intensity = CABIN_LIGHT.intensity * cabinBlendRef.current;
+      cabinLightRef.current.intensity = cabinLight.intensity * cabinBlendRef.current;
     }
-    setEnvironmentIntensity(scene, 1 + (CABIN_LIGHT.environment - 1) * cabinBlendRef.current);
+    setEnvironmentIntensity(scene, 1 + (cabinLight.environment - 1) * cabinBlendRef.current);
 
     controls.update();
   });

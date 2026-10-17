@@ -157,6 +157,7 @@ export function EstimateApp({
             <VehicleStage
               color={state.selection.color}
               colorLabel={colorLabel}
+              interior={state.selection.interior}
               step={state.step}
               wheel={state.selection.wheel}
             />

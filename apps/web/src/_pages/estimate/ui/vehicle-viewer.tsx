@@ -1,5 +1,6 @@
 'use client';
 
+import type { InteriorSwatch } from '@repo/vehicle-3d/interiors';
 import type { PaintSwatch } from '@repo/vehicle-3d/paints';
 import { vehicleById, vehicleUrls } from '@repo/vehicle-3d/vehicles';
 import { type InspectHandle, useModelAvailable, VehicleCanvas } from '@repo/vehicle-3d/viewer';
@@ -14,6 +15,7 @@ const VEHICLE = vehicleById('x5-web');
  */
 export default function VehicleViewer({
   paint,
+  interior,
   wheelInch,
   inspectRef,
   view,
@@ -21,6 +23,7 @@ export default function VehicleViewer({
   onReady,
 }: {
   paint: PaintSwatch;
+  interior: InteriorSwatch;
   wheelInch: number;
   view: CameraViewId;
   inspectRef: RefObject<InspectHandle | null>;
@@ -40,6 +43,7 @@ export default function VehicleViewer({
       available={available}
       className="size-full"
       inspectRef={inspectRef}
+      interior={interior}
       onReady={onReady}
       paint={paint}
       vehicleId="x5-web"

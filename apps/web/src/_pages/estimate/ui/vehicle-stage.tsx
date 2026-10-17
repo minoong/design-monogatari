@@ -8,10 +8,11 @@ import type { CameraViewId } from '@repo/vehicle-3d/views';
 import dynamic from 'next/dynamic';
 import { Component, type ReactNode, useRef, useState } from 'react';
 
+import { interiorSwatchOf } from '../model/interior-map';
 import { paintOf } from '../model/paint-map';
 import { isInsideView, STAGE_VIEW_OPTIONS, stageViewOf } from '../model/stage-view';
 import type { StepId } from '../model/steps';
-import type { ColorId, WheelId } from '../model/types';
+import type { ColorId, InteriorId, WheelId } from '../model/types';
 import { WHEEL_INCH } from '../model/wheel-map';
 
 const VEHICLE = vehicleById('x5-web');
@@ -73,11 +74,13 @@ class ViewerBoundary extends Component<
 export function VehicleStage({
   color,
   colorLabel,
+  interior,
   wheel,
   step,
 }: {
   color: ColorId;
   colorLabel: string;
+  interior: InteriorId;
   wheel: WheelId;
   step: StepId;
 }) {
@@ -106,7 +109,8 @@ export function VehicleStage({
             className="bg-background/80 text-foreground text-caption absolute top-3 left-3 z-10 max-w-[calc(100%-1.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm"
             role="status"
           >
-            실내는 모델의 기본 구성입니다. 선택한 시트와 내장은 반영되지 않습니다.
+            실내 색은 비슷한 색으로 보여 드리는 근사값입니다. 시트 구성과 가니쉬는 반영되지
+            않습니다.
           </p>
         ) : null}
         {showFallback ? (
@@ -126,6 +130,7 @@ export function VehicleStage({
               onUnavailable={() => {
                 setUnavailable(true);
               }}
+              interior={interiorSwatchOf(interior)}
               paint={paint}
               view={view}
               wheelInch={WHEEL_INCH[wheel]}
@@ -188,8 +193,8 @@ export function VehicleStage({
       <figcaption className="text-muted-foreground text-caption flex flex-col gap-1">
         <span>
           비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서
-          돌려 볼 수 있고, 3D 모델에는 외장 색상과 휠 크기만 반영되고 시트와 내장은 반영되지
-          않습니다. 휠 모양은 한 가지입니다.
+          돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기가 반영됩니다. 시트
+          구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다.
         </span>
         <details>
           <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
