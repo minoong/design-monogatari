@@ -7,6 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { fovForAspect } from './adaptive-fov';
 import { CAMERA_VIEWS, type CameraViewId, isInsideView } from './camera-views';
+import { prefersReducedMotion } from './reduced-motion';
 
 export type InspectHandle = {
   /** 지금 시점의 처음 위치로 돌아간다. */
@@ -50,10 +51,6 @@ function setEnvironmentIntensity(scene: Scene, value: number) {
 
 function easeInOut(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 function applyViewLimits(controls: OrbitControls, view: CameraViewId, wheelZoom: boolean) {

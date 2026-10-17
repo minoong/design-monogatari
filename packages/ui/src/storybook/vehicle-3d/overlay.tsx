@@ -103,6 +103,8 @@ export function SequenceOverlay({
   onInteriorId,
   sunroof,
   onSunroof,
+  sunroofOpen,
+  onSunroofOpen,
   view,
   onView,
   onPaintId,
@@ -119,6 +121,9 @@ export function SequenceOverlay({
   /** false 이면 선루프 구멍을 막은 차 */
   sunroof: boolean;
   onSunroof: (sunroof: boolean) => void;
+  /** 선루프 유리를 연 상태. 선루프가 없으면 쓰지 않는다. */
+  sunroofOpen: boolean;
+  onSunroofOpen: (open: boolean) => void;
   /** 카메라 시점. 바뀌면 카메라가 부드럽게 옮겨 간다. */
   view: CameraViewId;
   onView: (view: CameraViewId) => void;
@@ -218,6 +223,20 @@ export function SequenceOverlay({
               {value ? '있음' : '없음'}
             </Button>
           ))}
+          {/* 선루프가 없을 때도 자리를 지켜서, 있음과 없음을 바꿔도 아래 그룹이 밀리지 않는다. */}
+          <Button
+            aria-pressed={sunroof && sunroofOpen}
+            className={sunroof && sunroofOpen ? 'border-foreground' : undefined}
+            disabled={!sunroof}
+            size="small"
+            type="button"
+            variant="secondary"
+            onClick={() => {
+              onSunroofOpen(!sunroofOpen);
+            }}
+          >
+            열기
+          </Button>
         </div>
       </div>
       {/* 맨 아래에 둔다. 위쪽에 넣으면 나타날 때마다 아래 버튼들이 밀린다. */}

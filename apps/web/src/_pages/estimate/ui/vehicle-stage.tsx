@@ -98,6 +98,11 @@ export function VehicleStage({
     setPicked(null);
   }
   const view = picked?.step === step ? picked.view : stageViewOf(step);
+  // 선루프를 연 상태. 선루프 품목을 빼면 닫힌 상태로 돌려 놓는다(다시 담았을 때 열린 채로 나타나지 않게).
+  const [sunroofOpen, setSunroofOpen] = useState(false);
+  if (!sunroof && sunroofOpen) {
+    setSunroofOpen(false);
+  }
   const inside = isInsideView(view);
   const paint = paintOf(color);
   const showFallback = unavailable || failed;
@@ -136,6 +141,7 @@ export function VehicleStage({
               interior={interiorSwatchOf(interior)}
               paint={paint}
               sunroof={sunroof}
+              sunroofOpen={sunroofOpen}
               view={view}
               wheelInch={WHEEL_INCH[wheel]}
             />
@@ -146,22 +152,38 @@ export function VehicleStage({
       </div>
       {!showFallback ? (
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div aria-label="카메라 시점" className="flex flex-wrap gap-2" role="group">
-            {STAGE_VIEW_OPTIONS.map((option) => (
+          <div className="flex flex-wrap gap-2">
+            <div aria-label="카메라 시점" className="flex flex-wrap gap-2" role="group">
+              {STAGE_VIEW_OPTIONS.map((option) => (
+                <Button
+                  key={option.id}
+                  aria-pressed={view === option.id}
+                  className={view === option.id ? 'border-foreground' : undefined}
+                  disabled={!ready}
+                  size="small"
+                  variant="secondary"
+                  onClick={() => {
+                    setPicked({ step, view: option.id });
+                  }}
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+            {sunroof ? (
               <Button
-                key={option.id}
-                aria-pressed={view === option.id}
-                className={view === option.id ? 'border-foreground' : undefined}
+                aria-pressed={sunroofOpen}
+                className={sunroofOpen ? 'border-foreground' : undefined}
                 disabled={!ready}
                 size="small"
                 variant="secondary"
                 onClick={() => {
-                  setPicked({ step, view: option.id });
+                  setSunroofOpen((open) => !open);
                 }}
               >
-                {option.label}
+                선루프 열기
               </Button>
-            ))}
+            ) : null}
           </div>
           <div className="flex flex-wrap gap-2">
             <Button
