@@ -20,7 +20,7 @@ import { describeEffect } from '../model/describe';
 import { calculateQuote } from '../model/quote';
 import { hasSunroof } from '../model/roof-map';
 import { neighborStep, type StepId, STEPS } from '../model/steps';
-import { wizardReducer, type WizardState } from '../model/wizard';
+import { type WizardAction, wizardReducer, type WizardState } from '../model/wizard';
 import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-dialogs';
 import { EstimateHeader } from './estimate-header';
 import { ResultStep } from './result-step';
@@ -72,6 +72,8 @@ export function EstimateApp({
   const [issuesOpen, setIssuesOpen] = useState(restoreIssueCount > 0);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  // 선택을 시도한 요소(눌렀던 라디오). 고를 수 없다는 안내 창이 닫히면 초점을 여기로 돌려보내, 방향키로 이어서 움직일 수 있게 한다.
+  const openerRef = useRef<HTMLElement | null>(null);
   const shownStep = useRef(initial.step);
   const focusHeadingOnClose = useRef(false);
 
@@ -102,7 +104,16 @@ export function EstimateApp({
   const previous = neighborStep(state.step, -1);
   const next = neighborStep(state.step, 1);
   const currentLabel = STEPS[stepIndex]?.label ?? '';
-  const panelProps = { state, dispatch };
+  const panelProps = {
+    state,
+    dispatch: (action: WizardAction) => {
+      if (action.type === 'intent') {
+        openerRef.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      }
+      dispatch(action);
+    },
+  };
 
   const isDesktop = useIsDesktop();
   usePrintLight();
@@ -289,7 +300,7 @@ export function EstimateApp({
         </main>
 
         <ConfirmChangeDialog {...panelProps} returnFocusRef={headingRef} />
-        <BlockedDialog {...panelProps} returnFocusRef={headingRef} />
+        <BlockedDialog {...panelProps} fallbackFocusRef={headingRef} returnFocusRef={openerRef} />
         <SuggestionDialog {...panelProps} returnFocusRef={headingRef} />
       </div>
     </ToastProvider>

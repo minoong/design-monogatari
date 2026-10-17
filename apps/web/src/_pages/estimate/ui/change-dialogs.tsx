@@ -26,15 +26,22 @@ function signedWon(amount: number) {
 interface DialogProps {
   state: WizardState;
   dispatch: Dispatch<WizardAction>;
-  /** 창이 닫힌 뒤 초점을 보낼 곳. 눌렀던 라디오는 닫힘과 함께 사라질 수 있어 단계 제목으로 보낸다. */
+  /** 창이 닫힌 뒤 초점을 보낼 곳. 눌렀던 라디오는 닫힘과 함께 사라질 수 있어 단계 제목으로 보낸다(고를 수 없다는 안내 창은 행이 그대로라 눌렀던 행으로 돌려보낸다). */
   returnFocusRef?: RefObject<HTMLElement | null>;
+  /** `returnFocusRef`의 요소가 이미 사라졌을 때 대신 초점을 보낼 곳 */
+  fallbackFocusRef?: RefObject<HTMLElement | null>;
 }
 
-function returnFocus(ref?: RefObject<HTMLElement | null>) {
+/** 첫 번째로 아직 화면에 있는 요소로 초점을 보낸다. 없으면 Radix의 기본 동작에 맡긴다. */
+function returnFocus(
+  ref?: RefObject<HTMLElement | null>,
+  fallback?: RefObject<HTMLElement | null>,
+) {
   return (event: Event) => {
-    if (ref?.current) {
+    const target = [ref?.current, fallback?.current].find((element) => element?.isConnected);
+    if (target) {
       event.preventDefault();
-      ref.current.focus();
+      target.focus();
     }
   };
 }
@@ -91,7 +98,7 @@ export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogP
 }
 
 /** 막힌 변경: 왜 선택할 수 없는지 알리고, 대안 트림이 있으면 바꾸도록 제안한다. */
-export function BlockedDialog({ state, dispatch, returnFocusRef }: DialogProps) {
+export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRef }: DialogProps) {
   const effects = state.blocked ?? [];
   const alternativeTrim = effects.find(
     (effect) => effect.kind === 'unavailable-reason' && effect.alternativeTrim,
@@ -104,7 +111,7 @@ export function BlockedDialog({ state, dispatch, returnFocusRef }: DialogProps) 
         if (!open) dispatch({ type: 'dismiss-blocked' });
       }}
     >
-      <DialogContent onCloseAutoFocus={returnFocus(returnFocusRef)}>
+      <DialogContent onCloseAutoFocus={returnFocus(returnFocusRef, fallbackFocusRef)}>
         <DialogHeader>
           <DialogTitle>지금은 선택할 수 없습니다</DialogTitle>
           <DialogDescription>선택은 그대로이고, 견적 금액도 바뀌지 않았습니다.</DialogDescription>

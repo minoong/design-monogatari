@@ -263,7 +263,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 ### ColorSwatchGroup
 
-- Colour chips: 36px circles with a hairline; selected = `ring-2 ring-primary ring-offset-2`; keyboard focus = 2px outline offset 4px. The chip colour comes from the caller (`color`) and is the only place a non-token colour appears; the component never hardcodes one.
+- Colour chips: 36px circles with a hairline; selected = `ring-2 ring-primary ring-offset-2` (in dark `ring-primary-on-dark`: `primary` is a deep blue that nearly disappears on a dark panel); keyboard focus = 2px outline offset 4px. The chip colour comes from the caller (`color`) and is the only place a non-token colour appears; the component never hardcodes one.
 - `group` renders sub-headings (`text-caption text-muted-foreground`). The caption under the chips shows the hovered/focused chip, else the selected one: name + price, or its `unavailableReason`.
 - Unavailable chips get a diagonal strike (not colour alone), stay enabled with `aria-disabled`, and expose the reason via `aria-describedby`.
 
