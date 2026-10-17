@@ -8,7 +8,8 @@
     "./paints": "./src/paints.ts",
     "./constants": "./src/constants.ts",
     "./views": "./src/camera-views.ts",
-    "./interiors": "./src/interiors.ts"
+    "./interiors": "./src/interiors.ts",
+    "./calipers": "./src/calipers.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

@@ -18,6 +18,9 @@ import { SINGLE_SLOTS } from './types';
 /** URL 형식 버전. 코드 체계를 바꾸면 올리고, 이전 버전 링크는 기본값으로 복구한다. */
 export const CODEC_VERSION = '1';
 
+/** 캘리퍼가 생기기 전의 위치 코드 슬롯(앞 7개). 이 길이의 링크도 열려야 한다. */
+const LEGACY_POSITIONAL_SLOTS = SINGLE_SLOTS.slice(0, -1);
+
 const MULTI_CODE_LENGTH = 2;
 const DEFAULT_QUOTE_OPTIONS: QuoteOptions = { taxType: 'taxable', region: 'seoul' };
 const TAX_CODES: Record<TaxType, string> = { taxable: 'taxable', exempt: 'exempt' };
@@ -59,7 +62,8 @@ function isEmpty(input: ParamsSource): boolean {
 /**
  * 선택 전체를 쿼리 문자열로 만든다. 예: `v=1&c=GCW95KC&p=rcpp&a=fm`
  *
- * - `c`: 파워트레인·트림·외장·휠·시트·내장·가니쉬의 1자 코드를 이 순서로 이어 붙인 7자.
+ * - `c`: 파워트레인·트림·외장·휠·시트·내장·가니쉬·브레이크 캘리퍼의 1자 코드를 이 순서로 이어 붙인 8자.
+ *   캘리퍼가 생기기 전에 만든 7자 링크도 열린다(`decodeEstimate`가 캘리퍼를 기본값으로 둔다).
  * - `p`, `a`: 패키지·액세서리의 2자 코드를 카탈로그 순서로 이어 붙인다. 비면 생략한다.
  * - `r`, `t`: 지역과 과세 구분. 기본값(서울·과세)이면 생략한다.
  */
@@ -120,10 +124,12 @@ export function decodeEstimate(
 
   const draft: Selection = { ...defaults };
   const positional = read(input, 'c') ?? '';
-  if (positional.length !== SINGLE_SLOTS.length) {
+  // 캘리퍼 슬롯이 추가되기 전의 링크는 마지막 슬롯만 빠진 길이다. 그 슬롯은 기본값으로 둔다.
+  const legacyLength = LEGACY_POSITIONAL_SLOTS.length;
+  if (positional.length !== SINGLE_SLOTS.length && positional.length !== legacyLength) {
     issues.push({ kind: 'malformed', field: 'c', value: positional });
   } else {
-    SINGLE_SLOTS.forEach((slot, index) => {
+    SINGLE_SLOTS.slice(0, positional.length).forEach((slot, index) => {
       const char = positional[index]!;
       const item = catalog[slot].find((candidate) => candidate.code === char);
       if (item) (draft as unknown as Record<string, string>)[slot] = item.id;

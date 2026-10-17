@@ -449,3 +449,70 @@ describe('불변식: 어떤 변경이든 결과는 항상 규칙에 맞는 상�
     }
   });
 });
+
+describe('브레이크 캘리퍼', () => {
+  it('컴포트 트림에서는 레드와 블루를 고를 수 없다', () => {
+    const result = resolveSelection(defaults(), { type: 'set', slot: 'caliper', id: 'red' });
+    expect(result.status).toBe('blocked');
+    expect(result.next.caliper).toBe('standard');
+  });
+
+  it('스포트 트림에서는 고를 수 있다', () => {
+    const selection = apply(sportGasoline(), { type: 'set', slot: 'caliper', id: 'blue' });
+    expect(selection.caliper).toBe('blue');
+  });
+
+  it('스포트에서 컴포트로 바꾸면 캘리퍼가 조용히 사라지지 않고 되돌린 사실이 효과로 남는다', () => {
+    const prev = apply(sportGasoline(), { type: 'set', slot: 'caliper', id: 'red' });
+    const result = resolveSelection(prev, { type: 'set', slot: 'trim', id: 'comfort' });
+    expect(result.next.caliper).toBe('standard');
+    expect(result.effects).toContainEqual(
+      expect.objectContaining({ kind: 'remapped', slot: 'caliper', from: 'red', to: 'standard' }),
+    );
+  });
+});
+
+describe('브레이크 캘리퍼의 휠 조건', () => {
+  const sportW20 = () => apply(sportGasoline(), { type: 'set', slot: 'wheel', id: 'w20' });
+
+  it('블랙과 옐로는 스포트 트림이어도 19인치 휠에서는 고를 수 없다', () => {
+    for (const id of ['black', 'yellow'] as const) {
+      const result = resolveSelection(sportGasoline(), { type: 'set', slot: 'caliper', id });
+      expect(result.status).toBe('blocked');
+    }
+  });
+
+  it('20인치 휠에서는 블랙과 옐로를 고를 수 있고 골드는 고를 수 없다', () => {
+    expect(apply(sportW20(), { type: 'set', slot: 'caliper', id: 'yellow' }).caliper).toBe(
+      'yellow',
+    );
+    const gold = resolveSelection(sportW20(), { type: 'set', slot: 'caliper', id: 'gold' });
+    expect(gold.status).toBe('blocked');
+  });
+
+  it('휠을 19인치로 줄이면 옐로가 조용히 사라지지 않고 되돌린 사실이 효과로 남는다', () => {
+    const prev = apply(sportW20(), { type: 'set', slot: 'caliper', id: 'yellow' });
+    const result = resolveSelection(prev, { type: 'set', slot: 'wheel', id: 'w19' });
+    expect(result.next.caliper).toBe('standard');
+    expect(result.effects).toContainEqual(
+      expect.objectContaining({
+        kind: 'remapped',
+        slot: 'caliper',
+        from: 'yellow',
+        to: 'standard',
+      }),
+    );
+  });
+
+  it('금액: 블루 450,000, 레드 650,000, 옐로 1,200,000, 골드 2,500,000', () => {
+    const prices = Object.fromEntries(CATALOG.caliper.map((item) => [item.id, item.price]));
+    expect(prices).toEqual({
+      standard: 0,
+      blue: 450_000,
+      red: 650_000,
+      black: 450_000,
+      yellow: 1_200_000,
+      gold: 2_500_000,
+    });
+  });
+});

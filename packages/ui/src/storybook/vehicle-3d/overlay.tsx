@@ -1,5 +1,6 @@
 'use client';
 
+import { CALIPER_SWATCHES, type CaliperId } from '@repo/vehicle-3d/calipers';
 import { INTERIOR_SWATCHES, type InteriorId } from '@repo/vehicle-3d/interiors';
 import { PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
 import { vehicleById, type VehicleId } from '@repo/vehicle-3d/vehicles';
@@ -24,6 +25,12 @@ const PAINT_OPTIONS: readonly ColorSwatchOption[] = [
     color: swatch.hex,
   })),
 ];
+
+const CALIPER_OPTIONS: readonly ColorSwatchOption[] = CALIPER_SWATCHES.map((swatch) => ({
+  value: swatch.id,
+  label: swatch.label,
+  color: swatch.hex,
+}));
 
 const INTERIOR_OPTIONS: readonly ColorSwatchOption[] = INTERIOR_SWATCHES.map((swatch) => ({
   value: swatch.id,
@@ -101,6 +108,8 @@ export function SequenceOverlay({
   paintId,
   interiorId,
   onInteriorId,
+  caliperId,
+  onCaliperId,
   sunroof,
   onSunroof,
   sunroofOpen,
@@ -118,6 +127,8 @@ export function SequenceOverlay({
   paintId: PaintId | null;
   interiorId: InteriorId;
   onInteriorId: (id: InteriorId) => void;
+  caliperId: CaliperId;
+  onCaliperId: (id: CaliperId) => void;
   /** false 이면 선루프 구멍을 막은 차 */
   sunroof: boolean;
   onSunroof: (sunroof: boolean) => void;
@@ -203,6 +214,16 @@ export function SequenceOverlay({
         value={interiorId}
         onValueChange={(value) => {
           onInteriorId(value as InteriorId);
+        }}
+      />
+      <ColorSwatchGroup
+        className="mt-3 max-w-56"
+        legend="캘리퍼"
+        name="vehicle-caliper"
+        options={CALIPER_OPTIONS}
+        value={caliperId}
+        onValueChange={(value) => {
+          onCaliperId(value as CaliperId);
         }}
       />
       <div className="mt-3">
