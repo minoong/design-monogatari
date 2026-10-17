@@ -75,6 +75,20 @@ describe('calculateQuote', () => {
   });
 });
 
+describe('브레이크 캘리퍼 금액', () => {
+  it('블루는 450,000원, 레드는 650,000원을 더한다', () => {
+    const base = apply(defaults(), { type: 'set', slot: 'trim', id: 'sport' });
+    const red = apply(base, { type: 'set', slot: 'caliper', id: 'red' });
+    const blue = apply(base, { type: 'set', slot: 'caliper', id: 'blue' });
+    expect(calculateQuote(red, seoulTaxable).listPrice).toBe(
+      calculateQuote(base, seoulTaxable).listPrice + 650_000,
+    );
+    expect(calculateQuote(blue, seoulTaxable).listPrice).toBe(
+      calculateQuote(base, seoulTaxable).listPrice + 450_000,
+    );
+  });
+});
+
 describe('formatWon', () => {
   it('천 단위 쉼표를 넣는다', () => {
     expect(formatWon(0)).toBe('0원');

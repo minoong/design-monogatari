@@ -9,6 +9,7 @@ export type WheelId = 'w19' | 'w20' | 'w21';
 export type SeatId = 'five' | 'four';
 export type InteriorId = 'black' | 'cream' | 'brown';
 export type GarnishId = 'carbon' | 'wood' | 'metal';
+export type CaliperId = 'standard' | 'blue' | 'red' | 'black' | 'yellow' | 'gold';
 export type PackageId =
   'comfort-rear' | 'driving-assist' | 'hud' | 'popular' | 'panorama' | 'sky-lounge';
 export type AccessoryId = 'floor-mat' | 'dashcam' | 'tow-hitch';
@@ -23,6 +24,8 @@ export const SINGLE_SLOTS = [
   'seat',
   'interior',
   'garnish',
+  // 코드는 가장 뒤에 붙인다(이전 7자리 링크가 그대로 열리도록 codec.ts가 길이 7을 받아 준다).
+  'caliper',
 ] as const;
 export type SingleSlot = (typeof SINGLE_SLOTS)[number];
 
@@ -34,6 +37,7 @@ export interface Selection {
   seat: SeatId;
   interior: InteriorId;
   garnish: GarnishId;
+  caliper: CaliperId;
   /** 사용자가 직접 고른 패키지. 다른 패키지에 포함된 항목은 여기 넣지 않는다. */
   packages: readonly PackageId[];
   accessories: readonly AccessoryId[];
@@ -54,6 +58,7 @@ export interface Condition {
   powertrain?: readonly PowertrainId[];
   trim?: readonly TrimId[];
   color?: readonly ColorId[];
+  wheel?: readonly WheelId[];
   interior?: readonly InteriorId[];
 }
 
@@ -104,6 +109,7 @@ export interface Catalog {
   seat: readonly CatalogItem<SeatId>[];
   interior: readonly CatalogItem<InteriorId>[];
   garnish: readonly CatalogItem<GarnishId>[];
+  caliper: readonly CatalogItem<CaliperId>[];
   package: readonly CatalogItem<PackageId>[];
   accessory: readonly CatalogItem<AccessoryId>[];
   suggestions: readonly SuggestionRule[];

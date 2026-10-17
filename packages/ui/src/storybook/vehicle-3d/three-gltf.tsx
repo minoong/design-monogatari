@@ -1,5 +1,6 @@
 'use client';
 
+import { caliperById, type CaliperId } from '@repo/vehicle-3d/calipers';
 import { interiorById, type InteriorId } from '@repo/vehicle-3d/interiors';
 import { paintById, type PaintId } from '@repo/vehicle-3d/paints';
 import {
@@ -34,6 +35,7 @@ export function ThreeGltfDemo({
   const [paintId, setPaintId] = useState<PaintId | null>(null);
   const [sunroof, setSunroof] = useState(true);
   const [sunroofOpen, setSunroofOpen] = useState(false);
+  const [caliperId, setCaliperId] = useState<CaliperId>('standard');
   const [interiorId, setInteriorId] = useState<InteriorId>('black');
   const [view, setView] = useState<CameraViewId>(initialView);
   const inspectRef = useRef<InspectHandle | null>(null);
@@ -49,6 +51,8 @@ export function ThreeGltfDemo({
           engine="Three.js"
           kind={vehicle.kind}
           paintId={paintId}
+          caliperId={caliperId}
+          onCaliperId={setCaliperId}
           interiorId={interiorId}
           onInteriorId={setInteriorId}
           sunroof={sunroof}
@@ -77,6 +81,7 @@ export function ThreeGltfDemo({
         available={available}
         className="absolute inset-0 size-full touch-none"
         inspectRef={inspectRef}
+        caliper={caliperById(caliperId)}
         interior={interiorById(interiorId)}
         paint={paintId ? paintById(paintId) : undefined}
         sunroof={sunroof}

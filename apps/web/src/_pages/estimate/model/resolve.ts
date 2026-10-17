@@ -454,6 +454,7 @@ export function createDefaultSelection(catalog: Catalog = CATALOG): Selection {
     seat: first('seat'),
     interior: first('interior'),
     garnish: first('garnish'),
+    caliper: first('caliper'),
     packages: [],
     accessories: [],
   } as Selection;

@@ -1,5 +1,6 @@
 'use client';
 
+import type { CaliperSwatch } from '@repo/vehicle-3d/calipers';
 import type { InteriorSwatch } from '@repo/vehicle-3d/interiors';
 import type { PaintSwatch } from '@repo/vehicle-3d/paints';
 import { vehicleById, vehicleUrls } from '@repo/vehicle-3d/vehicles';
@@ -16,6 +17,7 @@ const VEHICLE = vehicleById('x5-web');
 export default function VehicleViewer({
   paint,
   interior,
+  caliper,
   sunroof,
   sunroofOpen,
   wheelInch,
@@ -26,6 +28,7 @@ export default function VehicleViewer({
 }: {
   paint: PaintSwatch;
   interior: InteriorSwatch;
+  caliper: CaliperSwatch;
   sunroof: boolean;
   sunroofOpen: boolean;
   wheelInch: number;
@@ -47,6 +50,7 @@ export default function VehicleViewer({
       available={available}
       className="size-full"
       inspectRef={inspectRef}
+      caliper={caliper}
       interior={interior}
       onReady={onReady}
       paint={paint}

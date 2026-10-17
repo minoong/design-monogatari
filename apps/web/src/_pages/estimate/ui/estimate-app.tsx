@@ -156,6 +156,7 @@ export function EstimateApp({
         <main className="lg:flex lg:min-h-0 lg:flex-1 print:block">
           <div className="min-w-0 p-4 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:p-6 print:hidden">
             <VehicleStage
+              caliper={state.selection.caliper}
               color={state.selection.color}
               colorLabel={colorLabel}
               interior={state.selection.interior}

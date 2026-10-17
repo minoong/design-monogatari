@@ -12,6 +12,7 @@ export const SLOT_LABEL: Record<ItemRef['slot'] | 'trim', string> = {
   seat: '시트',
   interior: '내장 색상',
   garnish: '가니쉬',
+  caliper: '브레이크 캘리퍼',
   package: '선택 품목',
   accessory: '액세서리',
 };

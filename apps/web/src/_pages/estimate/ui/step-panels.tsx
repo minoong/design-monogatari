@@ -106,7 +106,12 @@ export function ExteriorStep({ state, dispatch }: PanelProps) {
 }
 
 export function WheelStep(props: PanelProps) {
-  return <SlotOptions {...props} slot="wheel" legend="휠" />;
+  return (
+    <div className="flex flex-col gap-8">
+      <SlotOptions {...props} slot="wheel" legend="휠" />
+      <SlotOptions {...props} slot="caliper" legend="브레이크 캘리퍼" />
+    </div>
+  );
 }
 
 export function SeatStep(props: PanelProps) {

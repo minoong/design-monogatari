@@ -8,11 +8,12 @@ import type { CameraViewId } from '@repo/vehicle-3d/views';
 import dynamic from 'next/dynamic';
 import { Component, type ReactNode, useRef, useState } from 'react';
 
+import { caliperSwatchOf } from '../model/caliper-map';
 import { interiorSwatchOf } from '../model/interior-map';
 import { paintOf } from '../model/paint-map';
 import { isInsideView, STAGE_VIEW_OPTIONS, stageViewOf } from '../model/stage-view';
 import type { StepId } from '../model/steps';
-import type { ColorId, InteriorId, WheelId } from '../model/types';
+import type { CaliperId, ColorId, InteriorId, WheelId } from '../model/types';
 import { WHEEL_INCH } from '../model/wheel-map';
 
 const VEHICLE = vehicleById('x5-web');
@@ -73,12 +74,14 @@ class ViewerBoundary extends Component<
  */
 export function VehicleStage({
   color,
+  caliper,
   colorLabel,
   interior,
   sunroof,
   wheel,
   step,
 }: {
+  caliper: CaliperId;
   color: ColorId;
   colorLabel: string;
   interior: InteriorId;
@@ -138,6 +141,7 @@ export function VehicleStage({
               onUnavailable={() => {
                 setUnavailable(true);
               }}
+              caliper={caliperSwatchOf(caliper)}
               interior={interiorSwatchOf(interior)}
               paint={paint}
               sunroof={sunroof}
@@ -219,9 +223,9 @@ export function VehicleStage({
       <figcaption className="text-muted-foreground text-caption flex flex-col gap-1">
         <span>
           비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서
-          돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기가 반영됩니다. 시트
-          구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다. 선루프는 선택 품목(파노라마 선루프,
-          스카이 라운지 루프)을 담았을 때만 보입니다.
+          돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기, 브레이크 캘리퍼
+          색이 반영됩니다. 시트 구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다. 선루프는 선택
+          품목(파노라마 선루프, 스카이 라운지 루프)을 담았을 때만 보입니다.
         </span>
         <details>
           <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">

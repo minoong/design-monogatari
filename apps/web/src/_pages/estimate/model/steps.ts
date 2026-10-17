@@ -28,6 +28,7 @@ export function stepOf(slot: ItemRef['slot']): StepId {
     case 'color':
       return 'exterior';
     case 'wheel':
+    case 'caliper':
       return 'wheel';
     case 'seat':
       return 'seat';

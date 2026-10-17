@@ -7,6 +7,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
+import { applyThreeCaliper } from './apply-three-caliper';
 import { applyThreeInterior } from './apply-three-interior';
 import {
   applyThreePaint,
@@ -15,6 +16,7 @@ import {
   threePaintFromSwatch,
 } from './apply-three-paint';
 import { assembleG05Three } from './assemble-g05-three';
+import { CALIPER_SWATCHES, type CaliperSwatch } from './calipers';
 import { CAMERA_VIEWS, type CameraViewId, DEFAULT_CAMERA_VIEW } from './camera-views';
 import { GROUND_Y } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
@@ -75,6 +77,7 @@ function GltfModel({
   files,
   paint,
   interior,
+  caliper,
   sunroof = true,
   sunroofOpen = false,
   wheelInch,
@@ -86,6 +89,8 @@ function GltfModel({
   paint?: PaintSwatch;
   /** 없으면 모델 원래 실내(검정) */
   interior?: InteriorSwatch;
+  /** 브레이크 캘리퍼 색. 없으면 모델 원래(회색). */
+  caliper?: CaliperSwatch;
   /** false 이면 선루프 구멍을 막는다. 기본은 선루프가 있는 모델 그대로. */
   sunroof?: boolean;
   /** 선루프 유리를 연다. 선루프가 있을 때만 뜻이 있다. */
@@ -196,6 +201,14 @@ function GltfModel({
     if (!model) {
       return;
     }
+    applyThreeCaliper(model, caliper ?? CALIPER_SWATCHES[0]);
+    invalidate();
+  }, [caliper, invalidate, model]);
+
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
     applyWheelSize(model, wheelInch ?? NATIVE_WHEEL_INCH);
     invalidate();
   }, [invalidate, model, wheelInch]);
@@ -213,6 +226,8 @@ export type VehicleCanvasProps = {
   paint?: PaintSwatch;
   /** 실내 색(시트, 도어 안쪽, 실내 라이닝). 없으면 모델 원래 실내(검정)입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   interior?: InteriorSwatch;
+  /** 브레이크 캘리퍼 색. 휠 시점에서 림 사이로 보입니다. 없으면 모델 원래(회색)입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
+  caliper?: CaliperSwatch;
   /** false 이면 선루프 구멍을 막은 차를 보여 줍니다(지붕이 막힌 모양). 기본은 선루프가 있는 모델 그대로입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   sunroof?: boolean;
   /** 선루프 유리를 연다(뒤로 밀려 지붕 밑으로 들어갑니다). `sunroof`가 false 이면 뜻이 없습니다. 감소 모션이면 바로 열립니다. */
@@ -244,6 +259,7 @@ export function VehicleCanvas({
   vehicleId = 'x5',
   paint,
   interior,
+  caliper,
   sunroof,
   sunroofOpen,
   inspectRef,
@@ -279,6 +295,7 @@ export function VehicleCanvas({
           files={vehicle.files}
           front={vehicle.front}
           onReady={onReady}
+          caliper={caliper}
           interior={interior}
           paint={paint}
           sunroof={sunroof}
