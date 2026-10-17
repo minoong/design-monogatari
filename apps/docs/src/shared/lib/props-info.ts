@@ -1,8 +1,41 @@
+import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 import { createGenerator } from 'fumadocs-typescript';
 
-const generator = createGenerator({ tsconfigPath: path.resolve(process.cwd(), 'tsconfig.json') });
+const TSCONFIG_PATH = path.resolve(process.cwd(), 'tsconfig.json');
+const UI_SOURCE_DIR = path.resolve(
+  /*turbopackIgnore: true*/ process.cwd(),
+  '../../packages/ui/src',
+);
+
+let generator: ReturnType<typeof createGenerator> | undefined;
+let generatorBuiltFor = 0;
+
+/** 컴포넌트 소스 중 가장 늦게 바뀐 시각. props 타입은 `ButtonProps`처럼 다른 파일에서 이어받기도 해서 폴더 전체를 본다 */
+function latestSourceChange() {
+  let latest = 0;
+  for (const entry of readdirSync(UI_SOURCE_DIR)) {
+    if (entry.endsWith('.tsx')) {
+      latest = Math.max(latest, statSync(path.join(UI_SOURCE_DIR, entry)).mtimeMs);
+    }
+  }
+  return latest;
+}
+
+/**
+ * 생성기는 처음 읽은 소스를 그대로 들고 있어서, 개발 서버를 켠 채 props 타입을 고치면 표가
+ * "속성이 없습니다"로 깨진다. 소스가 바뀐 것을 알아채면 새로 만든다. 빌드에서는 소스가 고정이라
+ * 처음 한 번만 만들어진다.
+ */
+function getGenerator() {
+  const latest = latestSourceChange();
+  if (!generator || latest > generatorBuiltFor) {
+    generator = createGenerator({ tsconfigPath: TSCONFIG_PATH });
+    generatorBuiltFor = latest;
+  }
+  return generator;
+}
 
 export type PropsSpec = {
   /** 타입이 선언된 파일. 저장소 루트 기준 */
@@ -44,7 +77,7 @@ export async function getPropsRows({
   descriptions,
   defaults = {},
 }: PropsSpec): Promise<PropsRow[]> {
-  const [doc] = await generator.generateTypeTable({
+  const [doc] = await getGenerator().generateTypeTable({
     // 빌드 때만 실행된다 (repo-file.ts 의 같은 주석 참고)
     path: path.resolve(/*turbopackIgnore: true*/ process.cwd(), '../..', file),
     name,
