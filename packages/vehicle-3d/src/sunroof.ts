@@ -1,6 +1,7 @@
 import {
   BackSide,
   BufferGeometry,
+  Float32BufferAttribute,
   FrontSide,
   type Material,
   Matrix3,
@@ -17,6 +18,13 @@ import {
  * 아래로 0.04는 가장자리가 조금 보이고, 0.09에서 열기 전과 같아졌다(변화 0.6 이하). 더 내렸을 때는 시험하지 못했다.
  */
 const SLIDE_WORLD = new Vector3(0, -0.09, -0.55);
+/**
+ * 막는 판을 가장자리마다 이만큼(월드 좌표) 키운다. 도장 구멍과의 틈은 약 0.011이었다. 너무 키우면 지붕 곡면을 뚫고 올라와
+ * 바깥에서 보인다(안쪽 판을 0.12로 키웠더니 지붕 위에 어두운 파편이 솟았다). 안감 구멍은 유리보다 가로로 약 0.13 넓어서
+ * 안에서 보면 가장자리 틈으로 하늘이 가늘게 보이지만, 이 방식으로는 더 키울 수 없다.
+ */
+const OUTER_MARGIN = 0.03;
+const INNER_MARGIN = 0.03;
 const SLIDE_KEY = 'sunroofSlide';
 
 type SlideInfo = {
@@ -88,9 +96,84 @@ function splitByFacing(glass: Mesh) {
   return up;
 }
 
-function patchMesh(source: Mesh, indices: number[], material: Material, name: string) {
+/**
+ * 막는 판은 지붕 도장의 구멍보다 가로로 약 1cm 작아서, 그 틈으로 안쪽의 검은 부품과 안감이 비쳐 지붕에 검은 테두리가 보였다.
+ * (그 부품을 숨기면 지붕 도장이 상한다.) 판을 이루는 조각(앞 유리와 뒤 고정 유리)마다 가장자리 쪽으로 `margin`만큼 키워
+ * 도장 가장자리와 겹치게 하고, 두 조각 사이의 틈도 덮는다. 모델의 위치는 정점 양자화 때문에 한계값에 붙어 있어서,
+ * 실수 위치로 바꿔 넣는다.
+ */
+function enlargedPositions(source: Mesh, indices: number[], margin: number) {
+  const position = source.geometry.getAttribute('position');
+  source.updateWorldMatrix(true, false);
+  const toLocal = new Matrix4().copy(source.matrixWorld).invert();
+  const world = new Float32Array(position.count * 3);
+  const v = new Vector3();
+  for (let i = 0; i < position.count; i++) {
+    v.fromBufferAttribute(position, i).applyMatrix4(source.matrixWorld);
+    world.set([v.x, v.y, v.z], i * 3);
+  }
+
+  // 꼭짓점을 공유하는 삼각형끼리 한 조각으로 묶는다.
+  const parent = Array.from({ length: position.count }, (_, i) => i);
+  const find = (i: number): number => {
+    let root = i;
+    while (parent[root] !== root) root = parent[root] ?? root;
+    parent[i] = root;
+    return root;
+  };
+  for (let t = 0; t < indices.length; t += 3) {
+    const a = find(indices[t] ?? 0);
+    parent[find(indices[t + 1] ?? 0)] = a;
+    parent[find(indices[t + 2] ?? 0)] = a;
+  }
+  const groups = new Map<number, number[]>();
+  for (const i of new Set(indices)) {
+    const root = find(i);
+    groups.set(root, [...(groups.get(root) ?? []), i]);
+  }
+
+  for (const members of groups.values()) {
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minZ = Infinity;
+    let maxZ = -Infinity;
+    for (const i of members) {
+      minX = Math.min(minX, world[i * 3] ?? 0);
+      maxX = Math.max(maxX, world[i * 3] ?? 0);
+      minZ = Math.min(minZ, world[i * 3 + 2] ?? 0);
+      maxZ = Math.max(maxZ, world[i * 3 + 2] ?? 0);
+    }
+    const centerX = (minX + maxX) / 2;
+    const centerZ = (minZ + maxZ) / 2;
+    const scaleX = (maxX - minX + 2 * margin) / (maxX - minX || 1);
+    const scaleZ = (maxZ - minZ + 2 * margin) / (maxZ - minZ || 1);
+    for (const i of members) {
+      world[i * 3] = centerX + ((world[i * 3] ?? 0) - centerX) * scaleX;
+      world[i * 3 + 2] = centerZ + ((world[i * 3 + 2] ?? 0) - centerZ) * scaleZ;
+    }
+  }
+
+  const local = new Float32Array(position.count * 3);
+  for (let i = 0; i < position.count; i++) {
+    v.set(world[i * 3] ?? 0, world[i * 3 + 1] ?? 0, world[i * 3 + 2] ?? 0).applyMatrix4(toLocal);
+    local.set([v.x, v.y, v.z], i * 3);
+  }
+  return local;
+}
+
+function patchMesh(
+  source: Mesh,
+  indices: number[],
+  material: Material,
+  name: string,
+  margin: number,
+) {
   const geometry: BufferGeometry = source.geometry.clone();
   geometry.setIndex(indices);
+  geometry.setAttribute(
+    'position',
+    new Float32BufferAttribute(enlargedPositions(source, indices, margin), 3),
+  );
   const mesh = new Mesh(geometry, material);
   mesh.name = name;
   mesh.position.copy(source.position);
@@ -129,6 +212,10 @@ export function addSunroofPatch(root: Object3D) {
   // 조립 단계에서 모든 재질을 양면으로 바꿔 두므로, 바깥 판은 복제해서 앞면만 그리게 한다.
   const outerMaterial = paint.clone();
   outerMaterial.side = FrontSide;
+  // 키운 판이 도장 가장자리와 겹치는 띠에서 판이 이기게 한다(같은 색이라 이음매 깜빡임을 막는다).
+  outerMaterial.polygonOffset = true;
+  outerMaterial.polygonOffsetFactor = -2;
+  outerMaterial.polygonOffsetUnits = -2;
   // 안쪽 판은 같은 윗면 삼각형의 뒷면을 그린다. 뒷면은 법선이 뒤집혀 아래(실내)를 보는 면으로 조명을 받는다. 유리판의 아랫면
   // 삼각형(117개)을 쓰면 구멍 일부만 덮이고 조명 방향도 맞지 않아 시트가 크림이나 브라운일 때 안감과 달리 검게 보인다.
   const innerMaterial = new MeshStandardMaterial({
@@ -139,8 +226,8 @@ export function addSunroofPatch(root: Object3D) {
   });
 
   glass.parent.add(
-    patchMesh(glass, up, outerMaterial, OUTER_NAME),
-    patchMesh(glass, up, innerMaterial, INNER_NAME),
+    patchMesh(glass, up, outerMaterial, OUTER_NAME, OUTER_MARGIN),
+    patchMesh(glass, up, innerMaterial, INNER_NAME, INNER_MARGIN),
   );
 }
 
