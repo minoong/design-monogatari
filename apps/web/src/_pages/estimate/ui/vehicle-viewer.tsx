@@ -16,6 +16,7 @@ const VEHICLE = vehicleById('x5-web');
 export default function VehicleViewer({
   paint,
   interior,
+  sunroof,
   wheelInch,
   inspectRef,
   view,
@@ -24,6 +25,7 @@ export default function VehicleViewer({
 }: {
   paint: PaintSwatch;
   interior: InteriorSwatch;
+  sunroof: boolean;
   wheelInch: number;
   view: CameraViewId;
   inspectRef: RefObject<InspectHandle | null>;
@@ -46,6 +48,7 @@ export default function VehicleViewer({
       interior={interior}
       onReady={onReady}
       paint={paint}
+      sunroof={sunroof}
       vehicleId="x5-web"
       view={view}
       wheelInch={wheelInch}

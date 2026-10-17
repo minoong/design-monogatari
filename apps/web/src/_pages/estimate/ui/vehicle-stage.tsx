@@ -75,12 +75,15 @@ export function VehicleStage({
   color,
   colorLabel,
   interior,
+  sunroof,
   wheel,
   step,
 }: {
   color: ColorId;
   colorLabel: string;
   interior: InteriorId;
+  /** 선루프 품목을 담았는지. 아니면 선루프 구멍을 막은 차를 보여 준다. */
+  sunroof: boolean;
   wheel: WheelId;
   step: StepId;
 }) {
@@ -132,6 +135,7 @@ export function VehicleStage({
               }}
               interior={interiorSwatchOf(interior)}
               paint={paint}
+              sunroof={sunroof}
               view={view}
               wheelInch={WHEEL_INCH[wheel]}
             />
@@ -194,7 +198,8 @@ export function VehicleStage({
         <span>
           비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서
           돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기가 반영됩니다. 시트
-          구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다.
+          구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다. 선루프는 선택 품목(파노라마 선루프,
+          스카이 라운지 루프)을 담았을 때만 보입니다.
         </span>
         <details>
           <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
