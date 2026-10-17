@@ -20,6 +20,7 @@ const meta = {
           '',
           '- 드래그하면 차가 돌고 스크롤하면 확대됩니다. 페이지 스크롤과 연동된 회전은 없습니다.',
           '- 왼쪽 위 오버레이에서 도장 색을 바꾸거나 "원본 색"으로 되돌립니다.',
+          '- 오버레이의 "시점"에서 외관, 휠, 시트, 대시보드를 고르면 카메라가 부드럽게 옮겨 갑니다. 시트와 대시보드는 차 안에서 제자리로 둘러보는 실내 시점이라 확대는 없습니다. 실내는 모델의 기본 구성이고 도장 색은 반영되지 않습니다. 감소 모션이면 바로 옮겨 갑니다.',
           '',
           '| 모델 | 설명 |',
           '| --- | --- |',
@@ -55,4 +56,42 @@ export const 원본: Story = {
     },
   },
   render: () => <ThreeGltfDemo vehicleId="x5" />,
+};
+
+export const 휠: Story = {
+  name: '휠 시점',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '앞바퀴에 가까이 간 시점입니다. 림과 브레이크가 보입니다. 다른 시점에서 시작해 "휠"을 누르면 카메라가 이쪽으로 옮겨 옵니다.',
+      },
+    },
+  },
+  render: () => <ThreeGltfDemo initialView="wheel" vehicleId="x5-web" />,
+};
+
+export const 시트: Story = {
+  name: '실내: 시트 시점',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '앞좌석 사이에서 뒤쪽을 봅니다. 앞좌석, 뒷좌석, 천장이 한눈에 들어옵니다. 드래그하면 제자리에서 둘러봅니다.',
+      },
+    },
+  },
+  render: () => <ThreeGltfDemo initialView="seats" vehicleId="x5-web" />,
+};
+
+export const 대시보드: Story = {
+  name: '실내: 대시보드 시점',
+  parameters: {
+    docs: {
+      description: {
+        story: '운전자 눈높이에서 앞을 봅니다. 대시보드와 핸들이 보입니다.',
+      },
+    },
+  },
+  render: () => <ThreeGltfDemo initialView="dashboard" vehicleId="x5-web" />,
 };

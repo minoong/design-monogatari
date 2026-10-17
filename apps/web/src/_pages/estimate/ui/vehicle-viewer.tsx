@@ -3,6 +3,7 @@
 import type { PaintSwatch } from '@repo/vehicle-3d/paints';
 import { vehicleById, vehicleUrls } from '@repo/vehicle-3d/vehicles';
 import { type InspectHandle, useModelAvailable, VehicleCanvas } from '@repo/vehicle-3d/viewer';
+import type { CameraViewId } from '@repo/vehicle-3d/views';
 import { type RefObject, useEffect } from 'react';
 
 const VEHICLE = vehicleById('x5-web');
@@ -15,11 +16,13 @@ export default function VehicleViewer({
   paint,
   wheelInch,
   inspectRef,
+  view,
   onUnavailable,
   onReady,
 }: {
   paint: PaintSwatch;
   wheelInch: number;
+  view: CameraViewId;
   inspectRef: RefObject<InspectHandle | null>;
   onUnavailable: () => void;
   onReady: () => void;
@@ -40,6 +43,7 @@ export default function VehicleViewer({
       onReady={onReady}
       paint={paint}
       vehicleId="x5-web"
+      view={view}
       wheelInch={wheelInch}
       wheelZoom={false}
     />
