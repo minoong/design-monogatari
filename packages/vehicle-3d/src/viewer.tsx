@@ -1,7 +1,7 @@
 'use client';
 
-import { Canvas, useThree } from '@react-three/fiber';
-import { type RefObject, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { type RefObject, useEffect, useRef, useState } from 'react';
 import { Box3, type Object3D, PCFShadowMap, Vector3 } from 'three';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20,7 +20,8 @@ import { GROUND_Y } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
 import { INTERIOR_SWATCHES, type InteriorSwatch } from './interiors';
 import type { PaintSwatch } from './paints';
-import { addSunroofPatch, setSunroof } from './sunroof';
+import { prefersReducedMotion } from './reduced-motion';
+import { addSunroofPatch, setSunroof, slideSunroof } from './sunroof';
 import { ThreeStudio } from './three-studio';
 import { vehicleById, type VehicleId } from './vehicles';
 import { applyWheelSize, NATIVE_WHEEL_INCH } from './wheel-size';
@@ -63,11 +64,19 @@ function hideUtilityMeshes(root: Object3D) {
   });
 }
 
+/** 선루프 유리가 열리거나 닫히는 데 걸리는 시간(초) */
+const SUNROOF_SECONDS = 0.9;
+
+function easeInOut(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 function GltfModel({
   files,
   paint,
   interior,
   sunroof = true,
+  sunroofOpen = false,
   wheelInch,
   front,
   onReady,
@@ -79,6 +88,8 @@ function GltfModel({
   interior?: InteriorSwatch;
   /** false 이면 선루프 구멍을 막는다. 기본은 선루프가 있는 모델 그대로. */
   sunroof?: boolean;
+  /** 선루프 유리를 연다. 선루프가 있을 때만 뜻이 있다. */
+  sunroofOpen?: boolean;
   /** 휠 크기(인치). 없으면 모델 원래 크기(21인치). 바꿔도 모델을 다시 불러오지 않는다. */
   wheelInch?: number;
   front?: VehicleFront;
@@ -88,6 +99,8 @@ function GltfModel({
   const [model, setModel] = useState<Object3D | null>(null);
   const invalidate = useThree((state) => state.invalidate);
   const fileKey = files.join('|');
+  // 선루프 유리가 연 정도(0~1)와 가려는 값. 막는 판이 보일 때는 열지 않는다.
+  const slideRef = useRef({ current: 0, goal: 0 });
 
   useEffect(() => {
     let cancelled = false;
@@ -149,6 +162,32 @@ function GltfModel({
     if (!model) {
       return;
     }
+    const slide = slideRef.current;
+    slide.goal = sunroof && sunroofOpen ? 1 : 0;
+    if (prefersReducedMotion()) {
+      slide.current = slide.goal;
+      slideSunroof(model, slide.goal);
+    }
+    invalidate();
+  }, [invalidate, model, sunroof, sunroofOpen]);
+
+  useFrame((_, delta) => {
+    const slide = slideRef.current;
+    if (!model || slide.current === slide.goal) {
+      return;
+    }
+    const step = Math.min(delta, 0.05) / SUNROOF_SECONDS;
+    slide.current =
+      slide.current < slide.goal
+        ? Math.min(slide.goal, slide.current + step)
+        : Math.max(slide.goal, slide.current - step);
+    slideSunroof(model, easeInOut(slide.current));
+  });
+
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
     applyThreeInterior(model, interior ?? INTERIOR_SWATCHES[0]);
     invalidate();
   }, [interior, invalidate, model]);
@@ -176,6 +215,8 @@ export type VehicleCanvasProps = {
   interior?: InteriorSwatch;
   /** false 이면 선루프 구멍을 막은 차를 보여 줍니다(지붕이 막힌 모양). 기본은 선루프가 있는 모델 그대로입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   sunroof?: boolean;
+  /** 선루프 유리를 연다(뒤로 밀려 지붕 밑으로 들어갑니다). `sunroof`가 false 이면 뜻이 없습니다. 감소 모션이면 바로 열립니다. */
+  sunroofOpen?: boolean;
   /** 줌 인·아웃과 리셋을 호스트가 제어할 때 넘깁니다. 드래그 회전과 휠 줌은 항상 켜져 있습니다. */
   inspectRef?: RefObject<InspectHandle | null>;
   /**
@@ -204,6 +245,7 @@ export function VehicleCanvas({
   paint,
   interior,
   sunroof,
+  sunroofOpen,
   inspectRef,
   view = DEFAULT_CAMERA_VIEW,
   wheelZoom,
@@ -240,6 +282,7 @@ export function VehicleCanvas({
           interior={interior}
           paint={paint}
           sunroof={sunroof}
+          sunroofOpen={sunroofOpen}
           wheelInch={wheelInch}
         />
       ) : null}

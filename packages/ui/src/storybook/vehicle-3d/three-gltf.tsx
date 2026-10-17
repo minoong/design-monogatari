@@ -33,6 +33,7 @@ export function ThreeGltfDemo({
   // null 이면 모델 원래 색
   const [paintId, setPaintId] = useState<PaintId | null>(null);
   const [sunroof, setSunroof] = useState(true);
+  const [sunroofOpen, setSunroofOpen] = useState(false);
   const [interiorId, setInteriorId] = useState<InteriorId>('black');
   const [view, setView] = useState<CameraViewId>(initialView);
   const inspectRef = useRef<InspectHandle | null>(null);
@@ -52,6 +53,8 @@ export function ThreeGltfDemo({
           onInteriorId={setInteriorId}
           sunroof={sunroof}
           onSunroof={setSunroof}
+          sunroofOpen={sunroofOpen}
+          onSunroofOpen={setSunroofOpen}
           view={view}
           onView={setView}
           onPaintId={setPaintId}
@@ -77,6 +80,7 @@ export function ThreeGltfDemo({
         interior={interiorById(interiorId)}
         paint={paintId ? paintById(paintId) : undefined}
         sunroof={sunroof}
+        sunroofOpen={sunroofOpen}
         vehicleId={vehicleId}
         view={view}
       />

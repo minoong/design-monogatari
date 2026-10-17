@@ -17,6 +17,7 @@ export default function VehicleViewer({
   paint,
   interior,
   sunroof,
+  sunroofOpen,
   wheelInch,
   inspectRef,
   view,
@@ -26,6 +27,7 @@ export default function VehicleViewer({
   paint: PaintSwatch;
   interior: InteriorSwatch;
   sunroof: boolean;
+  sunroofOpen: boolean;
   wheelInch: number;
   view: CameraViewId;
   inspectRef: RefObject<InspectHandle | null>;
@@ -49,6 +51,7 @@ export default function VehicleViewer({
       onReady={onReady}
       paint={paint}
       sunroof={sunroof}
+      sunroofOpen={sunroofOpen}
       vehicleId="x5-web"
       view={view}
       wheelInch={wheelInch}
