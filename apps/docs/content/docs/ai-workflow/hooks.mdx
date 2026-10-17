@@ -1,0 +1,44 @@
+---
+title: 훅
+description: 지침이 지켜지지 않던 부분을 코드로 옮긴 여섯 개의 훅과, 로그를 개인정보 없이 남기는 방식을 설명합니다.
+---
+
+훅은 Claude Code가 이벤트마다 실행하는 스크립트입니다. **지침은 건너뛸 수 있지만 훅은 건너뛸 수 없습니다.** 그래서 글로 적었는데도 빠뜨리던 단계(문서 확인, 누락 점검, 끝내기 전 검증)를 훅으로 옮겼습니다. 설정은 `.claude/settings.json`에 있고 스크립트는 `.claude/hooks/`에 있습니다.
+
+<RepoFile path=".claude/settings.json" lines="1-22" />
+
+## 훅 목록
+
+| 이벤트                                             | 스크립트               | 하는 일                                                                                        | 막는가            |
+| -------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |
+| `SessionStart` (시작, 재개, 압축 후)               | `session-design.mjs`   | `DESIGN.md`와 디자인 규칙의 위치를 컨텍스트에 넣음                                             | 아니오            |
+| `PreToolUse` (`Write`/`Edit`)                      | `docs-consult.mjs`     | 라이브러리에 의존하는 코드를 고치기 직전, 그 문서를 이 세션에서 확인한 적이 없으면 한 번 알림  | 아니오            |
+| `PostToolUse` (스킬, 문서 조회, 에이전트 호출 등)  | `docs-consult.mjs`     | 확인했다는 기록을 남김                                                                         | 아니오            |
+| `PostToolUse` (`Write`/`Edit`)                     | `component-check.mjs`  | 컴포넌트를 고친 직후 그 컴포넌트에 빠진 것(스토리, 문서, 예시, 레지스트리, `DESIGN.md`)을 알림 | 아니오            |
+| `PostToolUse` (파일 편집, Playwright, `pnpm` 명령) | `ui-verify.mjs`        | UI 편집, 브라우저 확인, 검증 통과를 상태 파일에 기록                                           | 아니오            |
+| `Stop`, `SubagentStop`                             | `ui-verify.mjs`        | UI를 고쳤는데 브라우저 확인과 `pnpm verify`가 끝나지 않았으면 종료를 막음                      | **예**            |
+| `InstructionsLoaded`                               | `instructions-log.mjs` | 어떤 지침 파일이 왜 올라왔는지 기록                                                            | 아니오(관찰 전용) |
+
+## 끝내기 전에 막는 훅
+
+`ui-verify.mjs`는 화면에 영향을 주는 편집(`packages/ui`, `packages/vehicle-3d`, `apps`, `registry`, `DESIGN.md`, 문서 사이트의 MDX)을 표시합니다. 그런 편집이 있었는데 Playwright로 확인하거나 `pnpm verify`를 돌린 기록이 없으면 `Stop`을 막고 무엇이 빠졌는지 알려 줍니다. 서브에이전트가 편집자가 아니면 막지 않습니다.
+
+## 알려 주기만 하는 훅
+
+`docs-consult`와 `component-check`는 막지 않고 작업 중에 알려 주기만 합니다. 같은 주제나 같은 누락 목록은 세션당 한 번만 알려서 잔소리가 되지 않게 합니다. 막는 것은 `pnpm verify` 안의 같은 검사(`components:check`)입니다.
+
+`docs-consult`가 다루는 주제는 Turborepo, Next.js, Motion, GSAP, Radix, Tailwind v4, Storybook, React입니다. "확인했다"로 치는 기준은 해당 스킬 호출, 공식 문서 도메인에 대한 `WebFetch`, `docs-researcher` 호출, Next의 로컬 문서 읽기, `turbo docs`입니다.
+
+## 로그와 개인정보
+
+모든 훅의 판단은 `.claude/logs/hook-events.jsonl`(저장소에서 제외)에 한 줄씩 남습니다. 목적은 "루프가 실제로 동작했다"는 증거입니다. 허용 목록 방식으로만 기록해서 다음은 받지도 저장하지도 않습니다.
+
+- 프롬프트, 명령어 본문, 도구 출력, 대화 기록 경로
+- 프로젝트 밖의 파일 경로(안은 상대 경로만)
+- 세션 id 원문(SHA-256 앞 10자리만)
+
+값은 모두 정규식으로 검사해서 맞지 않으면 그 필드만 버립니다. 로깅이 실패해도 훅의 판단에는 영향이 없습니다.
+
+<RepoFile path=".claude/hooks/lib/log.mjs" lines="1-20" />
+
+`pnpm harness:trace`가 이 로그에서 공개해도 되는 요약을 뽑습니다. 출력 직전에 절대 경로, 이메일, 홈 디렉터리 같은 흔적이 보이면 아무것도 쓰지 않고 실패합니다. 실제 수치는 [개선 기록](/docs/ai-workflow/retrospective)에서 보여 줍니다.

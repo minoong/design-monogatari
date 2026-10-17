@@ -13,6 +13,7 @@
 - **새 컴포넌트 문서 추가**: `pnpm component:new <name>`가 예시·페이지·`meta.json` 항목의 뼈대를 만든다(`TODO(scaffold)` 표시). 페이지는 `button.mdx` 형식(프리뷰 → 설치 → 사용법 → 예시 → API 레퍼런스 → 접근성 → 소스). 설치 탭은 `registry.json` 항목이 있어야 하고, `pnpm components:check`가 빠진 것을 잡는다.
 - **에이전트용 Markdown**: `src/shared/lib/remark-doc-blocks.ts`가 `/llms-full.txt`, 페이지별 `.md`, Copy Markdown에서 블록을 코드·표로 펼치고 `<Callout>`을 인용문으로 바꾼다 (`replaceSource`라 렌더링은 그대로). 블록이 읽는 정보는 페이지와 같은 함수(`install-info`, `props-info`, `repo-file`)로 읽어 둘이 어긋나지 않는다. **새 블록을 만들면 `expanders`에도 추가한다.** `defineDocs`의 `mdxOptions`는 반드시 `applyMdxPreset(...)`으로 감싼다: 객체로 직접 주면 기본 프리셋이 빠져 `/api/search`가 500이 된다.
 - **테마**: 시스템 설정을 따르고(`defaultTheme: system`), 헤더의 해/달 버튼(`shared/ui/theme-toggle.tsx`)과 "…" 메뉴의 System/Light/Dark, `d` 단축키로 바꾼다. Spacious 레이아웃이 클라이언트 컴포넌트라 `slots`는 `_pages/docs/ui/docs-layout-client.tsx`에서 조립한다.
+- **사이드바 탭**: 「디자인 시스템」(`root: true` 폴더 밖의 모든 문서)과 「AI 워크플로」(`content/docs/ai-workflow/`, `root: true`) 두 개다. `docs-layout-client.tsx`의 `buildTabs`가 주소 목록으로 활성 탭을 판별한다(`getLayoutTabs`는 보고 있는 사이드바 트리 기준이라 다른 탭을 빠뜨린다). 새 최상위 폴더를 추가하면 어느 탭에 속하는지 정한다. 문서 안 코드 조각은 `RepoFile`로 읽으므로 가리킨 파일이나 줄이 바뀌면 `lines`를 맞춘다.
 - UI from `@repo/ui/*`.
 - `.mdx`는 Prettier 대상(린트 대상 아님). 생성물(`.source`, `public/r`)은 `.prettierignore`에 있다.
 - 전역 CSS(`src/_app/styles/globals.css`)에 `overflow-x: hidden`이나 unlayered 링크 리셋(`a { color: inherit }`)을 넣지 말 것: sticky 사이드바와 문서 프레임워크의 링크 색을 깨뜨린다.
