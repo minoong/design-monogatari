@@ -71,7 +71,7 @@ export const OptionRow = forwardRef<HTMLInputElement, OptionRowProps>(function O
       htmlFor={inputId}
       data-unavailable={unavailableReason ? '' : undefined}
       className={cn(
-        'border-border bg-background text-foreground relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-sans transition-[background-color] motion-reduce:transition-none',
+        'border-border bg-background text-foreground relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-sans',
         'hover:bg-secondary-hover has-checked:border-primary has-checked:ring-primary has-checked:ring-1',
         'has-focus-visible:outline-ring has-focus-visible:outline-2 has-focus-visible:outline-offset-2',
         'data-unavailable:bg-muted data-unavailable:text-muted-foreground has-disabled:bg-muted has-disabled:text-muted-foreground has-disabled:cursor-not-allowed',

@@ -64,7 +64,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
       <div
         data-included={includedIn ? '' : undefined}
         className={cn(
-          'border-border bg-background text-foreground hover:bg-secondary-hover relative rounded-lg border font-sans transition-[background-color] motion-reduce:transition-none',
+          'border-border bg-background text-foreground hover:bg-secondary-hover relative rounded-lg border font-sans',
           'has-[input:checked]:border-primary has-[input:checked]:ring-primary has-[input:checked]:ring-1',
           'has-[input:focus-visible]:outline-ring has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2',
           'data-included:bg-muted',
