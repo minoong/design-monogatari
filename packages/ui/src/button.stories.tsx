@@ -45,6 +45,28 @@ export const 주요: Story = {
   },
 };
 
+export const 눌림: Story = {
+  name: '눌림(토글)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`aria-pressed`를 주면 `secondary`가 프라이머리 테두리와 링으로 켜진 상태를 보입니다. 글자는 그대로 두고 상태만 바꾸십시오.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex gap-2">
+      <Button aria-pressed={true} size="small" variant="secondary">
+        휠
+      </Button>
+      <Button aria-pressed={false} size="small" variant="secondary">
+        시트
+      </Button>
+    </div>
+  ),
+};
+
 export const 크기: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-2">

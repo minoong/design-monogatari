@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import { CATALOG } from './catalog';
-import { COLOR_PAINT, paintOf } from './paint-map';
+import { COLOR_PAINT, paintSwatchOf } from './paint-map';
 
 describe('paint-map', () => {
   it('카탈로그의 모든 외장 색이 도장과 짝지어져 있다', () => {
     for (const color of CATALOG.color) {
       expect(COLOR_PAINT[color.id]).toBeDefined();
-      expect(paintOf(color.id).hex).toMatch(/^#[0-9A-F]{6}$/i);
+      expect(paintSwatchOf(color.id).hex).toMatch(/^#[0-9A-F]{6}$/i);
     }
   });
 

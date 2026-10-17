@@ -2,7 +2,14 @@
 
 import { useFrame, useThree } from '@react-three/fiber';
 import { type RefObject, useEffect, useRef } from 'react';
-import { type Camera, PerspectiveCamera, type PointLight, type Scene, Vector3 } from 'three';
+import {
+  type Camera,
+  PerspectiveCamera,
+  type PointLight,
+  type Scene,
+  Spherical,
+  Vector3,
+} from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { fovForAspect } from './adaptive-fov';
@@ -15,7 +22,15 @@ export type InspectHandle = {
   /** 실내 시점에서는 아무 일도 하지 않는다(제자리에서 둘러보기만 한다). */
   zoomIn: () => void;
   zoomOut: () => void;
+  /**
+   * 조준점을 중심으로 방향을 돌린다(드래그의 대안). 단위는 한 번 누르는 만큼의 걸음이다. 왼쪽은 `azimuth`가 음수, 위는 `polar`가 음수.
+   * 실내에서는 제자리에서 둘러본다. 시점이 바뀌는 중에는 아무 일도 하지 않는다.
+   */
+  rotateBy: (azimuth: number, polar: number) => void;
 };
+
+/** `rotateBy` 한 걸음의 각도(라디안, 약 20°) */
+const ROTATE_STEP = 0.35;
 
 /** 시점이 바뀔 때 카메라가 움직이는 시간(초). 감소 모션이면 바로 옮긴다. */
 const MOVE_SECONDS = 1.1;
@@ -114,6 +129,8 @@ export function InspectControls({
   // 화면 비율을 반영하기 전의 세로 시야각
   const baseFovRef = useRef<number>(CAMERA_VIEWS[view].fov);
   const aspectRef = useRef(1);
+  const pendingRotateRef = useRef({ azimuth: 0, polar: 0 });
+  const applyRotationRef = useRef<((azimuth: number, polar: number) => void) | null>(null);
   const cabinBlendRef = useRef(isInsideView(view) ? 1 : 0);
 
   const applyFov = (): void => {
@@ -201,7 +218,42 @@ export function InspectControls({
       invalidate();
     };
 
+    // 방향 버튼은 남은 회전량을 쌓아 두고 프레임마다 일부씩 적용해 부드럽게 돌린다(감소 모션이면 한 번에).
+    const applyRotation = (azimuth: number, polar: number) => {
+      const offset = camera.position.clone().sub(controls.target);
+      const spherical = new Spherical().setFromVector3(offset);
+      spherical.theta += azimuth;
+      const clamped = Math.min(
+        controls.maxPolarAngle,
+        Math.max(controls.minPolarAngle, spherical.phi + polar),
+      );
+      // 한계에 닿으면 남은 위아래 회전량은 버린다.
+      if (clamped !== spherical.phi + polar) pendingRotateRef.current.polar = 0;
+      spherical.phi = clamped;
+      offset.setFromSpherical(spherical);
+      camera.position.copy(controls.target).add(offset);
+      controls.update();
+      invalidate();
+    };
+    applyRotationRef.current = applyRotation;
+
+    const rotateBy = (azimuth: number, polar: number) => {
+      if (tweenRef.current) return;
+      // 실내에서는 눈앞의 점을 중심으로 도는 것이라 카메라 위치의 방향이 시선과 반대다. 버튼은 시선 방향으로 읽히게 뒤집는다.
+      const sign = isInsideView(viewRef.current) ? -1 : 1;
+      const turn = azimuth * sign * ROTATE_STEP;
+      const tilt = polar * sign * ROTATE_STEP;
+      if (prefersReducedMotion()) {
+        applyRotation(turn, tilt);
+        return;
+      }
+      pendingRotateRef.current.azimuth += turn;
+      pendingRotateRef.current.polar += tilt;
+      invalidate();
+    };
+
     handleRef.current = {
+      rotateBy,
       reset: () => {
         goToRef.current?.(viewRef.current, true);
       },
@@ -217,6 +269,8 @@ export function InspectControls({
       handleRef.current = null;
       goToRef.current = null;
       tweenRef.current = null;
+      pendingRotateRef.current = { azimuth: 0, polar: 0 };
+      applyRotationRef.current = null;
       controls.removeEventListener('change', onChange);
       controls.dispose();
       canvasElement.style.setProperty('touch-action', previousTouchAction);
@@ -249,6 +303,18 @@ export function InspectControls({
         tweenRef.current = null;
         applyViewLimits(controls, viewRef.current, wheelZoom);
       }
+    }
+
+    // 쌓아 둔 방향 버튼 회전량을 일부씩 적용한다.
+    const pending = pendingRotateRef.current;
+    if (pending.azimuth !== 0 || pending.polar !== 0) {
+      const share = 1 - Math.exp(-dt * 14);
+      const done = (rest: number) => (Math.abs(rest) < 0.002 ? rest : rest * share);
+      const turn = done(pending.azimuth);
+      const tilt = done(pending.polar);
+      pending.azimuth -= turn;
+      pending.polar -= tilt;
+      applyRotationRef.current?.(turn, tilt);
     }
 
     // 실내로 들어가면 안쪽 조명과 환경광을 부드럽게 올리고, 나오면 내린다.
