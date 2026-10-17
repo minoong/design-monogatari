@@ -85,8 +85,12 @@ export function VehicleStage({
   const [unavailable, setUnavailable] = useState(false);
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
-  // 직접 고른 시점은 그 단계에서만 유지한다. 다른 단계로 가면 다시 그 단계의 시점을 따른다.
+  // 직접 고른 시점은 고른 단계에 머무는 동안만 유지한다. 단계가 바뀌면 그 단계의 시점을 따른다.
   const [picked, setPicked] = useState<{ step: StepId; view: CameraViewId } | null>(null);
+  // 다른 단계로 가면 지운다. 지우지 않으면 그 단계로 돌아왔을 때 예전에 고른 시점이 되살아난다.
+  if (picked && picked.step !== step) {
+    setPicked(null);
+  }
   const view = picked?.step === step ? picked.view : stageViewOf(step);
   const inside = isInsideView(view);
   const paint = paintOf(color);
