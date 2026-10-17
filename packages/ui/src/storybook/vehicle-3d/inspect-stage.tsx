@@ -6,11 +6,14 @@ export function InspectStage({
   alt,
   overlay,
   credit,
+  hint = '드래그로 회전 · 스크롤로 줌',
   children,
 }: {
   alt: string;
   overlay: ReactNode;
   credit?: ReactNode;
+  /** 오른쪽 위 조작 안내 */
+  hint?: string;
   children: ReactNode;
 }) {
   return (
@@ -23,7 +26,7 @@ export function InspectStage({
             {overlay}
           </div>
           <p className="text-caption text-muted-foreground bg-background/55 absolute top-4 right-4 rounded-md px-2.5 py-1.5 whitespace-nowrap backdrop-blur-sm">
-            드래그로 회전 · 스크롤로 줌
+            {hint}
           </p>
         </div>
         {credit ? (

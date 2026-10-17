@@ -2,6 +2,7 @@
 
 import { PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
 import { vehicleById, type VehicleId } from '@repo/vehicle-3d/vehicles';
+import { CAMERA_VIEW_IDS, CAMERA_VIEWS, type CameraViewId } from '@repo/vehicle-3d/views';
 import { useState } from 'react';
 
 import { Button } from '../../button';
@@ -91,6 +92,8 @@ export function SequenceOverlay({
   engine,
   kind,
   paintId,
+  view,
+  onView,
   onPaintId,
   onResetView,
   onZoomIn,
@@ -100,6 +103,9 @@ export function SequenceOverlay({
   kind: string;
   /** null 이면 모델 원래 색 */
   paintId: PaintId | null;
+  /** 카메라 시점. 바뀌면 카메라가 부드럽게 옮겨 간다. */
+  view: CameraViewId;
+  onView: (view: CameraViewId) => void;
   onPaintId: (id: PaintId | null) => void;
   onResetView: () => void;
   onZoomIn: () => void;
@@ -113,12 +119,44 @@ export function SequenceOverlay({
         {kind} · {paintId ? '도장 hex는 테마와 무관합니다.' : '원본 머티리얼입니다.'}
       </p>
       <div className="mt-3">
+        <p className="text-muted-foreground text-caption mb-2">시점</p>
+        <div aria-label="카메라 시점" className="flex flex-wrap gap-1.5" role="group">
+          {CAMERA_VIEW_IDS.map((id) => (
+            <Button
+              key={id}
+              aria-pressed={view === id}
+              className={view === id ? 'border-foreground' : undefined}
+              size="small"
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                onView(id);
+              }}
+            >
+              {CAMERA_VIEWS[id].label}
+            </Button>
+          ))}
+        </div>
+      </div>
+      <div className="mt-3">
         <p className="text-muted-foreground text-caption mb-2">보기</p>
         <div className="flex flex-wrap gap-1.5">
-          <Button size="small" type="button" variant="secondary" onClick={onZoomIn}>
+          <Button
+            disabled={CAMERA_VIEWS[view].inside}
+            size="small"
+            type="button"
+            variant="secondary"
+            onClick={onZoomIn}
+          >
             줌 인
           </Button>
-          <Button size="small" type="button" variant="secondary" onClick={onZoomOut}>
+          <Button
+            disabled={CAMERA_VIEWS[view].inside}
+            size="small"
+            type="button"
+            variant="secondary"
+            onClick={onZoomOut}
+          >
             줌 아웃
           </Button>
           <Button size="small" type="button" variant="secondary" onClick={onResetView}>
@@ -136,6 +174,12 @@ export function SequenceOverlay({
           onPaintId(value === ORIGINAL_PAINT ? null : (value as PaintId));
         }}
       />
+      {/* 맨 아래에 둔다. 위쪽에 넣으면 나타날 때마다 아래 버튼들이 밀린다. */}
+      {CAMERA_VIEWS[view].inside ? (
+        <p className="text-caption text-muted-foreground mt-3" role="status">
+          실내는 모델의 기본 구성이며 도장 색은 반영되지 않습니다.
+        </p>
+      ) : null}
     </>
   );
 }

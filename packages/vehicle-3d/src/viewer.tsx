@@ -6,7 +6,6 @@ import { Box3, type Object3D, PCFShadowMap, Vector3 } from 'three';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-import { AdaptiveFov } from './adaptive-fov';
 import { alignVehicleHeading, type VehicleFront } from './align-vehicle';
 import {
   applyThreePaint,
@@ -15,7 +14,8 @@ import {
   threePaintFromSwatch,
 } from './apply-three-paint';
 import { assembleG05Three } from './assemble-g05-three';
-import { GROUND_Y, STUDIO_CAMERA } from './constants';
+import { CAMERA_VIEWS, type CameraViewId, DEFAULT_CAMERA_VIEW } from './camera-views';
+import { GROUND_Y } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
 import type { PaintSwatch } from './paints';
 import { ThreeStudio } from './three-studio';
@@ -147,6 +147,11 @@ export type VehicleCanvasProps = {
   paint?: PaintSwatch;
   /** 줌 인·아웃과 리셋을 호스트가 제어할 때 넘깁니다. 드래그 회전과 휠 줌은 항상 켜져 있습니다. */
   inspectRef?: RefObject<InspectHandle | null>;
+  /**
+   * 카메라 시점. 기본은 앞 3/4 외관(`exterior`). 바뀌면 현재 위치에서 새 시점까지 부드럽게 움직입니다.
+   * `seats`와 `dashboard`는 실내라서 확대 없이 제자리에서 둘러봅니다.
+   */
+  view?: CameraViewId;
   /** false 이면 휠·핀치 확대를 끈다. 페이지가 스크롤될 때 휠이 캔버스에 걸리지 않는다. 확대는 `inspectRef`의 `zoomIn`·`zoomOut`으로 합니다. */
   wheelZoom?: boolean;
   /** 휠 크기(인치). 림 크기와 타이어 옆면 두께가 바뀐다. 없으면 모델 원래 크기(21인치). */
@@ -167,6 +172,7 @@ export function VehicleCanvas({
   vehicleId = 'x5',
   paint,
   inspectRef,
+  view = DEFAULT_CAMERA_VIEW,
   wheelZoom,
   wheelInch,
   onReady,
@@ -179,13 +185,14 @@ export function VehicleCanvas({
     <Canvas
       aria-hidden
       className={className}
-      camera={{ position: [...STUDIO_CAMERA.position], fov: STUDIO_CAMERA.fov }}
+      camera={{ position: [...CAMERA_VIEWS[view].position], fov: CAMERA_VIEWS[view].fov }}
       gl={{ alpha: true, antialias: true }}
       shadows={{ type: PCFShadowMap }}
     >
-      <AdaptiveFov />
       <ThreeStudio />
-      {inspectRef ? <InspectControls handleRef={inspectRef} wheelZoom={wheelZoom} /> : null}
+      {inspectRef ? (
+        <InspectControls handleRef={inspectRef} view={view} wheelZoom={wheelZoom} />
+      ) : null}
       {available ? (
         <GltfModel
           key={vehicle.id}

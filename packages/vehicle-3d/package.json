@@ -6,7 +6,8 @@
     "./viewer": "./src/viewer.tsx",
     "./vehicles": "./src/vehicles.ts",
     "./paints": "./src/paints.ts",
-    "./constants": "./src/constants.ts"
+    "./constants": "./src/constants.ts",
+    "./views": "./src/camera-views.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
