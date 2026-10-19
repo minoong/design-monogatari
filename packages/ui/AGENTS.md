@@ -42,6 +42,10 @@ This package is a design system, not FSD. Pick a pattern by API surface, then co
 
 New components: `.agents/skills/create-component/SKILL.md`.
 
+## Animated icons (`src/icons/*`, import `@repo/ui/icons/<name>`)
+
+Icons come from [lucide-animated](https://lucide-animated.com) (MIT) or are hand-made in the same pattern: `IconFrame` (aria-hidden span) + `useAnimatedIcon` (variants `normal`/`animate`, parent-controlled `isHovered`, imperative `startAnimation`/`stopAnimation`, and **no motion under `prefers-reduced-motion`** — upstream has none of this). Add one with `node scripts/adapt-lucide-animated.mjs <name>` (single `useAnimation()` and `normal`/`animate` variants only; others are ported by hand, see `receipt-text.tsx`), then prettier + eslint. Put an icon as a **direct child** of `Button` with `data-icon="inline-start|inline-end"`: `Button` passes `isHovered` on pointer hover **and keyboard focus-visible**, and wrapping it in a DOM element hides it from that. For state changes (theme, sunroof open) call `ref.current?.startAnimation()` from an effect. Registry components must not import `./icons/*` (`registry:check` fails); use icons in apps and Storybook chrome and draw an inline svg inside a registry component. The gallery story is `파운데이션/아이콘`; `components:check` does not look into `icons/`.
+
 ## Storybook
 
 ```bash

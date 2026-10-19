@@ -1,6 +1,14 @@
 'use client';
 
 import { Button } from '@repo/ui/button';
+import { ArrowDownIcon } from '@repo/ui/icons/arrow-down';
+import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { ArrowUpIcon } from '@repo/ui/icons/arrow-up';
+import { MaximizeIcon } from '@repo/ui/icons/maximize';
+import { MinimizeIcon } from '@repo/ui/icons/minimize';
+import { RotateCCWIcon } from '@repo/ui/icons/rotate-ccw';
+import { SunIcon, type SunIconHandle } from '@repo/ui/icons/sun';
 import { Skeleton, SkeletonGroup } from '@repo/ui/skeleton';
 import { vehicleById } from '@repo/vehicle-3d/vehicles';
 import type { InspectHandle } from '@repo/vehicle-3d/viewer';
@@ -11,7 +19,7 @@ import {
   INSIDE_VIEW_NOTE,
 } from '@repo/vehicle-3d/views';
 import dynamic from 'next/dynamic';
-import { Component, type ReactNode, useRef, useState } from 'react';
+import { Component, type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { caliperSwatchOf } from '../model/caliper-map';
 import { CATALOG } from '../model/catalog';
@@ -119,6 +127,13 @@ export function VehicleStage({
   const view = picked?.step === step ? picked.view : stageViewOf(step);
   // 선루프를 연 상태. 선루프 품목을 빼면 닫힌 상태로 돌려 놓는다(다시 담았을 때 열린 채로 나타나지 않게).
   const [sunroofOpen, setSunroofOpen] = useState(false);
+  const sunRef = useRef<SunIconHandle>(null);
+  // 열고 닫을 때마다 해 아이콘이 한 번 움직인다(처음 그릴 때는 가만히 있다).
+  const sunroofOpenBefore = useRef(false);
+  useEffect(() => {
+    if (sunroofOpenBefore.current !== sunroofOpen) sunRef.current?.startAnimation();
+    sunroofOpenBefore.current = sunroofOpen;
+  }, [sunroofOpen]);
   if (!sunroof && sunroofOpen) {
     setSunroofOpen(false);
   }
@@ -204,6 +219,7 @@ export function VehicleStage({
                   setSunroofOpen((open) => !open);
                 }}
               >
+                <SunIcon ref={sunRef} data-icon="inline-start" />
                 {CAMERA_CONTROL_LABELS.sunroofOpen}
               </Button>
             ) : null}
@@ -216,12 +232,12 @@ export function VehicleStage({
             >
               {(
                 [
-                  ['←', CAMERA_CONTROL_LABELS.rotateLeft, -1, 0],
-                  ['→', CAMERA_CONTROL_LABELS.rotateRight, 1, 0],
-                  ['↑', CAMERA_CONTROL_LABELS.rotateUp, 0, -1],
-                  ['↓', CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
+                  [ArrowLeftIcon, CAMERA_CONTROL_LABELS.rotateLeft, -1, 0],
+                  [ArrowRightIcon, CAMERA_CONTROL_LABELS.rotateRight, 1, 0],
+                  [ArrowUpIcon, CAMERA_CONTROL_LABELS.rotateUp, 0, -1],
+                  [ArrowDownIcon, CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
                 ] as const
-              ).map(([glyph, label, azimuth, polar]) => (
+              ).map(([Glyph, label, azimuth, polar]) => (
                 <Button
                   key={label}
                   aria-label={label}
@@ -231,7 +247,7 @@ export function VehicleStage({
                   variant="secondary"
                   onClick={() => inspectRef.current?.rotateBy(azimuth, polar)}
                 >
-                  <span aria-hidden>{glyph}</span>
+                  <Glyph />
                 </Button>
               ))}
             </div>
@@ -242,6 +258,7 @@ export function VehicleStage({
               variant="secondary"
               onClick={() => inspectRef.current?.zoomIn()}
             >
+              <MaximizeIcon data-icon="inline-start" />
               {CAMERA_CONTROL_LABELS.zoomIn}
             </Button>
             <Button
@@ -251,6 +268,7 @@ export function VehicleStage({
               variant="secondary"
               onClick={() => inspectRef.current?.zoomOut()}
             >
+              <MinimizeIcon data-icon="inline-start" />
               {CAMERA_CONTROL_LABELS.zoomOut}
             </Button>
             <Button
@@ -259,6 +277,7 @@ export function VehicleStage({
               variant="secondary"
               onClick={() => inspectRef.current?.reset()}
             >
+              <RotateCCWIcon data-icon="inline-start" />
               {CAMERA_CONTROL_LABELS.reset}
             </Button>
           </div>

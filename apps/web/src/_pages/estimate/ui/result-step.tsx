@@ -12,6 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@repo/ui/dialog';
+import { PrinterIcon } from '@repo/ui/icons/printer';
+import { RotateCCWIcon } from '@repo/ui/icons/rotate-ccw';
+import { XIcon } from '@repo/ui/icons/x';
 import { Label } from '@repo/ui/label';
 import { NativeSelect } from '@repo/ui/native-select';
 import { Notice, NoticeDescription, NoticeTitle } from '@repo/ui/notice';
@@ -204,6 +207,7 @@ export function ResultStep({
             window.print();
           }}
         >
+          <PrinterIcon data-icon="inline-start" />
           인쇄 · PDF 저장
         </Button>
         <Button
@@ -214,6 +218,7 @@ export function ResultStep({
             setResetOpen(true);
           }}
         >
+          <RotateCCWIcon data-icon="inline-start" />
           처음부터 다시 견적
         </Button>
       </div>
@@ -242,7 +247,10 @@ export function ResultStep({
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">취소</Button>
+              <Button variant="secondary">
+                <XIcon data-icon="inline-start" />
+                취소
+              </Button>
             </DialogClose>
             <Button
               variant="primary"
@@ -251,6 +259,7 @@ export function ResultStep({
                 dispatch({ type: 'reset' });
               }}
             >
+              <RotateCCWIcon data-icon="inline-start" />
               처음부터 다시
             </Button>
           </DialogFooter>

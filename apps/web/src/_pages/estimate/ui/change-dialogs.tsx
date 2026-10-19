@@ -11,12 +11,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@repo/ui/dialog';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { XIcon } from '@repo/ui/icons/x';
 import type { Dispatch, RefObject } from 'react';
 
 import { describeEffect } from '../model/describe';
 import { diffSelections } from '../model/diff';
 import { formatWon } from '../model/format';
 import type { WizardAction, WizardState } from '../model/wizard';
+import { AlertGlyph } from './alert-glyph';
 
 function signedWon(amount: number) {
   if (amount === 0) return '변동 없음';
@@ -81,7 +85,10 @@ export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogP
         ) : null}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">취소</Button>
+            <Button variant="secondary">
+              <XIcon data-icon="inline-start" />
+              취소
+            </Button>
           </DialogClose>
           <Button
             variant="primary"
@@ -89,6 +96,7 @@ export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogP
               dispatch({ type: 'confirm' });
             }}
           >
+            <CheckIcon data-icon="inline-start" />
             변경 확인
           </Button>
         </DialogFooter>
@@ -113,7 +121,10 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
     >
       <DialogContent onCloseAutoFocus={returnFocus(returnFocusRef, fallbackFocusRef)}>
         <DialogHeader>
-          <DialogTitle>지금은 선택할 수 없습니다</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <AlertGlyph />
+            지금은 선택할 수 없습니다
+          </DialogTitle>
           <DialogDescription>선택은 그대로이고, 견적 금액도 바뀌지 않았습니다.</DialogDescription>
         </DialogHeader>
         <ul className="text-foreground flex list-disc flex-col gap-1 pl-5 text-sm">
@@ -123,7 +134,10 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
         </ul>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">닫기</Button>
+            <Button variant="secondary">
+              <XIcon data-icon="inline-start" />
+              닫기
+            </Button>
           </DialogClose>
           {alternativeTrim?.kind === 'unavailable-reason' && alternativeTrim.alternativeTrim ? (
             <Button
@@ -137,6 +151,7 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
               }}
             >
               {alternativeTrim.alternativeTrim === 'sport' ? '스포트' : '컴포트'} 트림으로 바꾸기
+              <ArrowRightIcon data-icon="inline-end" />
             </Button>
           ) : null}
         </DialogFooter>
@@ -168,7 +183,10 @@ export function SuggestionDialog({ state, dispatch, returnFocusRef }: DialogProp
         ) : null}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">그대로 진행</Button>
+            <Button variant="secondary">
+              <XIcon data-icon="inline-start" />
+              그대로 진행
+            </Button>
           </DialogClose>
           <Button
             variant="primary"
@@ -176,6 +194,7 @@ export function SuggestionDialog({ state, dispatch, returnFocusRef }: DialogProp
               dispatch({ type: 'accept-suggestion' });
             }}
           >
+            <CheckIcon data-icon="inline-start" />
             제안 받아들이기
           </Button>
         </DialogFooter>

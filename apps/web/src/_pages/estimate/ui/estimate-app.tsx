@@ -1,6 +1,11 @@
 'use client';
 
 import { Button } from '@repo/ui/button';
+import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { ReceiptTextIcon } from '@repo/ui/icons/receipt-text';
+import { XIcon } from '@repo/ui/icons/x';
 import { Notice, NoticeDescription, NoticeTitle } from '@repo/ui/notice';
 import { PriceBar, PriceBarActions, PriceBarTotal } from '@repo/ui/price-bar';
 import {
@@ -123,6 +128,7 @@ export function EstimateApp({
     <Sheet open={summaryOpen} onOpenChange={setSummaryOpen}>
       <SheetTrigger asChild>
         <Button size="small" variant="secondary">
+          <ReceiptTextIcon data-icon="inline-start" />
           견적 요약
         </Button>
       </SheetTrigger>
@@ -212,6 +218,7 @@ export function EstimateApp({
                             setIssuesOpen(false);
                           }}
                         >
+                          <XIcon data-icon="inline-start" />
                           닫기
                         </Button>
                       </div>
@@ -234,6 +241,7 @@ export function EstimateApp({
                             dispatch({ type: 'dismiss-notices' });
                           }}
                         >
+                          <CheckIcon data-icon="inline-start" />
                           확인
                         </Button>
                       </div>
@@ -282,6 +290,7 @@ export function EstimateApp({
                       if (previous) dispatch({ type: 'go', step: previous });
                     }}
                   >
+                    <ArrowLeftIcon data-icon="inline-start" />
                     이전
                   </Button>
                   {next ? (
@@ -292,6 +301,7 @@ export function EstimateApp({
                       }}
                     >
                       다음
+                      <ArrowRightIcon data-icon="inline-end" />
                     </Button>
                   ) : null}
                 </PriceBarActions>
