@@ -118,6 +118,7 @@ export function WheelStep(props: PanelProps) {
   return (
     <div className="flex flex-col gap-8">
       <SlotOptions {...props} slot="wheel" legend="휠" />
+      <SlotOptions {...props} slot="rimFinish" legend="휠 마감" />
       <SlotOptions {...props} slot="caliper" legend="브레이크 캘리퍼" />
     </div>
   );

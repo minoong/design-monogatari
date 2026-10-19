@@ -17,10 +17,11 @@ import { caliperSwatchOf } from '../model/caliper-map';
 import { CATALOG } from '../model/catalog';
 import { interiorSwatchOf } from '../model/interior-map';
 import { paintSwatchOf } from '../model/paint-map';
+import { rimFinishSwatchOf } from '../model/rim-map';
 import { SUNROOF_PACKAGES } from '../model/roof-map';
 import { isInsideView, STAGE_VIEW_OPTIONS, stageViewOf } from '../model/stage-view';
 import type { StepId } from '../model/steps';
-import type { CaliperId, ColorId, InteriorId, WheelId } from '../model/types';
+import type { CaliperId, ColorId, InteriorId, RimFinishId, WheelId } from '../model/types';
 import { WHEEL_INCH } from '../model/wheel-map';
 
 const VEHICLE = vehicleById('x5-web');
@@ -90,6 +91,7 @@ export function VehicleStage({
   caliper,
   colorLabel,
   interior,
+  rimFinish,
   sunroof,
   wheel,
   step,
@@ -98,6 +100,7 @@ export function VehicleStage({
   color: ColorId;
   colorLabel: string;
   interior: InteriorId;
+  rimFinish: RimFinishId;
   /** 선루프 품목을 담았는지. 아니면 선루프 구멍을 막은 차를 보여 준다. */
   sunroof: boolean;
   wheel: WheelId;
@@ -156,6 +159,7 @@ export function VehicleStage({
               }}
               caliper={caliperSwatchOf(caliper)}
               interior={interiorSwatchOf(interior)}
+              rimFinish={rimFinishSwatchOf(rimFinish)}
               paint={paint}
               sunroof={sunroof}
               sunroofOpen={sunroofOpen}
@@ -263,9 +267,9 @@ export function VehicleStage({
       <figcaption className="text-muted-foreground text-caption flex flex-col gap-1">
         <span>
           비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서
-          돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기, 브레이크 캘리퍼
-          색이 반영됩니다. 시트 구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다. 선루프는 선택
-          품목({SUNROOF_LABELS})을 담았을 때만 보입니다.
+          돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기, 휠 마감, 브레이크
+          캘리퍼 색이 반영됩니다. 시트 구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다.
+          선루프는 선택 품목({SUNROOF_LABELS})을 담았을 때만 보입니다.
         </span>
         <details>
           <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">

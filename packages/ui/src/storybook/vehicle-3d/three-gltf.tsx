@@ -3,6 +3,7 @@
 import { caliperById, type CaliperId } from '@repo/vehicle-3d/calipers';
 import { interiorById, type InteriorId } from '@repo/vehicle-3d/interiors';
 import { paintById, type PaintId } from '@repo/vehicle-3d/paints';
+import { rimFinishById, type RimFinishId } from '@repo/vehicle-3d/rim-finishes';
 import {
   vehicleById,
   type VehicleId,
@@ -36,6 +37,7 @@ export function ThreeGltfDemo({
   const [sunroof, setSunroof] = useState(true);
   const [sunroofOpen, setSunroofOpen] = useState(false);
   const [caliperId, setCaliperId] = useState<CaliperId>('standard');
+  const [rimFinishId, setRimFinishId] = useState<RimFinishId>('standard');
   const [interiorId, setInteriorId] = useState<InteriorId>('black');
   const [view, setView] = useState<CameraViewId>(initialView);
   const inspectRef = useRef<InspectHandle | null>(null);
@@ -53,6 +55,8 @@ export function ThreeGltfDemo({
           paintId={paintId}
           caliperId={caliperId}
           onCaliperId={setCaliperId}
+          rimFinishId={rimFinishId}
+          onRimFinishId={setRimFinishId}
           interiorId={interiorId}
           onInteriorId={setInteriorId}
           sunroof={sunroof}
@@ -84,6 +88,7 @@ export function ThreeGltfDemo({
         inspectRef={inspectRef}
         caliper={caliperById(caliperId)}
         interior={interiorById(interiorId)}
+        rimFinish={rimFinishById(rimFinishId)}
         paint={paintId ? paintById(paintId) : undefined}
         sunroof={sunroof}
         sunroofOpen={sunroofOpen}

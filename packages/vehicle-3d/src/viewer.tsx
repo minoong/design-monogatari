@@ -15,6 +15,7 @@ import {
   restoreThreePaint,
   threePaintFromSwatch,
 } from './apply-three-paint';
+import { applyThreeRim } from './apply-three-rim';
 import { assembleG05Three } from './assemble-g05-three';
 import { CALIPER_SWATCHES, type CaliperSwatch } from './calipers';
 import { CAMERA_VIEWS, type CameraViewId, DEFAULT_CAMERA_VIEW } from './camera-views';
@@ -23,6 +24,7 @@ import { InspectControls, type InspectHandle } from './inspect-controls';
 import { INTERIOR_SWATCHES, type InteriorSwatch } from './interiors';
 import type { PaintSwatch } from './paints';
 import { prefersReducedMotion } from './reduced-motion';
+import { RIM_FINISH_SWATCHES, type RimFinishSwatch } from './rim-finishes';
 import { addSunroofPatch, setSunroof, slideSunroof } from './sunroof';
 import { ThreeStudio } from './three-studio';
 import { vehicleById, type VehicleId } from './vehicles';
@@ -78,6 +80,7 @@ function GltfModel({
   paint,
   interior,
   caliper,
+  rimFinish,
   sunroof = true,
   sunroofOpen = false,
   wheelInch,
@@ -91,6 +94,8 @@ function GltfModel({
   interior?: InteriorSwatch;
   /** 브레이크 캘리퍼 색. 없으면 모델 원래(회색). */
   caliper?: CaliperSwatch;
+  /** 휠 림의 마감 색. 없으면 모델 원래(광택 검정). */
+  rimFinish?: RimFinishSwatch;
   /** false 이면 선루프 구멍을 막는다. 기본은 선루프가 있는 모델 그대로. */
   sunroof?: boolean;
   /** 선루프 유리를 연다. 선루프가 있을 때만 뜻이 있다. */
@@ -201,6 +206,14 @@ function GltfModel({
     if (!model) {
       return;
     }
+    applyThreeRim(model, rimFinish ?? RIM_FINISH_SWATCHES[0]);
+    invalidate();
+  }, [invalidate, model, rimFinish]);
+
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
     applyThreeCaliper(model, caliper ?? CALIPER_SWATCHES[0]);
     invalidate();
   }, [caliper, invalidate, model]);
@@ -228,6 +241,8 @@ export type VehicleCanvasProps = {
   interior?: InteriorSwatch;
   /** 브레이크 캘리퍼 색. 휠 시점에서 림 사이로 보입니다. 없으면 모델 원래(회색)입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   caliper?: CaliperSwatch;
+  /** 휠 림의 마감 색. 휠 시점에서 크게 보입니다. 없으면 모델 원래(광택 검정)입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
+  rimFinish?: RimFinishSwatch;
   /** false 이면 선루프 구멍을 막은 차를 보여 줍니다(지붕이 막힌 모양). 기본은 선루프가 있는 모델 그대로입니다. 바꿔도 모델을 다시 불러오지 않습니다. */
   sunroof?: boolean;
   /** 선루프 유리를 연다(뒤로 밀려 지붕 밑으로 들어갑니다). `sunroof`가 false 이면 뜻이 없습니다. 감소 모션이면 바로 열립니다. */
@@ -260,6 +275,7 @@ export function VehicleCanvas({
   paint,
   interior,
   caliper,
+  rimFinish,
   sunroof,
   sunroofOpen,
   inspectRef,
@@ -296,6 +312,7 @@ export function VehicleCanvas({
           front={vehicle.front}
           onReady={onReady}
           caliper={caliper}
+          rimFinish={rimFinish}
           interior={interior}
           paint={paint}
           sunroof={sunroof}
