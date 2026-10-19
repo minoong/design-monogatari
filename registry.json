@@ -693,6 +693,25 @@
           "target": "@ui/copy-button.tsx"
         }
       ]
+    },
+    {
+      "name": "text-roll",
+      "type": "registry:ui",
+      "title": "TextRoll",
+      "description": "Text that rolls upward when it changes: the old text slides out and the new text follows right behind it.",
+      "dependencies": ["motion"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/motion",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/text-roll.tsx",
+          "type": "registry:ui",
+          "target": "@ui/text-roll.tsx"
+        }
+      ]
     }
   ]
 }

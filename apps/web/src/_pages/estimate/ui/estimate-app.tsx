@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@repo/ui/sheet';
+import { TextRoll } from '@repo/ui/text-roll';
 import { ToastProvider } from '@repo/ui/toast';
 import {
   type UIEvent,
@@ -117,6 +118,14 @@ export function EstimateApp({
   }, [state.step]);
 
   const stepIndex = STEPS.findIndex((step) => step.id === state.step);
+  // 단계 제목이 굴러가는 방향: 다음 단계로 가면 위로, 이전 단계로 돌아가면 아래로. 단계가 바뀐 그 렌더에서 정한다.
+  const [titleRoll, setTitleRoll] = useState<{ index: number; direction: 'up' | 'down' }>({
+    index: stepIndex,
+    direction: 'up',
+  });
+  if (titleRoll.index !== stepIndex) {
+    setTitleRoll({ index: stepIndex, direction: stepIndex > titleRoll.index ? 'up' : 'down' });
+  }
   const previous = neighborStep(state.step, -1);
   const next = neighborStep(state.step, 1);
   const currentLabel = STEPS[stepIndex]?.label ?? '';
@@ -241,7 +250,7 @@ export function EstimateApp({
                       className="text-title font-semibold tracking-tight outline-none"
                     >
                       <span className="sr-only">{stepIndex + 1}단계: </span>
-                      {currentLabel}
+                      <TextRoll direction={titleRoll.direction}>{currentLabel}</TextRoll>
                     </h2>
                     <p className="text-muted-foreground mt-1 text-sm">{STEP_INTRO[state.step]}</p>
                   </div>
