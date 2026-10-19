@@ -3,10 +3,7 @@
 import { Button } from '@repo/ui/button';
 import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
 import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
-import { CheckIcon } from '@repo/ui/icons/check';
 import { ReceiptTextIcon } from '@repo/ui/icons/receipt-text';
-import { XIcon } from '@repo/ui/icons/x';
-import { Notice, NoticeDescription, NoticeTitle } from '@repo/ui/notice';
 import { PriceBar, PriceBarActions, PriceBarTotal } from '@repo/ui/price-bar';
 import {
   Sheet,
@@ -29,14 +26,15 @@ import {
 
 import { CATALOG } from '../model/catalog';
 import { encodeEstimate } from '../model/codec';
-import { describeEffect } from '../model/describe';
 import { calculateQuote } from '../model/quote';
 import { hasSunroof } from '../model/roof-map';
 import { neighborStep, type StepId, STEPS } from '../model/steps';
 import { type WizardAction, wizardReducer, type WizardState } from '../model/wizard';
 import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-dialogs';
 import { EstimateHeader } from './estimate-header';
+import { RestoreIssueToast } from './restore-issue-toast';
 import { ResultStep } from './result-step';
+import { StageNotice } from './stage-notice';
 import {
   AccessoriesStep,
   ExteriorStep,
@@ -82,7 +80,6 @@ export function EstimateApp({
   restoreIssueCount: number;
 }) {
   const [state, dispatch] = useReducer(wizardReducer, initial);
-  const [issuesOpen, setIssuesOpen] = useState(restoreIssueCount > 0);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -180,6 +177,7 @@ export function EstimateApp({
           <SheetDescription>선택한 항목과 금액입니다.</SheetDescription>
         </SheetHeader>
         <SummaryList
+          autoChanges={state.notices}
           quote={quote}
           dispatch={dispatch}
           onNavigate={() => {
@@ -192,7 +190,8 @@ export function EstimateApp({
   );
 
   return (
-    <ToastProvider>
+    <ToastProvider viewportClassName="bottom-24 split:max-lg:bottom-36 lg:bottom-48">
+      <RestoreIssueToast issueCount={restoreIssueCount} />
       <div className="bg-background text-foreground flex h-dvh flex-col overflow-hidden font-sans print:block print:h-auto print:min-h-0 print:overflow-visible">
         <EstimateHeader
           dispatch={dispatch}
@@ -210,6 +209,7 @@ export function EstimateApp({
               colorLabel={colorLabel}
               interior={state.selection.interior}
               large={stageLarge}
+              notice={<StageNotice notices={state.notices} />}
               compact={stageCompact}
               onToggleLarge={() => {
                 setStageLarge((large) => !large);
@@ -245,52 +245,6 @@ export function EstimateApp({
                     </h2>
                     <p className="text-muted-foreground mt-1 text-sm">{STEP_INTRO[state.step]}</p>
                   </div>
-
-                  {issuesOpen ? (
-                    <Notice variant="error">
-                      <NoticeTitle>주소의 일부를 읽지 못했습니다</NoticeTitle>
-                      <NoticeDescription>
-                        읽을 수 없는 값은 기본 선택으로 되돌렸습니다.
-                      </NoticeDescription>
-                      <div>
-                        <Button
-                          iconMotion="mount"
-                          size="small"
-                          variant="secondary"
-                          onClick={() => {
-                            setIssuesOpen(false);
-                          }}
-                        >
-                          <XIcon data-icon="inline-start" />
-                          닫기
-                        </Button>
-                      </div>
-                    </Notice>
-                  ) : null}
-
-                  {state.notices.length > 0 ? (
-                    <Notice>
-                      <NoticeTitle>선택이 자동으로 바뀌었습니다</NoticeTitle>
-                      <ul className="text-muted-foreground text-caption flex list-disc flex-col gap-1 pl-5">
-                        {state.notices.map((effect, index) => (
-                          <li key={index}>{describeEffect(effect)}</li>
-                        ))}
-                      </ul>
-                      <div>
-                        <Button
-                          iconMotion="mount"
-                          size="small"
-                          variant="secondary"
-                          onClick={() => {
-                            dispatch({ type: 'dismiss-notices' });
-                          }}
-                        >
-                          <CheckIcon data-icon="inline-start" />
-                          확인
-                        </Button>
-                      </div>
-                    </Notice>
-                  ) : null}
 
                   {state.step === 'model' ? <ModelStep {...panelProps} /> : null}
                   {state.step === 'exterior' ? <ExteriorStep {...panelProps} /> : null}

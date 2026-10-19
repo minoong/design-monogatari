@@ -167,6 +167,7 @@ export function VehicleStage({
   compact,
   interior,
   large,
+  notice,
   onToggleLarge,
   rimFinish,
   sunroof,
@@ -181,6 +182,8 @@ export function VehicleStage({
   interior: InteriorId;
   /** 좁은 화면에서 사용자가 차량 영역을 키운 상태 */
   large: boolean;
+  /** 차량 위 아래쪽에 겹쳐 보이는 안내(자동으로 바뀐 선택 등). 배치를 바꾸지 않는다. */
+  notice?: ReactNode;
   onToggleLarge: () => void;
   rimFinish: RimFinishId;
   /** 선루프 품목을 담았는지. 아니면 선루프 구멍을 막은 차를 보여 준다. */
@@ -229,6 +232,7 @@ export function VehicleStage({
         <p className="sr-only" role="status">
           {showFallback ? '' : `시점: ${CAMERA_VIEWS[view].label}`}
         </p>
+        {notice}
         {inside && !showFallback ? (
           // 무대 안에 겹쳐 둔다. 캡션 줄에 넣으면 나타날 때마다 무대 높이가 바뀐다.
           <p className="bg-background/80 text-foreground text-caption split:max-w-[calc(100%-1.5rem)] absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">

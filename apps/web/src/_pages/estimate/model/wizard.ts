@@ -32,7 +32,6 @@ export type WizardAction =
   | { type: 'confirm' }
   | { type: 'cancel' }
   | { type: 'dismiss-blocked' }
-  | { type: 'dismiss-notices' }
   | { type: 'dismiss-suggestion' }
   | { type: 'accept-suggestion' }
   | { type: 'reset' }
@@ -103,8 +102,6 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
       return { ...state, pending: null };
     case 'dismiss-blocked':
       return { ...state, blocked: null };
-    case 'dismiss-notices':
-      return { ...state, notices: [] };
     case 'dismiss-suggestion':
       return { ...state, suggestion: null };
     case 'accept-suggestion': {

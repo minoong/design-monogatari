@@ -38,7 +38,7 @@ export function App() {
 <PropsTable
   file="packages/ui/src/toast.tsx"
   name="ToastProviderProps"
-  include={['label', 'hotkey', 'limit', 'dismissLabel', 'errorPrefix']}
+  include={['label', 'hotkey', 'limit', 'dismissLabel', 'viewportClassName', 'errorPrefix']}
   defaults={{
     label: '"알림"',
     hotkey: '"F8"',
@@ -51,6 +51,8 @@ export function App() {
     hotkey: '누르면 알림 영역으로 포커스가 오는 키(KeyboardEvent.key)입니다. 끄려면 null.',
     limit: '동시에 보여 줄 최대 개수입니다. 넘치면 오래된 것부터 닫힙니다.',
     dismissLabel: '닫기 버튼의 이름입니다.',
+    viewportClassName:
+      '알림 영역의 위치를 바꾸는 클래스입니다. 화면 아래에 붙은 막대가 있으면 그 위로 올릴 때 씁니다(예: bottom-24). 기본은 화면 아래 끝입니다.',
     errorPrefix: '오류 알림을 스크린 리더가 읽을 때 앞에 붙는 말입니다.',
   }}
 />

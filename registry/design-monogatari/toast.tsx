@@ -56,6 +56,8 @@ export type ToastProviderProps = {
   /** 동시에 보여 줄 최대 개수. 넘치면 오래된 것부터 닫습니다. */
   limit?: number;
   dismissLabel?: string;
+  /** 알림 영역의 위치를 바꾸는 클래스(예: 화면 아래에 붙은 막대 위로 올리는 `bottom-24`). 기본은 화면 아래 끝입니다. */
+  viewportClassName?: string;
   /** 오류 알림을 스크린 리더가 읽을 때 앞에 붙는 말 */
   errorPrefix?: string;
 };
@@ -85,6 +87,7 @@ export function ToastProvider({
   hotkey = 'F8',
   limit = 3,
   dismissLabel = '알림 닫기',
+  viewportClassName,
   errorPrefix = '오류: ',
 }: ToastProviderProps) {
   const [items, setItems] = useState<ToastItem[]>([]);
@@ -149,7 +152,10 @@ export function ToastProvider({
         ref={viewportRef}
         role="region"
         aria-label={regionLabel}
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-60 flex flex-col items-center p-4 sm:items-end"
+        className={cn(
+          'pointer-events-none fixed inset-x-0 bottom-0 z-60 flex flex-col items-center p-4 sm:items-end',
+          viewportClassName,
+        )}
       >
         {/* list-style: none 이면 Safari/VoiceOver 가 목록 역할을 버리므로 role 을 명시한다 */}
         {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
