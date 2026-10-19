@@ -341,6 +341,10 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 - `CopyButton` wraps `Button` and inherits its defaults (`variant`, `size`, `radius`): do not set different defaults here, or a copy button placed next to a plain `Button` will look different (it once defaulted to `medium` next to `large` buttons). `value`, `label` / `copiedLabel` / `failedLabel`, `iconOnly` (square icon button like `IconButton`; the label stays as sr-only text so the accessible name still changes with the state), `resetDelay` (2000ms), `onCopy`, `onCopyError`. All labels are stacked in one grid cell so the width never changes; always-mounted sr-only regions announce the result: `role="status"` for success and `role="alert"` for failure, re-rendered with a counter key so repeats are read again. `aria-label` is not accepted (it would freeze the state label); the regions are siblings, so avoid `space-*`/`divide-*`/`:last-child` styled groups. Falls back to the failed label when `navigator.clipboard` is unavailable.
 
+### TextRoll
+
+- Rolls a short text when `children` changes: the old text slides one block out (`y: 0 → ∓100%`) while the new text follows from `±100% → 0` with the same distance, duration (`DURATION.base`) and curve (`EASE.outExpo`), so the two touch with almost no gap. The whole text moves as one block (a per-character stagger was tried and dropped: the order mixed and glyphs collided on two lines). `direction` (`up` default, `down`) sets the way it rolls; pass `up` when going to the next step and `down` when going back. Nothing moves on first paint (`AnimatePresence initial={false}`). Reduced motion: opacity-only swap at `DURATION.instant`. The animated layer is `aria-hidden` and `select-none`, one `sr-only` copy is read; no live region. Clipped by `overflow-hidden` with 0.1em vertical padding so ascenders and descenders are not cut. Pressing next/previous very fast stacks the exiting layers for a moment (about 0.3s each).
+
 ### Do
 
 - Use `primary` for every “click me” fill or link on light surfaces.

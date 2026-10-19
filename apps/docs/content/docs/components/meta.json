@@ -26,6 +26,7 @@
     "data-table",
     "skeleton",
     "progress",
-    "copy-button"
+    "copy-button",
+    "text-roll"
   ]
 }
