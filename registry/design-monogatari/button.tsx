@@ -14,6 +14,8 @@ import {
   type PointerEvent,
   type ReactElement,
   type ReactNode,
+  useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -73,6 +75,9 @@ export const buttonVariants = cva(
     },
   },
 );
+
+/** 터치로 누른 뒤 아이콘이 재생될 동안 올려 둔 상태를 유지하는 시간(ms). 가장 긴 아이콘 동작보다 길다. */
+const TOUCH_HOVER_HOLD = 1200;
 
 const BUTTON_PRESS = {
   rest: { scale: 1 },
@@ -168,6 +173,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const shouldReduceMotion = useReducedMotion();
   const [focusVisible, setFocusVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    },
+    [],
+  );
   const classes = cn(
     buttonVariants({
       variant,
@@ -199,12 +211,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 
   function handlePointerEnter(event: PointerEvent<HTMLButtonElement>) {
     onPointerEnter?.(event);
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
     setHovered(true);
   }
 
   function handlePointerLeave(event: PointerEvent<HTMLButtonElement>) {
     onPointerLeave?.(event);
-    setHovered(false);
+    if (event.pointerType === 'mouse') {
+      setHovered(false);
+      return;
+    }
+    // 터치와 펜은 누르는 순간 올림과 뗌(pointerenter, pointerleave)이 거의 동시에 와서, 바로 풀면 아이콘이 움직일 틈이
+    // 없다. 손가락을 뗀 뒤에도 아이콘이 한 번 재생될 시간만큼 올려 둔 상태로 둔다.
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    releaseTimer.current = setTimeout(() => {
+      setHovered(false);
+    }, TOUCH_HOVER_HOLD);
   }
 
   if (asChild) {
