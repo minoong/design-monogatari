@@ -254,6 +254,7 @@ export function EstimateApp({
                       </NoticeDescription>
                       <div>
                         <Button
+                          iconMotion="mount"
                           size="small"
                           variant="secondary"
                           onClick={() => {
@@ -277,6 +278,7 @@ export function EstimateApp({
                       </ul>
                       <div>
                         <Button
+                          iconMotion="mount"
                           size="small"
                           variant="secondary"
                           onClick={() => {

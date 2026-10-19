@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Button } from './button';
 import { ArrowRightIcon } from './icons/arrow-right';
+import { CheckIcon } from './icons/check';
 import { PlusIcon } from './icons/plus';
+import { XIcon } from './icons/x';
+import { StoryReplay } from './story-replay';
 
 const meta = {
   title: '컴포넌트/버튼',
@@ -160,6 +163,31 @@ export const 텍스트와아이콘: Story = {
         <ArrowRightIcon data-icon="inline-end" />
       </Button>
     </div>
+  ),
+};
+
+export const 아이콘_한_번: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`iconMotion="mount"`는 버튼이 나타날 때 아이콘이 한 번만 움직이고, 마우스를 올리거나 포커스가 와도 다시 움직이지 않습니다. 다이얼로그 푸터나 안내의 닫기 버튼에 씁니다. 오른쪽 위 버튼으로 다시 볼 수 있습니다.',
+      },
+    },
+  },
+  render: () => (
+    <StoryReplay>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button iconMotion="mount" variant="secondary">
+          <XIcon data-icon="inline-start" />
+          취소
+        </Button>
+        <Button iconMotion="mount" variant="primary">
+          <CheckIcon data-icon="inline-start" />
+          변경 확인
+        </Button>
+      </div>
+    </StoryReplay>
   ),
 };
 

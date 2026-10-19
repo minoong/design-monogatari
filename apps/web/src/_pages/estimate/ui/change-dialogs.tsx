@@ -85,12 +85,13 @@ export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogP
         ) : null}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">
+            <Button iconMotion="mount" variant="secondary">
               <XIcon data-icon="inline-start" />
               취소
             </Button>
           </DialogClose>
           <Button
+            iconMotion="mount"
             variant="primary"
             onClick={() => {
               dispatch({ type: 'confirm' });
@@ -134,13 +135,14 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
         </ul>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">
+            <Button iconMotion="mount" variant="secondary">
               <XIcon data-icon="inline-start" />
               닫기
             </Button>
           </DialogClose>
           {alternativeTrim?.kind === 'unavailable-reason' && alternativeTrim.alternativeTrim ? (
             <Button
+              iconMotion="mount"
               variant="primary"
               onClick={() => {
                 dispatch({ type: 'dismiss-blocked' });
@@ -183,12 +185,13 @@ export function SuggestionDialog({ state, dispatch, returnFocusRef }: DialogProp
         ) : null}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">
+            <Button iconMotion="mount" variant="secondary">
               <XIcon data-icon="inline-start" />
               그대로 진행
             </Button>
           </DialogClose>
           <Button
+            iconMotion="mount"
             variant="primary"
             onClick={() => {
               dispatch({ type: 'accept-suggestion' });

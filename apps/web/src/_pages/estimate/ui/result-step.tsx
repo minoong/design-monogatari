@@ -247,12 +247,13 @@ export function ResultStep({
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">
+              <Button iconMotion="mount" variant="secondary">
                 <XIcon data-icon="inline-start" />
                 취소
               </Button>
             </DialogClose>
             <Button
+              iconMotion="mount"
               variant="primary"
               onClick={() => {
                 setResetOpen(false);
