@@ -1,0 +1,24 @@
+---
+title: 아이콘
+description: 마우스를 올리거나 상태가 바뀔 때 한 번 움직이는 아이콘입니다. lucide-animated에서 옮겨 왔거나 같은 방식으로 직접 만들었습니다.
+---
+
+아이콘은 장식이 아니라 **누르거나 바꿀 수 있다는 표시**입니다. 버튼에 마우스를 올리거나 키보드로 포커스가 오면 한 번 움직이고, 테마 전환이나 선루프 열기처럼 상태가 바뀔 때도 한 번 움직입니다. [lucide-animated](https://lucide-animated.com)(MIT)의 아이콘을 옮겨 왔고, 없는 것(인쇄, 경고)은 같은 방식으로 직접 만들었습니다.
+
+<ComponentPreview name="icons/gallery" />
+
+## 사용법
+
+아이콘은 `@repo/ui/icons/<이름>`에서 하나씩 가져옵니다. 버튼의 **바로 아래 자식**으로 두고 `data-icon="inline-start"` 또는 `inline-end`를 주면 버튼이 hover와 키보드 포커스를 아이콘에 전달하고, 아이콘 쪽 안쪽 여백을 줄여 줍니다. `span` 같은 요소로 감싸면 전달되지 않아 움직이지 않습니다.
+
+<ComponentPreview name="button/with-icon" />
+
+상태가 바뀔 때 움직이려면 `ref`로 `startAnimation()`을 부릅니다. 부모가 직접 정하려면 `isHovered`를 넘깁니다.
+
+## 규칙
+
+- 아이콘은 장식입니다. 이름은 버튼 글자나 `aria-label`이 맡고, 아이콘은 `aria-hidden`입니다.
+- 한 번 재생하고 멈춥니다. 반복은 로딩처럼 진행 중인 상태에만 쓰고, 화면 밖이면 멈춥니다.
+- 감소 모션 설정이면 움직이지 않습니다. 완성된 모양은 그대로 보입니다.
+- 레지스트리 컴포넌트는 등록된 아이콘(`icon-check`, `icon-x`)만 씁니다. 설치하면 `@/lib/icons/`에 함께 복사됩니다.
+- 새 아이콘은 저장소의 `scripts/adapt-lucide-animated.mjs`로 옮깁니다.

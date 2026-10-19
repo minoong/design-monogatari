@@ -17,6 +17,14 @@ import { useState } from 'react';
 
 import { Button } from '../../button';
 import { ColorSwatchGroup, type ColorSwatchOption } from '../../color-swatch-group';
+import { ArrowDownIcon } from '../../icons/arrow-down';
+import { ArrowLeftIcon } from '../../icons/arrow-left';
+import { ArrowRightIcon } from '../../icons/arrow-right';
+import { ArrowUpIcon } from '../../icons/arrow-up';
+import { MaximizeIcon } from '../../icons/maximize';
+import { MinimizeIcon } from '../../icons/minimize';
+import { RotateCCWIcon } from '../../icons/rotate-ccw';
+import { SunIcon } from '../../icons/sun';
 
 const ORIGINAL_PAINT = 'original';
 
@@ -208,12 +216,12 @@ export function SequenceOverlay({
           >
             {(
               [
-                ['←', CAMERA_CONTROL_LABELS.rotateLeft, -1, 0],
-                ['→', CAMERA_CONTROL_LABELS.rotateRight, 1, 0],
-                ['↑', CAMERA_CONTROL_LABELS.rotateUp, 0, -1],
-                ['↓', CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
+                [ArrowLeftIcon, CAMERA_CONTROL_LABELS.rotateLeft, -1, 0],
+                [ArrowRightIcon, CAMERA_CONTROL_LABELS.rotateRight, 1, 0],
+                [ArrowUpIcon, CAMERA_CONTROL_LABELS.rotateUp, 0, -1],
+                [ArrowDownIcon, CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
               ] as const
-            ).map(([glyph, label, azimuth, polar]) => (
+            ).map(([Glyph, label, azimuth, polar]) => (
               <Button
                 key={label}
                 aria-label={label}
@@ -225,7 +233,7 @@ export function SequenceOverlay({
                   onRotateBy(azimuth, polar);
                 }}
               >
-                <span aria-hidden>{glyph}</span>
+                <Glyph />
               </Button>
             ))}
           </div>
@@ -236,6 +244,7 @@ export function SequenceOverlay({
             variant="secondary"
             onClick={onZoomIn}
           >
+            <MaximizeIcon data-icon="inline-start" />
             {CAMERA_CONTROL_LABELS.zoomIn}
           </Button>
           <Button
@@ -245,9 +254,11 @@ export function SequenceOverlay({
             variant="secondary"
             onClick={onZoomOut}
           >
+            <MinimizeIcon data-icon="inline-start" />
             {CAMERA_CONTROL_LABELS.zoomOut}
           </Button>
           <Button size="small" type="button" variant="secondary" onClick={onResetView}>
+            <RotateCCWIcon data-icon="inline-start" />
             {CAMERA_CONTROL_LABELS.reset}
           </Button>
         </div>
@@ -320,6 +331,7 @@ export function SequenceOverlay({
               onSunroofOpen(!sunroofOpen);
             }}
           >
+            <SunIcon data-icon="inline-start" />
             {CAMERA_CONTROL_LABELS.sunroofOpen}
           </Button>
         </div>
