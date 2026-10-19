@@ -56,7 +56,7 @@ pnpm --filter @repo/ui copy:car
 Stories live next to components: `src/*.stories.tsx`. Foundations: `src/foundations/*.stories.tsx`.
 Theme: the toolbar in `.storybook/preview.tsx` (`globalTypes.theme` + `ThemeDecorator`) applies `html.light` / `html.dark`.
 `parameters.layout: 'fullscreen'` stories skip ThemeDecorator `p-8` so full-height stages are not clipped below the iframe.
-3D car stories (`컴포넌트/차량 3D`, `src/storybook/vehicle-3d/`) are Storybook chrome around the viewer from `@repo/vehicle-3d`: the stage (`inspect-stage.tsx`), the paint-chip and zoom overlay (`overlay.tsx`, uses `Button`), and the credit line. The stories do not use page scroll. The 3D engine, model handling, assets, and licensing notes live in `packages/vehicle-3d/AGENTS.md`. `three` is not a dependency of this package. Not a public `@repo/ui/*` export, not in the registry.
+3D car stories (`컴포넌트/차량 3D`, `src/storybook/vehicle-3d/`) are Storybook chrome around the viewer from `@repo/vehicle-3d`: the stage (`inspect-stage.tsx`), the paint-chip and zoom overlay (`overlay.tsx`, uses `Button` and the animated arrow / maximize / minimize / rotate-ccw / sun icons), and the credit line. The stories do not use page scroll. The 3D engine, model handling, assets, and licensing notes live in `packages/vehicle-3d/AGENTS.md`. `three` is not a dependency of this package. Not a public `@repo/ui/*` export, not in the registry.
 
 ## Skills when working here
 
