@@ -11,6 +11,9 @@
  *      ./lib/cn  -> @/lib/utils      (소비자의 utils 별칭)
  *      ./lib/motion, ./lib/check-phase -> @/lib/<이름>  (모션 토큰과 체크 모션 훅, 레지스트리 lib 항목)
  *      ./<형제>   -> @/ui/<형제>      (shadcn CLI가 소비자의 ui 별칭으로 바꿔 준다)
+ *      ./icons/<이름> -> @/lib/icons/<이름>  (움직이는 아이콘. 레지스트리 lib 항목으로 등록된 것만)
+ *    아이콘 항목(`registry/design-monogatari/icons/*`)도 같은 방식으로 `packages/ui/src/icons/*` 에서 만든다.
+ *      ../lib/cn -> @/lib/utils, ./icon-frame · ./use-animated-icon -> @/lib/icons/<이름>
  * 2. 테마: `registry.json` 의 `theme` 항목(cssVars, css). `packages/ui/src/styles/globals.css`
  *    의 @theme, :root/.light, .dark, @keyframes 에서 만든다.
  *
@@ -22,7 +25,7 @@
  *   - `@keyframes` 와 `--animate-*` 가 없으면 Button 로딩 점이 움직이지 않는다.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -62,6 +65,7 @@ async function writeOrCheck(path, text, label) {
     drift.push(label);
     return;
   }
+  mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, next);
   say(`  갱신: ${label}`);
 }
@@ -72,9 +76,19 @@ const registry = JSON.parse(readFileSync(REGISTRY_JSON, 'utf8'));
 const uiItems = registry.items.filter((item) => item.type === 'registry:ui');
 const uiNames = new Set(uiItems.map((item) => item.name));
 
+// 움직이는 아이콘 항목: 원본은 `packages/ui/src/icons/<이름>.(tsx|ts)`, 복사본은 `registry/design-monogatari/icons/`.
+const ICON_DIR = 'registry/design-monogatari/icons/';
+const iconItems = registry.items.filter((item) => item.files?.[0]?.path.startsWith(ICON_DIR));
+const iconNames = new Set(
+  iconItems.map((item) => item.files[0].path.slice(ICON_DIR.length).replace(/\.tsx?$/, '')),
+);
+
 /** 원본 컴포넌트를 레지스트리용으로 바꾼다. import 줄 외에는 한 글자도 건드리지 않는다. */
 export function transformComponent(source) {
   return source
+    .replace(/from '\.\/icons\/([a-z0-9-]+)'/g, (match, icon) =>
+      iconNames.has(icon) ? `from '@/lib/icons/${icon}'` : match,
+    )
     .replace(/from '\.\/lib\/cn'/g, "from '@/lib/utils'")
     .replace(/from '\.\/lib\/(motion|check-phase)'/g, "from '@/lib/$1'")
     .replace(/from '\.\/([a-z0-9-]+)'/g, (match, sibling) =>
@@ -95,6 +109,24 @@ for (const item of uiItems) {
     );
   }
   await writeOrCheck(join(ROOT, file.path), transformComponent(source), file.path);
+}
+
+/** 아이콘 원본을 레지스트리용으로 바꾼다. */
+export function transformIcon(source) {
+  return source
+    .replace(/from '\.\.\/lib\/cn'/g, "from '@/lib/utils'")
+    .replace(/from '\.\/(icon-frame|use-animated-icon)'/g, "from '@/lib/icons/$1'");
+}
+
+for (const item of iconItems) {
+  const file = item.files[0];
+  const base = file.path.slice(ICON_DIR.length);
+  const sourcePath = join(SRC, 'icons', base);
+  const source = readFileSync(sourcePath, 'utf8');
+  if (/from '\.\.?\//.test(transformIcon(source))) {
+    drift.push(`${item.name}: 변환 뒤에도 상대 import 가 남아 있습니다`);
+  }
+  await writeOrCheck(join(ROOT, file.path), transformIcon(source), file.path);
 }
 
 // ---------------------------------------------------------------- 2. 테마

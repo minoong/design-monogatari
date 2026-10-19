@@ -143,9 +143,9 @@ function Icons() {
             제어가 둘 이상이거나 변형 이름이 다른 아이콘은 직접 옮깁니다.
           </li>
           <li>
-            디자인 시스템 컴포넌트(<Code>registry</Code>에 들어가는 것)는 <Code>./icons/*</Code>를
-            가져오지 않습니다. 레지스트리 동기화가 깨지므로 아이콘은 앱과 Storybook에서만 쓰고,
-            컴포넌트 안은 파일 안에 직접 그립니다.
+            디자인 시스템 컴포넌트는 레지스트리 항목(<Code>icon-check</Code>처럼 <Code>icon-</Code>
+            이름)으로 등록한 아이콘만 가져옵니다. 등록하지 않은 아이콘을 가져오면 레지스트리 검사가
+            실패합니다. 지금 등록된 것은 <Code>check</Code>와 <Code>x</Code>입니다.
           </li>
         </ul>
       </DocSection>

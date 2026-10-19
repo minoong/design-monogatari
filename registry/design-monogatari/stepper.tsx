@@ -12,6 +12,8 @@ import {
   useState,
 } from 'react';
 
+import { CheckIcon } from '@/lib/icons/check';
+import { useCheckPhase } from '@/lib/check-phase';
 import { cn } from '@/lib/utils';
 import { SPRING } from '@/lib/motion';
 
@@ -105,6 +107,9 @@ export function StepperItem({
   const reduceMotion = useReducedMotion();
   const current = currentValue === value;
   const Comp = asChild ? Slot : 'a';
+  // 단계를 끝낸 순간에만 체크가 그려진다. 처음부터 끝난 단계는 움직이지 않는다.
+  const noInput = useRef<HTMLInputElement>(null);
+  const checkPhase = useCheckPhase(completed, noInput);
 
   return (
     <li className="shrink-0">
@@ -142,17 +147,7 @@ export function StepperItem({
           data-done={completed ? '' : undefined}
         >
           {completed ? (
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={3}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-3.5"
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
+            <CheckIcon isHovered={checkPhase === 'in'} size={14} strokeWidth={3} />
           ) : null}
         </span>
         <Slottable>{children}</Slottable>

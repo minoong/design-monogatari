@@ -10,6 +10,7 @@ import {
   useRef,
 } from 'react';
 
+import { CheckIcon } from './icons/check';
 import { useCheckPhase } from './lib/check-phase';
 import { cn } from './lib/cn';
 
@@ -91,36 +92,16 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
                   aria-hidden
                   data-phase={phase}
                   // 체크되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
-                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100"
+                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border *:data-check:opacity-0 peer-checked:*:data-check:opacity-100"
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="size-3.5"
-                  >
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
+                  <CheckIcon data-check isHovered={phase === 'in'} size={14} strokeWidth={3} />
                   {/* 해제될 때만 보이는 "체크된 모습". 커지지 않고 바로 줄어들며 사라진다(select-out). */}
                   <span
                     aria-hidden
                     data-phase={phase}
                     className="bg-primary border-primary text-primary-foreground motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute -inset-px flex items-center justify-center rounded-md border opacity-0"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="size-3.5"
-                    >
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
+                    <CheckIcon size={14} strokeWidth={3} />
                   </span>
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col gap-1">

@@ -1,0 +1,3 @@
+- Animated icons are wrapped in an IconFrame span, so any parent CSS selector targeting a direct child `svg` (e.g. `[&>svg]`) silently stops matching. Check package-row.tsx style selectors after swapping plain svgs for `./icons/*`.
+- Button.withIconHover clones `isHovered` onto direct (non-DOM) children, overriding an explicit `isHovered` prop (copy-button iconOnly branch).
+- Button size classes force `svg` size by CSS (`[&_svg:not([class*="size-"])]:size-4/5/6`), so the icon `size` attribute only matters for small/medium.

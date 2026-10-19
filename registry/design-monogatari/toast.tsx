@@ -14,6 +14,7 @@ import {
 } from 'react';
 
 import { Button } from '@/ui/button';
+import { XIcon } from '@/lib/icons/x';
 import { cn } from '@/lib/utils';
 import { DURATION, EASE } from '@/lib/motion';
 
@@ -283,17 +284,7 @@ function ToastCard({
         onClick={() => onDismiss(id)}
         radius="md"
       >
-        <svg
-          aria-hidden
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M18 6 6 18M6 6l12 12" />
-        </svg>
+        <XIcon size={16} />
       </Button>
     </motion.li>
   );

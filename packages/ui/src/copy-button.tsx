@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Button, type ButtonProps } from './button';
+import { CheckIcon } from './icons/check';
 import { cn } from './lib/cn';
 
 type CopyState = 'idle' | 'copied' | 'failed';
@@ -41,22 +42,6 @@ function CopyIcon() {
     >
       <rect x="9" y="9" width="12" height="12" rx="2" />
       <path d="M5 15V5a2 2 0 0 1 2-2h8" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 6 9 17l-5-5" />
     </svg>
   );
 }
@@ -135,7 +120,14 @@ export function CopyButton({
       >
         {iconOnly ? (
           <>
-            {state === 'copied' ? <CheckIcon /> : <CopyIcon />}
+            {state === 'copied' ? (
+              // DOM 요소로 감싸야 Button이 isHovered를 덮어쓰지 않는다. 복사가 끝난 순간에 항상 그려진다.
+              <span className="contents">
+                <CheckIcon isHovered size={16} strokeWidth={2.5} />
+              </span>
+            ) : (
+              <CopyIcon />
+            )}
             <span className="sr-only">{labels[state]}</span>
           </>
         ) : (
@@ -150,7 +142,11 @@ export function CopyButton({
                   key !== state && 'invisible',
                 )}
               >
-                {key === 'copied' ? <CheckIcon /> : <CopyIcon />}
+                {key === 'copied' ? (
+                  <CheckIcon isHovered={state === 'copied'} size={16} strokeWidth={2.5} />
+                ) : (
+                  <CopyIcon />
+                )}
                 {labels[key]}
               </span>
             ))}

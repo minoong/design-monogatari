@@ -15,6 +15,8 @@ export type XIconHandle = {
 type XIconProps = {
   isHovered?: boolean;
   size?: number;
+  /** 선 굵기. 기본 2. 작은 크기에서 더 굵게 쓰려고 업스트림에 없는 것을 더했다. */
+  strokeWidth?: number;
 } & HTMLAttributes<HTMLSpanElement>;
 
 const PATH_VARIANTS: Variants = {
@@ -29,7 +31,7 @@ const PATH_VARIANTS: Variants = {
 };
 
 export const XIcon = forwardRef<XIconHandle, XIconProps>(function XIcon(
-  { onMouseEnter, onMouseLeave, className, isHovered, size = 24, ...props },
+  { onMouseEnter, onMouseLeave, className, isHovered, size = 24, strokeWidth = 2, ...props },
   ref,
 ) {
   const { controls, handleMouseEnter, handleMouseLeave, play, stop } = useAnimatedIcon(
@@ -57,7 +59,7 @@ export const XIcon = forwardRef<XIconHandle, XIconProps>(function XIcon(
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2"
+        strokeWidth={strokeWidth}
         viewBox="0 0 24 24"
         width={size}
         xmlns="http://www.w3.org/2000/svg"
