@@ -45,6 +45,70 @@
       ]
     },
     {
+      "name": "icon-frame",
+      "type": "registry:lib",
+      "title": "Icon frame",
+      "description": "Decorative (aria-hidden) wrapper that every animated icon renders inside.",
+      "registryDependencies": ["minoong/design-monogatari/cn"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/icons/icon-frame.tsx",
+          "type": "registry:lib",
+          "target": "@lib/icons/icon-frame.tsx"
+        }
+      ]
+    },
+    {
+      "name": "use-animated-icon",
+      "type": "registry:lib",
+      "title": "Animated icon hook",
+      "description": "Plays an icon on hover or on demand and stays still under reduced motion.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "registry/design-monogatari/icons/use-animated-icon.ts",
+          "type": "registry:lib",
+          "target": "@lib/icons/use-animated-icon.ts"
+        }
+      ]
+    },
+    {
+      "name": "icon-check",
+      "type": "registry:lib",
+      "title": "Animated check icon",
+      "description": "Check mark that draws itself in; play it with isHovered or a ref handle.",
+      "dependencies": ["motion"],
+      "registryDependencies": [
+        "minoong/design-monogatari/icon-frame",
+        "minoong/design-monogatari/use-animated-icon"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/icons/check.tsx",
+          "type": "registry:lib",
+          "target": "@lib/icons/check.tsx"
+        }
+      ]
+    },
+    {
+      "name": "icon-x",
+      "type": "registry:lib",
+      "title": "Animated close icon",
+      "description": "Close (x) mark whose two strokes redraw; play it with isHovered or a ref handle.",
+      "dependencies": ["motion"],
+      "registryDependencies": [
+        "minoong/design-monogatari/icon-frame",
+        "minoong/design-monogatari/use-animated-icon"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/icons/x.tsx",
+          "type": "registry:lib",
+          "target": "@lib/icons/x.tsx"
+        }
+      ]
+    },
+    {
       "name": "theme",
       "type": "registry:theme",
       "title": "Design Monogatari theme",
@@ -405,7 +469,8 @@
       "registryDependencies": [
         "minoong/design-monogatari/cn",
         "minoong/design-monogatari/theme",
-        "minoong/design-monogatari/check-phase"
+        "minoong/design-monogatari/check-phase",
+        "minoong/design-monogatari/icon-check"
       ],
       "files": [
         {
@@ -424,7 +489,9 @@
       "registryDependencies": [
         "minoong/design-monogatari/cn",
         "minoong/design-monogatari/theme",
-        "minoong/design-monogatari/motion"
+        "minoong/design-monogatari/motion",
+        "minoong/design-monogatari/icon-check",
+        "minoong/design-monogatari/check-phase"
       ],
       "files": [
         {
@@ -528,7 +595,8 @@
         "minoong/design-monogatari/cn",
         "minoong/design-monogatari/button",
         "minoong/design-monogatari/motion",
-        "minoong/design-monogatari/theme"
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/icon-x"
       ],
       "files": [
         {
@@ -615,7 +683,8 @@
       "registryDependencies": [
         "minoong/design-monogatari/cn",
         "minoong/design-monogatari/button",
-        "minoong/design-monogatari/theme"
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/icon-check"
       ],
       "files": [
         {
