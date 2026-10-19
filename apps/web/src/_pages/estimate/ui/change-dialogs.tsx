@@ -11,6 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@repo/ui/dialog';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { XIcon } from '@repo/ui/icons/x';
 import type { Dispatch, RefObject } from 'react';
 
 import { describeEffect } from '../model/describe';
@@ -82,14 +85,19 @@ export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogP
         ) : null}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">취소</Button>
+            <Button iconMotion="mount" variant="secondary">
+              <XIcon data-icon="inline-start" />
+              취소
+            </Button>
           </DialogClose>
           <Button
+            iconMotion="mount"
             variant="primary"
             onClick={() => {
               dispatch({ type: 'confirm' });
             }}
           >
+            <CheckIcon data-icon="inline-start" />
             변경 확인
           </Button>
         </DialogFooter>
@@ -127,10 +135,14 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
         </ul>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">닫기</Button>
+            <Button iconMotion="mount" variant="secondary">
+              <XIcon data-icon="inline-start" />
+              닫기
+            </Button>
           </DialogClose>
           {alternativeTrim?.kind === 'unavailable-reason' && alternativeTrim.alternativeTrim ? (
             <Button
+              iconMotion="mount"
               variant="primary"
               onClick={() => {
                 dispatch({ type: 'dismiss-blocked' });
@@ -141,6 +153,7 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
               }}
             >
               {alternativeTrim.alternativeTrim === 'sport' ? '스포트' : '컴포트'} 트림으로 바꾸기
+              <ArrowRightIcon data-icon="inline-end" />
             </Button>
           ) : null}
         </DialogFooter>
@@ -172,14 +185,19 @@ export function SuggestionDialog({ state, dispatch, returnFocusRef }: DialogProp
         ) : null}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">그대로 진행</Button>
+            <Button iconMotion="mount" variant="secondary">
+              <XIcon data-icon="inline-start" />
+              그대로 진행
+            </Button>
           </DialogClose>
           <Button
+            iconMotion="mount"
             variant="primary"
             onClick={() => {
               dispatch({ type: 'accept-suggestion' });
             }}
           >
+            <CheckIcon data-icon="inline-start" />
             제안 받아들이기
           </Button>
         </DialogFooter>

@@ -65,6 +65,12 @@ export function Example() {
 
 <ComponentPreview name="button/icon-only" />
 
+### 아이콘이 움직이는 때
+
+버튼 안의 움직이는 아이콘은 기본적으로(`iconMotion="hover"`) 마우스를 올리거나 키보드 포커스가 올 때, 터치에서는 누를 때 움직입니다. 다이얼로그 푸터나 안내의 닫기 버튼처럼 올릴 때마다 움직이면 방해가 되는 자리에는 `iconMotion="mount"`를 줍니다. 버튼이 나타날 때 한 번만 움직이고, 감소 모션 설정이면 움직이지 않습니다.
+
+<ComponentPreview name="button/icon-motion" />
+
 ### 로딩
 
 `loading`을 켜면 글자 대신 점 세 개가 움직이고, 클릭은 무시됩니다. 버튼 크기는 그대로 유지됩니다.
@@ -84,13 +90,14 @@ export function Example() {
 <PropsTable
   file="packages/ui/src/button.tsx"
   name="ButtonProps"
-  include={['variant', 'size', 'display', 'radius', 'icon', 'loading', 'asChild']}
+  include={['variant', 'size', 'display', 'radius', 'icon', 'iconMotion', 'loading', 'asChild']}
   defaults={{
     variant: '"secondary"',
     size: '"large"',
     display: '"inline"',
     radius: '"lg"',
     icon: 'false',
+    iconMotion: '"hover"',
     loading: 'false',
     asChild: 'false',
   }}
@@ -100,6 +107,8 @@ export function Example() {
     display: '부모 안에서 차지하는 너비입니다.',
     radius: '모서리 반경입니다.',
     icon: '글자 없이 아이콘만 있는 정사각형 버튼으로 만듭니다. 켜면 display는 inline으로 고정됩니다.',
+    iconMotion:
+      '버튼 안의 움직이는 아이콘이 움직이는 때입니다. hover는 마우스를 올리거나 포커스가 올 때(터치는 누를 때), mount는 버튼이 나타날 때 한 번입니다.',
     loading: '로딩 표시를 보이고 클릭을 막습니다. aria-busy가 함께 설정됩니다.',
     asChild: '버튼 대신 자식 요소에 스타일을 입혀 렌더합니다 (Radix Slot).',
   }}

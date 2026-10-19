@@ -76,7 +76,7 @@ export const buttonVariants = cva(
   },
 );
 
-/** 터치로 누른 뒤 아이콘이 재생될 동안 올려 둔 상태를 유지하는 시간(ms). 가장 긴 아이콘 동작보다 길다. */
+/** 아이콘이 재생될 동안 올려 둔 상태를 유지하는 시간(ms): 터치로 누른 뒤, `iconMotion="mount"`로 나타난 뒤. 가장 긴 아이콘 동작보다 길다. */
 const TOUCH_HOVER_HOLD = 1200;
 
 const BUTTON_PRESS = {
@@ -106,6 +106,11 @@ type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 export type ButtonProps = {
   asChild?: boolean;
   loading?: boolean;
+  /**
+   * 버튼 안의 움직이는 아이콘이 움직이는 때. `hover`(기본)는 마우스를 올리거나 키보드 포커스가 올 때이고, `mount`는
+   * 버튼이 화면에 나타날 때 한 번뿐이다. 다이얼로그 푸터나 안내처럼 마우스를 올릴 때마다 움직일 이유가 없는 자리에 쓴다.
+   */
+  iconMotion?: 'hover' | 'mount';
 } & ButtonVariantProps &
   Omit<
     ButtonHTMLAttributes<HTMLButtonElement>,
@@ -156,6 +161,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     disabled,
     display,
     icon = false,
+    iconMotion = 'hover',
     loading = false,
     onBlur,
     onClick,
@@ -173,6 +179,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const shouldReduceMotion = useReducedMotion();
   const [focusVisible, setFocusVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
+  // `mount`일 때 버튼이 나타난 직후에만 켜 두는 상태. 아이콘은 이것을 올린 상태(isHovered)로 받아 한 번 재생한다.
+  const [intro, setIntro] = useState(iconMotion === 'mount');
+  useEffect(() => {
+    if (iconMotion !== 'mount') return;
+    const timer = setTimeout(() => {
+      setIntro(false);
+    }, TOUCH_HOVER_HOLD);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [iconMotion]);
   const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
@@ -261,7 +278,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
           loading ? 'invisible inline-flex items-center justify-center gap-[inherit]' : 'contents'
         }
       >
-        {withIconHover(children, hovered || focusVisible)}
+        {withIconHover(children, iconMotion === 'mount' ? intro : hovered || focusVisible)}
       </span>
       {canPress ? (
         <motion.span
