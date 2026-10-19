@@ -3,9 +3,7 @@
 import { Button } from '@repo/ui/button';
 import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
 import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
-import { CheckIcon } from '@repo/ui/icons/check';
 import { ReceiptTextIcon } from '@repo/ui/icons/receipt-text';
-import { XIcon } from '@repo/ui/icons/x';
 import { Notice, NoticeDescription, NoticeTitle } from '@repo/ui/notice';
 import { PriceBar, PriceBarActions, PriceBarTotal } from '@repo/ui/price-bar';
 import {
@@ -260,7 +258,6 @@ export function EstimateApp({
                             setIssuesOpen(false);
                           }}
                         >
-                          <XIcon data-icon="inline-start" />
                           닫기
                         </Button>
                       </div>
@@ -283,7 +280,6 @@ export function EstimateApp({
                             dispatch({ type: 'dismiss-notices' });
                           }}
                         >
-                          <CheckIcon data-icon="inline-start" />
                           확인
                         </Button>
                       </div>

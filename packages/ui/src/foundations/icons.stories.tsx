@@ -131,6 +131,11 @@ function Icons() {
       <DocSection title="규칙">
         <ul className="text-foreground text-body flex list-disc flex-col gap-2 pl-5">
           <li>
+            움직임이 동작의 뜻을 말해 줄 때만 씁니다(이전·다음, 확대·축소, 처음으로, 인쇄, 테마,
+            복사 결과). 다이얼로그의 확인·취소 버튼과 안내의 닫기 버튼에는 넣지 않습니다. 글자가
+            이미 말해 주고, 마우스를 올릴 때마다 움직이면 방해가 됩니다.
+          </li>
+          <li>
             장식입니다. 이름은 버튼 글자나 <Code>aria-label</Code>이 맡고, 아이콘은{' '}
             <Code>aria-hidden</Code>입니다.
           </li>
