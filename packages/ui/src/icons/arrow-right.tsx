@@ -38,15 +38,15 @@ export const ArrowRightIcon = forwardRef<ArrowRightIconHandle, ArrowRightIconPro
     { onMouseEnter, onMouseLeave, className, isHovered, size = 24, ...props },
     ref,
   ) {
-    const { controls, handleMouseEnter, handleMouseLeave } = useAnimatedIcon(
+    const { controls, handleMouseEnter, handleMouseLeave, play, stop } = useAnimatedIcon(
       isHovered,
       onMouseEnter,
       onMouseLeave,
     );
 
     useImperativeHandle(ref, () => ({
-      startAnimation: () => void controls.start('animate'),
-      stopAnimation: () => void controls.start('normal'),
+      startAnimation: play,
+      stopAnimation: stop,
     }));
 
     return (

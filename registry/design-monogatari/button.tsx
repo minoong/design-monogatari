@@ -7,6 +7,7 @@ import {
   type ButtonHTMLAttributes,
   Children,
   cloneElement,
+  type FocusEvent,
   forwardRef,
   Fragment,
   isValidElement,
@@ -151,7 +152,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     display,
     icon = false,
     loading = false,
+    onBlur,
     onClick,
+    onFocus,
     onPointerEnter,
     onPointerLeave,
     radius,
@@ -163,6 +166,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref,
 ) {
   const shouldReduceMotion = useReducedMotion();
+  const [focusVisible, setFocusVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
   const classes = cn(
     buttonVariants({
@@ -182,6 +186,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ? ICON_PRESS
       : BUTTON_PRESS;
 
+  // 키보드로 포커스가 왔을 때도 아이콘이 마우스를 올린 것과 같이 움직인다(마우스로 누른 포커스는 해당하지 않는다).
+  function handleFocus(event: FocusEvent<HTMLButtonElement>) {
+    onFocus?.(event);
+    if (event.currentTarget.matches(':focus-visible')) setFocusVisible(true);
+  }
+
+  function handleBlur(event: FocusEvent<HTMLButtonElement>) {
+    onBlur?.(event);
+    setFocusVisible(false);
+  }
+
   function handlePointerEnter(event: PointerEvent<HTMLButtonElement>) {
     onPointerEnter?.(event);
     setHovered(true);
@@ -194,7 +209,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 
   if (asChild) {
     return (
-      <Slot className={classes} ref={ref} {...props}>
+      <Slot className={classes} ref={ref} onBlur={onBlur} onFocus={onFocus} {...props}>
         {children}
       </Slot>
     );
@@ -213,7 +228,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       whileTap={canPress ? 'pressed' : undefined}
       transition={PRESS_SPRING}
       {...props}
+      onBlur={handleBlur}
       onClick={loading ? undefined : onClick}
+      onFocus={handleFocus}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >
@@ -222,7 +239,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
           loading ? 'invisible inline-flex items-center justify-center gap-[inherit]' : 'contents'
         }
       >
-        {withIconHover(children, hovered)}
+        {withIconHover(children, hovered || focusVisible)}
       </span>
       {canPress ? (
         <motion.span
