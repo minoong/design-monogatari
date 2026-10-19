@@ -10,6 +10,7 @@ export type SeatId = 'five' | 'four';
 export type InteriorId = 'black' | 'cream' | 'brown';
 export type GarnishId = 'carbon' | 'wood' | 'metal';
 export type CaliperId = 'standard' | 'blue' | 'red' | 'black' | 'yellow' | 'gold';
+export type RimFinishId = 'standard' | 'silver' | 'gray' | 'bronze';
 export type PackageId =
   'comfort-rear' | 'driving-assist' | 'hud' | 'popular' | 'panorama' | 'sky-lounge';
 export type AccessoryId = 'floor-mat' | 'dashcam' | 'tow-hitch';
@@ -26,6 +27,8 @@ export const SINGLE_SLOTS = [
   'garnish',
   // 코드는 가장 뒤에 붙인다(이전 7자리 링크가 그대로 열리도록 codec.ts가 길이 7을 받아 준다).
   'caliper',
+  // 가장 뒤에 붙인다. 이전 길이의 링크는 codec.ts가 받아 주고 빠진 슬롯은 기본값으로 둔다.
+  'rimFinish',
 ] as const;
 export type SingleSlot = (typeof SINGLE_SLOTS)[number];
 
@@ -38,6 +41,7 @@ export interface Selection {
   interior: InteriorId;
   garnish: GarnishId;
   caliper: CaliperId;
+  rimFinish: RimFinishId;
   /** 사용자가 직접 고른 패키지. 다른 패키지에 포함된 항목은 여기 넣지 않는다. */
   packages: readonly PackageId[];
   accessories: readonly AccessoryId[];
@@ -110,6 +114,7 @@ export interface Catalog {
   interior: readonly CatalogItem<InteriorId>[];
   garnish: readonly CatalogItem<GarnishId>[];
   caliper: readonly CatalogItem<CaliperId>[];
+  rimFinish: readonly CatalogItem<RimFinishId>[];
   package: readonly CatalogItem<PackageId>[];
   accessory: readonly CatalogItem<AccessoryId>[];
   suggestions: readonly SuggestionRule[];

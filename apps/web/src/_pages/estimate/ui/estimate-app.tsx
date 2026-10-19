@@ -171,6 +171,7 @@ export function EstimateApp({
               color={state.selection.color}
               colorLabel={colorLabel}
               interior={state.selection.interior}
+              rimFinish={state.selection.rimFinish}
               step={state.step}
               sunroof={hasSunroof(state.selection.packages)}
               wheel={state.selection.wheel}

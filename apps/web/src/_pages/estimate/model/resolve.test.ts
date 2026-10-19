@@ -516,3 +516,36 @@ describe('브레이크 캘리퍼의 휠 조건', () => {
     });
   });
 });
+
+describe('휠 마감', () => {
+  it('실버는 컴포트 트림에서도 고를 수 있다', () => {
+    expect(apply(defaults(), { type: 'set', slot: 'rimFinish', id: 'silver' }).rimFinish).toBe(
+      'silver',
+    );
+  });
+
+  it('오빗 그레이는 스포트에서만, 브론즈는 스포트와 20인치 이상에서만 고를 수 있다', () => {
+    expect(
+      resolveSelection(defaults(), { type: 'set', slot: 'rimFinish', id: 'gray' }).status,
+    ).toBe('blocked');
+    expect(
+      resolveSelection(sportGasoline(), { type: 'set', slot: 'rimFinish', id: 'bronze' }).status,
+    ).toBe('blocked');
+    const w20 = apply(sportGasoline(), { type: 'set', slot: 'wheel', id: 'w20' });
+    expect(apply(w20, { type: 'set', slot: 'rimFinish', id: 'bronze' }).rimFinish).toBe('bronze');
+  });
+
+  it('스포트에서 컴포트로 바꾸면 오빗 그레이가 조용히 사라지지 않고 효과로 남는다', () => {
+    const prev = apply(sportGasoline(), { type: 'set', slot: 'rimFinish', id: 'gray' });
+    const result = resolveSelection(prev, { type: 'set', slot: 'trim', id: 'comfort' });
+    expect(result.next.rimFinish).toBe('standard');
+    expect(result.effects).toContainEqual(
+      expect.objectContaining({ kind: 'remapped', slot: 'rimFinish', from: 'gray' }),
+    );
+  });
+
+  it('금액: 실버 300,000, 오빗 그레이 500,000, 브론즈 800,000', () => {
+    const prices = Object.fromEntries(CATALOG.rimFinish.map((item) => [item.id, item.price]));
+    expect(prices).toEqual({ standard: 0, silver: 300_000, gray: 500_000, bronze: 800_000 });
+  });
+});

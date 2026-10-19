@@ -13,8 +13,8 @@ const state = (
 ): EstimateState => ({ selection, quoteOptions });
 
 describe('encodeEstimate', () => {
-  it('기본 선택은 버전과 8자 위치 코드만 가진다', () => {
-    expect(encodeEstimate(state())).toBe(`v=${CODEC_VERSION}&c=GCW95KCS`);
+  it('기본 선택은 버전과 9자 위치 코드만 가진다', () => {
+    expect(encodeEstimate(state())).toBe(`v=${CODEC_VERSION}&c=GCW95KCSS`);
   });
 
   it('패키지·액세서리는 2자 코드를 카탈로그 순서로 잇는다', () => {
@@ -24,12 +24,12 @@ describe('encodeEstimate', () => {
       { type: 'add', slot: 'packages', id: 'popular' },
       { type: 'add', slot: 'accessories', id: 'floor-mat' },
     );
-    expect(encodeEstimate(state(selection))).toBe(`v=1&c=GCW95KCS&p=pp&a=fmdc`);
+    expect(encodeEstimate(state(selection))).toBe(`v=1&c=GCW95KCSS&p=pp&a=fmdc`);
   });
 
   it('기본값이 아닌 지역·과세 구분만 담는다', () => {
     const encoded = encodeEstimate(state(defaults(), { taxType: 'exempt', region: 'jeju' }));
-    expect(encoded).toBe('v=1&c=GCW95KCS&r=jeju&t=exempt');
+    expect(encoded).toBe('v=1&c=GCW95KCSS&r=jeju&t=exempt');
   });
 
   it('같은 선택은 항상 같은 문자열이다', () => {
@@ -181,7 +181,7 @@ describe('잘못된 입력은 던지지 않고 기본값으로 복구하며 알�
   });
 });
 
-describe('캘리퍼가 생기기 전의 7자 링크', () => {
+describe('슬롯이 늘기 전에 만든 7자와 8자 링크', () => {
   it('열리고, 캘리퍼는 기본값으로 둔다', () => {
     const result = decodeEstimate('v=1&c=GCW95KC&p=pp&a=fm');
     expect(result.issues).toEqual([]);
@@ -189,7 +189,7 @@ describe('캘리퍼가 생기기 전의 7자 링크', () => {
     expect(result.state.selection.packages).toEqual(['popular']);
   });
 
-  it('길이가 7도 8도 아니면 잘못된 입력으로 알린다', () => {
+  it('7자보다 짧거나 현재보다 길면 잘못된 입력으로 알린다', () => {
     const result = decodeEstimate('v=1&c=GCW95K');
     expect(result.issues).toContainEqual({ kind: 'malformed', field: 'c', value: 'GCW95K' });
   });
@@ -201,7 +201,7 @@ describe('캘리퍼가 생기기 전의 7자 링크', () => {
       { type: 'set', slot: 'caliper', id: 'red' },
     );
     const encoded = encodeEstimate(state(selection));
-    expect(encoded).toBe('v=1&c=GSW95KCR');
+    expect(encoded).toBe('v=1&c=GSW95KCRS');
     expect(decodeEstimate(encoded).state.selection.caliper).toBe('red');
   });
 
@@ -209,5 +209,30 @@ describe('캘리퍼가 생기기 전의 7자 링크', () => {
     const result = decodeEstimate('v=1&c=GCW95KCR');
     expect(result.state.selection.caliper).toBe('standard');
     expect(result.effects.some((effect) => effect.kind === 'remapped')).toBe(true);
+  });
+});
+
+describe('휠 마감', () => {
+  it('8자 링크(캘리퍼까지)는 휠 마감을 기본값으로 두고 열린다', () => {
+    const result = decodeEstimate('v=1&c=GSW95KCR');
+    expect(result.issues).toEqual([]);
+    expect(result.state.selection.caliper).toBe('red');
+    expect(result.state.selection.rimFinish).toBe('standard');
+  });
+
+  it('9번째 글자에 담기고 왕복한다', () => {
+    const selection = apply(
+      defaults(),
+      { type: 'set', slot: 'trim', id: 'sport' },
+      { type: 'set', slot: 'rimFinish', id: 'gray' },
+    );
+    const encoded = encodeEstimate(state(selection));
+    expect(encoded).toBe('v=1&c=GSW95KCSG');
+    expect(decodeEstimate(encoded).state.selection.rimFinish).toBe('gray');
+  });
+
+  it('길이가 9보다 길면 잘못된 입력이다', () => {
+    const result = decodeEstimate('v=1&c=GCW95KCSSS');
+    expect(result.issues.some((issue) => issue.kind === 'malformed')).toBe(true);
   });
 });

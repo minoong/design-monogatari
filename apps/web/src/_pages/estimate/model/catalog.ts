@@ -156,6 +156,28 @@ export const CATALOG: Catalog = {
       unavailableReason: '스포트 트림과 21인치 휠에서만 선택할 수 있습니다.',
     },
   ],
+  // 휠 림의 마감 색. 휠 모양은 한 가지이고 색만 바꾼다. 금액과 조건은 허구다(실제 제조사도 휠 마감을 유료 선택으로 두고 큰 휠에 더 다양한
+  // 마감을 준다).
+  rimFinish: [
+    { id: 'standard', code: 'S', label: '기본 마감 (글로시 블랙)', price: 0 },
+    { id: 'silver', code: 'V', label: '실버 마감', price: 300_000 },
+    {
+      id: 'gray',
+      code: 'G',
+      label: '오빗 그레이 마감',
+      price: 500_000,
+      availableWhen: { trim: ['sport'] },
+      unavailableReason: '스포트 트림에서만 선택할 수 있습니다.',
+    },
+    {
+      id: 'bronze',
+      code: 'B',
+      label: '브론즈 마감',
+      price: 800_000,
+      availableWhen: { trim: ['sport'], wheel: ['w20', 'w21'] },
+      unavailableReason: '스포트 트림과 20인치 이상 휠에서만 선택할 수 있습니다.',
+    },
+  ],
   package: [
     { id: 'comfort-rear', code: 'rc', label: '뒷좌석 컴포트 패키지', price: 5_000_000 },
     { id: 'driving-assist', code: 'da', label: '드라이빙 어시스턴스', price: 2_800_000 },

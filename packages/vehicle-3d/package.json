@@ -9,7 +9,8 @@
     "./constants": "./src/constants.ts",
     "./views": "./src/camera-views.ts",
     "./interiors": "./src/interiors.ts",
-    "./calipers": "./src/calipers.ts"
+    "./calipers": "./src/calipers.ts",
+    "./rim-finishes": "./src/rim-finishes.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

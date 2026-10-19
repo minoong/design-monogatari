@@ -3,6 +3,7 @@
 import { CALIPER_SWATCHES, type CaliperId } from '@repo/vehicle-3d/calipers';
 import { INTERIOR_SWATCHES, type InteriorId } from '@repo/vehicle-3d/interiors';
 import { PAINT_SWATCHES, type PaintId } from '@repo/vehicle-3d/paints';
+import { RIM_FINISH_SWATCHES, type RimFinishId } from '@repo/vehicle-3d/rim-finishes';
 import { vehicleById, type VehicleId } from '@repo/vehicle-3d/vehicles';
 import {
   CAMERA_CONTROL_LABELS,
@@ -32,6 +33,12 @@ const PAINT_OPTIONS: readonly ColorSwatchOption[] = [
     color: swatch.hex,
   })),
 ];
+
+const RIM_OPTIONS: readonly ColorSwatchOption[] = RIM_FINISH_SWATCHES.map((swatch) => ({
+  value: swatch.id,
+  label: swatch.label,
+  color: swatch.hex,
+}));
 
 const CALIPER_OPTIONS: readonly ColorSwatchOption[] = CALIPER_SWATCHES.map((swatch) => ({
   value: swatch.id,
@@ -117,6 +124,8 @@ export function SequenceOverlay({
   onInteriorId,
   caliperId,
   onCaliperId,
+  rimFinishId,
+  onRimFinishId,
   sunroof,
   onSunroof,
   sunroofOpen,
@@ -137,6 +146,8 @@ export function SequenceOverlay({
   onInteriorId: (id: InteriorId) => void;
   caliperId: CaliperId;
   onCaliperId: (id: CaliperId) => void;
+  rimFinishId: RimFinishId;
+  onRimFinishId: (id: RimFinishId) => void;
   /** false 이면 선루프 구멍을 막은 차 */
   sunroof: boolean;
   onSunroof: (sunroof: boolean) => void;
@@ -259,6 +270,16 @@ export function SequenceOverlay({
         value={interiorId}
         onValueChange={(value) => {
           onInteriorId(value as InteriorId);
+        }}
+      />
+      <ColorSwatchGroup
+        className="mt-2 max-w-56"
+        legend="휠 마감"
+        name="vehicle-rim-finish"
+        options={RIM_OPTIONS}
+        value={rimFinishId}
+        onValueChange={(value) => {
+          onRimFinishId(value as RimFinishId);
         }}
       />
       <ColorSwatchGroup

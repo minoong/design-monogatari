@@ -3,6 +3,7 @@
 import type { CaliperSwatch } from '@repo/vehicle-3d/calipers';
 import type { InteriorSwatch } from '@repo/vehicle-3d/interiors';
 import type { PaintSwatch } from '@repo/vehicle-3d/paints';
+import type { RimFinishSwatch } from '@repo/vehicle-3d/rim-finishes';
 import { vehicleById, vehicleUrls } from '@repo/vehicle-3d/vehicles';
 import { type InspectHandle, useModelAvailable, VehicleCanvas } from '@repo/vehicle-3d/viewer';
 import type { CameraViewId } from '@repo/vehicle-3d/views';
@@ -18,6 +19,7 @@ export default function VehicleViewer({
   paint,
   interior,
   caliper,
+  rimFinish,
   sunroof,
   sunroofOpen,
   wheelInch,
@@ -29,6 +31,7 @@ export default function VehicleViewer({
   paint: PaintSwatch;
   interior: InteriorSwatch;
   caliper: CaliperSwatch;
+  rimFinish: RimFinishSwatch;
   sunroof: boolean;
   sunroofOpen: boolean;
   wheelInch: number;
@@ -51,6 +54,7 @@ export default function VehicleViewer({
       className="size-full"
       inspectRef={inspectRef}
       caliper={caliper}
+      rimFinish={rimFinish}
       interior={interior}
       onReady={onReady}
       paint={paint}
