@@ -17,7 +17,15 @@ import {
   SheetTrigger,
 } from '@repo/ui/sheet';
 import { ToastProvider } from '@repo/ui/toast';
-import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  type UIEvent,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 
 import { CATALOG } from '../model/catalog';
 import { encodeEstimate } from '../model/codec';
@@ -39,7 +47,7 @@ import {
   WheelStep,
 } from './step-panels';
 import { SummaryList } from './summary';
-import { VehicleStage } from './vehicle-stage';
+import { StageNotes, VehicleStage } from './vehicle-stage';
 
 const STEP_INTRO: Record<StepId, string> = {
   model: '파워트레인과 트림을 고릅니다. 트림에 따라 고를 수 있는 외장 색상과 휠이 달라집니다.',
@@ -77,6 +85,10 @@ export function EstimateApp({
   const [issuesOpen, setIssuesOpen] = useState(restoreIssueCount > 0);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  // 좁은 화면에서 차량 영역의 크기. 패널을 아래로 내리면 줄고(compact), 직접 키울 수도 있다(large).
+  const [stageCompact, setStageCompact] = useState(false);
+  const [stageLarge, setStageLarge] = useState(false);
   // 선택을 시도한 요소(눌렀던 라디오). 고를 수 없다는 안내 창이 닫히면 초점을 여기로 돌려보내, 방향키로 이어서 움직일 수 있게 한다.
   const openerRef = useRef<HTMLElement | null>(null);
   const shownStep = useRef(initial.step);
@@ -102,7 +114,9 @@ export function EstimateApp({
     // 처음 그릴 때가 아니라 단계가 실제로 바뀐 경우에만 옮긴다.
     if (shownStep.current === state.step) return;
     shownStep.current = state.step;
-    headingRef.current?.focus();
+    // 새 단계는 늘 맨 위에서 시작한다. 패널만 스크롤하므로 스크롤 위치가 이전 단계에서 이어지지 않게 한다.
+    scrollRef.current?.scrollTo({ top: 0 });
+    headingRef.current?.focus({ preventScroll: true });
   }, [state.step]);
 
   const stepIndex = STEPS.findIndex((step) => step.id === state.step);
@@ -120,7 +134,25 @@ export function EstimateApp({
     },
   };
 
-  const isDesktop = useIsDesktop();
+  const isSplit = useIsSplit();
+  // 좌우로 나누는 화면으로 바뀌면 줄여 둔 상태를 푼다(스크롤이 없어 되돌릴 이벤트가 오지 않는다).
+  if (isSplit && stageCompact) {
+    setStageCompact(false);
+  }
+
+  /**
+   * 좁은 화면에서 패널을 내리면 차량 영역을 줄이고, 맨 위로 돌아오면 다시 키운다. 줄이면 패널이 그만큼 커져서
+   * 스크롤할 수 있는 길이가 짧아지는데, 그 길이가 남지 않으면 줄였다 늘렸다 하며 깜빡이므로 줄인 뒤에도
+   * 충분히 남을 때만 줄인다. 줄이고 키우는 기준을 다르게 둬서(64px/8px) 경계에서 흔들리지 않게 한다.
+   */
+  function handleScroll(event: UIEvent<HTMLDivElement>) {
+    if (isSplit || stageLarge) return;
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+    const gain = window.innerHeight * 0.18;
+    setStageCompact((compact) =>
+      compact ? scrollTop > 8 : scrollTop > 64 && scrollHeight - clientHeight - gain > 96,
+    );
+  }
   usePrintLight();
   const colorLabel = CATALOG.color.find((item) => item.id === state.selection.color)!.label;
 
@@ -133,7 +165,7 @@ export function EstimateApp({
         </Button>
       </SheetTrigger>
       <SheetContent
-        side={isDesktop ? 'right' : 'bottom'}
+        side={isSplit ? 'right' : 'bottom'}
         onCloseAutoFocus={(event) => {
           // 시트의 "변경"으로 단계를 옮겼으면 닫힌 뒤 초점이 트리거로 돌아가지 않고 새 단계 제목으로 간다.
           if (focusHeadingOnClose.current) {
@@ -161,7 +193,7 @@ export function EstimateApp({
 
   return (
     <ToastProvider>
-      <div className="bg-background text-foreground min-h-dvh font-sans lg:flex lg:h-dvh lg:flex-col lg:overflow-hidden print:block print:h-auto print:min-h-0">
+      <div className="bg-background text-foreground flex h-dvh flex-col overflow-hidden font-sans print:block print:h-auto print:min-h-0 print:overflow-visible">
         <EstimateHeader
           dispatch={dispatch}
           query={query}
@@ -170,13 +202,19 @@ export function EstimateApp({
           summary={summaryTrigger}
         />
 
-        <main className="lg:flex lg:min-h-0 lg:flex-1 print:block">
-          <div className="min-w-0 p-4 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:p-6 print:hidden">
+        <main className="split:flex-row flex min-h-0 flex-1 flex-col print:block">
+          <div className="split:flex split:min-h-0 split:flex-1 split:flex-col split:overflow-hidden split:max-lg:p-3 min-w-0 shrink-0 lg:p-6 print:hidden!">
             <VehicleStage
               caliper={state.selection.caliper}
               color={state.selection.color}
               colorLabel={colorLabel}
               interior={state.selection.interior}
+              large={stageLarge}
+              compact={stageCompact}
+              onToggleLarge={() => {
+                setStageLarge((large) => !large);
+                setStageCompact(false);
+              }}
               rimFinish={state.selection.rimFinish}
               step={state.step}
               sunroof={hasSunroof(state.selection.packages)}
@@ -186,10 +224,14 @@ export function EstimateApp({
 
           <section
             aria-labelledby="step-title"
-            className="border-border flex min-w-0 flex-col lg:min-h-0 lg:w-120 lg:shrink-0 lg:border-l 2xl:w-136"
+            className="border-border split:w-[min(30rem,56vw)] split:flex-none split:shrink-0 split:border-t-0 split:border-l flex min-h-0 min-w-0 flex-1 flex-col border-t 2xl:w-136"
           >
-            <div className="relative lg:flex lg:min-h-0 lg:flex-1 lg:scrollbar-gutter-stable lg:flex-col lg:overflow-y-auto print:overflow-visible">
-              <div className="p-4 pb-32 lg:flex-1 lg:p-8 print:p-0">
+            <div
+              ref={scrollRef}
+              className="relative flex min-h-0 flex-1 scrollbar-gutter-stable flex-col overflow-y-auto overscroll-contain print:overflow-visible"
+              onScroll={handleScroll}
+            >
+              <div className="flex-1 p-4 lg:p-8 print:p-0">
                 <div className="flex flex-col gap-6">
                   <div>
                     <h2
@@ -259,12 +301,13 @@ export function EstimateApp({
                     <ResultStep {...panelProps} quote={quote} shareUrl={shareUrl} />
                   ) : null}
                 </div>
+                {/* 좁은 화면에서는 차량 아래에 둘 자리가 없어 패널 맨 끝에 둔다(모델 출처 고지는 차량을 보여 주는 곳에 늘 있어야 한다). */}
+                <StageNotes className="text-muted-foreground text-caption mt-8 flex flex-col gap-1 lg:hidden print:hidden" />
               </div>
 
               <PriceBar
                 aria-label="견적 금액과 단계 이동"
-                className="flex-nowrap gap-x-3 gap-y-0 lg:sticky lg:inset-x-auto lg:bottom-0 lg:z-10 lg:mt-auto lg:flex-wrap lg:gap-y-4 lg:px-8 lg:py-5 print:hidden"
-                fixed
+                className="split:max-lg:flex-wrap split:max-lg:gap-y-2 sticky bottom-0 z-10 mt-auto flex-nowrap gap-x-3 gap-y-0 lg:flex-wrap lg:gap-y-4 lg:px-8 lg:py-5 print:hidden"
               >
                 {state.step === 'result' ? (
                   <PriceBarTotal
@@ -345,21 +388,23 @@ function usePrintLight() {
   }, []);
 }
 
-const DESKTOP_QUERY = '(min-width: 1024px)';
+/** 차량과 패널을 좌우로 나누는 조건. globals.css의 `split` 변형과 같은 값이다. */
+const SPLIT_QUERY =
+  '(min-width: 64rem), (orientation: landscape) and (min-width: 36rem) and (max-height: 32rem)';
 
-function subscribeDesktop(onChange: () => void) {
-  const media = window.matchMedia(DESKTOP_QUERY);
+function subscribeSplit(onChange: () => void) {
+  const media = window.matchMedia(SPLIT_QUERY);
   media.addEventListener('change', onChange);
   return () => {
     media.removeEventListener('change', onChange);
   };
 }
 
-/** 큰 화면(1024px 이상)인지. 요약 시트가 오른쪽에서 열릴지 아래에서 열릴지 정한다. 서버에서는 false다. */
-function useIsDesktop() {
+/** 차량과 패널을 좌우로 나누는 화면인지. 요약 시트가 오른쪽에서 열릴지 아래에서 열릴지, 차량 영역을 줄일지 정한다. 서버에서는 false다. */
+function useIsSplit() {
   return useSyncExternalStore(
-    subscribeDesktop,
-    () => window.matchMedia(DESKTOP_QUERY).matches,
+    subscribeSplit,
+    () => window.matchMedia(SPLIT_QUERY).matches,
     () => false,
   );
 }

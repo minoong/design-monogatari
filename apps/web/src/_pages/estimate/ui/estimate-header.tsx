@@ -27,8 +27,8 @@ export function EstimateHeader({
   summary: ReactNode;
 }) {
   return (
-    <header className="border-border bg-background sticky top-0 z-30 flex flex-wrap items-center gap-x-4 border-b px-4 lg:h-16 lg:flex-nowrap lg:px-6 print:hidden">
-      <div className="flex h-14 min-w-0 flex-1 items-center gap-3 lg:h-auto lg:flex-none">
+    <header className="border-border bg-background split:h-16 split:flex-nowrap sticky top-0 z-30 flex shrink-0 flex-wrap items-center gap-x-4 border-b px-4 lg:px-6 print:hidden">
+      <div className="split:h-auto split:flex-none flex h-14 min-w-0 flex-1 items-center gap-3">
         <h1 className="text-body shrink-0 font-semibold tracking-tight">X5 견적</h1>
         <Badge
           className="hidden xl:inline-flex"
@@ -39,8 +39,8 @@ export function EstimateHeader({
         </Badge>
       </div>
 
-      <div className="order-3 -mx-4 w-[calc(100%+2rem)] min-w-0 lg:order-0 lg:mx-0 lg:w-auto lg:flex-1">
-        <Stepper aria-label="견적 단계" value={step} className="lg:mx-auto lg:max-w-4xl">
+      <div className="split:order-0 split:mx-0 split:w-auto split:flex-1 order-3 -mx-4 w-[calc(100%+2rem)] min-w-0">
+        <Stepper aria-label="견적 단계" value={step} className="split:mx-auto split:max-w-4xl">
           {STEPS.map((item, index) => (
             <StepperItem
               key={item.id}

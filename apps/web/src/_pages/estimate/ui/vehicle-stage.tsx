@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@repo/ui/button';
+import { cn } from '@repo/ui/cn';
 import { ArrowDownIcon } from '@repo/ui/icons/arrow-down';
 import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
 import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
@@ -89,6 +90,71 @@ class ViewerBoundary extends Component<
   }
 }
 
+/** 차량 아래 설명과 3D 모델 출처 고지. CC BY 4.0이라 모델을 보여 주는 곳에 늘 있어야 한다. */
+function StageNotesBody() {
+  return (
+    <>
+      <span>
+        비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서 돌려
+        볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기, 휠 마감, 브레이크 캘리퍼
+        색이 반영됩니다. 시트 구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다. 선루프는 선택
+        품목({SUNROOF_LABELS})을 담았을 때만 보입니다.
+      </span>
+      <details>
+        <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
+          3D 모델 출처와 고지
+        </summary>
+        <div className="mt-2 flex flex-col gap-1">
+          <p>
+            <a
+              className="underline underline-offset-2"
+              href={VEHICLE.credit.href}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {VEHICLE.credit.work}
+            </a>
+            {' · '}
+            {VEHICLE.credit.by}
+            {' · '}
+            <a
+              className="underline underline-offset-2"
+              href={VEHICLE.credit.licenseHref}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {VEHICLE.credit.license}
+            </a>
+            {' · '}
+            <a
+              className="underline underline-offset-2"
+              href={VEHICLE.credit.disclaimerHref}
+              rel="noreferrer"
+              target="_blank"
+            >
+              보증 부인
+            </a>
+          </p>
+          <p>수정: {VEHICLE.credit.changes}</p>
+          <p>{VEHICLE.credit.trademark}</p>
+        </div>
+      </details>
+    </>
+  );
+}
+
+/**
+ * 좁은 화면에서는 차량 아래에 설명을 둘 자리가 없어 패널 맨 끝에 이 블록을 놓는다(`estimate-app.tsx`).
+ * 넓은 화면에서는 `VehicleStage`의 `figcaption`이 같은 내용을 차량 아래에 보여 주고 이 블록은 숨긴다.
+ */
+export function StageNotes({ className }: { className?: string }) {
+  return (
+    <div className={className}>
+      <StageNotesBody />
+    </div>
+  );
+}
+
 /**
  * 선택한 외장 색을 입힌 3D 차량. 모델에는 외장 색과 휠 크기만 반영되고 시트·내장은 반영되지 않는다.
  * 단계가 바뀌면 카메라가 그 단계의 시점(휠, 실내 등)으로 움직이고, 아래 버튼으로 다른 시점을 직접 고를 수도 있다.
@@ -98,7 +164,10 @@ export function VehicleStage({
   color,
   caliper,
   colorLabel,
+  compact,
   interior,
+  large,
+  onToggleLarge,
   rimFinish,
   sunroof,
   wheel,
@@ -107,7 +176,12 @@ export function VehicleStage({
   caliper: CaliperId;
   color: ColorId;
   colorLabel: string;
+  /** 좁은 화면에서 패널을 내려 차량 영역을 줄인 상태. 좌우로 나누는 화면에서는 쓰지 않는다. */
+  compact: boolean;
   interior: InteriorId;
+  /** 좁은 화면에서 사용자가 차량 영역을 키운 상태 */
+  large: boolean;
+  onToggleLarge: () => void;
   rimFinish: RimFinishId;
   /** 선루프 품목을 담았는지. 아니면 선루프 구멍을 막은 차를 보여 준다. */
   sunroof: boolean;
@@ -143,15 +217,21 @@ export function VehicleStage({
   const fallback = <StageFallback hex={paint.hex} label={colorLabel} />;
 
   return (
-    <figure className="m-0 flex flex-col gap-2 lg:min-h-0 lg:flex-1">
-      <div className="border-border bg-card relative h-[38dvh] min-h-56 w-full overflow-hidden rounded-lg border lg:h-auto lg:min-h-0 lg:flex-1">
+    <figure className="split:min-h-0 split:flex-1 split:gap-2 m-0 flex flex-col">
+      <div
+        className={cn(
+          'border-border bg-card split:h-auto split:min-h-0 split:flex-1 split:rounded-lg split:border relative w-full overflow-hidden',
+          // 좁은 화면의 높이: 기본, 패널을 내렸을 때, 사용자가 키웠을 때. 좌우로 나누는 화면에서는 남는 높이를 모두 쓴다.
+          large ? 'h-[42dvh] min-h-56' : compact ? 'h-[18dvh] min-h-32' : 'h-[34dvh] min-h-48',
+        )}
+      >
         {/* 시점이 바뀌어도 화면 낭독기가 알 수 있게 항상 그려 두고 글자만 바꾼다(그려지는 순간 채워진 알림은 읽히지 않는 일이 많다). */}
         <p className="sr-only" role="status">
           {showFallback ? '' : `시점: ${CAMERA_VIEWS[view].label}`}
         </p>
         {inside && !showFallback ? (
           // 무대 안에 겹쳐 둔다. 캡션 줄에 넣으면 나타날 때마다 무대 높이가 바뀐다.
-          <p className="bg-background/80 text-foreground text-caption absolute top-3 left-3 z-10 max-w-[calc(100%-1.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
+          <p className="bg-background/80 text-foreground text-caption split:max-w-[calc(100%-1.5rem)] absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
             {INSIDE_VIEW_NOTE}
           </p>
         ) : null}
@@ -185,13 +265,27 @@ export function VehicleStage({
             {!ready ? <StageLoading /> : null}
           </ViewerBoundary>
         )}
+        {/* 좁은 화면에서만. 패널을 내려 줄어든 차량 영역을 직접 키우거나 되돌린다. 키우면 패널을 내려도 줄어들지 않는다. */}
+        {!showFallback ? (
+          <Button
+            aria-label={large ? '차량 영역 줄이기' : '차량 영역 키우기'}
+            aria-pressed={large}
+            className="split:hidden absolute top-2 right-2 z-10"
+            icon
+            size="small"
+            variant="secondary"
+            onClick={onToggleLarge}
+          >
+            {large ? <MinimizeIcon /> : <MaximizeIcon />}
+          </Button>
+        ) : null}
       </div>
       {!showFallback ? (
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-2">
+        <div className="split:p-0 flex scrollbar-none items-center gap-2 overflow-x-auto px-4 py-2 lg:flex-wrap lg:justify-between lg:overflow-visible">
+          <div className="flex shrink-0 gap-2 lg:flex-wrap">
             <div
               aria-label={CAMERA_CONTROL_LABELS.viewGroup}
-              className="flex flex-wrap gap-2"
+              className="flex gap-2 lg:flex-wrap"
               role="group"
             >
               {STAGE_VIEW_OPTIONS.map((option) => (
@@ -224,10 +318,11 @@ export function VehicleStage({
               </Button>
             ) : null}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex shrink-0 gap-2 lg:flex-wrap">
+            {/* 회전과 확대는 좁은 화면(터치)에서 끌기와 두 손가락 벌리기로 하므로 숨기고, 처음 시점으로 돌리는 버튼만 둔다. */}
             <div
               aria-label={CAMERA_CONTROL_LABELS.rotateGroup}
-              className="flex flex-wrap gap-2"
+              className="hidden gap-2 lg:flex lg:flex-wrap"
               role="group"
             >
               {(
@@ -253,6 +348,7 @@ export function VehicleStage({
             </div>
             <Button
               aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomIn}`}
+              className="hidden lg:inline-flex"
               disabled={!ready || inside}
               size="small"
               variant="secondary"
@@ -263,6 +359,7 @@ export function VehicleStage({
             </Button>
             <Button
               aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomOut}`}
+              className="hidden lg:inline-flex"
               disabled={!ready || inside}
               size="small"
               variant="secondary"
@@ -283,52 +380,8 @@ export function VehicleStage({
           </div>
         </div>
       ) : null}
-      <figcaption className="text-muted-foreground text-caption flex flex-col gap-1">
-        <span>
-          비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다. 드래그해서
-          돌려 볼 수 있고, 3D 모델에는 외장 색상, 내장 색상(비슷한 색), 휠 크기, 휠 마감, 브레이크
-          캘리퍼 색이 반영됩니다. 시트 구성과 가니쉬는 반영되지 않고 휠 모양은 한 가지입니다.
-          선루프는 선택 품목({SUNROOF_LABELS})을 담았을 때만 보입니다.
-        </span>
-        <details>
-          <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
-            3D 모델 출처와 고지
-          </summary>
-          <div className="mt-2 flex flex-col gap-1">
-            <p>
-              <a
-                className="underline underline-offset-2"
-                href={VEHICLE.credit.href}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {VEHICLE.credit.work}
-              </a>
-              {' · '}
-              {VEHICLE.credit.by}
-              {' · '}
-              <a
-                className="underline underline-offset-2"
-                href={VEHICLE.credit.licenseHref}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {VEHICLE.credit.license}
-              </a>
-              {' · '}
-              <a
-                className="underline underline-offset-2"
-                href={VEHICLE.credit.disclaimerHref}
-                rel="noreferrer"
-                target="_blank"
-              >
-                보증 부인
-              </a>
-            </p>
-            <p>수정: {VEHICLE.credit.changes}</p>
-            <p>{VEHICLE.credit.trademark}</p>
-          </div>
-        </details>
+      <figcaption className="text-muted-foreground text-caption hidden flex-col gap-1 lg:flex">
+        <StageNotesBody />
       </figcaption>
     </figure>
   );

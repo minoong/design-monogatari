@@ -2,6 +2,21 @@
 
 @source '../../../**/*.{ts,tsx}';
 
+/*
+ * 견적 화면을 차량(왼쪽)과 패널(오른쪽)로 나누는 조건. 1024px 이상이거나, 높이가 낮은 가로 화면(눕힌 폰)이다.
+ * 그 밖에는 위(차량)와 아래(패널)로 나누고, 페이지는 스크롤하지 않고 패널만 스크롤해서 차량이 늘 보인다.
+ * `estimate-app.tsx`의 SPLIT_QUERY와 같은 값이다.
+ */
+@custom-variant split {
+  @media (min-width: 64rem) {
+    @slot;
+  }
+
+  @media (orientation: landscape) and (min-width: 36rem) and (max-height: 32rem) {
+    @slot;
+  }
+}
+
 *,
 *::before,
 *::after {

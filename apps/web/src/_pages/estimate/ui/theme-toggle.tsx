@@ -5,7 +5,7 @@ import { cn } from '@repo/ui/cn';
 import { MoonIcon, type MoonIconHandle } from '@repo/ui/icons/moon';
 import { SunIcon, type SunIconHandle } from '@repo/ui/icons/sun';
 import { useTheme } from 'next-themes';
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
 
 const emptySubscribe = () => () => {};
 
@@ -42,15 +42,9 @@ export function ThemeToggle() {
   const moonRef = useRef<MoonIconHandle>(null);
   const isDark = resolvedTheme === 'dark';
 
-  // 테마가 바뀌면 새로 나타난 아이콘이 한 번 움직인다(처음 그릴 때는 가만히 있다).
-  const previous = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (!mounted) return;
-    if (previous.current !== null && previous.current !== isDark) {
-      (isDark ? sunRef : moonRef).current?.startAnimation();
-    }
-    previous.current = isDark;
-  }, [isDark, mounted]);
+  // 해와 달을 둘 다 그려 두고 하나만 보인다. 누르는 순간 두 아이콘을 재생하면 새로 나타나는 쪽이 한 번 움직인다.
+  // 아이콘을 새로 그리면서 재생하면 터치에서는 마우스를 올린 상태가 없어 움직이지 않았다. `hidden!`는 Button이 `data-icon`
+  // 요소에 주는 `inline-flex`를 이기려는 것이다.
 
   if (!mounted) {
     // 테마를 알기 전에도 자리를 같은 폭으로 잡아 둔다.
@@ -76,14 +70,13 @@ export function ThemeToggle() {
       variant="secondary"
       onClick={() => {
         setTheme(isDark ? 'light' : 'dark');
+        sunRef.current?.startAnimation();
+        moonRef.current?.startAnimation();
       }}
     >
       {/* 다크 모드일 때는 누르면 해(라이트)가 되고, 라이트일 때는 누르면 달(다크)이 된다. 아이콘은 가는 쪽을 보여 준다. */}
-      {isDark ? (
-        <SunIcon ref={sunRef} data-icon="inline-start" />
-      ) : (
-        <MoonIcon ref={moonRef} data-icon="inline-start" />
-      )}
+      <SunIcon ref={sunRef} className={isDark ? undefined : 'hidden!'} data-icon="inline-start" />
+      <MoonIcon ref={moonRef} className={isDark ? 'hidden!' : undefined} data-icon="inline-start" />
       <Label current={isDark ? '라이트' : '다크'} />
     </Button>
   );
