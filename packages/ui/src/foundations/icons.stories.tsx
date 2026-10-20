@@ -10,6 +10,7 @@ import { ArrowRightIcon } from '../icons/arrow-right';
 import { ArrowUpIcon } from '../icons/arrow-up';
 import { CheckIcon } from '../icons/check';
 import { ChevronDownIcon } from '../icons/chevron-down';
+import { DownloadIcon } from '../icons/download';
 import { HeartIcon } from '../icons/heart';
 import { MaximizeIcon } from '../icons/maximize';
 import { MinimizeIcon } from '../icons/minimize';
@@ -45,6 +46,7 @@ const ICONS: readonly {
   { name: 'moon', use: '다크', Icon: MoonIcon },
   { name: 'receipt-text', use: '견적 요약', Icon: ReceiptTextIcon },
   { name: 'printer', use: '인쇄', Icon: PrinterIcon },
+  { name: 'download', use: '이미지 저장', Icon: DownloadIcon },
   { name: 'triangle-alert', use: '경고, 선택할 수 없음', Icon: TriangleAlertIcon },
   { name: 'plus', use: '추가', Icon: PlusIcon },
   { name: 'heart', use: '관심', Icon: HeartIcon },

@@ -21,6 +21,22 @@ import { SequenceOverlay, VehicleCredit } from './overlay';
  * Storybook 데모. 3D 엔진(캔버스, 모델 조립, 도장, 조명)은 `@repo/vehicle-3d` 에 있고, 여기에는
  * 이 스토리의 크롬만 있다: 도장 칩과 줌 버튼 오버레이(`Button`), 크레딧 표기. 스크롤은 쓰지 않는다.
  */
+/** 장면을 PNG로 만들어 내려받는다. 차량이 아직 그려지지 않았으면 아무 일도 하지 않는다. */
+async function saveImage(handle: InspectHandle | null, name: string) {
+  const blob = await handle?.capture();
+  if (!blob) return;
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 10_000);
+}
+
 export function ThreeGltfDemo({
   vehicleId = 'x5',
   initialView = DEFAULT_CAMERA_VIEW,
@@ -67,6 +83,9 @@ export function ThreeGltfDemo({
           onView={setView}
           onPaintId={setPaintId}
           onResetView={() => inspectRef.current?.reset()}
+          onSaveImage={() => {
+            void saveImage(inspectRef.current, `${vehicle.label}.png`);
+          }}
           onRotateBy={(azimuth, polar) => inspectRef.current?.rotateBy(azimuth, polar)}
           onZoomIn={() => inspectRef.current?.zoomIn()}
           onZoomOut={() => inspectRef.current?.zoomOut()}

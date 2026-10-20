@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@repo/ui/dialog';
+import { DownloadIcon } from '@repo/ui/icons/download';
 import { PrinterIcon } from '@repo/ui/icons/printer';
 import { RotateCCWIcon } from '@repo/ui/icons/rotate-ccw';
 import { XIcon } from '@repo/ui/icons/x';
@@ -53,15 +54,46 @@ export function ResultStep({
   dispatch,
   quote,
   shareUrl,
+  captureImage,
+  imageName,
 }: {
   state: WizardState;
   dispatch: Dispatch<WizardAction>;
   quote: Quote;
   shareUrl: string;
+  /** 3D 차량의 이미지를 만드는 함수. 차량이 아직 그려지지 않았거나 3D를 쓸 수 없으면 null이라 저장 버튼이 꺼진다. */
+  captureImage: (() => Promise<Blob | null>) | null;
+  /** 저장할 파일 이름 */
+  imageName: string;
 }) {
   const regionId = useId();
   const { toast } = useToast();
   const [resetOpen, setResetOpen] = useState(false);
+
+  /** 지금 구성의 차량 이미지를 PNG 파일로 내려받는다. */
+  async function saveImage() {
+    const blob = await captureImage?.();
+    if (!blob) {
+      toast({
+        title: '차량 이미지를 만들지 못했습니다',
+        description: '잠시 뒤에 다시 시도해 주십시오.',
+        variant: 'error',
+      });
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = imageName;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    // 내려받기가 시작된 뒤에 풀어야 파일이 비지 않는다.
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 10_000);
+    toast({ title: '차량 이미지를 저장했습니다', description: imageName });
+  }
   const resetButtonRef = useRef<HTMLButtonElement>(null);
   const steps = explainTax(state.selection, state.quoteOptions);
   const selectedRegion = state.quoteOptions.region;
@@ -211,8 +243,19 @@ export function ResultStep({
           인쇄 · PDF 저장
         </Button>
         <Button
+          className="w-full"
+          disabled={!captureImage}
+          variant="secondary"
+          onClick={() => {
+            void saveImage();
+          }}
+        >
+          <DownloadIcon data-icon="inline-start" />
+          차량 이미지 저장
+        </Button>
+        <Button
           ref={resetButtonRef}
-          className="col-span-2 w-full"
+          className="w-full"
           variant="clear"
           onClick={() => {
             setResetOpen(true);

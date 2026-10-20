@@ -21,6 +21,7 @@ import { ArrowDownIcon } from '../../icons/arrow-down';
 import { ArrowLeftIcon } from '../../icons/arrow-left';
 import { ArrowRightIcon } from '../../icons/arrow-right';
 import { ArrowUpIcon } from '../../icons/arrow-up';
+import { DownloadIcon } from '../../icons/download';
 import { MaximizeIcon } from '../../icons/maximize';
 import { MinimizeIcon } from '../../icons/minimize';
 import { RotateCCWIcon } from '../../icons/rotate-ccw';
@@ -142,6 +143,7 @@ export function SequenceOverlay({
   onView,
   onPaintId,
   onResetView,
+  onSaveImage,
   onRotateBy,
   onZoomIn,
   onZoomOut,
@@ -167,6 +169,8 @@ export function SequenceOverlay({
   onView: (view: CameraViewId) => void;
   onPaintId: (id: PaintId | null) => void;
   onResetView: () => void;
+  /** 지금 장면을 고정된 앞 3/4 구도의 PNG로 저장한다(`InspectHandle.capture`). */
+  onSaveImage: () => void;
   /** 방향 버튼(드래그의 대안). `InspectHandle.rotateBy`와 같다. */
   onRotateBy: (azimuth: number, polar: number) => void;
   onZoomIn: () => void;
@@ -260,6 +264,10 @@ export function SequenceOverlay({
           <Button size="small" type="button" variant="secondary" onClick={onResetView}>
             <RotateCCWIcon data-icon="inline-start" />
             {CAMERA_CONTROL_LABELS.reset}
+          </Button>
+          <Button size="small" type="button" variant="secondary" onClick={onSaveImage}>
+            <DownloadIcon data-icon="inline-start" />
+            이미지 저장
           </Button>
         </div>
       </div>

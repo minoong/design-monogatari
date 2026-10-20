@@ -17,6 +17,7 @@ import { TextRoll } from '@repo/ui/text-roll';
 import { ToastProvider } from '@repo/ui/toast';
 import {
   type UIEvent,
+  useCallback,
   useEffect,
   useMemo,
   useReducer,
@@ -87,6 +88,12 @@ export function EstimateApp({
   // 좁은 화면에서 차량 영역의 크기. 패널을 아래로 내리면 줄고(compact), 직접 키울 수도 있다(large).
   const [stageCompact, setStageCompact] = useState(false);
   const [stageLarge, setStageLarge] = useState(false);
+  // 3D 차량이 다 그려지면 채워지는 "차량 이미지 만들기" 함수. 결과 화면의 저장 버튼이 쓴다.
+  const [captureImage, setCaptureImage] = useState<(() => Promise<Blob | null>) | null>(null);
+  const handleCaptureChange = useCallback((capture: (() => Promise<Blob | null>) | null) => {
+    // 함수를 상태로 담으려면 갱신 함수로 감싸야 한다(그냥 넘기면 호출된다).
+    setCaptureImage(() => capture);
+  }, []);
   // 선택을 시도한 요소(눌렀던 라디오). 고를 수 없다는 안내 창이 닫히면 초점을 여기로 돌려보내, 방향키로 이어서 움직일 수 있게 한다.
   const openerRef = useRef<HTMLElement | null>(null);
   const shownStep = useRef(initial.step);
@@ -219,6 +226,7 @@ export function EstimateApp({
               interior={state.selection.interior}
               large={stageLarge}
               notice={<StageNotice notices={state.notices} />}
+              onCaptureChange={handleCaptureChange}
               compact={stageCompact}
               onToggleLarge={() => {
                 setStageLarge((large) => !large);
@@ -263,7 +271,13 @@ export function EstimateApp({
                   {state.step === 'options' ? <OptionsStep {...panelProps} /> : null}
                   {state.step === 'accessories' ? <AccessoriesStep {...panelProps} /> : null}
                   {state.step === 'result' ? (
-                    <ResultStep {...panelProps} quote={quote} shareUrl={shareUrl} />
+                    <ResultStep
+                      {...panelProps}
+                      captureImage={captureImage}
+                      imageName={`X5-견적-${colorLabel}.png`}
+                      quote={quote}
+                      shareUrl={shareUrl}
+                    />
                   ) : null}
                 </div>
                 {/* 좁은 화면에서는 차량 아래에 둘 자리가 없어 패널 맨 끝에 둔다(모델 출처 고지는 차량을 보여 주는 곳에 늘 있어야 한다). */}

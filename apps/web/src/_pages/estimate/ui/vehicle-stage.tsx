@@ -168,6 +168,7 @@ export function VehicleStage({
   interior,
   large,
   notice,
+  onCaptureChange,
   onToggleLarge,
   rimFinish,
   sunroof,
@@ -184,6 +185,11 @@ export function VehicleStage({
   large: boolean;
   /** 차량 위 아래쪽에 겹쳐 보이는 안내(자동으로 바뀐 선택 등). 배치를 바꾸지 않는다. */
   notice?: ReactNode;
+  /**
+   * 차량 이미지를 만들 수 있는지 알린다. 모델이 다 그려지면 이미지를 만드는 함수를, 아직이거나 3D를 쓸 수 없으면 null을 넘긴다.
+   * 이미지는 화면의 시점과 상관없이 늘 같은 앞 3/4 구도다.
+   */
+  onCaptureChange?: (capture: (() => Promise<Blob | null>) | null) => void;
   onToggleLarge: () => void;
   rimFinish: RimFinishId;
   /** 선루프 품목을 담았는지. 아니면 선루프 구멍을 막은 차를 보여 준다. */
@@ -217,6 +223,15 @@ export function VehicleStage({
   const inside = isInsideView(view);
   const paint = paintSwatchOf(color);
   const showFallback = unavailable || failed;
+  const canCapture = ready && !showFallback;
+  useEffect(() => {
+    onCaptureChange?.(
+      canCapture ? () => inspectRef.current?.capture() ?? Promise.resolve(null) : null,
+    );
+    return () => {
+      onCaptureChange?.(null);
+    };
+  }, [canCapture, onCaptureChange]);
   const fallback = <StageFallback hex={paint.hex} label={colorLabel} />;
 
   return (
