@@ -184,6 +184,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - **Toggle (`aria-pressed`)**: `secondary` shows the on state as `border-primary` + a 1px `ring-primary`, the same family as OptionRow/PackageRow/ColorSwatchGroup selection. Keep the label fixed and let only `aria-pressed` change (a label that changes length shifts its neighbours); group toggles in `role="group"` with an `aria-label`.
 - `size`: `small` | `medium` | `large` (default) | `xlarge`. `display`: `inline` | `block` | `full`. Same 1px hairline on primary and secondary (`box-border`).
 - `loading`: keep label width, three-dot overlay, `aria-busy`. Combine with `disabled` when needed.
+- **Disabled**: `bg-muted text-muted-foreground` (primary and secondary, hairline kept) or just `text-muted-foreground` (clear), never `opacity` (it was `opacity-40` once; contrast now 4.7:1 light, 8.9:1 dark).
 - Icons + text: nest the icon as a sibling (Radix). Prefix `data-icon="inline-start"`, suffix `data-icon="inline-end"` (shadcn). Do not infer icon-only from children.
 - Links: `asChild` on `<a>`, or `buttonVariants(...)` on a native `<a>`. Focus: 2px `ring-ring`. Primary also uses `ring-offset-2 ring-offset-background` so the ring reads on a filled CTA. Ghost buttons skip the offset so the halo stays small.
 

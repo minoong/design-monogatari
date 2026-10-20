@@ -23,17 +23,18 @@ import { cn } from './lib/cn';
 import { SPRING } from './lib/motion';
 
 export const buttonVariants = cva(
-  'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-none select-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40 **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
+  'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-none select-none focus-visible:ring-2 disabled:pointer-events-none **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         primary:
-          'bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-offset-background focus-visible:ring-offset-2',
+          'bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-offset-background disabled:bg-muted disabled:text-muted-foreground focus-visible:ring-offset-2',
         // 토글로 쓰면(`aria-pressed`) 켜진 상태를 선택 행과 같은 프라이머리 테두리와 링으로 보인다. 켜진 채로 키보드 포커스가 오면
         // 포커스 링(2px)에 배경색 간격(2px)을 두어 켜짐 링(1px)과 한눈에 구분되게 한다(다크에서 둘 다 파랑이라 두께만으로는 구분이 약했다).
         secondary:
-          'border-border text-foreground hover:bg-secondary-hover aria-pressed:border-primary aria-pressed:ring-primary aria-pressed:focus-visible:ring-ring aria-pressed:focus-visible:ring-offset-background bg-transparent aria-pressed:ring-1 aria-pressed:focus-visible:ring-2 aria-pressed:focus-visible:ring-offset-2',
-        clear: 'text-foreground hover:bg-secondary-hover bg-transparent',
+          'border-border text-foreground hover:bg-secondary-hover disabled:bg-muted disabled:text-muted-foreground aria-pressed:border-primary aria-pressed:ring-primary aria-pressed:focus-visible:ring-ring aria-pressed:focus-visible:ring-offset-background bg-transparent aria-pressed:ring-1 aria-pressed:focus-visible:ring-2 aria-pressed:focus-visible:ring-offset-2',
+        clear:
+          'text-foreground hover:bg-secondary-hover disabled:text-muted-foreground bg-transparent',
       },
       size: {
         small:

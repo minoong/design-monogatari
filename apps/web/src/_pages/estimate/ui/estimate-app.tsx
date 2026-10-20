@@ -7,8 +7,10 @@ import { ReceiptTextIcon } from '@repo/ui/icons/receipt-text';
 import { PriceBar, PriceBarActions, PriceBarTotal } from '@repo/ui/price-bar';
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -201,6 +203,12 @@ export function EstimateApp({
             setSummaryOpen(false);
           }}
         />
+        {/* 모바일에는 Esc가 없고 바깥을 눌러야만 닫혔다. 눈에 보이는 닫기 버튼을 둔다. */}
+        <SheetFooter>
+          <SheetClose asChild>
+            <Button variant="secondary">닫기</Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );
@@ -208,7 +216,7 @@ export function EstimateApp({
   return (
     <ToastProvider viewportClassName="bottom-24 split:max-lg:bottom-36 lg:bottom-48">
       <RestoreIssueToast issueCount={restoreIssueCount} />
-      <div className="bg-background text-foreground flex h-dvh flex-col overflow-hidden font-sans print:block print:h-auto print:min-h-0 print:overflow-visible">
+      <div className="bg-background text-foreground tiny:h-auto tiny:min-h-dvh tiny:overflow-visible flex h-dvh flex-col overflow-hidden font-sans print:block print:h-auto print:min-h-0 print:overflow-visible">
         <EstimateHeader
           dispatch={dispatch}
           query={query}
@@ -217,7 +225,7 @@ export function EstimateApp({
           summary={summaryTrigger}
         />
 
-        <main className="split:flex-row flex min-h-0 flex-1 flex-col print:block">
+        <main className="split:flex-row tiny:min-h-auto flex min-h-0 flex-1 flex-col print:block">
           <div className="split:flex split:min-h-0 split:flex-1 split:flex-col split:overflow-hidden split:max-lg:p-3 min-w-0 shrink-0 lg:p-6 print:hidden!">
             <VehicleStage
               caliper={state.selection.caliper}
@@ -241,11 +249,11 @@ export function EstimateApp({
 
           <section
             aria-labelledby="step-title"
-            className="border-border split:w-[min(30rem,56vw)] split:flex-none split:shrink-0 split:border-t-0 split:border-l flex min-h-0 min-w-0 flex-1 flex-col border-t 2xl:w-136"
+            className="border-border split:w-[min(30rem,56vw)] split:flex-none split:shrink-0 split:border-t-0 split:border-l tiny:min-h-auto flex min-h-0 min-w-0 flex-1 flex-col border-t 2xl:w-136"
           >
             <div
               ref={scrollRef}
-              className="relative flex min-h-0 flex-1 scrollbar-gutter-stable flex-col overflow-y-auto overscroll-contain print:overflow-visible"
+              className="tiny:overflow-visible relative flex min-h-0 flex-1 scrollbar-gutter-stable flex-col overflow-y-auto overscroll-contain print:overflow-visible"
               onScroll={handleScroll}
             >
               <div className="flex-1 p-4 lg:p-8 print:p-0">
