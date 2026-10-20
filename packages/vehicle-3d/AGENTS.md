@@ -2,6 +2,10 @@
 
 Three.js vehicle viewer (BMW X5 G05) as a JIT internal package: no build step, `exports` map straight to `src/`. It is **not** part of the design system (`@repo/ui`) and not a shadcn registry item.
 
+## Rendering on demand
+
+`VehicleCanvas` uses `frameloop="demand"`: it renders only after `invalidate()`, so an idle car costs no GPU or battery (measured: 0 draw calls and 0 rAF callbacks per second idle; one full frame is about 264 draw calls). Everything that changes the picture must call `invalidate()`: effects that apply paint, rim, caliper, interior, wheel size or sunroof already do; anything that keeps moving over time (camera tween, queued rotate buttons, cabin-light blend, sunroof slide) calls `invalidate()` again at the end of its `useFrame` while it has not finished, and OrbitControls inertia continues through its `change` event; late arrivals (the HDR environment) invalidate when they land. A new animation or async load that forgets this freezes half-way or never shows. To check, count `drawElements`/`drawArrays` per second with an init script: 0 when idle, 0 again after each interaction.
+
 ## Where `three` may be imported
 
 `three` and `@react-three/fiber` are **dependencies of this package only**. `@repo/ui`, `apps/web`, and `apps/docs` must not import them directly; they use this package:

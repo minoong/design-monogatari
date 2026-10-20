@@ -491,6 +491,17 @@ export function InspectControls({
     setEnvironmentIntensity(scene, 1 + (cabinLight.environment - 1) * cabinBlendRef.current);
 
     controls.update();
+
+    // 그리기를 필요할 때만 하므로, 움직임이 남아 있으면 다음 프레임을 스스로 요청한다. 시점 이동, 쌓아 둔 방향 버튼 회전, 실내 조명이
+    // 섞이는 중이 그 경우다(드래그 관성은 OrbitControls가 움직일 때마다 change를 내서 이어진다).
+    if (
+      tweenRef.current ||
+      pendingRotateRef.current.azimuth !== 0 ||
+      pendingRotateRef.current.polar !== 0 ||
+      cabinBlendRef.current !== goal
+    ) {
+      invalidate();
+    }
   });
 
   return <pointLight ref={cabinLightRef} decay={1.4} intensity={0} position={[0, 0.6, 0.1]} />;
