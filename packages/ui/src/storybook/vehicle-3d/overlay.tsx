@@ -188,7 +188,6 @@ export function SequenceOverlay({
         {kind} · {paintId ? '도장 색은 테마와 무관합니다.' : '원본 머티리얼입니다.'}
       </p>
       <div className="mt-2">
-        <p className="text-muted-foreground text-caption mb-2">시점</p>
         <div
           aria-label={CAMERA_CONTROL_LABELS.viewGroup}
           className="flex flex-wrap gap-1.5"
@@ -210,8 +209,7 @@ export function SequenceOverlay({
           ))}
         </div>
       </div>
-      <div className="mt-2">
-        <p className="text-muted-foreground text-caption mb-2">보기</p>
+      <div className="mt-1.5">
         <div className="flex flex-wrap gap-1.5">
           <div
             aria-label={CAMERA_CONTROL_LABELS.rotateGroup}
@@ -272,7 +270,7 @@ export function SequenceOverlay({
         </div>
       </div>
       <ColorSwatchGroup
-        className="mt-2 max-w-56"
+        className="mt-2"
         legend="도장"
         name="vehicle-paint"
         options={PAINT_OPTIONS}
@@ -281,28 +279,29 @@ export function SequenceOverlay({
           onPaintId(value === ORIGINAL_PAINT ? null : (value as PaintId));
         }}
       />
+      {/* 내장(3칸)과 휠 마감(4칸)은 칩이 적어서 한 줄에 나란히 둔다. 패널이 세로로 길어져 스크롤되던 것을 줄인다. */}
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+        <ColorSwatchGroup
+          legend="내장"
+          name="vehicle-interior"
+          options={INTERIOR_OPTIONS}
+          value={interiorId}
+          onValueChange={(value) => {
+            onInteriorId(value as InteriorId);
+          }}
+        />
+        <ColorSwatchGroup
+          legend="휠 마감"
+          name="vehicle-rim-finish"
+          options={RIM_OPTIONS}
+          value={rimFinishId}
+          onValueChange={(value) => {
+            onRimFinishId(value as RimFinishId);
+          }}
+        />
+      </div>
       <ColorSwatchGroup
-        className="mt-2 max-w-56"
-        legend="내장"
-        name="vehicle-interior"
-        options={INTERIOR_OPTIONS}
-        value={interiorId}
-        onValueChange={(value) => {
-          onInteriorId(value as InteriorId);
-        }}
-      />
-      <ColorSwatchGroup
-        className="mt-2 max-w-56"
-        legend="휠 마감"
-        name="vehicle-rim-finish"
-        options={RIM_OPTIONS}
-        value={rimFinishId}
-        onValueChange={(value) => {
-          onRimFinishId(value as RimFinishId);
-        }}
-      />
-      <ColorSwatchGroup
-        className="mt-2 max-w-56"
+        className="mt-2"
         legend="캘리퍼"
         name="vehicle-caliper"
         options={CALIPER_OPTIONS}

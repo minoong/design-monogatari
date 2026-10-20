@@ -1,0 +1,19 @@
+/*
+ * 문서 페이지(autodocs)가 좁은 화면에서 가로로 넘치지 않게 한다. 인자 표와 스토리 미리보기는 자기 안에서 스크롤한다.
+ * 390px에서 버튼 문서는 표가 559px, 스테퍼 문서는 항목이 594px까지 뻗어 문서 전체에 가로 스크롤이 생겼다.
+ */
+.sbdocs-content {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.sbdocs .docblock-argstable {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.sbdocs .docs-story {
+  max-width: 100%;
+  overflow-x: auto;
+}

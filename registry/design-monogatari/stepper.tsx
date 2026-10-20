@@ -154,12 +154,16 @@ export function StepperItem({
         {completed ? <span className="sr-only">({completedLabel})</span> : null}
         {current ? (
           // 현재 단계의 밑줄. 단계가 바뀌면 이전 항목에서 새 항목으로 미끄러진다.
+          // 바깥 요소가 항목의 좌우 안쪽 여백을 그대로 물려받아(`padding-inline: inherit`) 막대가 글자와 번호 칸에 맞는다.
+          // 여백을 숫자로 박아 두면 항목이 좁은 화면에서 `px-2`일 때 막대가 양쪽 4px씩 안으로 들어갔다.
           <motion.span
             aria-hidden
             layoutId={`${gliderId}-glider`}
-            className="bg-primary pointer-events-none absolute inset-x-3 -bottom-px h-0.5 rounded-full"
+            className="pointer-events-none absolute inset-x-0 -bottom-px h-0.5 px-[inherit]"
             transition={reduceMotion ? { duration: 0 } : SPRING.snappy}
-          />
+          >
+            <span className="bg-primary block size-full rounded-full" />
+          </motion.span>
         ) : null}
       </Comp>
     </li>

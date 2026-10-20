@@ -7,6 +7,12 @@
  * 그 밖에는 위(차량)와 아래(패널)로 나누고, 페이지는 스크롤하지 않고 패널만 스크롤해서 차량이 늘 보인다.
  * `estimate-app.tsx`의 SPLIT_QUERY와 같은 값이다.
  */
+/*
+ * 좌우로 나눌 수 없고(폭 576px 미만) 세로로 쌓기에도 높이가 모자란(512px 이하) 아주 작은 창. 이때만 페이지 자체가 스크롤되어
+ * 차량 영역이 줄어드는 대신 내용이 잘리지 않게 한다. `split`과 겹치지 않는다.
+ */
+@custom-variant tiny (@media (max-width: 35.99rem) and (max-height: 32rem));
+
 @custom-variant split {
   @media (min-width: 64rem) {
     @slot;

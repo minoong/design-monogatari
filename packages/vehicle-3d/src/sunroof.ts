@@ -23,7 +23,7 @@ const SLIDE_WORLD = new Vector3(0, -0.09, -0.55);
  * 바깥에서 보인다(안쪽 판을 0.12로 키웠더니 지붕 위에 어두운 파편이 솟았다). 안감 구멍은 유리보다 가로로 약 0.13 넓어서
  * 안에서 보면 가장자리 틈으로 하늘이 가늘게 보이지만, 이 방식으로는 더 키울 수 없다.
  */
-const OUTER_MARGIN = 0.03;
+const OUTER_MARGIN = 0.05;
 const INNER_MARGIN = 0.03;
 const SLIDE_KEY = 'sunroofSlide';
 
