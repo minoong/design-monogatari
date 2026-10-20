@@ -186,7 +186,7 @@ function GltfModel({
     invalidate();
   }, [invalidate, model, sunroof, sunroofOpen]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const slide = slideRef.current;
     if (!model || slide.current === slide.goal) {
       return;
@@ -197,6 +197,8 @@ function GltfModel({
         ? Math.min(slide.goal, slide.current + step)
         : Math.max(slide.goal, slide.current - step);
     slideSunroof(model, easeInOut(slide.current));
+    // 아직 가는 중이면 다음 프레임을 요청한다(그리기를 필요할 때만 하므로 스스로 이어 가야 한다).
+    if (slide.current !== slide.goal) state.invalidate();
   });
 
   useEffect(() => {
@@ -306,6 +308,9 @@ export function VehicleCanvas({
       aria-hidden
       className={className}
       camera={{ position: [...CAMERA_VIEWS[view].position], fov: CAMERA_VIEWS[view].fov }}
+      // 필요할 때만 그린다(바뀐 것이 있어 `invalidate()`를 부를 때). 차가 가만히 있으면 프레임을 그리지 않아 배터리와 발열을 아낀다.
+      // 움직임이 이어지는 곳(카메라 이동, 선루프, 드래그 관성)은 프레임 안에서 끝날 때까지 다시 `invalidate()`한다.
+      frameloop="demand"
       gl={{ alpha: true, antialias: true }}
       shadows={{ type: PCFShadowMap }}
     >

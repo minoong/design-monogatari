@@ -12,6 +12,7 @@ export function ThreeStudio() {
   const camera = useThree((state) => state.camera);
   const gl = useThree((state) => state.gl);
   const scene = useThree((state) => state.scene);
+  const invalidate = useThree((state) => state.invalidate);
 
   useEffect(() => {
     camera.lookAt(0, 0.55, 0);
@@ -29,6 +30,8 @@ export function ThreeStudio() {
       }
       scene.environment = texture;
       envMap = texture;
+      // 환경맵은 나중에 도착하므로 도착하면 다시 그려야 반사가 나타난다(필요할 때만 그리는 모드).
+      invalidate();
     };
 
     const useRoom = () => {
@@ -56,7 +59,7 @@ export function ThreeStudio() {
       envMap?.dispose();
       pmrem.dispose();
     };
-  }, [gl, scene]);
+  }, [gl, invalidate, scene]);
 
   return (
     <>
