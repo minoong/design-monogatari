@@ -30,11 +30,13 @@ function QuoteSheet({
   side,
   lines = LINES,
   handle,
+  snapPoints,
   body = true,
 }: {
   side: SheetSide;
   lines?: string[][];
   handle?: boolean;
+  snapPoints?: number[];
   /** false 이면 `SheetBody` 없이 시트 전체가 스크롤한다(핸들을 끈 이전 방식). */
   body?: boolean;
 }) {
@@ -54,7 +56,7 @@ function QuoteSheet({
       <SheetTrigger asChild>
         <Button variant="secondary">견적 요약 보기</Button>
       </SheetTrigger>
-      <SheetContent handle={handle} side={side}>
+      <SheetContent handle={handle} side={side} snapPoints={snapPoints}>
         <SheetHeader>
           <SheetTitle>견적 요약</SheetTitle>
           <SheetDescription>
@@ -118,6 +120,18 @@ export const 아래_긴_내용: Story = {
   render: () => <QuoteSheet lines={MANY_LINES} side="bottom" />,
 };
 
+export const 아래_스냅_높이: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`snapPoints={[0.4, 0.85]}`는 화면 높이의 40%와 85% 두 높이에 멈춥니다. 처음에는 40%로 열리고, 핸들이나 본문을 위로 끌면 85%로 올라오며, 놓으면 가장 가까운 높이로 맞춰집니다. 가장 낮은 높이보다 더 내리면 닫힙니다. 85%일 때만 본문이 스크롤하고 40%일 때는 본문을 끌어 높이를 바꿉니다.',
+      },
+    },
+  },
+  render: () => <QuoteSheet lines={MANY_LINES} side="bottom" snapPoints={[0.4, 0.85]} />,
+};
+
 export const 아래_핸들_없음: Story = {
   parameters: {
     docs: {
@@ -175,7 +189,7 @@ export const 아래_중첩: Story = {
     docs: {
       description: {
         story:
-          '시트 안에서 다른 시트를 열면 바깥 시트가 한 칸 뒤로 물러나고(5% 작아짐) 안쪽 시트가 그 위에 열립니다. 안쪽을 닫으면 바깥 시트가 원래대로 돌아옵니다. 안쪽 시트도 핸들로 끌어 닫을 수 있고 포커스는 열었던 버튼으로 돌아갑니다.',
+          '시트 안에서 다른 시트를 열면 바깥 시트가 한 칸 뒤로 물러나고(5% 작아짐) 안쪽 시트가 그 위에 열립니다. 안쪽 시트의 핸들을 아래로 끌면 끄는 만큼 바깥 시트가 원래 크기로 돌아오고 다시 올리면 작아집니다(안쪽이 열린 정도에서 계산). 안쪽을 닫으면 바깥 시트가 원래대로 돌아옵니다. 안쪽 시트도 핸들로 끌어 닫을 수 있고 포커스는 열었던 버튼으로 돌아갑니다.',
       },
     },
   },
