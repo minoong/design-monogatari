@@ -277,7 +277,7 @@ export function ResultStep({
             // 취소나 Esc로 닫으면 눌렀던 버튼으로 돌아간다. 다시 시작해 버튼이 사라졌으면 단계 제목이 초점을 받는다.
             if (resetButtonRef.current) {
               event.preventDefault();
-              resetButtonRef.current.focus();
+              resetButtonRef.current.focus({ preventScroll: true });
             }
           }}
         >
