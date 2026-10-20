@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@repo/ui/button';
 import {
   Sheet,
@@ -10,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@repo/ui/sheet';
+import { useState } from 'react';
 
 const LINES = Array.from({ length: 24 }, (_, index) => [
   `선택 품목 ${index + 1}`,
@@ -17,15 +20,25 @@ const LINES = Array.from({ length: 24 }, (_, index) => [
 ]);
 
 export default function SheetSnap() {
+  const [point, setPoint] = useState(0.4);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="secondary">높이를 고르는 시트 열기</Button>
       </SheetTrigger>
-      <SheetContent side="bottom" snapPoints={[0.4, 0.85]} data-ds-preview>
+      <SheetContent
+        side="bottom"
+        snapPoints={[0.4, 0.85]}
+        data-ds-preview
+        onSnapPointChange={setPoint}
+      >
         <SheetHeader>
           <SheetTitle>선택 내역</SheetTitle>
-          <SheetDescription>핸들이나 본문을 위로 끌면 높이가 올라갑니다.</SheetDescription>
+          <SheetDescription>
+            핸들이나 본문을 위로 끌면 높이가 올라갑니다. 지금 높이는 {Math.round(point * 100)}
+            %입니다.
+          </SheetDescription>
         </SheetHeader>
         <SheetBody>
           <ul className="m-0 flex list-none flex-col gap-2 p-0 text-sm">

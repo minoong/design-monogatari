@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 
 import { Button } from './button';
 import {
@@ -125,11 +126,11 @@ export const 아래_스냅_높이: Story = {
     docs: {
       description: {
         story:
-          '`snapPoints={[0.4, 0.85]}`는 화면 높이의 40%와 85% 두 높이에 멈춥니다. 처음에는 40%로 열리고, 핸들이나 본문을 위로 끌면 85%로 올라오며, 놓으면 가장 가까운 높이로 맞춰집니다. 가장 낮은 높이보다 더 내리면 닫힙니다. 85%일 때만 본문이 스크롤하고 40%일 때는 본문을 끌어 높이를 바꿉니다.',
+          '`snapPoints={[0.4, 0.85]}`는 화면 높이의 40%와 85% 두 높이에 멈춥니다. 처음에는 40%로 열리고, 핸들이나 본문을 위로 끌면 85%로 올라오며, 놓으면 가장 가까운 높이로 맞춰집니다. 가장 낮은 높이보다 더 내리면 닫힙니다. 85%일 때만 본문이 스크롤하고 40%일 때는 본문을 끌어 높이를 바꿉니다. 높이가 바뀔 때 `onSnapPointChange`가 새 높이로 불리고, 이 스토리는 그 값을 설명에 보여 줍니다.',
       },
     },
   },
-  render: () => <QuoteSheet lines={MANY_LINES} side="bottom" snapPoints={[0.4, 0.85]} />,
+  render: () => <SnapSheet />,
 };
 
 export const 아래_핸들_없음: Story = {
@@ -143,6 +144,50 @@ export const 아래_핸들_없음: Story = {
   },
   render: () => <QuoteSheet body={false} handle={false} lines={MANY_LINES} side="bottom" />,
 };
+function SnapSheet() {
+  // `onSnapPointChange`로 받은 높이를 설명에 보여 준다(바뀔 때만 불린다).
+  const [point, setPoint] = useState(0.4);
+  const [changes, setChanges] = useState(0);
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="secondary">견적 요약 보기</Button>
+      </SheetTrigger>
+      <SheetContent
+        side="bottom"
+        snapPoints={[0.4, 0.85]}
+        onSnapPointChange={(next) => {
+          setPoint(next);
+          setChanges((count) => count + 1);
+        }}
+      >
+        <SheetHeader>
+          <SheetTitle>견적 요약</SheetTitle>
+          <SheetDescription data-testid="snap-state">
+            현재 높이 {Math.round(point * 100)}%, 바뀐 횟수 {changes}
+          </SheetDescription>
+        </SheetHeader>
+        <SheetBody>
+          <ul className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
+            {MANY_LINES.map(([label, price]) => (
+              <li key={label} className="border-border flex justify-between border-b py-2">
+                <span>{label}</span>
+                <span className="tabular-nums">{price}</span>
+              </li>
+            ))}
+          </ul>
+        </SheetBody>
+        <SheetFooter>
+          <SheetClose asChild>
+            <Button variant="primary">닫기</Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 function NestedSheets() {
   return (
     <Sheet>

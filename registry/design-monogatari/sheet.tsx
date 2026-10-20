@@ -228,14 +228,18 @@ export const SheetContent = forwardRef<
     });
     nestedScale.set(canRecede ? 1 - openness * NESTED_SCALE_STEP : 1);
   }, [canRecede, nestedScale]);
+  // 안쪽 시트가 있는 동안 이 시트의 윗 테두리를 또렷하게 한다(다크에서 뒤로 물러난 시트가 배경과 거의 같은 색이라 윤곽이 흐렸다).
+  const [hasNested, setHasNested] = useState(false);
   const register = useCallback(
     (openness: MotionValue<number>) => {
       nestedOpenness.current.add(openness);
+      setHasNested(true);
       const stop = openness.on('change', refreshScale);
       refreshScale();
       return () => {
         stop();
         nestedOpenness.current.delete(openness);
+        setHasNested(nestedOpenness.current.size > 0);
         refreshScale();
       };
     },
@@ -292,7 +296,28 @@ export const SheetContent = forwardRef<
         }
         if (delta > HANDOFF_SLOP && bodyDown.current) {
           state = 'dragging';
-          dragControls.start(bodyDown.current);
+          // 브라우저가 터치 시작 거리(약 15px) 동안은 첫 움직임을 알려 주지 않아서, 끌기가 시작될 때 이미 손가락이 그만큼 가 있다.
+          // 그 거리만큼 시트를 바로 맞춰 처음 몇 px를 건너뛰었다가 한꺼번에 따라붙지 않게 한다. 모션은 끌기를 시작한 점에서부터의
+          // 거리를 시트 위치에 더하므로, 시작점을 처음 눌렀던 곳이 아니라 지금 손가락 위치로 알려 준다(그러지 않으면 그 거리가 두 번 더해진다).
+          const origin = bodyDown.current;
+          dragControls.start({
+            type: 'pointerdown',
+            pointerId: origin.pointerId,
+            pointerType: 'touch',
+            isPrimary: true,
+            button: 0,
+            buttons: 1,
+            pageX: touch.pageX,
+            pageY: touch.pageY,
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            target: origin.target,
+            currentTarget: origin.currentTarget,
+            timeStamp: event.timeStamp,
+            preventDefault: () => undefined,
+            stopPropagation: () => undefined,
+          } as unknown as PointerEvent);
+          y.set(delta);
         }
       }
       if (state === 'dragging') {
@@ -317,7 +342,7 @@ export const SheetContent = forwardRef<
       panel.removeEventListener('touchend', onTouchEnd);
       panel.removeEventListener('touchcancel', onTouchEnd);
     };
-  }, [draggable, open, dragControls]);
+  }, [draggable, open, dragControls, y]);
 
   function handleDragEnd(velocityY: number) {
     // 모션이 잰 속도와 본문에서 넘긴 제스처의 속도 중 더 큰 쪽(방향 포함)을 쓴다. 위로 쓸면 음수라 `Math.max`로 고르면 안 된다.
@@ -387,10 +412,11 @@ export const SheetContent = forwardRef<
             <motion.div
               ref={panelRef}
               data-expanded={expanded}
+              data-nested={hasNested}
               // 끌 수 있으면 시트는 스크롤하지 않고 `SheetBody`가 스크롤한다. `touch-none`은 끌기 영역에서 브라우저가 세로 제스처를
               // 스크롤로 가져가지 못하게 한다(`SheetBody`는 자기 스크롤이라 `touch-pan-y`로 되돌린다).
               className={cn(
-                'group/sheet',
+                'group/sheet data-[nested=true]:border-muted-foreground/80',
                 baseClasses,
                 classes,
                 // 끌 때 제목 같은 글자가 선택되지 않게 한다(본문은 `SheetBody`가 선택을 되살린다).
