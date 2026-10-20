@@ -184,7 +184,7 @@ export function EstimateApp({
           if (focusHeadingOnClose.current) {
             event.preventDefault();
             focusHeadingOnClose.current = false;
-            headingRef.current?.focus();
+            headingRef.current?.focus({ preventScroll: true });
           }
         }}
       >
@@ -332,9 +332,17 @@ export function EstimateApp({
           </section>
         </main>
 
-        <ConfirmChangeDialog {...panelProps} returnFocusRef={headingRef} />
+        <ConfirmChangeDialog
+          {...panelProps}
+          fallbackFocusRef={headingRef}
+          returnFocusRef={openerRef}
+        />
         <BlockedDialog {...panelProps} fallbackFocusRef={headingRef} returnFocusRef={openerRef} />
-        <SuggestionDialog {...panelProps} returnFocusRef={headingRef} />
+        <SuggestionDialog
+          {...panelProps}
+          fallbackFocusRef={headingRef}
+          returnFocusRef={openerRef}
+        />
       </div>
     </ToastProvider>
   );

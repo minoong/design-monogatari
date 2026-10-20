@@ -30,13 +30,16 @@ function signedWon(amount: number) {
 interface DialogProps {
   state: WizardState;
   dispatch: Dispatch<WizardAction>;
-  /** 창이 닫힌 뒤 초점을 보낼 곳. 눌렀던 라디오는 닫힘과 함께 사라질 수 있어 단계 제목으로 보낸다(고를 수 없다는 안내 창은 행이 그대로라 눌렀던 행으로 돌려보낸다). */
+  /** 창이 닫힌 뒤 초점을 보낼 곳. 눌렀던 요소로 돌려보내고, 그것이 사라졌으면 `fallbackFocusRef`(단계 제목)로 보낸다. */
   returnFocusRef?: RefObject<HTMLElement | null>;
   /** `returnFocusRef`의 요소가 이미 사라졌을 때 대신 초점을 보낼 곳 */
   fallbackFocusRef?: RefObject<HTMLElement | null>;
 }
 
-/** 첫 번째로 아직 화면에 있는 요소로 초점을 보낸다. 없으면 Radix의 기본 동작에 맡긴다. */
+/**
+ * 첫 번째로 아직 화면에 있는 요소로 초점을 보낸다. 없으면 Radix의 기본 동작에 맡긴다. 초점을 옮기며 패널이 스크롤되지 않게
+ * `preventScroll`을 준다(단계 제목은 패널 맨 위라서 그냥 초점을 주면 창을 닫을 때마다 스크롤이 맨 위로 돌아갔다).
+ */
 function returnFocus(
   ref?: RefObject<HTMLElement | null>,
   fallback?: RefObject<HTMLElement | null>,
@@ -45,13 +48,18 @@ function returnFocus(
     const target = [ref?.current, fallback?.current].find((element) => element?.isConnected);
     if (target) {
       event.preventDefault();
-      target.focus();
+      target.focus({ preventScroll: true });
     }
   };
 }
 
 /** 확인이 필요한 변경: 이전 선택과 변경 후를 나란히 보이고, 확인하기 전까지 선택과 가격은 그대로다. */
-export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogProps) {
+export function ConfirmChangeDialog({
+  state,
+  dispatch,
+  returnFocusRef,
+  fallbackFocusRef,
+}: DialogProps) {
   const pending = state.pending;
   const diff = pending
     ? diffSelections(state.selection, pending.resolution.next, state.quoteOptions)
@@ -64,7 +72,10 @@ export function ConfirmChangeDialog({ state, dispatch, returnFocusRef }: DialogP
         if (!open) dispatch({ type: 'cancel' });
       }}
     >
-      <DialogContent className="max-w-xl" onCloseAutoFocus={returnFocus(returnFocusRef)}>
+      <DialogContent
+        className="max-w-xl"
+        onCloseAutoFocus={returnFocus(returnFocusRef, fallbackFocusRef)}
+      >
         <DialogHeader>
           <DialogTitle>다른 선택도 함께 바뀝니다</DialogTitle>
           <DialogDescription>
@@ -163,7 +174,12 @@ export function BlockedDialog({ state, dispatch, returnFocusRef, fallbackFocusRe
 }
 
 /** 더 알맞은 구성 제안. 받아들이면 그 변경을 실행하고, 거절하면 지금 선택을 그대로 둔다. */
-export function SuggestionDialog({ state, dispatch, returnFocusRef }: DialogProps) {
+export function SuggestionDialog({
+  state,
+  dispatch,
+  returnFocusRef,
+  fallbackFocusRef,
+}: DialogProps) {
   const suggestion = state.suggestion;
 
   return (
@@ -173,7 +189,7 @@ export function SuggestionDialog({ state, dispatch, returnFocusRef }: DialogProp
         if (!open) dispatch({ type: 'dismiss-suggestion' });
       }}
     >
-      <DialogContent onCloseAutoFocus={returnFocus(returnFocusRef)}>
+      <DialogContent onCloseAutoFocus={returnFocus(returnFocusRef, fallbackFocusRef)}>
         <DialogHeader>
           <DialogTitle>더 알맞은 구성이 있습니다</DialogTitle>
           <DialogDescription>{suggestion?.message}</DialogDescription>
