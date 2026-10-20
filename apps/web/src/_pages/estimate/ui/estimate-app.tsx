@@ -7,6 +7,7 @@ import { ReceiptTextIcon } from '@repo/ui/icons/receipt-text';
 import { PriceBar, PriceBarActions, PriceBarTotal } from '@repo/ui/price-bar';
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -194,15 +195,17 @@ export function EstimateApp({
           <SheetTitle>견적 요약</SheetTitle>
           <SheetDescription>선택한 항목과 금액입니다.</SheetDescription>
         </SheetHeader>
-        <SummaryList
-          autoChanges={state.notices}
-          quote={quote}
-          dispatch={dispatch}
-          onNavigate={() => {
-            focusHeadingOnClose.current = true;
-            setSummaryOpen(false);
-          }}
-        />
+        <SheetBody>
+          <SummaryList
+            autoChanges={state.notices}
+            quote={quote}
+            dispatch={dispatch}
+            onNavigate={() => {
+              focusHeadingOnClose.current = true;
+              setSummaryOpen(false);
+            }}
+          />
+        </SheetBody>
         {/* 모바일에는 Esc가 없고 바깥을 눌러야만 닫혔다. 눈에 보이는 닫기 버튼을 둔다. */}
         <SheetFooter>
           <SheetClose asChild>

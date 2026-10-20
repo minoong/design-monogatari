@@ -24,6 +24,13 @@ export function useDialogOpen() {
   return useContext(DialogOpenContext);
 }
 
+const DialogCloseContext = createContext<(() => void) | null>(null);
+
+/** `Dialog`/`Sheet` 안에서 창을 닫는 함수. 끌어서 닫는 시트처럼 닫기 버튼 밖에서 닫을 때 쓴다. */
+export function useDialogClose() {
+  return useContext(DialogCloseContext) ?? (() => undefined);
+}
+
 type DialogProps = ComponentProps<typeof DialogPrimitive.Root>;
 
 export function Dialog({ open: openProp, defaultOpen, onOpenChange, ...props }: DialogProps) {
@@ -39,7 +46,9 @@ export function Dialog({ open: openProp, defaultOpen, onOpenChange, ...props }: 
 
   return (
     <DialogOpenContext.Provider value={open}>
-      <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange} {...props} />
+      <DialogCloseContext.Provider value={() => handleOpenChange(false)}>
+        <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange} {...props} />
+      </DialogCloseContext.Provider>
     </DialogOpenContext.Provider>
   );
 }
