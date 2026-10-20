@@ -113,6 +113,9 @@ export function applyThreePaint(root: Object3D, paint: ThreePaint) {
 
     const source = originals(mesh);
     const current = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    // 도장 대상이 아닌 부품은 지금 입혀진 재질을 그대로 둔다. 원래 재질로 되돌리면 림 마감, 캘리퍼, 실내 색처럼 다른 효과가
+    // 입혀 둔 색이 차체 색을 바꿀 때마다 지워진다(그 효과들은 자기 값이 바뀔 때만 다시 입힌다).
+    const kept = new Set<Material>();
     const next = source.map((material, index) => {
       if (!material || !('color' in material)) {
         return current[index] ?? material;
@@ -125,11 +128,13 @@ export function applyThreePaint(root: Object3D, paint: ThreePaint) {
       if (role === 'bumper') {
         return toBumperMaterial(material, paint);
       }
-      return material;
+      const keep = current[index] ?? material;
+      kept.add(keep);
+      return keep;
     });
 
     for (const material of current) {
-      disposeIfClone(material, source);
+      if (!kept.has(material)) disposeIfClone(material, source);
     }
 
     mesh.material = Array.isArray(mesh.material) ? next : (next[0] ?? mesh.material);
@@ -147,10 +152,20 @@ export function restoreThreePaint(root: Object3D) {
       return;
     }
     const current = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    // 도장 대상이 아닌 부품의 재질(림 마감, 캘리퍼, 실내 색)은 그대로 둔다. 도장을 걷어 내도 그 효과의 색은 남아야 한다.
+    const kept = new Set<Material>();
+    const next = source.map((material, index) => {
+      if (material && 'color' in material && paintRole(mesh.name, material.name) === 'skip') {
+        const keep = current[index] ?? material;
+        kept.add(keep);
+        return keep;
+      }
+      return material;
+    });
     for (const material of current) {
-      disposeIfClone(material, source);
+      if (!kept.has(material)) disposeIfClone(material, source);
     }
-    mesh.material = Array.isArray(mesh.material) ? [...source] : (source[0] ?? mesh.material);
+    mesh.material = Array.isArray(mesh.material) ? next : (next[0] ?? mesh.material);
   });
 }
 

@@ -4,16 +4,20 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { type RefObject, useEffect, useRef } from 'react';
 import {
   type Camera,
+  type Mesh,
   PerspectiveCamera,
   type PointLight,
   type Scene,
   Spherical,
+  Vector2,
   Vector3,
+  type WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { fovForAspect } from './adaptive-fov';
 import { CAMERA_VIEWS, type CameraViewId, isInsideView } from './camera-views';
+import { VEHICLE_MODEL_NAME } from './constants';
 import { prefersReducedMotion } from './reduced-motion';
 
 export type InspectHandle = {
@@ -27,6 +31,21 @@ export type InspectHandle = {
    * 실내에서는 제자리에서 둘러본다. 시점이 바뀌는 중에는 아무 일도 하지 않는다.
    */
   rotateBy: (azimuth: number, polar: number) => void;
+  /**
+   * 지금 장면(색, 휠, 선루프 등)을 고정된 앞 3/4 시점의 PNG로 만든다. 화면의 카메라와 상관없이 늘 같은 구도이고, 실내 시점에서
+   * 불러도 실내용 조명이 섞이지 않는다. 화면에 보이는 장면과 같은 렌더러로 한 번 그린 뒤 바로 원래 크기와 카메라로 돌려서 깜빡이지 않는다.
+   * 모델을 아직 불러오지 못했으면 차 없는 빈 그림이 나오므로 `onReady` 뒤에 부른다.
+   */
+  capture: (options?: CaptureOptions) => Promise<Blob | null>;
+};
+
+export type CaptureOptions = {
+  /** 이미지 폭(px). 기본 1920 */
+  width?: number;
+  /** 이미지 높이(px). 기본 1080 */
+  height?: number;
+  /** 배경색(CSS 색). 장면은 투명이라 이 색 위에 얹는다. 기본 #f5f5f7 */
+  background?: string;
 };
 
 /** `rotateBy` 한 걸음의 각도(라디안, 약 20°) */
@@ -62,6 +81,142 @@ function setClipPlanes(camera: Camera) {
 
 function setEnvironmentIntensity(scene: Scene, value: number) {
   scene.environmentIntensity = value;
+}
+
+/** 화면 반 폭·반 높이 중 큰 쪽에서 차가 이만큼까지 차지하게 맞춘다. 나머지는 여백이다. */
+const STILL_FILL = 0.74;
+/** 꼭짓점을 이 간격으로 건너뛰며 모은다. 윤곽의 가장자리는 이 정도 성기게 봐도 거의 같다. */
+const VERTEX_STRIDE = 7;
+
+/**
+ * 보이는 메시의 꼭짓점을 월드 좌표로 모은다. 숨긴 부품(선루프 패치 등)과 바닥의 그림자 판은 빼야 구도가 틀어지지 않는다.
+ * 경계 상자의 모서리로 맞추면 3/4 시점에서는 실제 윤곽보다 훨씬 커서 차가 작고 한쪽으로 치우친다.
+ */
+function vehiclePoints(scene: Scene): Vector3[] | null {
+  const root = scene.getObjectByName(VEHICLE_MODEL_NAME);
+  if (!root) return null;
+  root.updateWorldMatrix(true, true);
+  const points: Vector3[] = [];
+  root.traverseVisible((object) => {
+    const mesh = object as Mesh;
+    if (!mesh.isMesh) return;
+    const position = mesh.geometry.getAttribute('position');
+    for (let index = 0; index < position.count; index += VERTEX_STRIDE) {
+      points.push(
+        new Vector3(position.getX(index), position.getY(index), position.getZ(index)).applyMatrix4(
+          mesh.matrixWorld,
+        ),
+      );
+    }
+  });
+  return points.length > 0 ? points : null;
+}
+
+/**
+ * 앞 3/4 방향은 그대로 두고, 차의 윤곽(화면에 투영한 꼭짓점의 범위)이 가운데에 놓이고 `STILL_FILL`만큼 차지하도록
+ * 조준점과 거리를 맞춘다. 원근 때문에 한 번에 풀리지 않아 몇 번 되풀이한다. 화면용 시점은 조작하는 무대에 맞춰 잡은 것이라
+ * 가로로 긴 이미지에서는 차가 한쪽 구석에 작게 나왔다.
+ */
+function fitStill(still: PerspectiveCamera, points: Vector3[], direction: Vector3) {
+  const target = new Vector3();
+  for (const point of points) target.add(point);
+  target.divideScalar(points.length);
+  let distance = 6;
+  const right = new Vector3();
+  const up = new Vector3();
+  const projected = new Vector3();
+
+  for (let step = 0; step < 10; step += 1) {
+    still.position.copy(target).addScaledVector(direction, distance);
+    still.lookAt(target);
+    still.updateMatrixWorld();
+    still.updateProjectionMatrix();
+
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const point of points) {
+      projected.copy(point).project(still);
+      minX = Math.min(minX, projected.x);
+      maxX = Math.max(maxX, projected.x);
+      minY = Math.min(minY, projected.y);
+      maxY = Math.max(maxY, projected.y);
+    }
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const half = Math.max((maxX - minX) / 2, (maxY - minY) / 2);
+
+    // 윤곽의 가운데가 화면 가운데로 오도록 조준점을 옮긴다(화면 위 한 칸의 실제 길이는 거리와 시야각으로 구한다).
+    const halfHeight = distance * Math.tan((still.fov * Math.PI) / 360);
+    right.setFromMatrixColumn(still.matrixWorld, 0);
+    up.setFromMatrixColumn(still.matrixWorld, 1);
+    target.addScaledVector(right, centerX * halfHeight * still.aspect);
+    target.addScaledVector(up, centerY * halfHeight);
+    distance *= half / STILL_FILL;
+  }
+
+  still.position.copy(target).addScaledVector(direction, distance);
+  still.lookAt(target);
+  still.updateMatrixWorld();
+}
+
+/**
+ * 같은 렌더러로 정지 화면 한 장을 그려 2D 캔버스에 옮긴다. 화면 캔버스의 크기를 잠깐 바꿨다가 이 함수가 끝나기 전에
+ * 원래 크기, 카메라, 조명으로 되돌려 다시 그리므로 화면에는 보이지 않는다(그리는 것과 되돌리는 것이 한 작업 안에서 끝난다).
+ * 렌더 타깃에 따로 그리면 톤 매핑이 빠져 화면과 색이 달라져서 화면 캔버스를 그대로 쓴다.
+ * r3f의 렌더러·장면은 외부 three.js 객체라 직접 바꾸는 것이 정해진 방식이어서 컴포넌트 밖 함수로 둔다.
+ */
+function renderStill(
+  gl: WebGLRenderer,
+  scene: Scene,
+  liveCamera: Camera,
+  cabinLight: PointLight | null,
+  { width = 1920, height = 1080, background = '#f5f5f7' }: CaptureOptions,
+): HTMLCanvasElement {
+  const pose = poseOf('exterior');
+  const aspect = width / height;
+  const still = new PerspectiveCamera(fovForAspect(pose.fov, aspect), aspect, 0.02, 60);
+  const points = vehiclePoints(scene);
+  if (points) {
+    fitStill(still, points, pose.position.clone().sub(pose.target).normalize());
+  } else {
+    still.position.copy(pose.position);
+    still.lookAt(pose.target);
+    still.updateMatrixWorld();
+  }
+
+  const size = gl.getSize(new Vector2());
+  const pixelRatio = gl.getPixelRatio();
+  const environment = scene.environmentIntensity;
+  const light = cabinLight?.intensity ?? 0;
+
+  const out = document.createElement('canvas');
+  out.width = width;
+  out.height = height;
+  const context = out.getContext('2d');
+
+  try {
+    gl.setPixelRatio(1);
+    gl.setSize(width, height, false);
+    // 실내 시점에서 올려 둔 안쪽 조명과 환경광은 바깥에서 보면 과하게 밝다. 바깥 시점의 값으로 그린다.
+    setEnvironmentIntensity(scene, 1);
+    if (cabinLight) cabinLight.intensity = 0;
+    gl.render(scene, still);
+    if (context) {
+      context.fillStyle = background;
+      context.fillRect(0, 0, width, height);
+      context.drawImage(gl.domElement, 0, 0, width, height);
+    }
+  } finally {
+    gl.setPixelRatio(pixelRatio);
+    gl.setSize(size.x, size.y, false);
+    setEnvironmentIntensity(scene, environment);
+    if (cabinLight) cabinLight.intensity = light;
+    gl.render(scene, liveCamera);
+  }
+
+  return out;
 }
 
 function easeInOut(t: number) {
@@ -253,6 +408,11 @@ export function InspectControls({
     };
 
     handleRef.current = {
+      capture: (options = {}) =>
+        new Promise<Blob | null>((resolve) => {
+          const still = renderStill(gl, scene, camera, cabinLightRef.current, options);
+          still.toBlob(resolve, 'image/png');
+        }),
       rotateBy,
       reset: () => {
         goToRef.current?.(viewRef.current, true);
@@ -276,7 +436,7 @@ export function InspectControls({
       canvasElement.style.setProperty('touch-action', previousTouchAction);
       controlsRef.current = null;
     };
-  }, [camera, gl, handleRef, invalidate, wheelZoom]);
+  }, [camera, gl, handleRef, invalidate, scene, wheelZoom]);
 
   useEffect(() => {
     viewRef.current = view;

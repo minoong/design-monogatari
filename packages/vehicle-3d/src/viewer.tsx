@@ -19,7 +19,7 @@ import { applyThreeRim } from './apply-three-rim';
 import { assembleG05Three } from './assemble-g05-three';
 import { CALIPER_SWATCHES, type CaliperSwatch } from './calipers';
 import { CAMERA_VIEWS, type CameraViewId, DEFAULT_CAMERA_VIEW } from './camera-views';
-import { GROUND_Y } from './constants';
+import { GROUND_Y, VEHICLE_MODEL_NAME } from './constants';
 import { InspectControls, type InspectHandle } from './inspect-controls';
 import { INTERIOR_SWATCHES, type InteriorSwatch } from './interiors';
 import type { PaintSwatch } from './paints';
@@ -30,7 +30,7 @@ import { ThreeStudio } from './three-studio';
 import { vehicleById, type VehicleId } from './vehicles';
 import { applyWheelSize, NATIVE_WHEEL_INCH } from './wheel-size';
 
-export { type InspectHandle } from './inspect-controls';
+export { type CaptureOptions, type InspectHandle } from './inspect-controls';
 export { useModelAvailable } from './use-model-available';
 
 function sitOnGround(root: Object3D, groundY: number) {
@@ -70,6 +70,11 @@ function hideUtilityMeshes(root: Object3D) {
 
 /** 선루프 유리가 열리거나 닫히는 데 걸리는 시간(초) */
 const SUNROOF_SECONDS = 0.9;
+
+/** 이미지로 만들 때 차만 골라 쓰도록 뿌리에 이름을 붙인다. r3f의 객체는 외부 three.js 객체라 컴포넌트 밖 함수에서 직접 바꾼다. */
+function nameVehicleModel(root: Object3D) {
+  root.name = VEHICLE_MODEL_NAME;
+}
 
 function easeInOut(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -201,6 +206,14 @@ function GltfModel({
     applyThreeInterior(model, interior ?? INTERIOR_SWATCHES[0]);
     invalidate();
   }, [interior, invalidate, model]);
+
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
+    // `InspectHandle.capture`가 차만 골라 구도를 맞추려고 이 이름으로 찾는다(바닥의 그림자 판은 빼야 한다).
+    nameVehicleModel(model);
+  }, [model]);
 
   useEffect(() => {
     if (!model) {
