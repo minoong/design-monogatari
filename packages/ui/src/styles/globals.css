@@ -135,7 +135,7 @@
   --palette-dark-primary-foreground: #ffffff;
   --palette-dark-primary-on-dark: #8ab5ff;
   --palette-dark-secondary-hover: #1f1f22;
-  --palette-dark-ring: #2356d6;
+  --palette-dark-ring: #3b6ee6;
   --palette-dark-overlay: color-mix(in srgb, #000000 64%, transparent);
   --palette-dark-card: #121315;
   --palette-dark-destructive: #ff6369;

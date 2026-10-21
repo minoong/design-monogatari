@@ -20,6 +20,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -38,7 +39,7 @@ import {
   useDialogOpen,
 } from '@/ui/dialog';
 import { cn } from '@/lib/utils';
-import { DURATION, EASE } from '@/lib/motion';
+import { DURATION, EASE, SPRING } from '@/lib/motion';
 
 /** 시트는 `Dialog`와 같은 Radix 대화상자다. 가장자리에서 밀려 나오는 모양만 다르다. */
 export const Sheet = Dialog;
@@ -115,7 +116,7 @@ const NestedSheetContext = createContext<{
   register: (openness: MotionValue<number>) => () => void;
 } | null>(null);
 
-/** 안쪽 시트가 열려 있을 때 바깥 시트가 줄어드는 비율(한 칸마다)과 소요 시간은 `animate`의 `transition`을 따른다. */
+/** 안쪽 시트가 완전히 열려 있을 때 바깥 시트가 줄어드는 비율. 안쪽이 닫혀 가는 정도에 따라 이 값에서 0으로 줄어든다. */
 const NESTED_SCALE_STEP = 0.05;
 
 /**
@@ -137,12 +138,38 @@ const HANDOFF_SLOP = 6;
  */
 export const SheetBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   function SheetBody({ className, ...props }, ref) {
+    const inner = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => inner.current as HTMLDivElement);
+    // 넘칠 때만 키보드로 닿는 자리(tab stop)를 만든다. 스크롤하는 영역은 안에 누를 것이 없으면 키보드로 스크롤할 수 없다.
+    const [scrollable, setScrollable] = useState(false);
+    useEffect(() => {
+      const element = inner.current;
+      if (!element) return;
+      const check = () => {
+        setScrollable(element.scrollHeight > element.clientHeight + 1);
+      };
+      check();
+      const observer = new ResizeObserver(check);
+      observer.observe(element);
+      Array.from(element.children).forEach((child) => {
+        observer.observe(child);
+      });
+      return () => {
+        observer.disconnect();
+      };
+    }, []);
+
     return (
       <div
-        ref={ref}
+        ref={inner}
         data-sheet-body=""
+        // 이름(`aria-label`)을 주면 영역(region)으로 읽힌다. 포커스 링은 안쪽에 그려 스크롤 영역에 잘리지 않게 한다.
+        role={props['aria-label'] ? 'region' : undefined}
+        tabIndex={scrollable ? 0 : undefined}
         className={cn(
-          '-mx-6 min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-6 select-text group-data-[expanded=false]/sheet:touch-none group-data-[expanded=false]/sheet:overflow-hidden',
+          // 핀치 확대는 막지 않는다(`touch-pinch-zoom`). 가장 큰 높이가 아닌 스냅에서는 본문이 스크롤하지 않고 끌어서 높이를 바꾸므로
+          // 세로 스크롤 제스처도 끈다.
+          'focus-visible:ring-ring -mx-6 min-h-0 flex-1 touch-pan-y touch-pinch-zoom overflow-y-auto overscroll-contain px-6 select-text group-data-[expanded=false]/sheet:[touch-action:pinch-zoom] group-data-[expanded=false]/sheet:overflow-hidden focus-visible:ring-2 focus-visible:outline-hidden focus-visible:ring-inset',
           className,
         )}
         {...props}
@@ -207,6 +234,8 @@ export const SheetContent = forwardRef<
   const snaps =
     draggable && snapPoints && snapPoints.length > 0 ? [...snapPoints].sort((a, b) => a - b) : null;
   const [snapIndex, setSnapIndex] = useState(defaultSnapIndex);
+  // 이번 누름에서 끌기가 일어났는지. 핸들을 끌었다 놓을 때 이어서 오는 클릭이 높이를 또 바꾸지 않게 한다.
+  const dragged = useRef(false);
   const activeSnap = snaps ? Math.min(Math.max(snapIndex, 0), snaps.length - 1) : 0;
   const expanded = !snaps || activeSnap === snaps.length - 1;
   // 시트 높이와 각 높이에서 아래로 내려가 있는 거리(px). 열려 있을 때만 쓰므로 창 높이를 바로 읽는다.
@@ -215,7 +244,7 @@ export const SheetContent = forwardRef<
   const offsetOf = (index: number) =>
     snaps ? sheetHeight - Math.round((snaps[index] ?? 1) * viewport) : 0;
 
-  // 이 시트 안에서 열려 있는 안쪽 시트의 수. 있으면 이 시트가 뒤로 물러난다.
+  // 이 시트를 감싼 바깥 시트(있으면)의 등록 통로. 안쪽 시트의 배경 짙기를 바깥 시트에 알리는 데 쓴다.
   const parent = useContext(NestedSheetContext);
   // 안쪽 시트들의 "열린 정도". 합이 클수록 이 시트가 더 작아진다. 값이 바뀔 때마다 이 시트의 크기를 다시 계산한다(렌더 없이).
   const nestedScale = useMotionValue(1);
@@ -369,7 +398,7 @@ export const SheetContent = forwardRef<
       // 높이가 바뀌면 `animate`의 `y`가 새 높이로 옮긴다. 같은 높이로 돌아올 때는 값이 안 바뀌어 직접 되돌린다.
       if (target === activeSnap) {
         if (reduceMotion) y.set(offsetOf(target));
-        else void animate(y, offsetOf(target), { type: 'spring', stiffness: 420, damping: 38 });
+        else void animate(y, offsetOf(target), SPRING.sheet);
       }
       const point = snaps[target];
       if (point !== undefined && target !== activeSnap) onSnapPointChange?.(point);
@@ -382,7 +411,7 @@ export const SheetContent = forwardRef<
       return;
     }
     if (reduceMotion) y.set(0);
-    else void animate(y, 0, { type: 'spring', stiffness: 420, damping: 38 });
+    else void animate(y, 0, SPRING.sheet);
   }
 
   return (
@@ -398,7 +427,7 @@ export const SheetContent = forwardRef<
               exit={
                 reduceMotion ? undefined : { opacity: 0, transition: { duration: EXIT_SECONDS } }
               }
-              transition={{ duration: DURATION.base }}
+              transition={{ duration: DURATION.base, ease: EASE.outExpo }}
             >
               <motion.div
                 className={cn('absolute inset-0', parent ? 'bg-overlay/50' : 'bg-overlay')}
@@ -416,11 +445,17 @@ export const SheetContent = forwardRef<
               // 끌 수 있으면 시트는 스크롤하지 않고 `SheetBody`가 스크롤한다. `touch-none`은 끌기 영역에서 브라우저가 세로 제스처를
               // 스크롤로 가져가지 못하게 한다(`SheetBody`는 자기 스크롤이라 `touch-pan-y`로 되돌린다).
               className={cn(
-                'group/sheet data-[nested=true]:border-muted-foreground/80',
+                'group/sheet data-[nested=true]:border-muted-foreground dark:data-[nested=true]:border-muted-foreground/80',
                 baseClasses,
                 classes,
                 // 끌 때 제목 같은 글자가 선택되지 않게 한다(본문은 `SheetBody`가 선택을 되살린다).
-                draggable ? 'touch-none overflow-hidden select-none' : 'overflow-y-auto',
+                draggable
+                  ? [
+                      // 핀치 확대는 막지 않는다. 시트가 직접 스크롤할 수 있어야 `SheetBody` 밖의 긴 내용이 잘려 닿지 못하는 일이 없다(스냅 높이가 있을 때는 아래로 내려가 있는 부분을 자르기만 한다).
+                      'touch-pinch-zoom select-none',
+                      snaps ? 'overflow-clip' : 'overflow-y-auto overscroll-contain',
+                    ]
+                  : 'overflow-y-auto',
                 className,
               )}
               style={{
@@ -468,22 +503,56 @@ export const SheetContent = forwardRef<
                         bodyDown.current = event.nativeEvent;
                         return;
                       }
-                      if (target.closest(DRAG_IGNORE)) return;
+                      // 핸들은 버튼이지만 누르면서 끌 수 있어야 한다(눌러서 떼기만 하면 `onClick`이 높이를 바꾼다).
+                      if (target.closest(DRAG_IGNORE) && !target.closest('[data-sheet-handle]'))
+                        return;
+                      dragged.current = false;
                       dragControls.start(event);
                     }
                   : undefined
               }
+              onDragStart={() => {
+                dragged.current = true;
+              }}
+              // 스냅 높이가 있는데 가려진 아래쪽 내용으로 키보드 포커스가 오면 가장 큰 높이로 펼친다. 가려진 채 포커스가 있으면 보이지 않는 곳에서 입력하게 된다.
+              onFocusCapture={(event) => {
+                if (!snaps || expanded) return;
+                if ((event.target as HTMLElement).closest('[data-sheet-body]')) {
+                  setSnapIndex(snaps.length - 1);
+                  const point = snaps[snaps.length - 1];
+                  if (point !== undefined) onSnapPointChange?.(point);
+                }
+              }}
               onDragEnd={(_, info) => {
                 handleDragEnd(info.velocity.y);
               }}
             >
               {draggable ? (
-                <div
-                  aria-hidden
-                  className="-mx-6 -mt-6 flex cursor-grab justify-center py-3 active:cursor-grabbing"
-                >
-                  <span className="bg-muted-foreground/50 h-1 w-10 rounded-full" />
-                </div>
+                snaps ? (
+                  // 높이를 고를 수 있으면 끌기 말고도 키보드와 클릭으로 바꿀 수 있어야 한다: 누를 때마다 다음 높이로, 가장 큰 높이에서는 가장 작은 높이로 간다.
+                  <button
+                    type="button"
+                    data-sheet-handle=""
+                    aria-label="시트 높이 바꾸기"
+                    onClick={() => {
+                      if (dragged.current) return;
+                      const next = (activeSnap + 1) % snaps.length;
+                      setSnapIndex(next);
+                      const point = snaps[next];
+                      if (point !== undefined) onSnapPointChange?.(point);
+                    }}
+                    className="focus-visible:ring-ring -mx-6 -mt-6 flex w-[calc(100%+3rem)] cursor-grab justify-center rounded-t-[inherit] py-3 focus-visible:ring-2 focus-visible:outline-hidden focus-visible:ring-inset active:cursor-grabbing"
+                  >
+                    <span className="bg-muted-foreground h-1 w-10 rounded-full forced-colors:bg-[ButtonText]" />
+                  </button>
+                ) : (
+                  <div
+                    aria-hidden
+                    className="-mx-6 -mt-6 flex cursor-grab justify-center py-3 active:cursor-grabbing"
+                  >
+                    <span className="bg-muted-foreground h-1 w-10 rounded-full forced-colors:bg-[ButtonText]" />
+                  </div>
+                )
               ) : null}
               <NestedRegistrar openness={backdrop} />
               <NestedSheetContext.Provider value={nestedContext}>

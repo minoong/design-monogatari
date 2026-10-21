@@ -250,7 +250,7 @@ export function VehicleStage({
         {notice}
         {inside && !showFallback ? (
           // 무대 안에 겹쳐 둔다. 캡션 줄에 넣으면 나타날 때마다 무대 높이가 바뀐다.
-          <p className="bg-background/80 text-foreground text-caption split:max-w-[calc(100%-1.5rem)] absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
+          <p className="bg-background/85 text-foreground text-caption split:max-w-[calc(100%-1.5rem)] absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
             {INSIDE_VIEW_NOTE}
           </p>
         ) : null}
@@ -287,7 +287,7 @@ export function VehicleStage({
         {/* 좁은 화면에서만. 패널을 내려 줄어든 차량 영역을 직접 키우거나 되돌린다. 키우면 패널을 내려도 줄어들지 않는다. */}
         {!showFallback ? (
           <Button
-            aria-label={large ? '차량 영역 줄이기' : '차량 영역 키우기'}
+            aria-label="차량 영역 키우기"
             aria-pressed={large}
             className="split:hidden absolute top-2 right-2 z-10"
             icon
@@ -300,7 +300,7 @@ export function VehicleStage({
         ) : null}
       </div>
       {!showFallback ? (
-        <div className="split:p-0 flex scrollbar-none items-center gap-2 overflow-x-auto px-4 py-2 lg:flex-wrap lg:justify-between lg:overflow-visible">
+        <div className="split:p-0 flex scroll-px-4 scrollbar-none items-center gap-2 overflow-x-auto px-4 py-2 lg:flex-wrap lg:justify-between lg:overflow-visible">
           <div className="flex shrink-0 gap-2 lg:flex-wrap">
             <div
               aria-label={CAMERA_CONTROL_LABELS.viewGroup}
@@ -338,10 +338,10 @@ export function VehicleStage({
             ) : null}
           </div>
           <div className="flex shrink-0 gap-2 lg:flex-wrap">
-            {/* 회전과 확대는 좁은 화면(터치)에서 끌기와 두 손가락 벌리기로 하므로 숨기고, 처음 시점으로 돌리는 버튼만 둔다. */}
+            {/* 끌기와 두 손가락 벌리기만으로는 손가락 하나로 할 수 없는 사람이 쓸 수 없으므로, 좁은 화면에서도 버튼을 둔다(옆으로 밀어서 닿는다). */}
             <div
               aria-label={CAMERA_CONTROL_LABELS.rotateGroup}
-              className="hidden gap-2 lg:flex lg:flex-wrap"
+              className="flex gap-2 lg:flex-wrap"
               role="group"
             >
               {(
@@ -367,7 +367,6 @@ export function VehicleStage({
             </div>
             <Button
               aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomIn}`}
-              className="hidden lg:inline-flex"
               disabled={!ready || inside}
               size="small"
               variant="secondary"
@@ -378,7 +377,6 @@ export function VehicleStage({
             </Button>
             <Button
               aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomOut}`}
-              className="hidden lg:inline-flex"
               disabled={!ready || inside}
               size="small"
               variant="secondary"

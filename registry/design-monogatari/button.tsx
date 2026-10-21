@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 import { SPRING } from '@/lib/motion';
 
 export const buttonVariants = cva(
-  'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-none select-none focus-visible:ring-2 disabled:pointer-events-none **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
+  'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-hidden select-none focus-visible:ring-2 disabled:pointer-events-none **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
   {
     variants: {
       variant: {
