@@ -218,12 +218,6 @@ export function ResultStep({
           label="견적 링크 복사"
           value={shareUrl}
           variant="primary"
-          onCopy={() => {
-            toast({
-              title: '링크를 복사했습니다',
-              description: '붙여 넣으면 같은 견적을 다시 열 수 있습니다.',
-            });
-          }}
           onCopyError={() => {
             toast({
               title: '링크를 복사하지 못했습니다',
@@ -244,6 +238,7 @@ export function ResultStep({
         </Button>
         <Button
           className="w-full"
+          aria-describedby={captureImage ? undefined : `${regionId}-capture-hint`}
           disabled={!captureImage}
           variant="secondary"
           onClick={() => {
@@ -265,6 +260,14 @@ export function ResultStep({
           처음부터 다시 견적
         </Button>
       </div>
+      {captureImage ? null : (
+        <p
+          id={`${regionId}-capture-hint`}
+          className="text-muted-foreground text-caption -mt-6 print:hidden"
+        >
+          차량 모델을 불러오는 중이거나 이 기기에서 3D를 쓸 수 없어 이미지를 저장할 수 없습니다.
+        </p>
+      )}
 
       <Notice className="print:break-inside-avoid" role="note">
         <NoticeTitle>안내</NoticeTitle>

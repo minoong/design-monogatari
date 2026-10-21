@@ -20,22 +20,19 @@ export type TextRollProps = Omit<ComponentProps<'span'>, 'children'> & {
 const TRANSITION = { duration: DURATION.base, ease: EASE.outExpo };
 
 /** `custom`은 방향(위 1, 아래 -1)이다. 나가는 글자는 AnimatePresence의 `custom`으로 바뀐 방향을 받는다. */
-function variantsFor(reduce: boolean | null): Variants {
-  if (reduce) {
-    // 감소 모션: 이동 없이 짧게 바꾼다.
-    return {
-      below: { opacity: 0 },
-      in: { opacity: 1, transition: { duration: DURATION.instant } },
-      out: { opacity: 0, transition: { duration: DURATION.instant } },
-    };
-  }
-  // 들어오는 글자와 나가는 글자가 같은 거리(한 덩어리의 높이)를 같은 시간과 곡선으로 움직여서, 새 글자가 이전 글자 바로 뒤에 붙는다.
-  return {
-    below: (direction: number = 1) => ({ y: `${direction * 100}%` }),
-    in: { y: 0, transition: TRANSITION },
-    out: (direction: number = 1) => ({ y: `${direction * -100}%`, transition: TRANSITION }),
-  };
-}
+// 들어오는 글자와 나가는 글자가 같은 거리(한 덩어리의 높이)를 같은 시간과 곡선으로 움직여서, 새 글자가 이전 글자 바로 뒤에 붙는다.
+const ROLL_VARIANTS: Variants = {
+  below: (direction: number = 1) => ({ y: `${direction * 100}%` }),
+  in: { y: 0, transition: TRANSITION },
+  out: (direction: number = 1) => ({ y: `${direction * -100}%`, transition: TRANSITION }),
+};
+
+/** 감소 모션: 이동 없이 짧게 바꾼다. */
+const REDUCED_VARIANTS: Variants = {
+  below: { opacity: 0 },
+  in: { opacity: 1, transition: { duration: DURATION.instant } },
+  out: { opacity: 0, transition: { duration: DURATION.instant } },
+};
 
 /**
  * 글자가 바뀔 때 이전 글자가 한 덩어리로 밀려 나가고 새 글자가 바로 뒤에서 따라 들어옵니다. 단계 제목처럼 한 자리에서
@@ -64,7 +61,7 @@ export function TextRoll({ children, direction = 'up', className, ...props }: Te
           initial="below"
           animate="in"
           exit="out"
-          variants={variantsFor(reduce)}
+          variants={reduce ? REDUCED_VARIANTS : ROLL_VARIANTS}
         >
           {children}
         </motion.span>

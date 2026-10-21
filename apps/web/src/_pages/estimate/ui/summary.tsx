@@ -2,7 +2,7 @@
 
 import { Button } from '@repo/ui/button';
 import { PriceBreakdown, PriceRow } from '@repo/ui/price-bar';
-import type { Dispatch } from 'react';
+import { type Dispatch, useId } from 'react';
 
 import { describeEffect } from '../model/describe';
 import type { Quote } from '../model/quote';
@@ -27,11 +27,12 @@ export function SummaryList({
   /** 인쇄용: "변경" 버튼을 그리지 않는다. */
   readOnly?: boolean;
 }) {
+  const autoChangesId = useId();
   return (
     <>
       {autoChanges.length > 0 && !readOnly ? (
-        <section aria-labelledby="auto-changes-title" className="mb-4">
-          <h3 id="auto-changes-title" className="text-sm font-semibold">
+        <section aria-labelledby={autoChangesId} className="mb-4">
+          <h3 id={autoChangesId} className="text-sm font-semibold">
             자동으로 바뀐 항목
           </h3>
           <ul className="text-muted-foreground text-caption mt-1 flex list-disc flex-col gap-1 pl-5">

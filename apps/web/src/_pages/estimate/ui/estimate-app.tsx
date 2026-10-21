@@ -256,7 +256,7 @@ export function EstimateApp({
           >
             <div
               ref={scrollRef}
-              className="tiny:overflow-visible relative flex min-h-0 flex-1 scrollbar-gutter-stable flex-col overflow-y-auto overscroll-contain print:overflow-visible"
+              className="tiny:overflow-visible relative flex min-h-0 flex-1 scroll-pb-28 scrollbar-gutter-stable flex-col overflow-y-auto overscroll-contain print:overflow-visible"
               onScroll={handleScroll}
             >
               <div className="flex-1 p-4 lg:p-8 print:p-0">
@@ -266,7 +266,7 @@ export function EstimateApp({
                       id="step-title"
                       ref={headingRef}
                       tabIndex={-1}
-                      className="text-title font-semibold tracking-tight outline-none"
+                      className="text-title focus-visible:ring-ring rounded-sm font-semibold tracking-tight outline-hidden focus-visible:ring-2"
                     >
                       <span className="sr-only">{stepIndex + 1}단계: </span>
                       <TextRoll direction={titleRoll.direction}>{currentLabel}</TextRoll>

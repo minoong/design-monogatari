@@ -182,7 +182,7 @@
           "primary-foreground": "#ffffff",
           "primary-on-dark": "#8ab5ff",
           "secondary-hover": "#1f1f22",
-          "ring": "#2356d6",
+          "ring": "#3b6ee6",
           "overlay": "rgb(0 0 0 / 64%)",
           "card": "#121315",
           "dimmer": "#000000",

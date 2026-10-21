@@ -72,7 +72,7 @@ export function Stepper({ value, className, children, ...props }: StepperProps) 
         <ol
           ref={listRef}
           role="list"
-          className="scrollbar-none relative m-0 flex scroll-px-2 list-none gap-1 overflow-x-auto p-1 [counter-reset:step] in-data-[edge=end]:mask-[linear-gradient(to_right,transparent,#000_2rem)] in-data-[edge=middle]:mask-[linear-gradient(to_right,transparent,#000_2rem,#000_calc(100%-2rem),transparent)] in-data-[edge=start]:mask-[linear-gradient(to_right,#000_calc(100%-2rem),transparent)] [&::-webkit-scrollbar]:hidden"
+          className="scrollbar-none relative m-0 flex scroll-px-2 list-none gap-1 overflow-x-auto p-1 [counter-reset:step] in-data-[edge=end]:mask-[linear-gradient(to_right,transparent,black_2rem)] in-data-[edge=middle]:mask-[linear-gradient(to_right,transparent,black_2rem,black_calc(100%-2rem),transparent)] in-data-[edge=start]:mask-[linear-gradient(to_right,black_calc(100%-2rem),transparent)] [&::-webkit-scrollbar]:hidden"
         >
           {children}
         </ol>
