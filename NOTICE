@@ -26,3 +26,33 @@
 ## 글꼴 — `apps/web/src/_app/fonts/`
 
 - Geist (Vercel). 각 글꼴 파일과 함께 배포되는 라이선스를 따릅니다(SIL Open Font License 1.1).
+
+## 움직이는 아이콘 — `packages/ui/src/icons/` 와 `registry/design-monogatari/icons/`
+
+- **원본**: [lucide-animated](https://lucide-animated.com) (pqoqubbw, <https://github.com/pqoqubbw/icons>)의 아이콘을 이 저장소의 방식(`IconFrame` + `useAnimatedIcon`)으로 옮겼습니다. 옮긴 아이콘: arrow-down, arrow-left, arrow-right, arrow-up, check, chevron-down, download, heart, maximize, minimize, moon, plus, receipt-text, rotate-ccw, sun, x. printer와 triangle-alert는 같은 방식으로 직접 만들었습니다.
+- **수정 사항**: 변형 이름과 움직임 제어를 이 저장소의 훅으로 바꾸고, 감소 모션 설정을 따르게 했으며, 장식용(`aria-hidden`)으로 감쌌고, 일부(check, x)에는 선 굵기 속성을 더했습니다. 각 파일 맨 위 주석에 출처를 적었습니다.
+- **라이선스**: MIT. 레지스트리로 배포되는 복사본(`icon-check`, `icon-x` 등)에도 같은 주석이 들어 있으며, 전문은 아래와 같습니다.
+
+```
+MIT License
+
+Copyright (c) 2024-2026 pqoqubbw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

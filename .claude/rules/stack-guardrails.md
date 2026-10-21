@@ -6,7 +6,7 @@
 - React **19** + TypeScript
 - Monorepo: **Turborepo** + workspace packages
 - Styling: **Tailwind CSS v4** (active — `@repo/ui/styles.css`, `@source` monorepo)
-- UI motion: **Motion** (`motion/react`, active)
+- UI motion: **Motion** (`motion/react-client` for components, `motion/react` for hooks and `AnimatePresence`)
 - Scroll/timeline animation: **GSAP** (+ ScrollTrigger)
 - Component docs: **Storybook** (active)
 - 3D vehicle: **Three.js** + `@react-three/fiber`, dependencies of `@repo/vehicle-3d` only (not `@repo/ui`, not apps directly)

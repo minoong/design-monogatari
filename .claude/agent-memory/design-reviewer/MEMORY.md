@@ -1,3 +1,8 @@
 - Animated icons are wrapped in an IconFrame span, so any parent CSS selector targeting a direct child `svg` (e.g. `[&>svg]`) silently stops matching. Check package-row.tsx style selectors after swapping plain svgs for `./icons/*`.
-- Button.withIconHover clones `isHovered` onto direct (non-DOM) children, overriding an explicit `isHovered` prop (copy-button iconOnly branch).
+- Button.withIconHover clones `isHovered` onto direct (non-DOM) children, overriding an explicit `isHovered` prop (copy-button iconOnly branch; now wrapped in `span.contents` on purpose).
 - Button size classes force `svg` size by CSS (`[&_svg:not([class*="size-"])]:size-4/5/6`), so the icon `size` attribute only matters for small/medium.
+- DESIGN.md prose drifts after feature work: Sheet "shared DialogOverlay" (code uses DialogPrimitive.Overlay), PackageRow "chevron is the only animation" (also select-pop + check draw), Storybook 3D controls list omits rotate arrows / 이미지 저장. Re-diff DESIGN sections against code each review.
+- Ad-hoc motion numbers recur: sheet.tsx springs 420/38 twice instead of a `SPRING` token; overlay fades in Sheet lack the Dialog `EASE.outExpo`.
+- Floating-chip alpha varies by file (`bg-background/80`, `/85`, `/95`) across vehicle-stage, stage-notice, inspect-stage.
+- registry:sync only checks leftover relative imports, not `registryDependencies` completeness; icon-button registry item lists unused deps (cn, theme, cva). registry.json descriptions are hand-written and go stale (text-roll "rolls upward").
+- Stepper/Button import `motion` from `motion/react`; Sheet/Dialog/TextRoll/Toast use `motion/react-client` (CLAUDE.md prefers the latter).

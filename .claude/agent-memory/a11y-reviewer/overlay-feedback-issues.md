@@ -11,4 +11,6 @@ metadata:
 - aria-live on a container with buttons announces button names too (noisy); mirror title+description in an sr-only live region instead.
 - `list-none` ol needs `role="list"` (also seen in Stepper).
 - role=status inserted with content on mount is not reliably announced; docs overclaim "나중에 나타날 때 읽힙니다".
+- Sheet (handle default true): panel is `touch-none overflow-hidden`, so long content outside SheetBody is clipped with no wheel/touch scroll; touch-none/touch-pan-y also block pinch-zoom (use touch-pinch-zoom); snap heights: only drag changes height, focus into clipped/off-screen part is not auto-expanded; SheetBody has no tabindex/ring (Safari cannot keyboard-scroll text-only body); handle bg-muted-foreground/50 is ~2:1 light.
+- Live status inserted while a Radix modal is exiting is lost (aria-hidden others stays until unmount): StageNotice after accept-suggestion / blocked-dialog alt-trim.
 - Tables with table-fixed inside overflow-hidden wrappers clip long unbroken text instead of scrolling; add wrap-break-word to th too.

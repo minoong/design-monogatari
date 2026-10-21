@@ -25,4 +25,6 @@ metadata:
 - Dark `bg-primary` (#003cff) on `bg-muted` (#121315) is ~2.7:1 (<3:1 non-text); light/dark `bg-muted` tracks are ~1.1:1 vs background and vanish in forced-colors (Progress). Add forced-colors:bg-[Highlight]/border.
 - Live regions whose text stays the same on a repeat action (CopyButton copied twice in 2s) announce nothing; key the child. `role=status aria-busy=true` on a never-completing loader group (SkeletonGroup) can suppress its own sr-only label.
 - Fragment-returned sr-only sibling next to a Button breaks `space-x-*`, `divide-*`, `:last-child` radius in groups (gap is fine since sr-only is absolute).
+- Button `loading` wraps label in `invisible` (visibility:hidden) so the accessible name is empty while loading unless aria-label; Button base uses `outline-none` so ring (box-shadow) vanishes in forced-colors.
+- Estimate panel scroll container and sticky PriceBar have no scroll-padding-bottom (2.4.11); toggle buttons that swap aria-label AND use aria-pressed (vehicle-stage maximize) double-encode state.
 - Motion `whileInView` with `amount: 0.2` never fires for elements taller than 5x viewport; initial opacity 0 is in SSR HTML (invisible without JS/print).
