@@ -6,13 +6,13 @@ paths:
 
 # Animation
 
-| Use case                                    | Tool                                           | Skill                                       |
-| ------------------------------------------- | ---------------------------------------------- | ------------------------------------------- |
-| Hover, enter/exit, layout UI motion         | Motion (`motion/react`, active)                | `motion-react`, `fixing-motion-performance` |
-| Scroll-linked, pin, scrub, complex timeline | GSAP + ScrollTrigger                           | `gsap-scrolltrigger`, `gsap-timeline`       |
-| React integration                           | GSAP in components                             | `gsap-react`                                |
-| Performance                                 | transforms, avoid layout thrash                | `gsap-performance`                          |
-| 3D vehicle (rotate, zoom, paint)            | Three `OrbitControls`, no page-scroll coupling | `packages/vehicle-3d/AGENTS.md`             |
+| Use case                                    | Tool                                                                                          | Skill                                       |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Hover, enter/exit, layout UI motion         | Motion (`motion/react-client` for components, `motion/react` for hooks and `AnimatePresence`) | `motion-react`, `fixing-motion-performance` |
+| Scroll-linked, pin, scrub, complex timeline | GSAP + ScrollTrigger                                                                          | `gsap-scrolltrigger`, `gsap-timeline`       |
+| React integration                           | GSAP in components                                                                            | `gsap-react`                                |
+| Performance                                 | transforms, avoid layout thrash                                                               | `gsap-performance`                          |
+| 3D vehicle (rotate, zoom, paint)            | Three `OrbitControls`, no page-scroll coupling                                                | `packages/vehicle-3d/AGENTS.md`             |
 
 ## Motion budget
 

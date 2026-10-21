@@ -12,4 +12,6 @@ metadata:
 - Storybook overlay panels use `bg-background/55` + text-muted-foreground over the scene: contrast not guaranteed.
 - OptionRow keeps unavailable radios enabled with aria-disabled; arrowing onto one fires onChange (dialog) - check each time.
 
+- Rotate/zoom buttons are `hidden lg:flex` (display:none): narrow viewport incl. 200-400% zoom on desktop loses them; gate on pointer:coarse, not width. Save-image button disabled gives no reason.
+
 Resolved (chore/review-3d-controls): rotate buttons (rotateBy) are the non-drag alternative; the sr-only role=status is always mounted and says the current view; "처음 시점" has no aria-label; arrow-key navigation over unavailable option rows no longer opens the dialog (only Space/click does); the Storybook overlay panel is bg-background/95; pressed+focus-visible on a secondary Button gets a ring with an offset. Still open: Button disabled uses opacity (DS-wide); focus after closing the wizard dialog goes to the step heading, not the row.

@@ -51,7 +51,7 @@ turbo run lint check-types build --filter=@repo/ui --filter=web --filter=docs
 - build: pass/fail
 ```
 
-## PR 전 (사용자 요청 시)
+## PR 전
 
 - `.agents/skills/git-commit/SKILL.md` — 한글 Conventional Commit
 - PR test plan에 `pnpm verify` 체크박스 포함
@@ -59,4 +59,4 @@ turbo run lint check-types build --filter=@repo/ui --filter=web --filter=docs
 ## 금지
 
 - 검증 없이 "완료" 선언
-- 사용자 요청 없이 commit / push / PR
+- 검증 없이 commit / push / PR. `main`에 직접 push, force push, 브랜치 삭제는 사용자가 요청할 때만

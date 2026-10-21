@@ -6,11 +6,12 @@
  * @see https://code.claude.com/docs/ko/hooks
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { env, stdin } from 'node:process';
 
 import { logEvent, repoRelative } from './lib/log.mjs';
+import { writeStateAtomically } from './lib/write-state.mjs';
 
 const STATE_DIR = join(env.CLAUDE_PROJECT_DIR || process.cwd(), '.claude/hooks/state');
 const STATE_PATH = join(STATE_DIR, 'ui-verify.json');
@@ -59,7 +60,7 @@ function loadState() {
 
 function saveState(state) {
   mkdirSync(STATE_DIR, { recursive: true });
-  writeFileSync(
+  writeStateAtomically(
     STATE_PATH,
     `${JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2)}\n`,
   );
@@ -137,7 +138,7 @@ function followupMessage(state) {
     missing.push('`pnpm verify`');
   }
   return [
-    `UI changed (${files}) but definition of done is incomplete. Do not ask the user. Do not commit.`,
+    `UI changed (${files}) but definition of done is incomplete. Do not ask the user. Do not commit or open a PR before it is done.`,
     `Still needed: ${missing.join(' then ')}.`,
     'Then report pass/fail and stop. Subagent: `.claude/agents/ui-verifier.md`. Skill: `verify`.',
   ].join(' ');
@@ -180,7 +181,7 @@ function handlePostToolUse(input) {
       saveState(next);
       logEvent(input, { ...snapshot, decision: 'nudge', reason: 'ui_edit_first' });
       return postToolUseContext(
-        'UI file edited. Do not ask the user. Before finishing: delegate to the ui-verifier subagent (Playwright Storybook html.light and html.dark), then pnpm verify. Do not commit unless asked.',
+        'UI file edited. Do not ask the user. Before finishing: delegate to the ui-verifier subagent (Playwright Storybook html.light and html.dark), then pnpm verify. Commit and open the PR only after both pass (one PR at a time).',
       );
     }
     saveState(next);

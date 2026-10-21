@@ -62,3 +62,4 @@ packages/ui/.storybook/public/models/carla/
 # Misc
 .DS_Store
 *.pem
+.claude/agent-memory-local/

@@ -11,7 +11,7 @@ Project-specific notes for **design-monogatari**. Deep knowledge lives in `.agen
 | React             | 19                                             | active |
 | Design system     | `@repo/ui` (JIT)                               | active |
 | Styling           | Tailwind CSS v4                                | active |
-| UI motion         | Framer Motion                                  | active |
+| UI motion         | Motion (`motion`)                              | active |
 | Scroll animation  | GSAP + ScrollTrigger                           | active |
 | 3D vehicle        | Three.js + R3F (`@repo/vehicle-3d`)            | active |
 | Docs              | Storybook (`@repo/ui`), Fumadocs (`apps/docs`) | active |
@@ -23,16 +23,16 @@ Alternative libraries require **AskUserQuestion** + user approval (see `.claude/
 
 ## Claude Code context ([docs](https://code.claude.com/docs/ko/memory))
 
-| Layer      | Location                                   | Role                                                                                                      |
-| ---------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| CLAUDE.md  | repo root + `apps/web`, `packages/ui`      | Project instructions. Nested files import their folder's `AGENTS.md`                                      |
-| Rules      | `.claude/rules/*.md`                       | Always-on, or scoped with `paths:` frontmatter                                                            |
-| Agent loop | `.claude/rules/agent-loop.md`              | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                    |
-| Hooks      | `.claude/settings.json` → `.claude/hooks/` | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop), docs-consult (PreToolUse nudge) |
-| Skills     | `.agents/skills/`                          | Deep workflows. `.claude/skills/<name>` are symlinks to them                                              |
-| Subagents  | `.claude/agents/`                          | Isolated verify (`ui-verifier`)                                                                           |
-| MCP        | `.mcp.json`                                | `lucide-animated`, `storybook` (needs the dev server). Playwright is defined inline in `ui-verifier` only |
-| Commands   | _(none)_                                   | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                                                   |
+| Layer      | Location                                                                  | Role                                                                                                              |
+| ---------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| CLAUDE.md  | repo root + `apps/web`, `apps/docs`, `packages/ui`, `packages/vehicle-3d` | Project instructions. Nested files import their folder's `AGENTS.md`                                              |
+| Rules      | `.claude/rules/*.md`                                                      | Always-on, or scoped with `paths:` frontmatter                                                                    |
+| Agent loop | `.claude/rules/agent-loop.md`                                             | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                            |
+| Hooks      | `.claude/settings.json` → `.claude/hooks/`                                | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop), docs-consult (PreToolUse nudge)         |
+| Skills     | `.agents/skills/`                                                         | Deep workflows. `.claude/skills/<name>` are symlinks to them                                                      |
+| Subagents  | `.claude/agents/`                                                         | `ui-verifier` (browser checks), `a11y-reviewer` and `design-reviewer` (review), `docs-researcher` (official docs) |
+| MCP        | `.mcp.json`                                                               | `lucide-animated`, `storybook` (needs the dev server). Playwright is defined inline in `ui-verifier` only         |
+| Commands   | _(none)_                                                                  | `/` slash는 사용자가 켜는 것. 자동 루프는 skill + hook.                                                           |
 
 Do not duplicate skill or DESIGN.md content in rules. Point to canonical files (`DESIGN.md`). Project rule: `.claude/rules/design.md`. Do not copy skills into `.claude/skills/` — symlink them from `.agents/skills/`.
 
@@ -145,14 +145,14 @@ Do not wait for the user to ask. After UI / token / Storybook changes:
 
 A `Stop` hook (`.claude/hooks/ui-verify.mjs`) blocks finishing if this is skipped. `PostToolUse` nudges mid-loop. `SubagentStop` holds back a subagent that edited UI and skipped verify.
 
-Do not commit or push unless the user asks.
+After verification the agent commits, pushes and opens the PR itself (one PR at a time; see Git workflow). Never push to `main`, force-push or delete branches unasked.
 
 ## Git workflow
 
 - Skill: `.agents/skills/git-commit/SKILL.md`
 - **작업 전**: feature branch from `main` (`feat/`, `fix/`, `chore/` …). Default branch is **`main`**, not `master`.
 - **`main`에 직접 커밋하지 않음**
-- **커밋·push·PR**: 사용자 요청 시에만, **한글** Conventional Commits
+- **커밋·push·PR**: 검증이 끝나면 에이전트가 직접 한다(PR은 한 번에 하나). **한글** Conventional Commits. `main` 직접 push·force push·브랜치 삭제는 요청 시에만
 - **PR 머지 후**: 사용자가 머지했다고 알리면 에이전트가 `main` 체크아웃 + `git pull origin main` 실행 (skill §7)
 
 <!-- BEGIN:turborepo-agent-rules -->

@@ -14,11 +14,12 @@
  * @see https://code.claude.com/docs/ko/hooks
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { env, stdin } from 'node:process';
 
 import { hashSession, logEvent, repoRelative } from './lib/log.mjs';
+import { writeStateAtomically } from './lib/write-state.mjs';
 
 const ROOT = env.CLAUDE_PROJECT_DIR || process.cwd();
 const STATE_PATH = join(ROOT, '.claude/hooks/state/docs-consult.json');
@@ -143,7 +144,7 @@ function loadState(session) {
 function saveState(state) {
   try {
     mkdirSync(join(ROOT, '.claude/hooks/state'), { recursive: true });
-    writeFileSync(STATE_PATH, JSON.stringify(state));
+    writeStateAtomically(STATE_PATH, JSON.stringify(state));
   } catch {
     // 상태 저장 실패는 알림에 영향을 주지 않는다
   }

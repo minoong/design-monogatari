@@ -11,22 +11,22 @@ React design system package (Just-in-Time — no `build` script).
 - **Design language**: root `DESIGN.md` — read before UI changes
 - **Design tokens**: `@theme` in `src/styles/globals.css` (keep in sync with DESIGN.md)
 - **Monorepo import**: `@repo/ui/<name>` — **Registry export**: `registry/design-monogatari/` + `registry.json` for `shadcn add` (`bg-background`, `text-foreground`, …)
-- Reference: @packages/ui/src/button.tsx (variants / `asChild`), @packages/ui/src/dialog.tsx (compound)
+- Reference: `packages/ui/src/button.tsx` (variants / `asChild`), `packages/ui/src/dialog.tsx` (compound)
 
 ## Composition patterns
 
 This package is a design system, not FSD. Pick a pattern by API surface, then copy the referenced file. Do not invent a new public API style.
 
-| When                                        | Pattern                                                           | Reference                                              | Do not                                                  |
-| ------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------- |
-| One control, visual variants                | Props + CVA (`variant` / `size` / `radius`)                       | @packages/ui/src/button.tsx                            | Boolean soup (`isPrimary` + `isLarge` + `isPill`)       |
-| Same control, stricter a11y                 | Thin wrapper, named export                                        | @packages/ui/src/icon-button.tsx                       | Guess icon-only from child count                        |
-| Trigger + content + header/footer           | Compound: `Root` + parts, same file, shared context               | @packages/ui/src/dialog.tsx                            | Render props; one mega-component with 12 layout props   |
-| Label + control + error                     | Compound: `Field` + `FieldLabel` + `FieldError`                   | @packages/ui/src/field.tsx                             | Unlabeled inputs; error text without `aria-describedby` |
-| Grouped surface                             | Compound: `Card` + `CardHeader` + `CardTitle` + `CardDescription` | @packages/ui/src/card.tsx                              | Demo link cards with required `href` / UTM              |
-| Render as another element (`<a>`, `<Link>`) | `asChild` + Radix `Slot`                                          | `Button asChild`, Dialog trigger/close                 | `as="a"` unions; `children` as function                 |
-| Form primitive                              | Wrap native or Radix, forward ref                                 | @packages/ui/src/input.tsx, @packages/ui/src/label.tsx | Reimplement labelling without Radix `Label`             |
-| Scroll-linked frame sequence                | Pin + canvas + ScrollTrigger                                      | @packages/ui/src/scroll-image-sequence.tsx             | Motion on the canvas; setState every frame              |
+| When                                        | Pattern                                                           | Reference                                                | Do not                                                  |
+| ------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------- |
+| One control, visual variants                | Props + CVA (`variant` / `size` / `radius`)                       | `packages/ui/src/button.tsx`                             | Boolean soup (`isPrimary` + `isLarge` + `isPill`)       |
+| Same control, stricter a11y                 | Thin wrapper, named export                                        | `packages/ui/src/icon-button.tsx`                        | Guess icon-only from child count                        |
+| Trigger + content + header/footer           | Compound: `Root` + parts, same file, shared context               | `packages/ui/src/dialog.tsx`                             | Render props; one mega-component with 12 layout props   |
+| Label + control + error                     | Compound: `Field` + `FieldLabel` + `FieldError`                   | `packages/ui/src/field.tsx`                              | Unlabeled inputs; error text without `aria-describedby` |
+| Grouped surface                             | Compound: `Card` + `CardHeader` + `CardTitle` + `CardDescription` | `packages/ui/src/card.tsx`                               | Demo link cards with required `href` / UTM              |
+| Render as another element (`<a>`, `<Link>`) | `asChild` + Radix `Slot`                                          | `Button asChild`, Dialog trigger/close                   | `as="a"` unions; `children` as function                 |
+| Form primitive                              | Wrap native or Radix, forward ref                                 | `packages/ui/src/input.tsx`, `packages/ui/src/label.tsx` | Reimplement labelling without Radix `Label`             |
+| Scroll-linked frame sequence                | Pin + canvas + ScrollTrigger                                      | `packages/ui/src/scroll-image-sequence.tsx`              | Motion on the canvas; setState every frame              |
 
 **Compound (Dialog):** `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose` — consumers compose JSX; parts share open state via context. **`DialogTitle` is required** inside `DialogContent`. `DialogContent` already renders overlay — do not add `DialogOverlay` as a sibling.
 

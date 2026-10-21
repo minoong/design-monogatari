@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-`AGENTS.md` (root, `apps/web`, `packages/ui`) holds the agent index and folder notes. Claude Code does not load the root one automatically when this file exists — this file and `.claude/` carry what Claude needs. `apps/web/CLAUDE.md`, `apps/docs/CLAUDE.md` and `packages/ui/CLAUDE.md` each import their folder's `AGENTS.md`.
+`AGENTS.md` (root, `apps/web`, `packages/ui`) holds the agent index and folder notes. Claude Code does not load the root one automatically when this file exists — this file and `.claude/` carry what Claude needs. `apps/web/CLAUDE.md`, `apps/docs/CLAUDE.md`, `packages/ui/CLAUDE.md` and `packages/vehicle-3d/CLAUDE.md` each import their folder's `AGENTS.md`.
 
 ## Commands
 
