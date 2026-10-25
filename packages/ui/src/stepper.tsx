@@ -104,10 +104,10 @@ const ITEM_RADIUS: Record<StepperIndicator, string> = {
   ring: 'rounded-md',
 };
 
-// 알약은 `bg-muted`가 호버 배경(`secondary-hover`)과 라이트에서 같아서 `muted-foreground` 테두리로 호버와 구분한다(Segmented의 알약과 같다). 강제 색상 모드는 배경을 지우므로
+// 알약은 `bg-muted`가 호버 배경(`secondary-hover`)과 라이트에서 같아서 헤어라인 `border-border` 테두리로 호버와 구분한다(Segmented의 알약과 같다). 진한 테두리는 마음에 들지 않아 연하게 두었고, 구분은 파란 번호 배지와 굵은 글자가 더 맡는다. 강제 색상 모드는 배경을 지우므로
 // 알약과 링은 `Highlight` 테두리가 현재 단계를 남기고, 막대는 안쪽 요소가 `Highlight` 배경이 된다.
 const INDICATOR_CLASSES: Record<StepperIndicator, string> = {
-  pill: 'bg-muted border-muted-foreground rounded-pill inset-0 -z-10 border forced-colors:border-[Highlight]',
+  pill: 'bg-muted border-border rounded-pill inset-0 -z-10 border forced-colors:border-[Highlight]',
   underline: 'inset-x-0 -bottom-px h-0.5 px-[inherit]',
   ring: 'border-primary ring-primary inset-0 -z-10 rounded-md border ring-1 forced-colors:border-[Highlight]',
 };

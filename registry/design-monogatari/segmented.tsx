@@ -118,9 +118,10 @@ const ITEM_CLASSES: Record<SegmentedIndicator, string> = {
 };
 
 const INDICATOR_CLASSES: Record<SegmentedIndicator, string> = {
-  // 알약의 채움(`bg-background`)은 트랙과 거의 같은 밝기라 윤곽을 `border-muted-foreground`로 3:1 이상 낸다.
+  // 알약의 채움(`bg-background`)은 트랙과 거의 같은 밝기라 헤어라인 `border-border`로 윤곽을 낸다. 진한 테두리(`muted-foreground`)는 마음에
+  // 들지 않아 연하게 두었다. 대비는 3:1에 못 미치므로(라이트 1.4:1, 다크 1.6:1) 선택은 글자색(4.66→16.83)이 함께 알린다.
   // 강제 색상 모드는 배경을 지우므로 막대는 `Highlight` 배경, 알약과 링은 `Highlight` 테두리로 남긴다.
-  pill: 'bg-background border-muted-foreground rounded-pill border forced-colors:border-[Highlight]',
+  pill: 'bg-background border-border rounded-pill border forced-colors:border-[Highlight]',
   underline: 'bg-primary inset-x-0 -bottom-px top-auto h-0.5 forced-colors:bg-[Highlight]',
   ring: 'border-primary ring-primary rounded-md border ring-1 forced-colors:border-[Highlight]',
 };
