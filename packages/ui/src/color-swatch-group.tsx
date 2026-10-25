@@ -1,9 +1,12 @@
 'use client';
 
-import { type ReactNode, useId, useRef, useState } from 'react';
+import { animate, useMotionValue, useReducedMotion } from 'motion/react';
+import * as motion from 'motion/react-client';
+import { type ReactNode, useId, useLayoutEffect, useRef, useState } from 'react';
 
 import { useCheckPhase } from './lib/check-phase';
 import { cn } from './lib/cn';
+import { SPRING } from './lib/motion';
 
 export type ColorSwatchOption = {
   value: string;
@@ -78,14 +81,7 @@ function ColorSwatch({
         data-phase={phase}
         style={{ backgroundColor: option.color }}
         // 선택되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
-        className="border-border peer-checked:ring-primary dark:peer-checked:ring-primary-on-dark peer-checked:ring-offset-background peer-focus-visible:outline-ring motion-safe:data-[phase=in]:animate-select-pop relative size-9 rounded-full border peer-checked:ring-2 peer-checked:ring-offset-2 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
-      />
-      {/* 해제될 때만 보이는 "선택된 모습"(링 포함). 커지지 않고 바로 줄어들며 사라진다(select-out). */}
-      <span
-        aria-hidden
-        data-phase={phase}
-        style={{ backgroundColor: option.color }}
-        className="border-border ring-primary dark:ring-primary-on-dark ring-offset-background motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute inset-0 rounded-full border opacity-0 ring-2 ring-offset-2"
+        className="border-border peer-focus-visible:outline-ring motion-safe:data-[phase=in]:animate-select-pop relative size-9 rounded-full border peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4"
       />
       {option.unavailableReason ? (
         <span
@@ -125,6 +121,52 @@ export function ColorSwatchGroup({
 }: ColorSwatchGroupProps) {
   const captionId = useId();
   const [previewValue, setPreviewValue] = useState<string | null>(null);
+  // 선택 링은 그룹이 요소 하나로 그리고 선택된 칩의 위치로 옮긴다. 칩마다 링을 만들고 없애면 가려지거나 이동이 생략된다(OptionGroup에서 겪었다).
+  // 기준 상자는 `fieldset`이 아니라 칩들을 담은 `relative` 상자다: `fieldset`의 절대 위치 기준은 `legend` 아래부터라서 어긋난다.
+  const chipsRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const ringX = useMotionValue(0);
+  const ringY = useMotionValue(0);
+  const ringOpacity = useMotionValue(0);
+  const placed = useRef(false);
+  useLayoutEffect(() => {
+    const chips = chipsRef.current;
+    const row = chips?.querySelector<HTMLInputElement>(
+      'input[type="radio"]:checked',
+    )?.parentElement;
+    if (!chips || !row) {
+      // 선택된 칩이 없으면 숨기기만 한다(요소는 지우지 않는다).
+      ringOpacity.set(0);
+      return;
+    }
+    // `offsetLeft`/`offsetTop`은 정수로 반올림돼 소수 배치에서 링이 어긋난다. 칩 상자 기준의 실제 위치 차이를 쓴다.
+    const target = () => {
+      const box = chips.getBoundingClientRect();
+      const at = row.getBoundingClientRect();
+      return { x: at.left - box.left, y: at.top - box.top };
+    };
+    const { x, y } = target();
+    ringOpacity.set(1);
+    if (!placed.current || reduceMotion) {
+      ringX.set(x);
+      ringY.set(y);
+      placed.current = true;
+    } else {
+      void animate(ringX, x, SPRING.settle);
+      void animate(ringY, y, SPRING.settle);
+    }
+    // 칩이 줄바꿈되는 폭이나 글꼴이 바뀌면 애니메이션 없이 따라간다.
+    const observer = new ResizeObserver(() => {
+      const next = target();
+      ringX.set(next.x);
+      ringY.set(next.y);
+    });
+    observer.observe(chips);
+    observer.observe(row);
+    return () => {
+      observer.disconnect();
+    };
+  }, [value, options, reduceMotion, ringX, ringY, ringOpacity]);
   const hasUnavailable = options.some((option) => option.unavailableReason);
   const shown =
     options.find((option) => option.value === (previewValue ?? value)) ??
@@ -133,7 +175,7 @@ export function ColorSwatchGroup({
   return (
     <fieldset className={cn('m-0 min-w-0 border-0 p-0 font-sans', className)}>
       <legend className="text-foreground mb-3 p-0 text-sm font-semibold">{legend}</legend>
-      <div className="flex flex-col gap-4">
+      <div ref={chipsRef} className="relative flex flex-col gap-4">
         {groupOptions(options).map(([group, items], groupIndex) => (
           <div
             key={group}
@@ -164,6 +206,13 @@ export function ColorSwatchGroup({
             </div>
           </div>
         ))}
+        {/* 선택된 칩의 링. 요소는 하나이고 마지막 자식이라 칩들 위에 그려지며, 속이 비어 있어 칩 색을 가리지 않는다. 링 안쪽의 간격(ring-offset)은
+            페이지 배경색이라 칩 가장자리를 2px 띄운다. 강제 색상 모드는 box-shadow를 지우므로 outline으로 남긴다. */}
+        <motion.span
+          aria-hidden
+          className="ring-primary dark:ring-primary-on-dark ring-offset-background pointer-events-none absolute top-0 left-0 size-9 rounded-full ring-2 ring-offset-2 forced-colors:outline-2 forced-colors:outline-offset-2 forced-colors:outline-[Highlight]"
+          style={{ x: ringX, y: ringY, opacity: ringOpacity }}
+        />
       </div>
       <p className="text-caption mt-3 flex min-h-6 flex-wrap items-center gap-x-2">
         {shown ? (
