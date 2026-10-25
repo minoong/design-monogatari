@@ -275,6 +275,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ### PackageRow
 
 - Checkbox row built like OptionRow (native checkbox `sr-only`, decorative box with a check mark, `ring-1 ring-primary` when checked). `items` adds a Radix Accordion trigger ("구성 보기") that expands the included list; the trigger's accessible name includes the package label.
+- Narrow containers: the row wraps instead of squeezing the text. The label has `min-w-48` and the checkbox + text group `min-w-36`, so below about 300px the `구성 보기` trigger drops to its own line and below about 360px the price drops under the text (right-aligned to the label column, so it sits left of the price column of plain `OptionRow`s there). The text column never goes under about 130px. No container queries (inline-size containment would collapse the row's width in shrink-to-fit parents of registry consumers).
 - `includedIn` marks an item that is already checked because another package includes it (muted surface + small tag). It does not disable the checkbox; callers show a confirmation before unpacking the package.
 - The accordion chevron rotates and the included list opens to its measured height (`animate-accordion-down`, 0.28s `ease-out-expo`, height + opacity; closing `animate-accordion-up`, 0.2s) — both off under reduced motion (`motion-safe:`). Radix Presence applies `hidden` only after the close animation ends (the region element itself stays in the DOM, hidden, at height 0). The check box pops and its check draws in on change (see Motion).
 
