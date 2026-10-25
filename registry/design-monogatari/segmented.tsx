@@ -112,9 +112,12 @@ export type SegmentedItemProps = Omit<ComponentProps<'label'>, 'onChange'> & {
 
 const ITEM_CLASSES: Record<SegmentedIndicator, string> = {
   // 알약은 트랙 패딩(4px)이 포커스 아웃라인(2px)과 간격(2px)을 합친 것과 같아 링이 트랙 가장자리에 붙는다. 간격을 없앤다.
-  pill: 'rounded-pill has-[input:focus-visible]:outline-offset-0 h-9 px-4',
-  underline: 'h-11 px-4',
-  ring: 'rounded-md h-9 px-4',
+  // 호버: 고를 수 있는 선택 안 된 항목에만 배경을 깔아, 호버로 글자만 진해져 선택된 항목과 헷갈리는 것을 막는다. 알약은 트랙(`bg-muted`) 위라
+  // 호버 배경(`secondary-hover`)이 보이지 않는다. 선택된 알약(`bg-background`)과 반대로 글자색(`foreground`)을 옅게 깐다: 라이트에서는 트랙보다 살짝 어둡고, 다크에서는 살짝 밝아서 선택된 알약(트랙보다 밝은 흰색/어두운 검정, 테두리 있음)과 갈린다.
+  pill: 'rounded-pill has-[input:focus-visible]:outline-offset-0 has-[input:not(:checked):not(:disabled)]:hover:bg-foreground/8 h-9 px-4',
+  underline:
+    'has-[input:not(:checked):not(:disabled)]:hover:bg-secondary-hover rounded-md h-11 px-4',
+  ring: 'rounded-md has-[input:not(:checked):not(:disabled)]:hover:bg-secondary-hover h-9 px-4',
 };
 
 const INDICATOR_CLASSES: Record<SegmentedIndicator, string> = {
@@ -167,7 +170,8 @@ export function SegmentedItem({
           transition={reduceMotion ? { duration: 0 } : SPRING.settle}
         />
       ) : null}
-      <span className="relative">{children}</span>
+      {/* 글자는 표시(`motion.span`)보다 위에 둔다: 표시가 옆 항목으로 미끄러져 지나갈 때 그 항목의 글자를 가리지 않게 한다. */}
+      <span className="relative z-10">{children}</span>
     </label>
   );
 }
