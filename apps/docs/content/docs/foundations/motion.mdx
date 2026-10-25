@@ -35,6 +35,7 @@ description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, �
 - **선택 반응**: `Radio`, `OptionRow`, `PackageRow`, `ColorSwatchGroup`은 선택되는 순간 표시가 0.6배에서 1.12배를 거쳐 1배로 돌아오고(`animate-select-pop`, 0.32초), 해제되면 커지지 않고 바로 0.6배로 줄어들며 사라집니다(`animate-select-out`, 0.2초). 처음 그려질 때는 움직이지 않습니다. 바뀐 순간은 `useCheckPhase` 훅이 알려 주며, 제어·비제어 모두 동작합니다. `Radio`와 `Checkbox` 단독은 자식을 둘 수 없는 `<input>`이라 `::before`에 그린 선택된 모습이 줄어들며 사라집니다. 입력 자체의 `box-shadow`와 `border`는 애니메이션하지 않습니다. 끝난 뒤에도 값이 유지되어 포커스 링과 오류 표시를 덮어쓰기 때문입니다.
 - **단계 이동**: [`Stepper`](/docs/components/stepper)의 현재 단계 알약이 이전 단계에서 새 단계로 넘치지 않고 미끄러집니다(`SPRING.settle`).
 - **선택 표시 이동**: [`Segmented`](/docs/components/segmented)는 선택 표시(알약, 밑줄, 링)가 이전 항목에서 새 항목으로 넘치지 않고 미끄러집니다(`SPRING.settle`). `snappy`는 이동 거리의 약 4.5%를 넘쳤다 돌아와서 따로 두었습니다.
+- **옵션 선택 테두리**: [`OptionRow`](/docs/components/option-row)는 `OptionGroup` 안에서 선택 테두리가 이전 행에서 새 행으로 넘치지 않고 미끄러집니다(`SPRING.settle`). 선택하는 순간의 작은 튀어 오름(`animate-select-pop`)은 그대로입니다.
 - **시트**: [`Sheet`](/docs/components/sheet)는 투명도 없이 화면 가장자리까지 미끄러져 들어오고 나가며, 뒤 배경의 짙기는 시트의 위치에서 계산합니다(내리는 만큼 옅어집니다). 시트 위에 시트를 또 열면 바깥 시트가 안쪽 시트가 열린 정도에 따라 최대 5%까지 줄어듭니다.
 - **알림 밀어 닫기**: [`Toast`](/docs/components/toast)는 터치와 펜으로 옆으로 밀어 닫을 수 있고, 닫히지 않으면 `SPRING.snappy`로 돌아옵니다. 마우스로는 밀리지 않습니다.
 - **글자 바꾸기**: [`TextRoll`](/docs/components/text-roll)은 이전 글자가 밀려 나가고 새 글자가 같은 거리를 따라 들어옵니다(`DURATION.base`, `EASE.outExpo`).
@@ -45,7 +46,7 @@ description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, �
 ## 규칙
 
 1. **움직임은 상태 변화에 붙입니다.** 선택, 진입, 이동, 로딩입니다. 아무 일도 없을 때 계속 움직이는 장식(배경, 커서 따라다니기)은 쓰지 않습니다.
-2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다. 유일한 예외는 `PackageRow`의 구성 보기 한 곳으로, Radix가 잰 높이(`--radix-accordion-content-height`)까지만 열리는 작은 목록이라 허용했습니다. 다른 곳에 높이 애니메이션이 필요해 보이면 먼저 예외로 둘 만한지 따져 보십시오.
+2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다. 예외는 두 곳입니다. `PackageRow`의 구성 보기는 Radix가 잰 높이(`--radix-accordion-content-height`)까지만 열리는 작은 목록이라 허용했고, `OptionGroup`의 선택 테두리는 절대 위치의 장식이라 높이를 움직여도 다른 요소의 배치가 밀리지 않습니다. 다른 곳에 높이 애니메이션이 필요해 보이면 먼저 예외로 둘 만한지 따져 보십시오.
 3. **화면당 큰 연출은 하나입니다.** `DURATION.hero`와 `SPRING.bouncy`는 한 화면에 한 번만 씁니다.
 4. **감소 모션을 기본으로 지킵니다.** `useReducedMotion()`으로 읽고, 이동은 없애고 짧은 페이드(`DURATION.instant`)만 남깁니다. 설정이 바뀌면 바로 반영되도록 마운트 때 한 번만 읽지 않습니다. CSS 애니메이션은 `motion-safe:`로 감싸서 감소 모션에서는 아예 적용하지 않습니다(`motion-reduce:animate-none`은 `peer-checked:` 같은 변형에 특이도에서 져서 꺼지지 않습니다).
 5. **Motion과 Tailwind `transition-*`을 같은 요소에 쓰지 않습니다.** WebGL 캔버스에는 Motion을 쓰지 않습니다.

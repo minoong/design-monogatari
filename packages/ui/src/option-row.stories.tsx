@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`OptionRow`는 견적처럼 하나만 고르는 옵션 한 줄입니다. 네이티브 라디오라서 같은 `name`끼리 방향키로 이동하고, 이름·설명·선택 불가 이유가 모두 입력에 연결됩니다. `unavailableReason`을 주면 행이 muted 면이 되고 이유가 행 안에 항상 보입니다(호버에 의존하지 않습니다). 이때도 입력은 비활성이 아니라서 눌렀을 때 대안을 안내할 수 있습니다. 완전히 막으려면 `disabled`를 쓰십시오. 묶음은 `OptionGroup`이 `fieldset`과 `legend`로 감쌉니다.',
+          '`OptionRow`는 견적처럼 하나만 고르는 옵션 한 줄입니다. 네이티브 라디오라서 같은 `name`끼리 방향키로 이동하고, 이름·설명·선택 불가 이유가 모두 입력에 연결됩니다. `unavailableReason`을 주면 행이 muted 면이 되고 이유가 행 안에 항상 보입니다(호버에 의존하지 않습니다). 이때도 입력은 비활성이 아니라서 눌렀을 때 대안을 안내할 수 있습니다. 완전히 막으려면 `disabled`를 쓰십시오. 묶음은 `OptionGroup`이 `fieldset`과 `legend`로 감쌉니다. 묶음 안에서는 선택 테두리가 이전 행에서 새 행으로 미끄러집니다(감소 모션이면 바로 옮겨 감).',
       },
     },
   },
@@ -110,4 +110,35 @@ function WheelGroup() {
 
 export const 그룹: Story = {
   render: () => <WheelGroup />,
+};
+
+export const 비제어_그룹: Story = {
+  name: '묶음 (비제어)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`checked`를 주지 않고 `defaultChecked`만 준 묶음입니다. 브라우저가 선택을 관리해도 선택 테두리가 행 사이를 미끄러집니다.',
+      },
+    },
+  },
+  render: () => (
+    <OptionGroup legend="구동 방식" className="w-full max-w-md">
+      <OptionRow
+        name="story-drive"
+        value="rear"
+        label="후륜구동"
+        price="기본 포함"
+        defaultChecked
+      />
+      <OptionRow name="story-drive" value="all" label="사륜구동" price="+2,400,000원" />
+      <OptionRow
+        name="story-drive"
+        value="hybrid"
+        label="플러그인 하이브리드"
+        description="전기 모터가 함께 구동합니다."
+        price="+6,800,000원"
+      />
+    </OptionGroup>
+  ),
 };
