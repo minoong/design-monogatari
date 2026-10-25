@@ -60,6 +60,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
       .join(' ') || undefined;
   const hasItems = Boolean(items && items.length > 0);
 
+  // 좁으면(문서 미리보기, 두 칸 격자) 구성 보기 버튼이 다음 줄로 내려가고, 가격도 글 아래로 내려가서 글이 한 글자씩 접히지 않는다.
   return (
     <AccordionPrimitive.Root type="single" collapsible asChild>
       <div
@@ -74,56 +75,58 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
       >
         <AccordionPrimitive.Item value="items" asChild>
           <div>
-            <div className="flex items-start gap-3 p-4">
+            <div className="flex flex-wrap items-start gap-x-3 gap-y-1 p-4">
               <label
                 htmlFor={inputId}
-                className="-m-4 flex min-w-0 flex-1 cursor-pointer items-start gap-3 p-4"
+                className="-m-4 flex min-w-48 flex-1 cursor-pointer flex-wrap items-start gap-x-3 gap-y-1 p-4"
               >
-                <input
-                  ref={innerRef}
-                  id={inputId}
-                  type="checkbox"
-                  aria-labelledby={labelId}
-                  aria-describedby={described}
-                  className="peer sr-only"
-                  {...props}
-                />
-                <span
-                  aria-hidden
-                  data-phase={phase}
-                  // 체크되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
-                  className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border *:data-check:opacity-0 peer-checked:*:data-check:opacity-100"
-                >
-                  <CheckIcon data-check isHovered={phase === 'in'} size={14} strokeWidth={3} />
-                  {/* 해제될 때만 보이는 "체크된 모습". 커지지 않고 바로 줄어들며 사라진다(select-out). */}
+                <span className="flex min-w-36 flex-1 items-start gap-3">
+                  <input
+                    ref={innerRef}
+                    id={inputId}
+                    type="checkbox"
+                    aria-labelledby={labelId}
+                    aria-describedby={described}
+                    className="peer sr-only"
+                    {...props}
+                  />
                   <span
                     aria-hidden
                     data-phase={phase}
-                    className="bg-primary border-primary text-primary-foreground motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute -inset-px flex items-center justify-center rounded-md border opacity-0"
+                    // 체크되면 튀어 오르고(in), 해제되면 바로 줄어들며 사라진다(out). 처음 그려질 때는 움직이지 않는다.
+                    className="border-border bg-background peer-checked:border-primary peer-checked:bg-primary text-primary-foreground motion-safe:data-[phase=in]:animate-select-pop relative mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border *:data-check:opacity-0 peer-checked:*:data-check:opacity-100"
                   >
-                    <CheckIcon size={14} strokeWidth={3} />
+                    <CheckIcon data-check isHovered={phase === 'in'} size={14} strokeWidth={3} />
+                    {/* 해제될 때만 보이는 "체크된 모습". 커지지 않고 바로 줄어들며 사라진다(select-out). */}
+                    <span
+                      aria-hidden
+                      data-phase={phase}
+                      className="bg-primary border-primary text-primary-foreground motion-safe:data-[phase=out]:animate-select-out pointer-events-none absolute -inset-px flex items-center justify-center rounded-md border opacity-0"
+                    >
+                      <CheckIcon size={14} strokeWidth={3} />
+                    </span>
                   </span>
-                </span>
-                <span className="flex min-w-0 flex-1 flex-col gap-1">
-                  <span
-                    id={labelId}
-                    className="flex flex-wrap items-center gap-2 text-sm font-medium"
-                  >
-                    {label}
-                    {includedIn ? (
-                      <span className="border-border bg-background text-muted-foreground rounded-full border px-2 py-0.5 text-xs font-semibold">
-                        {includedIn}
+                  <span className="flex min-w-0 flex-1 flex-col gap-1">
+                    <span
+                      id={labelId}
+                      className="flex flex-wrap items-center gap-2 text-sm font-medium"
+                    >
+                      {label}
+                      {includedIn ? (
+                        <span className="border-border bg-background text-muted-foreground rounded-full border px-2 py-0.5 text-xs font-semibold">
+                          {includedIn}
+                        </span>
+                      ) : null}
+                    </span>
+                    {description ? (
+                      <span id={descriptionId} className="text-caption text-muted-foreground">
+                        {description}
                       </span>
                     ) : null}
                   </span>
-                  {description ? (
-                    <span id={descriptionId} className="text-caption text-muted-foreground">
-                      {description}
-                    </span>
-                  ) : null}
                 </span>
                 {price ? (
-                  <span id={priceId} className="shrink-0 text-sm font-medium tabular-nums">
+                  <span id={priceId} className="ml-auto shrink-0 text-sm font-medium tabular-nums">
                     {price}
                   </span>
                 ) : null}
