@@ -78,6 +78,33 @@
   --animate-button-loader-dot: button-loader-dot 0.9s ease-in-out infinite;
   --animate-select-pop: select-pop 0.32s var(--ease-out-expo) both;
   --animate-select-out: select-out 0.2s cubic-bezier(0.4, 0, 0.8, 0.4) both;
+  --animate-accordion-down: accordion-down 0.28s var(--ease-out-expo) both;
+  --animate-accordion-up: accordion-up 0.2s var(--ease-out-expo) both;
+}
+
+/* 펼침과 접힘: Radix Accordion 이 잰 내용 높이까지 열리고 닫힌다. 높이를 움직이는 드문 예외라 한 행짜리 작은 목록에만 쓴다. */
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+
+  to {
+    height: 0;
+    opacity: 0;
+  }
 }
 
 /* 해제: 커지지 않고 바로 줄어들며 사라진다. 선택 때보다 짧고 빠르게 끝난다. */
