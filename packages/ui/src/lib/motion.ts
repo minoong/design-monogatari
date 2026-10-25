@@ -27,6 +27,8 @@ export const SPRING = {
   snappy: { type: 'spring', stiffness: 520, damping: 32 },
   /** 패널·카드 이동 */
   gentle: { type: 'spring', stiffness: 260, damping: 28 },
+  /** 선택 표시가 항목 사이를 옮겨 갈 때. 넘쳤다 돌아오지 않고 멈춘다(감쇠비 약 0.93) */
+  settle: { type: 'spring', stiffness: 460, damping: 40 },
   /** 시트가 제자리나 정해 둔 높이로 돌아올 때(끌었다 놓은 뒤). 눌림보다 느리고 패널보다 빠르다 */
   sheet: { type: 'spring', stiffness: 420, damping: 38 },
   /** 선택 확정 같은 작은 강조. 화면당 하나 이내로 쓴다 */

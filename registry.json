@@ -734,6 +734,25 @@
           "target": "@ui/text-roll.tsx"
         }
       ]
+    },
+    {
+      "name": "segmented",
+      "type": "registry:ui",
+      "title": "Segmented",
+      "description": "Single-choice segmented control built on native radios, with a selection indicator that slides between items.",
+      "dependencies": ["clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/motion"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/segmented.tsx",
+          "type": "registry:ui",
+          "target": "@ui/segmented.tsx"
+        }
+      ]
     }
   ]
 }
