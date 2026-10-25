@@ -78,7 +78,8 @@
   --animate-button-loader-dot: button-loader-dot 0.9s ease-in-out infinite;
   --animate-select-pop: select-pop 0.32s var(--ease-out-expo) both;
   --animate-select-out: select-out 0.2s cubic-bezier(0.4, 0, 0.8, 0.4) both;
-  --animate-accordion-down: accordion-down 0.28s var(--ease-out-expo) both;
+  /* 열 때는 끝 값을 붙들지 않는다(`backwards`): 끝난 뒤에는 높이가 자동으로 돌아가서, 열린 채로 내용이 길어져도(창 크기, 글꼴 크기) 잘리지 않는다. 닫을 때는 0에서 멈춰 있어야 한다. */
+  --animate-accordion-down: accordion-down 0.28s var(--ease-out-expo) backwards;
   --animate-accordion-up: accordion-up 0.2s var(--ease-out-expo) both;
 }
 
