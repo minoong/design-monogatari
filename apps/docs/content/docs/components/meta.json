@@ -28,6 +28,7 @@
     "progress",
     "copy-button",
     "text-roll",
-    "segmented"
+    "segmented",
+    "switch"
   ]
 }
