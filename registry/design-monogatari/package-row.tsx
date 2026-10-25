@@ -60,7 +60,9 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
       .join(' ') || undefined;
   const hasItems = Boolean(items && items.length > 0);
 
-  // 좁으면(문서 미리보기, 두 칸 격자) 구성 보기 버튼이 다음 줄로 내려가고, 가격도 글 아래로 내려가서 글이 한 글자씩 접히지 않는다.
+  // 구성 보기 버튼은 폭과 상관없이 항상 가격 아래 다음 줄의 오른쪽 끝에 둔다. 라벨이 행 전체 너비를 쓰므로 가격이 다른 행의 가격과 같은
+  // 오른쪽 끝 열에 놓인다(버튼이 가격 옆에 있으면 그 열에서 100px 비켜 보인다). 폭에 따라 위치가 바뀌는 기준이 없어 경계 구간의 어긋남도 없다.
+  // 라벨 안이 좁으면(약 250px 아래) 가격은 글 아래 오른쪽 끝으로 내려간다.
   return (
     <AccordionPrimitive.Root type="single" collapsible asChild>
       <div
@@ -78,7 +80,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
             <div className="flex flex-wrap items-start gap-x-3 gap-y-1 p-4">
               <label
                 htmlFor={inputId}
-                className="-m-4 flex min-w-48 flex-1 cursor-pointer flex-wrap items-start gap-x-3 gap-y-1 p-4"
+                className="-m-4 flex min-w-0 flex-1 cursor-pointer flex-wrap items-start gap-x-3 gap-y-1 p-4"
               >
                 <span className="flex min-w-36 flex-1 items-start gap-3">
                   <input
@@ -133,7 +135,7 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
               </label>
               {hasItems ? (
                 <AccordionPrimitive.Header asChild>
-                  <div className="relative shrink-0">
+                  <div className="relative flex basis-full justify-end">
                     <AccordionPrimitive.Trigger
                       id={triggerId}
                       aria-labelledby={`${triggerId} ${labelId}`}
