@@ -1,6 +1,13 @@
 'use client';
 
-import { AnimatePresence, useReducedMotion } from 'motion/react';
+import {
+  animate,
+  AnimatePresence,
+  useDragControls,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from 'motion/react';
 import * as motion from 'motion/react-client';
 import {
   createContext,
@@ -16,7 +23,7 @@ import {
 import { Button } from './button';
 import { XIcon } from './icons/x';
 import { cn } from './lib/cn';
-import { DURATION, EASE } from './lib/motion';
+import { DURATION, EASE, SPRING } from './lib/motion';
 
 export type ToastOptions = {
   title: ReactNode;
@@ -63,6 +70,16 @@ export type ToastProviderProps = {
 };
 
 const DEFAULT_DURATION = 5000;
+
+/** 옆으로 밀어 닫는 거리 기준: 카드 너비의 이 비율을 넘게 밀거나, */
+const SWIPE_DISTANCE = 0.35;
+/** 밀던 방향으로 이 속도(px/s)보다 빠르게 쓸면 닫힙니다. */
+const SWIPE_VELOCITY = 500;
+/** 속도로 닫으려면 적어도 이만큼(px) 움직여야 합니다. 스치기만 해서 닫히지 않게 합니다. */
+const SWIPE_FLICK_MIN = 24;
+/** 밀기를 시작하지 않는 곳: 누르거나 입력하는 요소. 글에 이런 요소가 들어 있어도 누르려던 손가락이 카드를 끌지 않는다. */
+const DRAG_IGNORE =
+  'button, a, input, select, textarea, label, summary, [role="button"], [contenteditable="true"], [tabindex]:not([data-toast])';
 
 /** 응답을 놓치면 안 되는 알림(동작이 있거나 오류)은 자동으로 닫지 않습니다. */
 function durationOf(item: ToastOptions) {
@@ -152,6 +169,21 @@ export function ToastProvider({
         ref={viewportRef}
         role="region"
         aria-label={regionLabel}
+        onBlur={(event) => {
+          // 알림 영역을 완전히 떠나면 기억해 둔 자리를 버린다(나중에 엉뚱한 곳으로 돌려 보내지 않게).
+          // 빈 곳을 눌러 포커스가 아무 데도 없게 된 경우(`relatedTarget`이 null)도 버린다. 다만 창이나 탭을 바꿔 생긴 blur는 돌아오면
+          // 같은 자리에 포커스가 남으므로 `document.hasFocus()`가 거짓일 때는 둔다.
+          const to = event.relatedTarget as HTMLElement | null;
+          const left = to ? !event.currentTarget.contains(to) : document.hasFocus();
+          if (left) returnFocus.current = null;
+        }}
+        onFocus={(event) => {
+          // F8이 아니라 탭이나 Tab으로 알림에 닿아도, 그 알림이 사라질 때 이전 자리로 돌려 보낼 수 있게 기억해 둔다.
+          const from = event.relatedTarget as HTMLElement | null;
+          if (!returnFocus.current && from && !event.currentTarget.contains(from)) {
+            returnFocus.current = from;
+          }
+        }}
         className={cn(
           'pointer-events-none fixed inset-x-0 bottom-0 z-60 flex flex-col items-center p-4 sm:items-end',
           viewportClassName,
@@ -190,8 +222,13 @@ function ToastCard({
   const remaining = useRef(duration);
   const startedAt = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // 멈춤 이유를 따로 센다. 셋이 모두 풀려야 다시 센다.
-  const holds = useRef({ hover: false, focus: false, hidden: false });
+  // 멈춤 이유를 따로 센다. 모두 풀려야 다시 센다.
+  const holds = useRef({ hover: false, focus: false, hidden: false, drag: false });
+  // 터치로 옆으로 밀어 닫는다. 밀리는 동안 카드가 손가락을 따라가고, 멀어질수록 옅어진다.
+  const x = useMotionValue(0);
+  const swipeOpacity = useTransform(x, [-180, 0, 180], [0.35, 1, 0.35]);
+  const dragControls = useDragControls();
+  const cardRef = useRef<HTMLDivElement>(null);
   const { id } = item;
 
   const stop = useCallback(() => {
@@ -202,7 +239,8 @@ function ToastCard({
   }, []);
 
   const sync = useCallback(() => {
-    const held = holds.current.hover || holds.current.focus || holds.current.hidden;
+    const held =
+      holds.current.hover || holds.current.focus || holds.current.hidden || holds.current.drag;
     if (held) {
       stop();
       return;
@@ -215,7 +253,7 @@ function ToastCard({
   }, [id, onDismiss, stop]);
 
   const hold = useCallback(
-    (reason: 'hover' | 'focus' | 'hidden', value: boolean) => {
+    (reason: 'hover' | 'focus' | 'hidden' | 'drag', value: boolean) => {
       holds.current[reason] = value;
       sync();
     },
@@ -246,7 +284,10 @@ function ToastCard({
       transition={{ duration: DURATION.base, ease: EASE.outExpo }}
       onPointerEnter={() => hold('hover', true)}
       onPointerLeave={() => hold('hover', false)}
-      onFocus={() => hold('focus', true)}
+      onFocus={(event) => {
+        // 탭해서 생긴 포커스는 타이머를 멈추지 않는다. 키보드(F8, Tab)로 온 포커스만 읽을 시간을 준다.
+        if (event.target.matches(':focus-visible')) hold('focus', true);
+      }}
       onBlur={(event) => {
         // 알림 안에서 포커스가 옮겨 갈 때는 멈춘 채로 둔다.
         if (event.currentTarget.contains(event.relatedTarget)) return;
@@ -257,41 +298,82 @@ function ToastCard({
       }}
       data-variant={item.variant ?? 'default'}
       className={cn(
-        'bg-card text-foreground pointer-events-auto flex items-start gap-3 rounded-lg border p-4 font-sans text-sm outline-none',
+        'text-foreground pointer-events-auto rounded-lg font-sans text-sm outline-none',
         'focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2',
-        item.variant === 'error' ? 'border-destructive border-2' : 'border-border',
       )}
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <p className="font-medium">{item.title}</p>
-        {item.description ? (
-          <p className="text-muted-foreground text-caption">{item.description}</p>
-        ) : null}
-        {item.action ? (
-          <div className="mt-2">
-            <Button
-              size="small"
-              variant="secondary"
-              onClick={() => {
-                item.action?.onClick();
-                onDismiss(id);
-              }}
-            >
-              {item.action.label}
-            </Button>
-          </div>
-        ) : null}
-      </div>
-      <Button
-        icon
-        size="small"
-        variant="clear"
-        aria-label={dismissLabel}
-        onClick={() => onDismiss(id)}
-        radius="md"
+      {/* 겉(`li`)은 나타나고 사라지고 자리를 옮기는 일(`layout`)과 포커스 링을 맡고, 안쪽 카드가 밀리는 일을 맡는다. 둘을 한 요소에 두면 끌기와 레이아웃 계산이 겹친다. */}
+      <motion.div
+        ref={cardRef}
+        // 마우스로는 끌지 않는다: 글자를 선택하거나 복사하려는 드래그를 가로채지 않게, 마우스 사용자는 닫기 버튼과 Esc를 쓴다.
+        className={cn(
+          // 세로 스크롤과 핀치 확대는 브라우저에 남기고 가로 움직임만 가져온다.
+          'bg-card flex touch-pan-y touch-pinch-zoom items-start gap-3 rounded-lg border p-4',
+          item.variant === 'error' ? 'border-destructive border-2' : 'border-border',
+        )}
+        style={{ x, opacity: swipeOpacity }}
+        drag="x"
+        dragControls={dragControls}
+        dragListener={false}
+        dragMomentum={false}
+        onPointerDown={(event) => {
+          if (event.pointerType === 'mouse' || event.button !== 0) return;
+          if ((event.target as HTMLElement).closest(DRAG_IGNORE)) return;
+          dragControls.start(event);
+        }}
+        onDragStart={() => hold('drag', true)}
+        onDragEnd={(_, info) => {
+          const width = cardRef.current?.offsetWidth ?? 0;
+          // 짧게 튕기기만 해도 닫히면 실수로 알림을 잃는다. 속도로 닫는 길은 어느 정도 움직인 뒤에만 열고, 자동으로 닫히지 않는
+          // 알림(오류, 동작이 있는 알림)은 거리로만 닫는다.
+          const flicked =
+            Number.isFinite(duration) &&
+            Math.abs(info.offset.x) > SWIPE_FLICK_MIN &&
+            Math.abs(info.velocity.x) > SWIPE_VELOCITY &&
+            Math.sign(info.velocity.x) === Math.sign(info.offset.x);
+          const away = Math.abs(info.offset.x) > width * SWIPE_DISTANCE || flicked;
+          if (away) {
+            onDismiss(id);
+            return;
+          }
+          hold('drag', false);
+          if (reduceMotion) x.set(0);
+          else void animate(x, 0, SPRING.snappy);
+        }}
       >
-        <XIcon size={16} />
-      </Button>
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <p className="font-medium">{item.title}</p>
+          {item.description ? (
+            <p className="text-muted-foreground text-caption">{item.description}</p>
+          ) : null}
+          {item.action ? (
+            <div className="mt-2">
+              <Button
+                size="small"
+                variant="secondary"
+                onClick={() => {
+                  item.action?.onClick();
+                  onDismiss(id);
+                }}
+              >
+                {item.action.label}
+              </Button>
+            </div>
+          ) : null}
+        </div>
+        <Button
+          icon
+          size="small"
+          variant="clear"
+          aria-label={dismissLabel}
+          // 호버·포커스 때마다 움직이면 소음이라, 알림이 나타날 때 한 번만 그린다.
+          iconMotion="mount"
+          onClick={() => onDismiss(id)}
+          radius="md"
+        >
+          <XIcon size={16} />
+        </Button>
+      </motion.div>
     </motion.li>
   );
 }
