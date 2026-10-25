@@ -46,7 +46,7 @@ description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, �
 ## 규칙
 
 1. **움직임은 상태 변화에 붙입니다.** 선택, 진입, 이동, 로딩입니다. 아무 일도 없을 때 계속 움직이는 장식(배경, 커서 따라다니기)은 쓰지 않습니다.
-2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다. 유일한 예외는 `PackageRow`의 구성 보기 한 곳으로, Radix가 잰 높이(`--radix-accordion-content-height`)까지만 열리는 작은 목록이라 허용했습니다. 다른 곳에 높이 애니메이션이 필요해 보이면 먼저 예외로 둘 만한지 따져 보십시오.
+2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다. 예외는 두 곳입니다. `PackageRow`의 구성 보기는 Radix가 잰 높이(`--radix-accordion-content-height`)까지만 열리는 작은 목록이라 허용했고, `OptionGroup`의 선택 테두리는 절대 위치의 장식이라 높이를 움직여도 다른 요소의 배치가 밀리지 않습니다. 다른 곳에 높이 애니메이션이 필요해 보이면 먼저 예외로 둘 만한지 따져 보십시오.
 3. **화면당 큰 연출은 하나입니다.** `DURATION.hero`와 `SPRING.bouncy`는 한 화면에 한 번만 씁니다.
 4. **감소 모션을 기본으로 지킵니다.** `useReducedMotion()`으로 읽고, 이동은 없애고 짧은 페이드(`DURATION.instant`)만 남깁니다. 설정이 바뀌면 바로 반영되도록 마운트 때 한 번만 읽지 않습니다. CSS 애니메이션은 `motion-safe:`로 감싸서 감소 모션에서는 아예 적용하지 않습니다(`motion-reduce:animate-none`은 `peer-checked:` 같은 변형에 특이도에서 져서 꺼지지 않습니다).
 5. **Motion과 Tailwind `transition-*`을 같은 요소에 쓰지 않습니다.** WebGL 캔버스에는 Motion을 쓰지 않습니다.
