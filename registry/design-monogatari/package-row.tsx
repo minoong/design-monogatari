@@ -155,7 +155,11 @@ export const PackageRow = forwardRef<HTMLInputElement, PackageRowProps>(function
               ) : null}
             </div>
             {hasItems ? (
-              <AccordionPrimitive.Content aria-labelledby={triggerId}>
+              <AccordionPrimitive.Content
+                aria-labelledby={triggerId}
+                // 감소 모션이면 애니메이션 없이 바로 열리고 닫힌다(`motion-safe`).
+                className="motion-safe:data-[state=closed]:animate-accordion-up motion-safe:data-[state=open]:animate-accordion-down overflow-hidden"
+              >
                 <ul className="border-border text-caption text-muted-foreground mx-4 mb-4 flex list-disc flex-col gap-1 border-t pt-3 pl-5">
                   {items!.map((item, index) => (
                     <li key={index}>{item}</li>
