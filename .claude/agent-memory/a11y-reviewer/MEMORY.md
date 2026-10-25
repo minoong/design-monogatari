@@ -1,4 +1,5 @@
 - [Recurring a11y issues](recurring-issues.md) — sr-only input rows, Radix accordion ids, forced-colors focus, price not announced
 - [3D stage issues](vehicle-stage-issues.md) — aria-hidden canvas, no keyboard orbit, conditional role=status, overlay contrast
 - [Overlay/feedback issues](overlay-feedback-issues.md) — toast live regions, modal inertness, timer pause bugs, notice status
+- [Segmented control](segmented-issues.md) — forced-colors underline, pill border 1.4:1, disabled opacity, untyped aria-label
 - [Animated icons](animated-icons-issues.md) — IconFrame span breaks `[&>svg]` selectors, Button overrides isHovered
