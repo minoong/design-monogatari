@@ -218,8 +218,12 @@ export function OptionGroup({ legend, children, className, ...props }: OptionGro
     const row = active;
     const rows = rowsRef.current;
     if (!row || !rows) return;
-    // 테두리는 행 상자보다 1px씩 바깥이다. `offsetTop`은 `rows`(relative) 기준이다.
-    const target = () => ({ y: row.offsetTop - 1, h: row.offsetHeight + 2 });
+    // 테두리는 행 상자보다 1px씩 바깥이다. `offsetTop`은 정수로 반올림돼 소수 배치에서 어긋나므로 `rows`(relative) 기준의 실제 위치 차이를 쓴다.
+    const target = () => {
+      const box = rows.getBoundingClientRect();
+      const at = row.getBoundingClientRect();
+      return { y: at.top - box.top - 1, h: at.height + 2 };
+    };
     const { y, h } = target();
     if (!placed.current || reduceMotion) {
       top.set(y);
