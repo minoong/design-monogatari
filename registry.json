@@ -807,6 +807,25 @@
           "target": "@ui/presence.tsx"
         }
       ]
+    },
+    {
+      "name": "morph",
+      "type": "registry:ui",
+      "title": "Morph",
+      "description": "Frame that morphs to the size and corner radius of whatever it holds when the content swaps; the content slides inside the clipped frame, opacity is never animated.",
+      "dependencies": ["clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/motion"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/morph.tsx",
+          "type": "registry:ui",
+          "target": "@ui/morph.tsx"
+        }
+      ]
     }
   ]
 }
