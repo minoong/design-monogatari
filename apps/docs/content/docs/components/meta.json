@@ -31,6 +31,7 @@
     "segmented",
     "switch",
     "switch-field",
-    "presence"
+    "presence",
+    "morph"
   ]
 }

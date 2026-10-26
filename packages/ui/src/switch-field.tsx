@@ -83,7 +83,10 @@ export function SwitchField({
       <Switch {...props} ref={setRef} disabled={disabled} onChange={onChange} />
       <span className="whitespace-nowrap">{label}</span>
       {status ? (
-        <span aria-hidden className="text-muted-foreground text-caption inline-grid">
+        <span
+          aria-hidden
+          className="text-muted-foreground text-caption inline-grid whitespace-nowrap"
+        >
           {/* 두 글자를 같은 칸에 보이지 않게 깔아 폭을 긴 쪽에 맞춘다(글자 수가 아니라 실제 폭). */}
           <span className="invisible col-start-1 row-start-1">{status.on}</span>
           <span className="invisible col-start-1 row-start-1">{status.off}</span>

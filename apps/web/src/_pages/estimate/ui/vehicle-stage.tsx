@@ -9,7 +9,7 @@ import { ArrowUpIcon } from '@repo/ui/icons/arrow-up';
 import { MaximizeIcon } from '@repo/ui/icons/maximize';
 import { MinimizeIcon } from '@repo/ui/icons/minimize';
 import { RotateCCWIcon } from '@repo/ui/icons/rotate-ccw';
-import { Presence } from '@repo/ui/presence';
+import { Morph } from '@repo/ui/morph';
 import { Segmented, SegmentedItem } from '@repo/ui/segmented';
 import { Skeleton, SkeletonGroup } from '@repo/ui/skeleton';
 import { SwitchField } from '@repo/ui/switch-field';
@@ -238,15 +238,11 @@ export function VehicleStage({
       >
         {/* 시점이 바뀌어도 화면 낭독기가 알 수 있게 항상 그려 두고 글자만 바꾼다(그려지는 순간 채워진 알림은 읽히지 않는 일이 많다). */}
         <p className="sr-only" role="status">
-          {showFallback ? '' : `시점: ${CAMERA_VIEWS[view].label}`}
+          {showFallback
+            ? ''
+            : `시점: ${CAMERA_VIEWS[view].label}${inside ? `. ${INSIDE_VIEW_NOTE}` : ''}`}
         </p>
         {notice}
-        {inside && !showFallback ? (
-          // 무대 안에 겹쳐 둔다. 캡션 줄에 넣으면 나타날 때마다 무대 높이가 바뀐다. 오른쪽 위 도구 판(폭 42px)을 가리지 않게 모든 폭에서 오른쪽을 비운다.
-          <p className="bg-background/85 text-foreground text-caption absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
-            {INSIDE_VIEW_NOTE}
-          </p>
-        ) : null}
         {showFallback ? (
           fallback
         ) : (
@@ -279,21 +275,32 @@ export function VehicleStage({
         )}
         {!showFallback ? (
           <>
-            {/* 선루프 품목이 있을 때만 차량 위 왼쪽 위에 나타난다. 차량 위에 겹쳐서 자리를 잡지 않는다. 안쪽 시점에서는 같은 자리에 안내가 나오므로 비운다. */}
-            <div className="absolute top-3 left-3 z-10">
-              <Presence show={sunroof && !inside}>
-                <div className="bg-background/85 border-border rounded-pill border pr-3 backdrop-blur-sm">
-                  <SwitchField
-                    checked={sunroofOpen}
-                    disabled={!ready}
-                    label={SUNROOF_SWITCH_LABEL}
-                    status={{ on: '열림', off: '닫힘' }}
-                    onChange={(event) => {
-                      setSunroofOpen(event.target.checked);
-                    }}
-                  />
-                </div>
-              </Presence>
+            {/* 왼쪽 위 모서리는 한 틀이 번갈아 쓴다: 선루프 품목이 있으면 스위치 알약, 안쪽 시점이면 안내 문구. 시점이 바뀌면 틀이 새 내용의 크기로 변형된다. 틀은 차량 위에 겹쳐서 자리를 잡지 않고, 오른쪽 위 도구 판(폭 42px)을 가리지 않게 오른쪽을 비운다. */}
+            <div className="absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)]">
+              <Morph
+                // 틀 안의 "열림/닫힘" 글자는 옅은 글자색이라, 어두운 차 위에서도 4.5:1을 지키도록 판보다 불투명하게 둔다(95%).
+                className="bg-background/95 border-border max-w-full border backdrop-blur-sm"
+                order={['switch', 'note']}
+                radii={{ switch: 18, note: 8 }}
+                value={inside ? 'note' : sunroof ? 'switch' : null}
+              >
+                {inside ? (
+                  <p className="text-foreground text-caption px-2.5 py-1.5">{INSIDE_VIEW_NOTE}</p>
+                ) : (
+                  // 스위치 포커스 링(4px)이 틀 가장자리에서 잘리지 않게 왼쪽과 위아래에 여유를 둔다.
+                  <div className="flex py-1 pr-3 pl-1">
+                    <SwitchField
+                      checked={sunroofOpen}
+                      disabled={!ready}
+                      label={SUNROOF_SWITCH_LABEL}
+                      status={{ on: '열림', off: '닫힘' }}
+                      onChange={(event) => {
+                        setSunroofOpen(event.target.checked);
+                      }}
+                    />
+                  </div>
+                )}
+              </Morph>
             </div>
             {/* 패널을 내려 차량 영역이 줄었을 때는 비운다(그 높이에는 들어가지 않는다). */}
             {!compact ? (
