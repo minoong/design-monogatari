@@ -13,6 +13,12 @@
  */
 @custom-variant tiny (@media (max-width: 35.99rem) and (max-height: 32rem));
 
+/*
+ * 터치 기기이면서 화면 높이가 낮은 경우(가로로 든 폰). 차량 영역이 약 240px뿐이라 차량 위에 얹은 도구 판이 많은 부분을 덮으므로
+ * 이때만 회전 화살표 판을 숨긴다(터치는 끌어서 돌릴 수 있다). 마우스·키보드 화면에는 영향이 없다.
+ */
+@custom-variant short-touch (@media (max-height: 26rem) and (pointer: coarse));
+
 @custom-variant split {
   @media (min-width: 64rem) {
     @slot;
