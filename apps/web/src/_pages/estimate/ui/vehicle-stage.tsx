@@ -9,8 +9,10 @@ import { ArrowUpIcon } from '@repo/ui/icons/arrow-up';
 import { MaximizeIcon } from '@repo/ui/icons/maximize';
 import { MinimizeIcon } from '@repo/ui/icons/minimize';
 import { RotateCCWIcon } from '@repo/ui/icons/rotate-ccw';
-import { SunIcon, type SunIconHandle } from '@repo/ui/icons/sun';
+import { Presence } from '@repo/ui/presence';
+import { Segmented, SegmentedItem } from '@repo/ui/segmented';
 import { Skeleton, SkeletonGroup } from '@repo/ui/skeleton';
+import { SwitchField } from '@repo/ui/switch-field';
 import { vehicleById } from '@repo/vehicle-3d/vehicles';
 import type { InspectHandle } from '@repo/vehicle-3d/viewer';
 import {
@@ -34,6 +36,9 @@ import type { CaliperId, ColorId, InteriorId, RimFinishId, WheelId } from '../mo
 import { WHEEL_INCH } from '../model/wheel-map';
 
 const VEHICLE = vehicleById('x5-web');
+
+/** 선루프 스위치의 이름. 상태에 따라 바꾸지 않는다(상태는 스위치와 옆의 글자가 알린다). */
+const SUNROOF_SWITCH_LABEL = '선루프 열어 보기';
 
 /** 선루프가 보이게 하는 선택 품목 이름. 카탈로그에서 읽어서 이름이 바뀌어도 캡션이 어긋나지 않는다. */
 const SUNROOF_LABELS = CATALOG.package
@@ -166,10 +171,8 @@ export function VehicleStage({
   colorLabel,
   compact,
   interior,
-  large,
   notice,
   onCaptureChange,
-  onToggleLarge,
   rimFinish,
   sunroof,
   wheel,
@@ -181,8 +184,6 @@ export function VehicleStage({
   /** 좁은 화면에서 패널을 내려 차량 영역을 줄인 상태. 좌우로 나누는 화면에서는 쓰지 않는다. */
   compact: boolean;
   interior: InteriorId;
-  /** 좁은 화면에서 사용자가 차량 영역을 키운 상태 */
-  large: boolean;
   /** 차량 위 아래쪽에 겹쳐 보이는 안내(자동으로 바뀐 선택 등). 배치를 바꾸지 않는다. */
   notice?: ReactNode;
   /**
@@ -190,7 +191,6 @@ export function VehicleStage({
    * 이미지는 화면의 시점과 상관없이 늘 같은 앞 3/4 구도다.
    */
   onCaptureChange?: (capture: (() => Promise<Blob | null>) | null) => void;
-  onToggleLarge: () => void;
   rimFinish: RimFinishId;
   /** 선루프 품목을 담았는지. 아니면 선루프 구멍을 막은 차를 보여 준다. */
   sunroof: boolean;
@@ -210,13 +210,6 @@ export function VehicleStage({
   const view = picked?.step === step ? picked.view : stageViewOf(step);
   // 선루프를 연 상태. 선루프 품목을 빼면 닫힌 상태로 돌려 놓는다(다시 담았을 때 열린 채로 나타나지 않게).
   const [sunroofOpen, setSunroofOpen] = useState(false);
-  const sunRef = useRef<SunIconHandle>(null);
-  // 열고 닫을 때마다 해 아이콘이 한 번 움직인다(처음 그릴 때는 가만히 있다).
-  const sunroofOpenBefore = useRef(false);
-  useEffect(() => {
-    if (sunroofOpenBefore.current !== sunroofOpen) sunRef.current?.startAnimation();
-    sunroofOpenBefore.current = sunroofOpen;
-  }, [sunroofOpen]);
   if (!sunroof && sunroofOpen) {
     setSunroofOpen(false);
   }
@@ -239,8 +232,8 @@ export function VehicleStage({
       <div
         className={cn(
           'border-border bg-card split:h-auto split:min-h-0 split:flex-1 split:rounded-lg split:border relative w-full overflow-hidden',
-          // 좁은 화면의 높이: 기본, 패널을 내렸을 때, 사용자가 키웠을 때. 좌우로 나누는 화면에서는 남는 높이를 모두 쓴다.
-          large ? 'h-[42dvh] min-h-56' : compact ? 'h-[18dvh] min-h-32' : 'h-[34dvh] min-h-48',
+          // 좁은 화면의 높이: 기본, 패널을 내렸을 때. 좌우로 나누는 화면에서는 남는 높이를 모두 쓴다.
+          compact ? 'h-[18dvh] min-h-32' : 'h-[34dvh] min-h-48',
         )}
       >
         {/* 시점이 바뀌어도 화면 낭독기가 알 수 있게 항상 그려 두고 글자만 바꾼다(그려지는 순간 채워진 알림은 읽히지 않는 일이 많다). */}
@@ -249,8 +242,8 @@ export function VehicleStage({
         </p>
         {notice}
         {inside && !showFallback ? (
-          // 무대 안에 겹쳐 둔다. 캡션 줄에 넣으면 나타날 때마다 무대 높이가 바뀐다.
-          <p className="bg-background/85 text-foreground text-caption split:max-w-[calc(100%-1.5rem)] absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
+          // 무대 안에 겹쳐 둔다. 캡션 줄에 넣으면 나타날 때마다 무대 높이가 바뀐다. 오른쪽 위 도구 판(폭 42px)을 가리지 않게 모든 폭에서 오른쪽을 비운다.
+          <p className="bg-background/85 text-foreground text-caption absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)] rounded-md px-2.5 py-1.5 backdrop-blur-sm">
             {INSIDE_VIEW_NOTE}
           </p>
         ) : null}
@@ -284,117 +277,115 @@ export function VehicleStage({
             {!ready ? <StageLoading /> : null}
           </ViewerBoundary>
         )}
-        {/* 좁은 화면에서만. 패널을 내려 줄어든 차량 영역을 직접 키우거나 되돌린다. 키우면 패널을 내려도 줄어들지 않는다. */}
         {!showFallback ? (
-          <Button
-            aria-label="차량 영역 키우기"
-            aria-pressed={large}
-            className="split:hidden absolute top-2 right-2 z-10"
-            icon
-            size="small"
-            variant="secondary"
-            onClick={onToggleLarge}
-          >
-            {large ? <MinimizeIcon /> : <MaximizeIcon />}
-          </Button>
+          <>
+            {/* 선루프 품목이 있을 때만 차량 위 왼쪽 위에 나타난다. 차량 위에 겹쳐서 자리를 잡지 않는다. 안쪽 시점에서는 같은 자리에 안내가 나오므로 비운다. */}
+            <div className="absolute top-3 left-3 z-10">
+              <Presence show={sunroof && !inside}>
+                <div className="bg-background/85 border-border rounded-pill border pr-3 backdrop-blur-sm">
+                  <SwitchField
+                    checked={sunroofOpen}
+                    disabled={!ready}
+                    label={SUNROOF_SWITCH_LABEL}
+                    status={{ on: '열림', off: '닫힘' }}
+                    onChange={(event) => {
+                      setSunroofOpen(event.target.checked);
+                    }}
+                  />
+                </div>
+              </Presence>
+            </div>
+            {/* 패널을 내려 차량 영역이 줄었을 때는 비운다(그 높이에는 들어가지 않는다). */}
+            {!compact ? (
+              <>
+                {/* 버튼 배경이 투명이라 차량 색과 겹치면 안 보인다(확대하면 차체가 화면을 채운다). 선루프 알약과 같은 반투명 판 위에 올린다. */}
+                <div className="bg-background/85 border-border absolute top-3 right-3 z-10 flex flex-col gap-1 rounded-lg border p-1 backdrop-blur-sm">
+                  <Button
+                    aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomIn}`}
+                    disabled={!ready || inside}
+                    icon
+                    size="small"
+                    variant="clear"
+                    onClick={() => inspectRef.current?.zoomIn()}
+                  >
+                    <MaximizeIcon />
+                  </Button>
+                  <Button
+                    aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomOut}`}
+                    disabled={!ready || inside}
+                    icon
+                    size="small"
+                    variant="clear"
+                    onClick={() => inspectRef.current?.zoomOut()}
+                  >
+                    <MinimizeIcon />
+                  </Button>
+                  <Button
+                    aria-label={CAMERA_CONTROL_LABELS.reset}
+                    disabled={!ready}
+                    icon
+                    size="small"
+                    variant="clear"
+                    onClick={() => inspectRef.current?.reset()}
+                  >
+                    <RotateCCWIcon />
+                  </Button>
+                </div>
+                {/* 끌기와 두 손가락 벌리기만으로는 손가락 하나로 할 수 없는 사람이 쓸 수 없으므로, 좁은 화면에서도 버튼을 둔다. */}
+                <div
+                  aria-label={CAMERA_CONTROL_LABELS.rotateGroup}
+                  className="bg-background/85 border-border absolute right-3 bottom-3 z-10 flex gap-1 rounded-lg border p-1 backdrop-blur-sm"
+                  role="group"
+                >
+                  {(
+                    [
+                      [ArrowLeftIcon, CAMERA_CONTROL_LABELS.rotateLeft, -1, 0],
+                      [ArrowRightIcon, CAMERA_CONTROL_LABELS.rotateRight, 1, 0],
+                      [ArrowUpIcon, CAMERA_CONTROL_LABELS.rotateUp, 0, -1],
+                      [ArrowDownIcon, CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
+                    ] as const
+                  ).map(([Glyph, label, azimuth, polar]) => (
+                    <Button
+                      key={label}
+                      aria-label={label}
+                      disabled={!ready}
+                      icon
+                      size="small"
+                      variant="clear"
+                      onClick={() => inspectRef.current?.rotateBy(azimuth, polar)}
+                    >
+                      <Glyph />
+                    </Button>
+                  ))}
+                </div>
+              </>
+            ) : null}
+          </>
         ) : null}
       </div>
       {!showFallback ? (
-        <div className="split:p-0 flex scroll-px-4 scrollbar-none items-center gap-2 overflow-x-auto px-4 py-2 lg:flex-wrap lg:justify-between lg:overflow-visible">
-          <div className="flex shrink-0 gap-2 lg:flex-wrap">
-            <div
-              aria-label={CAMERA_CONTROL_LABELS.viewGroup}
-              className="flex gap-2 lg:flex-wrap"
-              role="group"
-            >
-              {STAGE_VIEW_OPTIONS.map((option) => (
-                <Button
-                  key={option.id}
-                  aria-pressed={view === option.id}
-                  disabled={!ready}
-                  size="small"
-                  variant="secondary"
-                  onClick={() => {
-                    setPicked({ step, view: option.id });
-                  }}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </div>
-            {sunroof ? (
-              <Button
-                aria-pressed={sunroofOpen}
+        // 시점만 한 줄로 둔다. 확대·축소·회전은 차량 위에 겹치고, 선루프 스위치도 차량 위에 겹친다(자리를 잡지 않는다).
+        <div className="split:p-0 px-4 py-2">
+          <Segmented
+            aria-label={CAMERA_CONTROL_LABELS.viewGroup}
+            className="w-full lg:w-fit"
+            value={view}
+            onValueChange={(next) => {
+              const option = STAGE_VIEW_OPTIONS.find((item) => item.id === next);
+              if (option) setPicked({ step, view: option.id });
+            }}
+          >
+            {STAGE_VIEW_OPTIONS.map((option) => (
+              <SegmentedItem
+                key={option.id}
+                className="flex-1 lg:flex-none"
                 disabled={!ready}
-                size="small"
-                variant="secondary"
-                onClick={() => {
-                  setSunroofOpen((open) => !open);
-                }}
+                value={option.id}
               >
-                <SunIcon ref={sunRef} data-icon="inline-start" />
-                {CAMERA_CONTROL_LABELS.sunroofOpen}
-              </Button>
-            ) : null}
-          </div>
-          <div className="flex shrink-0 gap-2 lg:flex-wrap">
-            {/* 끌기와 두 손가락 벌리기만으로는 손가락 하나로 할 수 없는 사람이 쓸 수 없으므로, 좁은 화면에서도 버튼을 둔다(옆으로 밀어서 닿는다). */}
-            <div
-              aria-label={CAMERA_CONTROL_LABELS.rotateGroup}
-              className="flex gap-2 lg:flex-wrap"
-              role="group"
-            >
-              {(
-                [
-                  [ArrowLeftIcon, CAMERA_CONTROL_LABELS.rotateLeft, -1, 0],
-                  [ArrowRightIcon, CAMERA_CONTROL_LABELS.rotateRight, 1, 0],
-                  [ArrowUpIcon, CAMERA_CONTROL_LABELS.rotateUp, 0, -1],
-                  [ArrowDownIcon, CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
-                ] as const
-              ).map(([Glyph, label, azimuth, polar]) => (
-                <Button
-                  key={label}
-                  aria-label={label}
-                  disabled={!ready}
-                  icon
-                  size="small"
-                  variant="secondary"
-                  onClick={() => inspectRef.current?.rotateBy(azimuth, polar)}
-                >
-                  <Glyph />
-                </Button>
-              ))}
-            </div>
-            <Button
-              aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomIn}`}
-              disabled={!ready || inside}
-              size="small"
-              variant="secondary"
-              onClick={() => inspectRef.current?.zoomIn()}
-            >
-              <MaximizeIcon data-icon="inline-start" />
-              {CAMERA_CONTROL_LABELS.zoomIn}
-            </Button>
-            <Button
-              aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomOut}`}
-              disabled={!ready || inside}
-              size="small"
-              variant="secondary"
-              onClick={() => inspectRef.current?.zoomOut()}
-            >
-              <MinimizeIcon data-icon="inline-start" />
-              {CAMERA_CONTROL_LABELS.zoomOut}
-            </Button>
-            <Button
-              disabled={!ready}
-              size="small"
-              variant="secondary"
-              onClick={() => inspectRef.current?.reset()}
-            >
-              <RotateCCWIcon data-icon="inline-start" />
-              {CAMERA_CONTROL_LABELS.reset}
-            </Button>
-          </div>
+                {option.label}
+              </SegmentedItem>
+            ))}
+          </Segmented>
         </div>
       ) : null}
       <figcaption className="text-muted-foreground text-caption hidden flex-col gap-1 lg:flex">

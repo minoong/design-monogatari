@@ -44,7 +44,7 @@ export function StageNotice({ notices }: { notices: readonly Effect[] }) {
   return (
     <div
       role="status"
-      className="split:right-auto split:max-w-md pointer-events-none absolute inset-x-3 bottom-3 z-10 flex justify-start"
+      className="split:right-auto split:max-w-[min(28rem,calc(100%-12rem))] split:pr-0 pointer-events-none absolute inset-x-3 bottom-3 z-10 flex justify-start pr-44"
     >
       {visible && first ? (
         <p className="bg-background/85 text-foreground text-caption line-clamp-2 rounded-md px-2.5 py-1.5 backdrop-blur-sm">
