@@ -5,6 +5,8 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
 
+import { KO_TRANSLATIONS } from '@/shared/lib/translations';
+
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
@@ -31,7 +33,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     >
       <body className="flex min-h-screen flex-col font-sans">
         {/* 테마는 RootProvider(next-themes)가 html 클래스(light/dark)로 전환한다. @repo/ui 토큰과 같은 방식 */}
-        <RootProvider theme={{ attribute: 'class' }}>{children}</RootProvider>
+        <RootProvider
+          i18n={{ locale: 'ko', translations: KO_TRANSLATIONS }}
+          theme={{ attribute: 'class' }}
+        >
+          {children}
+        </RootProvider>
       </body>
     </html>
   );

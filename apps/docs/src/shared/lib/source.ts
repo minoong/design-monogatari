@@ -3,6 +3,8 @@ import { llms, loader } from 'fumadocs-core/source';
 import { applyMdxPreset } from 'fumadocs-mdx/config';
 import { defineDocs } from 'fumadocs-mdx/macro';
 
+import { iconFor } from '@/shared/ui/section-icons';
+
 import { remarkDocBlocks } from './remark-doc-blocks';
 
 const docs = defineDocs({
@@ -22,6 +24,8 @@ const docs = defineDocs({
 export const source = loader({
   baseUrl: '/docs',
   source: docs.toFumadocsSource(),
+  // 프런트매터와 meta.json의 `icon`(이름 문자열)을 사이드바 아이콘으로 바꾼다.
+  icon: iconFor,
 });
 
 /** 에이전트와 검색 도구가 읽는 형태: llms.txt 색인, 전체 본문, 페이지별 Markdown */

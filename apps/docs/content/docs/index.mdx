@@ -1,6 +1,7 @@
 ---
 title: 소개
 description: Radix, Tailwind, Motion으로 만든 디자인 시스템과 shadcn 레지스트리 문서입니다.
+icon: Book
 ---
 
 design-monogatari는 Apple에서 영감을 받은 디자인 시스템입니다. 조용한 크롬에 강조색은 Action Blue 하나만 쓰고, 폰트는 Geist입니다. 접근성과 동작이 필요한 곳(Dialog, Label, Slot)은 **Radix Primitives**를 쓰고, 스타일은 **Tailwind CSS v4**와 자체 토큰으로 만듭니다. 움직임은 UI에 **Motion**, 스크롤 연동에 **GSAP**을 나눠 씁니다.
@@ -9,12 +10,20 @@ design-monogatari는 Apple에서 영감을 받은 디자인 시스템입니다. 
 
 이 사이트는 골격 단계입니다. 아래는 순서대로 채워 갑니다.
 
-| 영역                                                      | 상태                                                                                                                       |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| 파운데이션 (색, 타이포그래피, 라운딩, 보더, 모션, 아이콘) | [색](/docs/foundations/colors), 타이포그래피, 라운딩, 보더, 모션, [아이콘](/docs/foundations/icons) 페이지가 있습니다      |
-| 컴포넌트 (Button, Dialog, Field 등)                       | [Button](/docs/components/button)부터 시트, 토스트, 글자 롤, 세그먼트, 스위치, 등장 래퍼, 변형 틀까지 서른두 개가 있습니다 |
-| 유틸리티                                                  | [cn](/docs/utilities/cn)이 있습니다                                                                                        |
-| Claude Code 에이전틱 개발 워크플로우                      | [AI 워크플로](/docs/ai-workflow)에 지침, 에이전트, 스킬, 훅, 루프를 정리했습니다                                           |
+<Cards>
+  <Card href="/docs/foundations/colors" icon={<SectionIcon name="Layers" />} title="파운데이션">
+    색, 타이포그래피, 라운딩, 보더, 모션, 아이콘의 토큰과 규칙입니다.
+  </Card>
+  <Card href="/docs/components/button" icon={<SectionIcon name="Grid" />} title="컴포넌트">
+    Button부터 시트, 토스트, 글자 롤, 세그먼트, 스위치, 등장 래퍼, 변형 틀까지 서른두 개가 있습니다.
+  </Card>
+  <Card href="/docs/utilities/cn" icon={<SectionIcon name="Terminal" />} title="유틸리티">
+    cn 같은 작은 도구입니다.
+  </Card>
+  <Card href="/docs/ai-workflow" icon={<SectionIcon name="Sparkles" />} title="AI 워크플로">
+    Claude Code 에이전틱 개발의 지침, 에이전트, 스킬, 훅, 루프를 정리했습니다.
+  </Card>
+</Cards>
 
 ## 빠른 설치
 

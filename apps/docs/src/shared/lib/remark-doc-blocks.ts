@@ -249,6 +249,26 @@ export function remarkDocBlocks() {
         });
         return;
       }
+      if (node.type === 'mdxJsxFlowElement' && node.name === 'Cards') {
+        // 카드 묶음은 에이전트가 읽기 쉽게 `- [제목](주소): 설명` 목록으로 바꾼다
+        replaceSource(file, node as Parameters<typeof replaceSource>[1], (s) =>
+          (node.children ?? [])
+            .filter((card) => card.type === 'mdxJsxFlowElement' && card.name === 'Card')
+            .map((card) => {
+              const title = attribute(card, 'title');
+              const href = attribute(card, 'href');
+              const body = s
+                .inner(card as Parameters<typeof replaceSource>[1])
+                .trim()
+                .replace(/\s+/g, ' ');
+              const label =
+                typeof href === 'string' ? `[${String(title)}](${href})` : `**${String(title)}**`;
+              return `- ${label}: ${body}`;
+            })
+            .join('\n'),
+        );
+        return;
+      }
       if (node.type === 'mdxJsxFlowElement' && node.name && node.name in expanders) {
         found.push(node);
       }

@@ -1,5 +1,6 @@
 {
   "title": "AI 워크플로",
+  "icon": "Sparkles",
   "root": true,
   "pages": ["index", "memory", "subagents", "skills", "hooks", "mcp", "loop", "retrospective"]
 }
