@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import type { ComponentProps, ReactNode } from 'react';
 
 import { baseOptions } from '@/shared/lib/layout-options';
+import { SectionIcon } from '@/shared/ui/section-icons';
 import { ThemeToggle } from '@/shared/ui/theme-toggle';
 
 /** 헤더 오른쪽 액션: 눈에 띄는 테마 전환 버튼 + 기본 액션(검색 외 링크, 옵션 메뉴) */
@@ -52,6 +53,7 @@ function buildTabs(tree: Root, pathname: string): LayoutTab[] {
   return [
     {
       title: '디자인 시스템',
+      icon: <SectionIcon name="Layers" />,
       description: '토큰, 컴포넌트, 유틸리티',
       url: '/docs',
       urls: new Set(['/docs', ...urls.filter((url) => !isAiWorkflowUrl(url))]),
@@ -59,6 +61,7 @@ function buildTabs(tree: Root, pathname: string): LayoutTab[] {
     },
     {
       title: 'AI 워크플로',
+      icon: <SectionIcon name="Sparkles" />,
       description: '지침, 에이전트, 스킬, 훅, 루프',
       url: AI_WORKFLOW_URL,
       urls: new Set([AI_WORKFLOW_URL, ...urls.filter(isAiWorkflowUrl)]),

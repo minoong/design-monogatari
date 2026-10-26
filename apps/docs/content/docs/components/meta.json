@@ -1,5 +1,6 @@
 {
   "title": "컴포넌트",
+  "icon": "Grid",
   "pages": [
     "button",
     "icon-button",

@@ -1,4 +1,5 @@
 {
   "title": "파운데이션",
+  "icon": "Layers",
   "pages": ["colors", "typography", "radius", "border", "motion", "icons"]
 }
