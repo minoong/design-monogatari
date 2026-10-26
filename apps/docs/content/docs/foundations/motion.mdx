@@ -38,6 +38,7 @@ description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, �
 - **옵션 선택 테두리**: [`OptionRow`](/docs/components/option-row)는 `OptionGroup` 안에서 선택 테두리가 이전 행에서 새 행으로 넘치지 않고 미끄러집니다(`SPRING.settle`). 선택하는 순간의 작은 튀어 오름(`animate-select-pop`)은 그대로입니다.
 - **색 칩 선택 링**: [`ColorSwatchGroup`](/docs/components/color-swatch-group)의 선택 링은 요소 하나가 칩 사이를 줄과 소제목을 가로질러 넘치지 않고 미끄러집니다(`SPRING.settle`).
 - **스위치 손잡이**: [`Switch`](/docs/components/switch)는 누르는 동안 손잡이가 16px에서 20px로 늘어났다가 놓으면 돌아오고, 켜고 끄면 손잡이가 280ms 동안 미끄러집니다(`ease-out-expo`, 넘치지 않음). 모두 CSS이고 감소 모션이면 바로 바뀝니다.
+- **담기고 빠지는 컨트롤**: [`Presence`](/docs/components/presence)는 조건에 따라 있고 없는 컨트롤의 자리를 폭(또는 높이)으로 열고 닫아서 이웃이 한꺼번에 밀리지 않고 부드럽게 비켜 줍니다. `reserve`는 자리를 늘 잡아 두어 이웃이 전혀 움직이지 않고, 나머지(`collapse`, 기본 `slide`, `spring`)는 컨트롤이 자기 자리 안에서 잘리며 옆에서 밀려들고 밀려납니다(들어올 때 0.28초 `outExpo`, 나갈 때 0.28초 `inOut`). 투명도는 바꾸지 않아 반투명한 중간 상태가 없고, 처음부터 있던 것은 움직이지 않습니다. (아래 규칙 2의 예외).
 - **시트**: [`Sheet`](/docs/components/sheet)는 투명도 없이 화면 가장자리까지 미끄러져 들어오고 나가며, 뒤 배경의 짙기는 시트의 위치에서 계산합니다(내리는 만큼 옅어집니다). 시트 위에 시트를 또 열면 바깥 시트가 안쪽 시트가 열린 정도에 따라 최대 5%까지 줄어듭니다.
 - **알림 밀어 닫기**: [`Toast`](/docs/components/toast)는 터치와 펜으로 옆으로 밀어 닫을 수 있고, 닫히지 않으면 `SPRING.snappy`로 돌아옵니다. 마우스로는 밀리지 않습니다.
 - **글자 바꾸기**: [`TextRoll`](/docs/components/text-roll)은 이전 글자가 밀려 나가고 새 글자가 같은 거리를 따라 들어옵니다(`DURATION.base`, `EASE.outExpo`).
@@ -48,7 +49,7 @@ description: 움직임의 시간, 곡선, 스프링을 토큰으로 정하고, �
 ## 규칙
 
 1. **움직임은 상태 변화에 붙입니다.** 선택, 진입, 이동, 로딩입니다. 아무 일도 없을 때 계속 움직이는 장식(배경, 커서 따라다니기)은 쓰지 않습니다.
-2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다. 예외는 두 곳입니다. `PackageRow`의 구성 보기는 Radix가 잰 높이(`--radix-accordion-content-height`)까지만 열리는 작은 목록이라 허용했고, `OptionGroup`의 선택 테두리는 절대 위치의 장식이라 높이를 움직여도 다른 요소의 배치가 밀리지 않습니다. 다른 곳에 높이 애니메이션이 필요해 보이면 먼저 예외로 둘 만한지 따져 보십시오.
+2. **`opacity`와 `transform`만 움직입니다.** 너비, 높이, 위치(`top`/`left`)를 애니메이션하면 레이아웃이 밀립니다. 예외는 두 곳입니다. `PackageRow`의 구성 보기는 Radix가 잰 높이(`--radix-accordion-content-height`)까지만 열리는 작은 목록이라 허용했고, `OptionGroup`의 선택 테두리는 절대 위치의 장식이라 높이를 움직여도 다른 요소의 배치가 밀리지 않습니다. `Presence`는 컨트롤 하나가 담기고 빠질 때 이웃이 한꺼번에 밀리지 않고 부드럽게 비켜 주도록 폭(또는 높이)을 움직이며, 작은 컨트롤 하나에 한정합니다. 다른 곳에 높이 애니메이션이 필요해 보이면 먼저 예외로 둘 만한지 따져 보십시오.
 3. **화면당 큰 연출은 하나입니다.** `DURATION.hero`와 `SPRING.bouncy`는 한 화면에 한 번만 씁니다.
 4. **감소 모션을 기본으로 지킵니다.** `useReducedMotion()`으로 읽고, 이동은 없애고 짧은 페이드(`DURATION.instant`)만 남깁니다. 설정이 바뀌면 바로 반영되도록 마운트 때 한 번만 읽지 않습니다. CSS 애니메이션은 `motion-safe:`로 감싸서 감소 모션에서는 아예 적용하지 않습니다(`motion-reduce:animate-none`은 `peer-checked:` 같은 변형에 특이도에서 져서 꺼지지 않습니다).
 5. **Motion과 Tailwind `transition-*`을 같은 요소에 쓰지 않습니다.** WebGL 캔버스에는 Motion을 쓰지 않습니다.
