@@ -20,6 +20,8 @@ import {
   CAMERA_VIEWS,
   type CameraViewId,
   INSIDE_VIEW_NOTE,
+  INSIDE_VIEW_NOTE_APPROX,
+  INSIDE_VIEW_NOTE_NO_ZOOM,
 } from '@repo/vehicle-3d/views';
 import dynamic from 'next/dynamic';
 import { Component, type ReactNode, useEffect, useRef, useState } from 'react';
@@ -285,7 +287,11 @@ export function VehicleStage({
                 value={inside ? 'note' : sunroof ? 'switch' : null}
               >
                 {inside ? (
-                  <p className="text-foreground text-caption px-2.5 py-1.5">{INSIDE_VIEW_NOTE}</p>
+                  <p className="text-foreground text-caption px-2.5 py-1.5">
+                    {INSIDE_VIEW_NOTE_APPROX}
+                    {/* 확대가 꺼진 이유는 비활성 버튼이 이미 보여 준다. 좁은 화면에서는 안내가 차량을 덮지 않게 앞 문장만 두고, 낭독기에는 전체를 읽어 준다. */}
+                    <span className="hidden xl:inline"> {INSIDE_VIEW_NOTE_NO_ZOOM}</span>
+                  </p>
                 ) : (
                   // 스위치 포커스 링(4px)이 틀 가장자리에서 잘리지 않게 왼쪽과 위아래에 여유를 둔다.
                   <div className="flex py-1 pr-3 pl-1">
@@ -341,7 +347,7 @@ export function VehicleStage({
                 {/* 끌기와 두 손가락 벌리기만으로는 손가락 하나로 할 수 없는 사람이 쓸 수 없으므로, 좁은 화면에서도 버튼을 둔다. */}
                 <div
                   aria-label={CAMERA_CONTROL_LABELS.rotateGroup}
-                  className="bg-background/85 border-border absolute right-3 bottom-3 z-10 flex gap-1 rounded-lg border p-1 backdrop-blur-sm"
+                  className="bg-background/85 border-border short-touch:hidden absolute right-3 bottom-3 z-10 flex gap-1 rounded-lg border p-1 backdrop-blur-sm"
                   role="group"
                 >
                   {(

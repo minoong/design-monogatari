@@ -69,6 +69,10 @@ export const CAMERA_CONTROL_LABELS = {
   rotateDown: '아래로 돌리기',
 } as const;
 
-/** 실내 시점에서 보이는 안내. 확대가 꺼지는 이유도 함께 알린다. */
-export const INSIDE_VIEW_NOTE =
-  '실내 색은 근사값이고 시트 구성과 가니쉬는 반영되지 않습니다. 실내에서는 확대할 수 없습니다.';
+/** 실내 시점 안내의 앞 문장: 보이는 것이 근사값임을 알린다. */
+export const INSIDE_VIEW_NOTE_APPROX =
+  '실내 색은 근사값이고 시트 구성과 가니쉬는 반영되지 않습니다.';
+/** 실내 시점 안내의 뒤 문장: 확대가 꺼지는 이유. 좁은 화면에서는 비활성 버튼이 이미 보여 주므로 화면에서는 생략할 수 있다. */
+export const INSIDE_VIEW_NOTE_NO_ZOOM = '실내에서는 확대할 수 없습니다.';
+/** 실내 시점에서 보이는 안내 전체(낭독기와 Storybook은 이 전체를 쓴다). */
+export const INSIDE_VIEW_NOTE = `${INSIDE_VIEW_NOTE_APPROX} ${INSIDE_VIEW_NOTE_NO_ZOOM}`;
