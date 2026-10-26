@@ -4,7 +4,7 @@
 
 - **프레임워크**: Fumadocs (`@fumadocs/base-ui`의 Spacious `DocsLayout` — Radix 판 `fumadocs-ui`에는 없는 레이아웃, `fumadocs-mdx`). 선택 근거와 스파이크 게이트 결과는 `docs/decisions/docs-framework.md`(저장소 루트, 문서 사이트에는 싣지 않는다).
 - **콘텐츠**: `content/docs/**` (MDX, 한국어). 사이드바 순서는 각 폴더의 `meta.json`. `.source/`는 `fumadocs-mdx`가 dev/build 때 만드는 생성물이라 커밋하지 않는다.
-- **구조**: FSD in `src/`. `_app`(루트 레이아웃, 전역 CSS, 폰트, `api-routes/`), `_pages/docs`(문서 셸, 페이지, 메타데이터), `_pages/home`(`/` → `/docs` 리다이렉트), `shared/`(`lib/source.ts` 콘텐츠 로더, `layout-options.tsx`, `ui/mdx-components.tsx`). Next `app/`은 re-export만 하고 route handler 구현은 `src/_app/api-routes/`에 둔다. 예외는 `.claude/rules/fsd-apps.md`.
+- **구조**: FSD in `src/`. `_app`(루트 레이아웃, 전역 CSS, 폰트, `api-routes/`), `_pages/docs`(문서 셸, 페이지, 메타데이터), `_pages/home`(`/` 랜딩 페이지), `shared/`(`lib/source.ts` 콘텐츠 로더, `layout-options.tsx`, `ui/mdx-components.tsx`). Next `app/`은 re-export만 하고 route handler 구현은 `src/_app/api-routes/`에 둔다. 예외는 `.claude/rules/fsd-apps.md`.
 - **에이전트용 노출**: `/llms.txt`, `/llms-full.txt`, 페이지마다 `/docs/<경로>.md`(rewrite → `/llms.mdx/docs/…`), 검색 `/api/search`.
 - **테마**: `RootProvider`(next-themes, `attribute: 'class'`)가 `html.light` / `html.dark`를 전환한다. `globals.css`의 "테마 브리지"가 `--color-fd-*`를 `@repo/ui` 토큰에 연결하므로, 문서 크롬 색을 바꾸려면 Fumadocs 클래스가 아니라 이 브리지를 고친다.
 - **반경**: `@theme inline`이 `rounded-md/lg`에 값을 박아 넣어서 변수 덮어쓰기가 안 먹는다. 크롬은 `globals.css`에서 클래스를 겨냥해 되돌리고, 문서 안에서 `@repo/ui` 컴포넌트를 보여 주는 영역은 `data-ds-preview`로 표시해 제외한다.
@@ -17,6 +17,7 @@
 - **쉘 문구 한국어화**: `@fumadocs/base-ui`는 영어 원문을 키로 `t("On this page")`처럼 부른다. `src/shared/lib/translations.ts`의 사전(영어 → 한국어)을 `src/_app/index.tsx`의 `RootProvider i18n={{ locale: 'ko', translations }}`에 넘긴다. 사전에 없는 문구는 영어로 남으므로, 새 라이브러리 문구가 영어로 보이면 사전에 키를 더한다(라우팅용 i18n은 쓰지 않는다).
 - **아이콘**: 새 의존성(lucide-react)을 들이지 않으려고 `src/shared/ui/section-icons.tsx`에 선 아이콘 몇 개(Book, Layers, Grid, Terminal, Sparkles, Bot)를 직접 둔다. 프런트매터와 `meta.json`의 `icon: Layers` 같은 이름 문자열을 `shared/lib/source.ts`의 `loader({ icon: iconFor })`가 사이드바 아이콘으로 바꾼다. 탭 아이콘은 `docs-layout-client.tsx`에서 직접 준다. MDX 안에서는 `<SectionIcon name="Grid" />`로 쓴다(`Card`의 `icon`).
 - **카드**: `Cards`/`Card`(Fumadocs 기본)는 에이전트용 Markdown에서 `- [제목](주소): 설명` 목록으로 펼쳐진다(`remark-doc-blocks.ts`). `href`는 실제 페이지 주소여야 한다(인덱스 페이지 없는 폴더 주소는 404).
+- **랜딩 페이지** (`/`, `src/_pages/home/ui/`): `HomeLayout`(`@fumadocs/base-ui/layouts/home`) 헤더 아래에 히어로(태그, 제목, CTA, 실제 컴포넌트를 조합한 라이브 견적 카드 `hero-estimate.tsx`), 컴포넌트 갤러리(`gallery.tsx`, 카드마다 눌러 볼 수 있는 미리보기와 문서 링크), 토큰 견본(`token-section.tsx`, 색은 `getPaletteRows`로 레지스트리 테마에서 읽음), 모션 데모(`motion-section.tsx`, `_examples`의 문서 예시를 그대로 재사용), 설치 명령(`install-section.tsx`), 푸터가 있다. 모두 `@repo/ui/*` 컴포넌트와 토큰만 쓰고 새 의존성이 없다. 라이브 미리보기는 클라이언트 컴포넌트이고 나머지는 서버 컴포넌트다. 갤러리 카드의 아래 칸은 설명 줄 수가 달라도 구분선 높이가 같도록 최소 높이를 고정한다. 새 컴포넌트를 갤러리에 더할 때는 카드에 문서 링크를 건다. fumadocs.dev 홈의 구조를 참고했을 뿐 코드와 이미지는 가져오지 않았다.
 - UI from `@repo/ui/*`.
 - `.mdx`는 Prettier 대상(린트 대상 아님). 생성물(`.source`, `public/r`)은 `.prettierignore`에 있다.
 - 전역 CSS(`src/_app/styles/globals.css`)에 `overflow-x: hidden`이나 unlayered 링크 리셋(`a { color: inherit }`)을 넣지 말 것: sticky 사이드바와 문서 프레임워크의 링크 색을 깨뜨린다.
