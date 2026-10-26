@@ -22,7 +22,7 @@ export function HomePage() {
         { text: 'AI 워크플로', url: '/docs/ai-workflow', active: 'nested-url' },
       ]}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col break-keep">
         <section className="mx-auto w-full max-w-6xl px-4 pt-14 md:px-6 md:pt-24">
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
             <p className="border-primary/40 text-primary m-0 rounded-full border px-3 py-1 font-mono text-xs">
@@ -45,7 +45,14 @@ export function HomePage() {
             </div>
           </div>
           <div className="border-border relative mt-14 overflow-hidden rounded-2xl border bg-[radial-gradient(120%_90%_at_50%_0%,color-mix(in_oklab,var(--color-primary)_20%,transparent),transparent_70%)] p-4 md:p-10">
-            <HeroEstimate />
+            {/* 장식: 아주 옅은 격자가 위쪽에서 아래로 사라진다. 클릭을 가로채지 않고 낭독기에는 숨긴다. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,color-mix(in_oklab,var(--color-foreground)_7%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklab,var(--color-foreground)_7%,transparent)_1px,transparent_1px)] mask-[radial-gradient(80%_70%_at_50%_0%,black,transparent)] bg-size-[32px_32px]"
+            />
+            <div className="relative">
+              <HeroEstimate />
+            </div>
           </div>
           <p className="text-muted-foreground mt-3 mb-0 text-center text-xs">
             위 카드는 실제 컴포넌트입니다. 눌러 보십시오. 가상의 견적 데모이며 BMW와 무관합니다.
