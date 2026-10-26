@@ -38,8 +38,11 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const R_DIR = join(ROOT, 'apps/docs/public/r');
 const SHADCN = join(ROOT, 'node_modules/.bin/shadcn');
 const NAMESPACE = 'minoong/design-monogatari';
-/** 소비자 앱 생성기 버전. 외부 도구 업데이트 때문에 PR이 이유 없이 빨개지지 않게 고정한다 */
-const CREATE_NEXT_APP = 'create-next-app@16.4.0';
+/**
+ * 소비자 앱 생성기 버전. 외부 도구 업데이트 때문에 PR이 이유 없이 빨개지지 않게 고정한다.
+ * 알려진 보안 취약점이 있는 Next 버전(16.4.0 이하)은 `next build`가 스스로 중단되므로, 고정 버전은 패치된 버전으로 유지한다.
+ */
+const CREATE_NEXT_APP = 'create-next-app@16.4.1';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
