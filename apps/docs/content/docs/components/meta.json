@@ -29,6 +29,8 @@
     "copy-button",
     "text-roll",
     "segmented",
-    "switch"
+    "switch",
+    "switch-field",
+    "presence"
   ]
 }

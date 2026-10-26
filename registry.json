@@ -768,6 +768,45 @@
           "target": "@ui/switch.tsx"
         }
       ]
+    },
+    {
+      "name": "switch-field",
+      "type": "registry:ui",
+      "title": "Switch Field",
+      "description": "Switch and its label in one label element, with an optional rolling state word that is hidden from screen readers.",
+      "dependencies": ["@radix-ui/react-label", "clsx", "motion", "tailwind-merge"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/label",
+        "minoong/design-monogatari/switch",
+        "minoong/design-monogatari/text-roll"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/switch-field.tsx",
+          "type": "registry:ui",
+          "target": "@ui/switch-field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "presence",
+      "type": "registry:ui",
+      "title": "Presence",
+      "description": "Wrapper that opens and closes the space of a conditionally rendered control (collapse, slide, spring) or keeps it (reserve) so neighbours ease aside or stay put; opaque the whole time, inert while leaving.",
+      "dependencies": ["motion"],
+      "registryDependencies": [
+        "minoong/design-monogatari/theme",
+        "minoong/design-monogatari/motion"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/presence.tsx",
+          "type": "registry:ui",
+          "target": "@ui/presence.tsx"
+        }
+      ]
     }
   ]
 }
