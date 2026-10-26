@@ -88,9 +88,8 @@ export function EstimateApp({
   const [summaryOpen, setSummaryOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  // 좁은 화면에서 차량 영역의 크기. 패널을 아래로 내리면 줄고(compact), 직접 키울 수도 있다(large).
+  // 좁은 화면에서 차량 영역의 크기. 패널을 아래로 내리면 줄고(compact), 맨 위로 돌아오면 다시 커진다.
   const [stageCompact, setStageCompact] = useState(false);
-  const [stageLarge, setStageLarge] = useState(false);
   // 3D 차량이 다 그려지면 채워지는 "차량 이미지 만들기" 함수. 결과 화면의 저장 버튼이 쓴다.
   const [captureImage, setCaptureImage] = useState<(() => Promise<Blob | null>) | null>(null);
   const handleCaptureChange = useCallback((capture: (() => Promise<Blob | null>) | null) => {
@@ -162,7 +161,7 @@ export function EstimateApp({
    * 충분히 남을 때만 줄인다. 줄이고 키우는 기준을 다르게 둬서(64px/8px) 경계에서 흔들리지 않게 한다.
    */
   function handleScroll(event: UIEvent<HTMLDivElement>) {
-    if (isSplit || stageLarge) return;
+    if (isSplit) return;
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     const gain = window.innerHeight * 0.18;
     setStageCompact((compact) =>
@@ -235,14 +234,9 @@ export function EstimateApp({
               color={state.selection.color}
               colorLabel={colorLabel}
               interior={state.selection.interior}
-              large={stageLarge}
               notice={<StageNotice notices={state.notices} />}
               onCaptureChange={handleCaptureChange}
               compact={stageCompact}
-              onToggleLarge={() => {
-                setStageLarge((large) => !large);
-                setStageCompact(false);
-              }}
               rimFinish={state.selection.rimFinish}
               step={state.step}
               sunroof={hasSunroof(state.selection.packages)}
