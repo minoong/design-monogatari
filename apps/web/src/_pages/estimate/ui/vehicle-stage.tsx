@@ -34,8 +34,9 @@ import { rimFinishSwatchOf } from '../model/rim-map';
 import { SUNROOF_PACKAGES } from '../model/roof-map';
 import { isInsideView, STAGE_VIEW_OPTIONS, stageViewOf } from '../model/stage-view';
 import type { StepId } from '../model/steps';
-import type { CaliperId, ColorId, InteriorId, RimFinishId, WheelId } from '../model/types';
+import type { CaliperId, ColorId, Effect, InteriorId, RimFinishId, WheelId } from '../model/types';
 import { WHEEL_INCH } from '../model/wheel-map';
+import { NOTICE_LEAD, useStageNotice } from './stage-notice';
 
 const VEHICLE = vehicleById('x5-web');
 
@@ -173,7 +174,7 @@ export function VehicleStage({
   colorLabel,
   compact,
   interior,
-  notice,
+  notices,
   onCaptureChange,
   rimFinish,
   sunroof,
@@ -186,8 +187,8 @@ export function VehicleStage({
   /** 좁은 화면에서 패널을 내려 차량 영역을 줄인 상태. 좌우로 나누는 화면에서는 쓰지 않는다. */
   compact: boolean;
   interior: InteriorId;
-  /** 차량 위 아래쪽에 겹쳐 보이는 안내(자동으로 바뀐 선택 등). 배치를 바꾸지 않는다. */
-  notice?: ReactNode;
+  /** 자동으로 바뀐 선택. 왼쪽 위 틀에 잠깐 문장으로 보인다(차량 위에 겹쳐 배치를 바꾸지 않는다). */
+  notices: readonly Effect[];
   /**
    * 차량 이미지를 만들 수 있는지 알린다. 모델이 다 그려지면 이미지를 만드는 함수를, 아직이거나 3D를 쓸 수 없으면 null을 넘긴다.
    * 이미지는 화면의 시점과 상관없이 늘 같은 앞 3/4 구도다.
@@ -216,6 +217,7 @@ export function VehicleStage({
     setSunroofOpen(false);
   }
   const inside = isInsideView(view);
+  const stageNotice = useStageNotice(notices);
   const paint = paintSwatchOf(color);
   const showFallback = unavailable || failed;
   const canCapture = ready && !showFallback;
@@ -244,7 +246,10 @@ export function VehicleStage({
             ? ''
             : `시점: ${CAMERA_VIEWS[view].label}${inside ? `. ${INSIDE_VIEW_NOTE}` : ''}`}
         </p>
-        {notice}
+        {/* 자동 변경 알림은 틀이 잠깐만 보여 주므로, 낭독기에는 항상 있는 이 영역에 같은 문장을 넣는다. */}
+        <p className="sr-only" role="status">
+          {showFallback || !stageNotice.visible ? '' : stageNotice.message}
+        </p>
         {showFallback ? (
           fallback
         ) : (
@@ -277,16 +282,20 @@ export function VehicleStage({
         )}
         {!showFallback ? (
           <>
-            {/* 왼쪽 위 모서리는 한 틀이 번갈아 쓴다: 선루프 품목이 있으면 스위치 알약, 안쪽 시점이면 안내 문구. 시점이 바뀌면 틀이 새 내용의 크기로 변형된다. 틀은 차량 위에 겹쳐서 자리를 잡지 않고, 오른쪽 위 도구 판(폭 42px)을 가리지 않게 오른쪽을 비운다. */}
+            {/* 왼쪽 위 모서리는 한 틀이 번갈아 쓴다: 선루프 품목이 있으면 스위치 알약, 안쪽 시점이면 안내 문구, 선택이 자동으로 바뀌면 그 문장(잠깐). 내용이 바뀌면 틀이 새 내용의 크기로 변형된다. 틀은 차량 위에 겹쳐서 자리를 잡지 않고, 오른쪽 위 도구 판(폭 42px)을 가리지 않게 오른쪽을 비운다. */}
             <div className="absolute top-3 left-3 z-10 max-w-[calc(100%-4.5rem)]">
               <Morph
                 // 틀 안의 "열림/닫힘" 글자는 옅은 글자색이라, 어두운 차 위에서도 4.5:1을 지키도록 판보다 불투명하게 둔다(95%).
                 className="bg-background/95 border-border max-w-full border backdrop-blur-sm"
-                order={['switch', 'note']}
-                radii={{ switch: 18, note: 8 }}
-                value={inside ? 'note' : sunroof ? 'switch' : null}
+                order={['switch', 'note', 'notice']}
+                radii={{ switch: 18, note: 8, notice: 8 }}
+                value={stageNotice.visible ? 'notice' : inside ? 'note' : sunroof ? 'switch' : null}
               >
-                {inside ? (
+                {stageNotice.visible ? (
+                  <p className="text-foreground text-caption px-2.5 py-1.5">
+                    <span className="font-semibold">{NOTICE_LEAD}</span> {stageNotice.detail}
+                  </p>
+                ) : inside ? (
                   <p className="text-foreground text-caption px-2.5 py-1.5">
                     {INSIDE_VIEW_NOTE_APPROX}
                     {/* 확대가 꺼진 이유는 비활성 버튼이 이미 보여 준다. 좁은 화면에서는 안내가 차량을 덮지 않게 앞 문장만 두고, 낭독기에는 전체를 읽어 준다. */}

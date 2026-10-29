@@ -39,7 +39,6 @@ import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-d
 import { EstimateHeader } from './estimate-header';
 import { RestoreIssueToast } from './restore-issue-toast';
 import { ResultStep } from './result-step';
-import { StageNotice } from './stage-notice';
 import {
   AccessoriesStep,
   ExteriorStep,
@@ -234,7 +233,7 @@ export function EstimateApp({
               color={state.selection.color}
               colorLabel={colorLabel}
               interior={state.selection.interior}
-              notice={<StageNotice notices={state.notices} />}
+              notices={state.notices}
               onCaptureChange={handleCaptureChange}
               compact={stageCompact}
               rimFinish={state.selection.rimFinish}
