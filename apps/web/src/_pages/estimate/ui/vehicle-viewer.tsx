@@ -63,9 +63,9 @@ export default function VehicleViewer({
       vehicleId="x5-web"
       view={view}
       wheelInch={wheelInch}
-      wheelZoom={false}
-      // 차량 영역은 스크롤되는 패널 밖에 있고 페이지도 스크롤되지 않으므로(작은 창 `tiny` 제외) 내줄 스크롤이 없다. 세로 드래그도 회전에 쓴다.
-      touchScroll={false}
+      // 휠과 핀치로 확대한다. 차량 영역은 스크롤되는 패널 밖에 있고 페이지도 스크롤되지 않으므로(작은 창 `tiny` 제외) 휠이 가로챌 스크롤이 없다.
+      // `touchScroll`도 기본값(꺼짐)이라 세로 드래그가 회전에 쓰이고 두 손가락 확대가 캔버스에 전달된다. 확대 버튼은 손가락 하나로 할 수 없는 사람을 위한 대안으로 남는다.
+      wheelZoom
     />
   );
 }
