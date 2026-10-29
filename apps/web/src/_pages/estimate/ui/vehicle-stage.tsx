@@ -233,10 +233,12 @@ export function VehicleStage({
     <figure className="split:min-h-0 split:flex-1 split:gap-2 m-0 flex flex-col">
       <div
         className={cn(
-          'border-border bg-card split:h-auto split:min-h-0 split:flex-1 split:rounded-lg split:border relative w-full overflow-hidden',
+          'group/stage border-border bg-card split:h-auto split:min-h-0 split:flex-1 split:rounded-lg split:border relative w-full overflow-hidden',
           // 좁은 화면의 높이: 기본, 패널을 내렸을 때. 좌우로 나누는 화면에서는 남는 높이를 모두 쓴다.
           compact ? 'h-[18dvh] min-h-32' : 'h-[34dvh] min-h-48',
         )}
+        // 도구 판(회전 화살표)이 그려지는지. 자동 변경 알림이 이 값을 보고 화살표 판 위로 올라간다.
+        data-tools={!compact && !showFallback}
       >
         {/* 시점이 바뀌어도 화면 낭독기가 알 수 있게 항상 그려 두고 글자만 바꾼다(그려지는 순간 채워진 알림은 읽히지 않는 일이 많다). */}
         <p className="sr-only" role="status">

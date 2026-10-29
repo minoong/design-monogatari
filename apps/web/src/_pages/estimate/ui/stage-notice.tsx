@@ -44,10 +44,12 @@ export function StageNotice({ notices }: { notices: readonly Effect[] }) {
   return (
     <div
       role="status"
-      className="split:right-auto split:max-w-[min(28rem,calc(100%-12rem))] split:pr-0 pointer-events-none absolute inset-x-3 bottom-3 z-10 flex justify-start pr-44"
+      // 회전 화살표 판이 있으면(`data-tools`) 그 위로 올려서 넓은 폭을 쓴다. 오른쪽은 위쪽 확대 판(폭 42px)을 피해 비운다.
+      // 판이 없을 때(차량 영역이 줄었거나 가로 폰의 터치 화면)는 아래 가장자리에 둔다.
+      className="split:right-auto split:max-w-md group-data-[tools=true]/stage:short-touch:bottom-3 pointer-events-none absolute inset-x-3 bottom-3 z-10 flex justify-start pr-14 group-data-[tools=true]/stage:bottom-16"
     >
       {visible && first ? (
-        <p className="bg-background/85 text-foreground text-caption line-clamp-2 rounded-md px-2.5 py-1.5 backdrop-blur-sm">
+        <p className="bg-background/85 text-foreground text-caption rounded-md px-2.5 py-1.5 backdrop-blur-sm">
           <span className="font-semibold">선택이 자동으로 바뀌었습니다.</span>{' '}
           {describeEffect(first)}
           {more > 0 ? ` 외 ${more}건. 견적 요약에서 모두 볼 수 있습니다.` : ''}
