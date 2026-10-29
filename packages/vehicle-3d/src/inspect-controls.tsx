@@ -261,6 +261,7 @@ export function InspectControls({
   view,
   cabinLight = CABIN_LIGHT,
   wheelZoom = true,
+  touchScroll,
 }: {
   handleRef: RefObject<InspectHandle | null>;
   /** 카메라 시점. 바뀌면 현재 위치에서 새 시점까지 부드럽게 움직인다. */
@@ -269,6 +270,12 @@ export function InspectControls({
   cabinLight?: { intensity: number; environment: number };
   /** false 이면 휠·핀치 확대를 끈다. 스크롤되는 페이지 안에서 휠이 페이지 스크롤을 가로채지 않게 한다(확대는 `handleRef`로). */
   wheelZoom?: boolean;
+  /**
+   * true이면 캔버스 위에서 세로로 쓸어 넘기는 터치를 페이지 스크롤에 내준다(`touch-action: pan-y`). 이때는 가로 드래그만 회전에 쓰이고 위아래 회전은
+   * 터치로 할 수 없다. 모르면 `!wheelZoom`(확대를 끈 쪽은 스크롤되는 페이지 안이라고 본다). 캔버스가 스크롤 영역 밖에 있어 내줄 스크롤이 없으면
+   * false로 두어 세로 드래그도 회전하게 한다.
+   */
+  touchScroll?: boolean;
 }) {
   const camera = useThree((state) => state.camera);
   const gl = useThree((state) => state.gl);
@@ -310,10 +317,11 @@ export function InspectControls({
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.enablePan = false;
-    // 확대를 끈 쪽은 스크롤되는 페이지 안이다. 세로로 쓸어 넘기는 터치는 페이지 스크롤에 내주고, 가로 드래그만 회전에 쓴다.
+    // 기본은 확대를 끈 쪽이 스크롤되는 페이지 안이라고 본다. 그때 세로로 쓸어 넘기는 터치는 페이지 스크롤에 내주고, 가로 드래그만 회전에 쓴다.
+    // 내줄 스크롤이 없으면(`touchScroll={false}`) OrbitControls의 기본(`touch-action: none`)을 그대로 둬서 세로 드래그도 회전한다.
     const canvasElement = gl.domElement;
     const previousTouchAction = canvasElement.style.getPropertyValue('touch-action');
-    if (!wheelZoom) canvasElement.style.setProperty('touch-action', 'pan-y');
+    if (touchScroll ?? !wheelZoom) canvasElement.style.setProperty('touch-action', 'pan-y');
 
     setClipPlanes(camera);
 
@@ -436,7 +444,7 @@ export function InspectControls({
       canvasElement.style.setProperty('touch-action', previousTouchAction);
       controlsRef.current = null;
     };
-  }, [camera, gl, handleRef, invalidate, scene, wheelZoom]);
+  }, [camera, gl, handleRef, invalidate, scene, touchScroll, wheelZoom]);
 
   useEffect(() => {
     viewRef.current = view;
