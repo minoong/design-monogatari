@@ -271,6 +271,11 @@ export type VehicleCanvasProps = {
   view?: CameraViewId;
   /** false 이면 휠·핀치 확대를 끈다. 페이지가 스크롤될 때 휠이 캔버스에 걸리지 않는다. 확대는 `inspectRef`의 `zoomIn`·`zoomOut`으로 합니다. */
   wheelZoom?: boolean;
+  /**
+   * true이면 캔버스 위의 세로 터치 드래그를 페이지 스크롤에 내준다(위아래 회전은 터치로 안 된다). 기본은 `!wheelZoom`. 캔버스가 스크롤 영역 밖에 있어
+   * 내줄 스크롤이 없으면 false로 둬서 세로 드래그도 회전하게 한다.
+   */
+  touchScroll?: boolean;
   /** 휠 크기(인치). 림 크기와 타이어 옆면 두께가 바뀐다. 없으면 모델 원래 크기(21인치). */
   wheelInch?: number;
   /** 모델 조립이 끝났을 때 한 번 호출된다. 호스트가 로딩 표시를 걷는 데 쓴다. */
@@ -296,6 +301,7 @@ export function VehicleCanvas({
   inspectRef,
   view = DEFAULT_CAMERA_VIEW,
   wheelZoom,
+  touchScroll,
   wheelInch,
   onReady,
   available,
@@ -321,6 +327,7 @@ export function VehicleCanvas({
           handleRef={inspectRef}
           view={view}
           wheelZoom={wheelZoom}
+          touchScroll={touchScroll}
         />
       ) : null}
       {available ? (

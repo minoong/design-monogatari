@@ -64,6 +64,8 @@ export default function VehicleViewer({
       view={view}
       wheelInch={wheelInch}
       wheelZoom={false}
+      // 차량 영역은 스크롤되는 패널 밖에 있고 페이지도 스크롤되지 않으므로(작은 창 `tiny` 제외) 내줄 스크롤이 없다. 세로 드래그도 회전에 쓴다.
+      touchScroll={false}
     />
   );
 }
