@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 import { Button } from './button';
+import { ArrowLeftIcon } from './icons/arrow-left';
+import { ArrowRightIcon } from './icons/arrow-right';
 import { PriceBar, PriceBarActions, PriceBarTotal, PriceBreakdown, PriceRow } from './price-bar';
 import { textControls } from './storybook/arg-types';
 
@@ -62,6 +64,75 @@ function PriceBarDemo() {
 export const 기본: Story = {
   render: () => <PriceBarDemo />,
 };
+
+const NARROW_AMOUNTS = [
+  { label: '8천만 원대', amount: 82_900_000 },
+  { label: '1억 원대', amount: 129_850_000 },
+  { label: '11억 원대', amount: 1_129_850_000 },
+] as const;
+
+function NarrowBar({ width, amount }: { width: number; amount: number }) {
+  return (
+    <figure className="m-0 max-w-full" style={{ width }}>
+      <figcaption className="text-muted-foreground text-caption mb-1">{width}px 폭</figcaption>
+      <PriceBar className="border-border gap-x-3 gap-y-2 rounded-lg border">
+        <PriceBarTotal amount={amount} />
+        <PriceBarActions className="ml-auto flex-nowrap">
+          <Button variant="secondary">
+            <ArrowLeftIcon data-icon="inline-start" />
+            이전
+          </Button>
+          <Button variant="primary">
+            다음
+            <ArrowRightIcon data-icon="inline-end" />
+          </Button>
+        </PriceBarActions>
+      </PriceBar>
+    </figure>
+  );
+}
+
+export const 좁은폭: Story = {
+  name: '좁은 폭에서 글자 줄이기',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '금액이 버튼 옆 자리보다 길면 글자 크기를 줄여 한 줄에 맞춥니다(제목 크기의 절반까지). 그래도 안 들어가는 폭에서는 총액이 자기 줄로 내려갑니다. 금액을 바꿔 두 폭을 비교해 보십시오.',
+      },
+    },
+  },
+  render: () => <NarrowDemo />,
+};
+
+function NarrowDemo() {
+  const [index, setIndex] = useState(1);
+  const { amount } = NARROW_AMOUNTS[index] ?? NARROW_AMOUNTS[0];
+
+  return (
+    <div className="flex flex-col gap-3 p-3">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="금액">
+        {NARROW_AMOUNTS.map((item, i) => (
+          <Button
+            key={item.label}
+            size="small"
+            variant={i === index ? 'primary' : 'secondary'}
+            aria-pressed={i === index}
+            onClick={() => {
+              setIndex(i);
+            }}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </div>
+      <div className="flex flex-wrap items-start gap-3">
+        <NarrowBar width={390} amount={amount} />
+        <NarrowBar width={320} amount={amount} />
+      </div>
+    </div>
+  );
+}
 
 export const 항목별금액: Story = {
   name: '항목별 금액',
