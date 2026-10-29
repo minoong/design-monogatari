@@ -9,6 +9,7 @@ import {
   type PointLight,
   type Scene,
   Spherical,
+  TOUCH,
   Vector2,
   Vector3,
   type WebGLRenderer,
@@ -228,6 +229,9 @@ function applyViewLimits(controls: OrbitControls, view: CameraViewId, wheelZoom:
   controls.enableRotate = true;
   if (spec.inside) {
     controls.enableZoom = false;
+    // 확대도 이동도 꺼진 채로 두 손가락을 대면 OrbitControls는 상태를 바꾸지 않고 돌아가서, 첫 손가락이 시작한 회전이 그대로 남는다(두 손가락 핀치가
+    // 장면을 크게 돌렸다). 두 손가락 동작을 비워 두면 아무 일도 하지 않는다.
+    controls.touches.TWO = null;
     controls.minDistance = INSIDE_ORBIT_RADIUS;
     controls.maxDistance = INSIDE_ORBIT_RADIUS;
     // 위로는 수평에서 0.45rad(약 26°), 아래로는 0.2rad(약 11°)까지만. 더 젖히면 원근 때문에 화면이 기울어 보이고,
@@ -239,6 +243,7 @@ function applyViewLimits(controls: OrbitControls, view: CameraViewId, wheelZoom:
     return;
   }
   controls.enableZoom = wheelZoom;
+  controls.touches.TWO = TOUCH.DOLLY_PAN;
   controls.minDistance = spec.minDistance;
   controls.maxDistance = spec.maxDistance;
   controls.minPolarAngle = 0.18;
