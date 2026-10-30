@@ -44,6 +44,7 @@ const meta = {
     amount: { control: 'number' },
     // `fixed`는 화면 아래에 붙으므로 따로 둔 `고정` 스토리에서만 다룬다.
     fixed: { control: false },
+    currency: { control: 'inline-radio', options: ['won', 'symbol'] },
     ...textControls('label', 'note', 'aria-label'),
   },
 } satisfies Meta<PriceBarArgs>;
@@ -110,7 +111,7 @@ function FitDemo() {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex max-w-xs flex-col gap-1.5">
-        <Label htmlFor={inputId}>금액(원)</Label>
+        <Label htmlFor={inputId}>금액(₩)</Label>
         <Input
           id={inputId}
           inputMode="numeric"
@@ -187,6 +188,14 @@ export const 항목별금액: Story = {
       </div>
     ),
   ],
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`PriceRow`는 숫자를 "₩1,000" 모양으로 서식을 맞추고, `signed`는 부호를, 숫자가 아닌 값은 그대로 보입니다. `action`은 라벨과 금액 사이 오른쪽 끝에 놓이고 `total`은 위에 선이 그어집니다. 낭독기에는 "원"으로 쓴 금액이 읽힙니다.',
+      },
+    },
+  },
   render: () => (
     <PriceBreakdown title="견적 요약">
       <PriceRow label="기본 가격" amount={82_900_000} />

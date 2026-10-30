@@ -35,7 +35,7 @@ const COLORS = [
     label: '펄 화이트',
     color: '#e8e6df',
     group: '메탈릭',
-    price: '+1,000,000원',
+    price: '+₩1,000,000',
     extra: 1_000_000,
   },
   {
@@ -43,15 +43,15 @@ const COLORS = [
     label: '브론즈',
     color: '#7a5c3e',
     group: '메탈릭',
-    price: '+1,000,000원',
+    price: '+₩1,000,000',
     extra: 1_000_000,
   },
 ] as const;
 
 const WHEELS = [
   { value: 'w19', label: '19인치 기본 휠', price: '기본 포함', extra: 0 },
-  { value: 'w20', label: '20인치 알로이 휠', price: '+1,500,000원', extra: 1_500_000 },
-  { value: 'w21', label: '21인치 알로이 휠', price: '+3,200,000원', extra: 3_200_000 },
+  { value: 'w20', label: '20인치 알로이 휠', price: '+₩1,500,000', extra: 1_500_000 },
+  { value: 'w21', label: '21인치 알로이 휠', price: '+₩3,200,000', extra: 3_200_000 },
 ] as const;
 
 const VIEWS = [

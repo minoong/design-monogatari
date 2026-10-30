@@ -52,14 +52,14 @@ export const 선택불가이유: Story = {
   args: {
     label: '21인치 알로이 휠',
     description: '지름이 커서 더 단단한 인상입니다.',
-    price: '+3,200,000원',
+    price: '+₩3,200,000',
     unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있습니다.',
   },
   decorators: 기본.decorators,
 };
 
 export const 비활성: Story = {
-  args: { disabled: true, label: '20인치 알로이 휠', price: '+1,500,000원' },
+  args: { disabled: true, label: '20인치 알로이 휠', price: '+₩1,500,000' },
   decorators: 기본.decorators,
 };
 
@@ -73,7 +73,7 @@ export const 뱃지와썸네일: Story = {
       </span>
     ),
     media: <span aria-hidden className="bg-muted border-border block size-12 rounded-md border" />,
-    price: '+500,000원',
+    price: '+₩500,000',
   },
   decorators: 기본.decorators,
 };
@@ -82,11 +82,11 @@ function WheelGroup() {
   const [value, setValue] = useState('w19');
   const wheels = [
     { value: 'w19', label: '19인치 기본 휠', price: '기본 포함' },
-    { value: 'w20', label: '20인치 알로이 휠', price: '+1,500,000원' },
+    { value: 'w20', label: '20인치 알로이 휠', price: '+₩1,500,000' },
     {
       value: 'w21',
       label: '21인치 알로이 휠',
-      price: '+3,200,000원',
+      price: '+₩3,200,000',
       unavailableReason: '가솔린 스포트 트림에서만 선택할 수 있습니다.',
     },
   ];
@@ -131,13 +131,13 @@ export const 비제어_그룹: Story = {
         price="기본 포함"
         defaultChecked
       />
-      <OptionRow name="story-drive" value="all" label="사륜구동" price="+2,400,000원" />
+      <OptionRow name="story-drive" value="all" label="사륜구동" price="+₩2,400,000" />
       <OptionRow
         name="story-drive"
         value="hybrid"
         label="플러그인 하이브리드"
         description="전기 모터가 함께 구동합니다."
-        price="+6,800,000원"
+        price="+₩6,800,000"
       />
     </OptionGroup>
   ),

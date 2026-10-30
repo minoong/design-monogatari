@@ -18,7 +18,7 @@ export type ChangeDiffProps = Omit<ComponentProps<'div'>, 'children'> & {
   itemLabel?: string;
   beforeLabel?: string;
   afterLabel?: string;
-  /** 합계 줄에 보일 값 (예: "+1,500,000원") */
+  /** 합계 줄에 보일 값 (예: "+₩1,500,000") */
   summary?: ReactNode;
   summaryLabel?: string;
   /** 상태 표식과 빈 칸에 쓰는 글자 */

@@ -22,7 +22,7 @@ const meta = {
       { label: '선택 품목', before: '스카이 라운지 루프', after: undefined },
       { label: '액세서리', before: undefined, after: '빌트인 블랙박스' },
     ],
-    summary: '-3,100,000원',
+    summary: '-₩3,100,000',
   },
   decorators: [
     (Story) => (
@@ -52,6 +52,6 @@ export const 한줄: Story = {
   name: '한 항목만',
   args: {
     rows: [{ label: '시트', before: '5인승', after: '4인승 독립 시트' }],
-    summary: '+3,000,000원',
+    summary: '+₩3,000,000',
   },
 };

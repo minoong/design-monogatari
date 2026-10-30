@@ -37,8 +37,8 @@ export function AnimatedAmount({
   value,
   animate = true,
   className,
-  prefix,
-  suffix = '원',
+  prefix: prefixProp,
+  suffix: suffixProp,
   locales = 'ko-KR',
   format = KRW_FORMAT,
   inView = false,
@@ -48,6 +48,9 @@ export function AnimatedAmount({
   inViewRoot,
   reserveWidth = true,
 }: AnimatedAmountProps) {
+  // 접두사와 접미사를 둘 다 안 주면 원화 기호 ₩이 앞에 붙는다. 하나라도 주면(예: 퍼센트의 `suffix="%"`) 기본 ₩은 붙지 않는다.
+  const prefix = prefixProp ?? (suffixProp === undefined ? '₩' : undefined);
+  const suffix = suffixProp ?? '';
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, {
     amount: inViewAmount,
@@ -69,8 +72,13 @@ export function AnimatedAmount({
         {reserveWidth && prefix ? <span className="whitespace-pre">{prefix}</span> : null}
         {reserveWidth ? (
           // 숨은 글자와 숫자를 같은 칸에 겹쳐 둔다. 절대 위치로 띄우면 숫자가 칸 맨 위에 붙어 접미사와 기준선이 글자 크기마다
-          // 달라지므로, 격자에서 기준선을 맞춘다. 폭은 숨은 글자가 잡고 숫자는 오른쪽에 붙는다.
-          <span className="inline-grid items-baseline justify-items-end">
+          // 달라지므로, 격자에서 기준선을 맞춘다. 폭은 숨은 글자가 잡고 숫자는 접미사가 있으면 오른쪽(접미사 쪽), 없으면 왼쪽(접두사 쪽)에 붙는다.
+          <span
+            className={cn(
+              'inline-grid items-baseline',
+              suffix ? 'justify-items-end' : 'justify-items-start',
+            )}
+          >
             <span aria-hidden className="invisible whitespace-nowrap [grid-area:1/1]">
               {digitText}
             </span>

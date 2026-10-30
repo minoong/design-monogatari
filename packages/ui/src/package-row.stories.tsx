@@ -19,7 +19,7 @@ const meta = {
   args: {
     label: '파퓰러 패키지',
     description: '드라이빙 어시스턴스와 헤드업 디스플레이를 함께 담았습니다.',
-    price: '+3,600,000원',
+    price: '+₩3,600,000',
     items: ['드라이빙 어시스턴스', '헤드업 디스플레이'],
   },
   decorators: [
@@ -48,7 +48,7 @@ export const 구성없음: Story = {
   args: {
     label: '파노라마 선루프',
     description: undefined,
-    price: '+1,800,000원',
+    price: '+₩1,800,000',
     items: undefined,
   },
 };

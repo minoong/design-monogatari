@@ -121,7 +121,7 @@
           "text-body--line-height": "1.625",
           "text-caption": "0.875rem",
           "text-caption--line-height": "1.5",
-          "font-sans": "var(--font-geist-sans, ui-sans-serif), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          "font-sans": "'Won Sign', var(--font-geist-sans, ui-sans-serif), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           "font-mono": "var(--font-geist-mono, ui-monospace), 'SFMono-Regular', menlo, monaco, consolas, monospace",
           "radius-md": "11px",
           "radius-lg": "18px",

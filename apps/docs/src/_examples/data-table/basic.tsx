@@ -8,7 +8,7 @@ const FEES: readonly Fee[] = [
   { region: '제주', delivery: 910_000, registration: 140_000 },
 ];
 
-const won = (value: number) => `${new Intl.NumberFormat('ko-KR').format(value)}원`;
+const won = (value: number) => `₩${new Intl.NumberFormat('ko-KR').format(value)}`;
 
 const COLUMNS: readonly DataTableColumn<Fee>[] = [
   { key: 'region', header: '탁송 지역', rowHeader: true },

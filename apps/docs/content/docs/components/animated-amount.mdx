@@ -25,7 +25,7 @@ export function Example({ total }: { total: number }) {
 
 ### 접두사, 접미사, 형식
 
-기본은 `ko-KR`로 정수에 `원`입니다. `prefix`, `suffix`로 앞뒤 글자를, `format`으로 `Intl.NumberFormat` 옵션을 바꿀 수 있습니다.
+기본은 `ko-KR`로 정수에 앞에 `₩`을 붙입니다(`prefix`와 `suffix`를 둘 다 안 줄 때만이고, 하나라도 주면 `₩`은 붙지 않습니다). `prefix`, `suffix`로 앞뒤 글자를, `format`으로 `Intl.NumberFormat` 옵션을 바꿀 수 있습니다.
 
 <ComponentPreview name="animated-amount/affixes" />
 
@@ -59,7 +59,8 @@ export function Example({ total }: { total: number }) {
   ]}
   defaults={{
     animate: 'true',
-    suffix: '"원"',
+    prefix: '"₩" (prefix와 suffix를 둘 다 안 줄 때)',
+    suffix: '""',
     locales: '"ko-KR"',
     format: '정수 (소수 자릿수 0)',
     reserveWidth: 'true',
@@ -90,7 +91,7 @@ export function Example({ total }: { total: number }) {
 숫자는 [NumberFlow](https://number-flow.barvian.me/)로 그립니다. 스크린 리더에는 이렇게 노출됩니다 (Chrome 접근성 트리로 확인).
 
 - 숫자는 `image` 역할에 `aria-label="1,250,000"`처럼 **쉼표가 들어간 최종 값**이 이름입니다. 값이 바뀌면 이름도 바뀝니다.
-- 단위(`원`)와 `prefix`, `suffix`는 숫자 밖의 일반 텍스트라서, 스크린 리더가 "이미지 1,250,000", "원"을 **따로** 읽을 수 있습니다.
+- 단위(`₩`)와 `prefix`, `suffix`는 숫자 밖의 일반 텍스트라서, 스크린 리더가 "₩", "이미지 1,250,000"을 **따로** 읽을 수 있습니다.
 - 폭을 잡아 두는 보이지 않는 글자는 `aria-hidden`이라 중복해서 읽히지 않습니다.
 - `prefers-reduced-motion`을 켜면 굴러가는 애니메이션 없이 값이 바로 바뀝니다.
 

@@ -18,7 +18,7 @@ import type { Dispatch, RefObject } from 'react';
 
 import { describeEffect } from '../model/describe';
 import { diffSelections } from '../model/diff';
-import { formatWon } from '../model/format';
+import { formatWon, josa } from '../model/format';
 import type { WizardAction, WizardState } from '../model/wizard';
 import { AlertGlyph } from './alert-glyph';
 
@@ -196,7 +196,7 @@ export function SuggestionDialog({
         </DialogHeader>
         {suggestion ? (
           <p className="text-foreground text-sm font-medium">
-            제안을 받아들이면 {formatWon(suggestion.savings)}을 절약합니다.
+            제안을 받아들이면 {josa(formatWon(suggestion.savings), '을/를')} 절약합니다.
           </p>
         ) : null}
         <DialogFooter>

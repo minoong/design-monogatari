@@ -136,13 +136,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '`AnimatedAmount`는 금액이 바뀔 때 자릿수가 세로로 굴러갑니다. 기본은 `reserveWidth`로 목표 금액 너비를 미리 잡아 `원`이 밀리지 않습니다. `inView`를 켜면 뷰포트에 들어올 때 0에서 목표값까지 구릅니다. `inViewOnce`, `inViewAmount`, `inViewMargin`은 Motion `useInView` 옵션과 같습니다. `prefers-reduced-motion`이면 롤 없이 바로 최종 값을 보여 줍니다.',
+          '`AnimatedAmount`는 금액이 바뀔 때 자릿수가 세로로 굴러갑니다. 기본은 `reserveWidth`로 목표 금액 너비를 미리 잡아 `₩`과 접미사가 밀리지 않습니다. `inView`를 켜면 뷰포트에 들어올 때 0에서 목표값까지 구릅니다. `inViewOnce`, `inViewAmount`, `inViewMargin`은 Motion `useInView` 옵션과 같습니다. `prefers-reduced-motion`이면 롤 없이 바로 최종 값을 보여 줍니다.',
       },
     },
   },
   args: {
     value: 71_400_000,
-    suffix: '원',
   },
   argTypes: {
     value: { control: { type: 'number' } },
@@ -170,7 +169,7 @@ export const 접두사와접미사: Story = {
   render: () => (
     <div className="text-body flex flex-col items-center gap-3">
       <AnimatedAmount value={52_900_000} />
-      <AnimatedAmount prefix="약 " suffix="원부터" value={52_900_000} />
+      <AnimatedAmount prefix="약 ₩" suffix="부터" value={52_900_000} />
       <AnimatedAmount
         format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }}
         suffix="%"
@@ -229,7 +228,7 @@ export const 폭고정: Story = {
     docs: {
       description: {
         story:
-          '스크롤해서 금액이 상자에 다 들어오면 (`inViewAmount: all`) `reserveWidth` 차이가 보입니다. 위는 목표 너비를 미리 잡아 `원`이 안 움직이고, 아래는 숫자 폭을 따라갑니다. 오른쪽 위 새로고침으로 처음부터 다시 볼 수 있습니다.',
+          '스크롤해서 금액이 상자에 다 들어오면 (`inViewAmount: all`) `reserveWidth` 차이가 보입니다. 위는 목표 너비를 미리 잡아 `₩`과 접미사가 안 움직이고, 아래는 숫자 폭을 따라갑니다. 오른쪽 위 새로고침으로 처음부터 다시 볼 수 있습니다.',
       },
     },
   },
