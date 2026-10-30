@@ -13,7 +13,7 @@ import {
 
 const LINES = Array.from({ length: 24 }, (_, index) => [
   `선택 품목 ${index + 1}`,
-  `+${((index + 1) * 350_000).toLocaleString('ko-KR')}원`,
+  `+₩${((index + 1) * 350_000).toLocaleString('ko-KR')}`,
 ]);
 
 export default function SheetBottomScroll() {

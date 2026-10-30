@@ -58,7 +58,7 @@ function LoadedDemo() {
       {loaded ? (
         <div className="flex flex-col gap-1">
           <p className="text-foreground text-sm font-semibold">예상 견적 금액</p>
-          <p className="text-title font-semibold">82,900,000원</p>
+          <p className="text-title font-semibold">₩82,900,000</p>
         </div>
       ) : (
         <SkeletonGroup label="견적을 불러오는 중입니다" className="flex flex-col gap-2">

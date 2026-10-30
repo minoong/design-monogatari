@@ -22,7 +22,7 @@ export default function OptionRowUnavailable() {
           name="option-row-unavailable-wheel"
           value="w21"
           label="21인치 알로이 휠"
-          price="+3,200,000원"
+          price="+₩3,200,000"
           unavailableReason="가솔린 스포트 트림에서만 선택할 수 있습니다."
           checked={value === 'w21'}
           onChange={() =>
@@ -33,7 +33,7 @@ export default function OptionRowUnavailable() {
           name="option-row-unavailable-wheel"
           value="w22"
           label="22인치 단조 휠"
-          price="+5,000,000원"
+          price="+₩5,000,000"
           disabled
         />
       </OptionGroup>

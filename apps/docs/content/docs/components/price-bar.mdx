@@ -34,7 +34,7 @@ export function Example() {
 
 ### 항목별 금액
 
-`PriceBreakdown`과 `PriceRow`는 항목과 금액의 목록입니다. 숫자는 원 단위로 서식을 맞추고, `signed`를 주면 `+`/`−`를 붙입니다. 문자("기본 포함")도 넘길 수 있고, `total`은 합계 줄입니다. `action`에는 항목을 바꾸러 가는 링크나 버튼을 놓습니다. 금액 바로 왼쪽 끝에 정렬되어 모든 줄에서 같은 위치에 놓입니다.
+`PriceBreakdown`과 `PriceRow`는 항목과 금액의 목록입니다. 숫자는 원 단위로 "₩1,000" 모양으로 서식을 맞추고(`PriceBreakdown`의 `currency`를 `"won"`으로 주면 "1,000원" 모양), `signed`를 주면 `+`/`−`를 붙입니다. 문자("기본 포함")도 넘길 수 있고, `total`은 합계 줄입니다. `action`에는 항목을 바꾸러 가는 링크나 버튼을 놓습니다. 금액 바로 왼쪽 끝에 정렬되어 모든 줄에서 같은 위치에 놓입니다.
 
 <ComponentPreview name="price-bar/breakdown" />
 
@@ -45,10 +45,12 @@ export function Example() {
 <PropsTable
   file="packages/ui/src/price-bar.tsx"
   name="PriceBarProps"
-  include={['fixed']}
-  defaults={{ fixed: 'false' }}
+  include={['fixed', 'currency']}
+  defaults={{ fixed: 'false', currency: '"symbol"' }}
   descriptions={{
     fixed: '화면 아래에 붙이고 기기의 하단 안전 영역을 비웁니다.',
+    currency:
+      '안의 총액(PriceBarTotal)의 금액 표기입니다. 기본인 "symbol"은 "₩82,900,000", "won"은 "82,900,000원"입니다.',
   }}
 />
 
@@ -61,6 +63,18 @@ export function Example() {
     label: '총액 위에 보이는 이름이자, 스크린 리더가 금액 앞에 읽는 이름입니다.',
     amount: '원 단위 정수 금액입니다.',
     note: '총액 아래 보조 문구입니다.',
+  }}
+/>
+
+<PropsTable
+  file="packages/ui/src/price-bar.tsx"
+  name="PriceBreakdownProps"
+  include={['title', 'currency']}
+  defaults={{ currency: '"symbol"' }}
+  descriptions={{
+    title: '목록의 이름입니다. 있으면 그 이름의 그룹으로 읽힙니다.',
+    currency:
+      '안의 모든 행(PriceRow)의 금액 표기입니다. 기본인 "symbol"은 "₩1,000", "won"은 "1,000원"입니다.',
   }}
 />
 
@@ -82,7 +96,7 @@ export function Example() {
 ## 접근성
 
 - `PriceBar`는 `role="region"`이고 이름은 "견적 요약"입니다. 한 화면에 막대가 둘 이상이면 `aria-label`을 서로 다르게 주십시오. `PriceBreakdown`의 `title`도 이 이름과 겹치지 않게 쓰십시오.
-- 눈에 보이는 총액은 스크린 리더에서 숨기고, 조용한 알림(`role="status"`)이 "예상 견적 금액 87,900,000원"을 읽어 줍니다. 금액이 연달아 바뀌면 0.5초 동안 멈춘 뒤 최종 금액만 알려서 중간 값이 쌓여 읽히지 않습니다. 처음 그려질 때는 알리지 않습니다.
+- 눈에 보이는 총액은 스크린 리더에서 숨기고, 조용한 알림(`role="status"`)이 "예상 견적 금액 87,900,000원"을 읽어 줍니다. 금액이 연달아 바뀌면 0.5초 동안 멈춘 뒤 최종 금액만 알려서 중간 값이 쌓여 읽히지 않습니다. 처음 그려질 때는 알리지 않습니다. 화면에는 "₩"으로 보이지만 알림과 `PriceRow`의 낭독은 "원"으로 쓴 금액입니다(낭독기마다 "₩"을 읽는 방식이 달라서, 보이는 "₩" 표기는 숨깁니다).
 - 금액이 자리보다 길면 글자 크기만 줄여 한 줄에 맞춥니다(제목 크기의 절반까지, 약 14px). 막대에서 버튼을 뺀 폭을 재서 한 번에 맞추므로 버튼과 겹치지 않고, 금액이나 폭이 바뀌면 다시 맞춥니다. 확대한 글자 설정에서도 같습니다. 크기가 바뀔 때는 이전 크기에서 0.18초 동안 `transform`으로 부드럽게 이어 붙이고, 감소 모션이면 바로 바뀝니다. 가장 작은 크기로도 버튼 옆에 안 들어가면 막대가 줄바꿈되어 총액이 자기 줄로 내려갑니다(막대가 `flex-wrap`일 때, 기본값입니다).
 - 숫자는 `tabular-nums`라 자릿수가 흔들리지 않습니다. 숫자 애니메이션은 NumberFlow의 기본 동작에 따라 `prefers-reduced-motion`을 켜면 멈춥니다.
 - `PriceBreakdown`은 `dl`입니다. 제목을 주면 그 이름의 그룹으로 읽히고, 제목이 없으면 그룹 역할을 달지 않습니다. 행 안의 `action`이 여러 개이므로 각각 `aria-label`로 항목을 구분하고, 링크는 색만으로 구분되지 않도록 밑줄을 두십시오.

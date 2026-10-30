@@ -8,7 +8,7 @@ const ITEMS: readonly Item[] = [
   { name: '번호판·증지대', amount: 62_000 },
 ];
 
-const won = (value: number) => `${new Intl.NumberFormat('ko-KR').format(value)}원`;
+const won = (value: number) => `₩${new Intl.NumberFormat('ko-KR').format(value)}`;
 
 const COLUMNS: readonly DataTableColumn<Item>[] = [
   { key: 'name', header: '항목', rowHeader: true },

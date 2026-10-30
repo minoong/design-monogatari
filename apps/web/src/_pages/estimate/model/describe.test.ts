@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { describeEffect } from './describe';
-import { josa } from './format';
+import { formatWon, josa } from './format';
 import { defaults } from './helpers.test-util';
 import { resolveSelection } from './resolve';
 
@@ -26,6 +26,13 @@ describe('josa', () => {
     expect(josa('X5', '이/가')).toBe('X5가');
     expect(josa('옵션1', '이/가')).toBe('옵션1이');
     expect(josa('옵션3', '을/를')).toBe('옵션3을');
+  });
+
+  it('₩ 금액은 끝자리 숫자의 소리를 따른다', () => {
+    expect(josa(formatWon(1_500_000), '을/를')).toBe('₩1,500,000을');
+    expect(josa(formatWon(1_500_002), '을/를')).toBe('₩1,500,002를');
+    expect(josa(formatWon(1_500_004), '을/를')).toBe('₩1,500,004를');
+    expect(josa(formatWon(1_500_001), '을/를')).toBe('₩1,500,001을');
   });
 });
 

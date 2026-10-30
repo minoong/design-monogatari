@@ -28,7 +28,7 @@ export default function ChangeDiffInDialog() {
             { label: '휠', before: '20인치 알로이 휠', after: '19인치 기본 휠' },
             { label: '외장 색상', before: '브론즈', after: '화이트' },
           ]}
-          summary="-10,500,000원"
+          summary="-₩10,500,000"
         />
         <DialogFooter>
           <DialogClose asChild>

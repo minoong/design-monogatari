@@ -23,9 +23,10 @@
 - **라이선스**: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) (표기 의무 없음, 출처를 밝혀 둡니다)
 - **원본**: <https://polyhaven.com/a/studio_small_08>
 
-## 글꼴 — `apps/web/src/_app/fonts/`
+## 글꼴 — `apps/web/src/_app/fonts/`, `packages/ui/src/fonts/`
 
 - Geist (Vercel). 각 글꼴 파일과 함께 배포되는 라이선스를 따릅니다(SIL Open Font License 1.1).
+- `packages/ui/src/fonts/won-sign.woff2`: Pretendard v1.3.9 (Kil Hyung-jin, <https://github.com/orioncactus/pretendard>)의 가변 글꼴에서 원화 기호 ₩(U+20A9) 한 글자만 떼어 낸 것입니다. Geist에 ₩이 없어 숫자와 같은 서체로 보이게 하려는 용도입니다. SIL Open Font License 1.1이며 전문은 `packages/ui/src/fonts/won-sign-OFL.txt`입니다. 수정 사항: 글자 하나로 줄이고(`pyftsubset`) 힌트와 레이아웃 기능을 지웠으며, 예약된 글꼴 이름(Pretendard)을 쓰지 않도록 글꼴 이름을 "Won Sign"으로 바꿨고, 글자 양옆에 여백을 조금 더했습니다.
 
 ## 움직이는 아이콘 — `packages/ui/src/icons/` 와 `registry/design-monogatari/icons/`
 

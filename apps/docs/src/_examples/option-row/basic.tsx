@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 const wheels = [
   { value: 'w19', label: '19인치 기본 휠', price: '기본 포함' },
-  { value: 'w20', label: '20인치 알로이 휠', price: '+1,500,000원' },
-  { value: 'w21', label: '21인치 알로이 휠', price: '+3,200,000원' },
+  { value: 'w20', label: '20인치 알로이 휠', price: '+₩1,500,000' },
+  { value: 'w21', label: '21인치 알로이 휠', price: '+₩3,200,000' },
 ];
 
 export default function OptionRowBasic() {

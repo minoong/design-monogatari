@@ -9,7 +9,7 @@ export default function ChangeDiffBasic() {
         { label: '선택 품목', before: '스카이 라운지 루프', after: undefined },
         { label: '액세서리', before: undefined, after: '빌트인 블랙박스' },
       ]}
-      summary="-2,800,000원"
+      summary="-₩2,800,000"
     />
   );
 }

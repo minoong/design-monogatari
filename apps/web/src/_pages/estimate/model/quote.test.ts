@@ -76,7 +76,7 @@ describe('calculateQuote', () => {
 });
 
 describe('브레이크 캘리퍼 금액', () => {
-  it('블루는 450,000원, 레드는 650,000원을 더한다', () => {
+  it('블루는 ₩450,000, 레드는 ₩650,000을 더한다', () => {
     const base = apply(defaults(), { type: 'set', slot: 'trim', id: 'sport' });
     const red = apply(base, { type: 'set', slot: 'caliper', id: 'red' });
     const blue = apply(base, { type: 'set', slot: 'caliper', id: 'blue' });
@@ -91,9 +91,9 @@ describe('브레이크 캘리퍼 금액', () => {
 
 describe('formatWon', () => {
   it('천 단위 쉼표를 넣는다', () => {
-    expect(formatWon(0)).toBe('0원');
-    expect(formatWon(1_500_000)).toBe('1,500,000원');
-    expect(formatWon(-700_000)).toBe('-700,000원');
+    expect(formatWon(0)).toBe('₩0');
+    expect(formatWon(1_500_000)).toBe('₩1,500,000');
+    expect(formatWon(-700_000)).toBe('-₩700,000');
   });
 
   it('정수가 아니면 던진다', () => {
