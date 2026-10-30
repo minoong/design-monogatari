@@ -21,25 +21,41 @@ const ANNOUNCE_DELAY = 500;
 /** 총액이 줄어들 수 있는 가장 작은 크기입니다(제목 글자 크기의 절반, 28px 기준 14px). */
 const MIN_FIT_SCALE = 0.5;
 
+/** 글자 크기가 바뀔 때 이전 크기에서 새 크기로 커지거나 작아지는 시간(ms)과 곡선입니다. */
+const FIT_DURATION = 180;
+const FIT_EASING = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
 /**
  * 금액이 자리(막대에서 버튼을 뺀 폭)보다 길면 글자를 그 폭에 맞게 줄입니다. 글자 폭은 크기에 비례하므로
  * 지금 폭과 자리의 비율로 한 번에 구하고(반복 측정 없음), 값이나 자리 폭이 바뀔 때만 다시 잽니다.
  * 가장 작은 크기로도 자리에 안 들어가는 폭이면 총액 칸의 최소 폭을 그 크기의 글자 폭으로 잡아, 막대가 줄바꿈될 때
  * 총액이 버튼과 겹치지 않고 자기 줄로 내려가게 합니다(막대가 `flex-wrap`일 때).
- * 반환한 `box`는 자리를 재는 바깥, `text`는 `em`으로 줄어드는 안쪽, `label`은 줄이지 않는 이름표에 붙입니다.
+ * 크기는 바로 바뀌고, 눈에 보이는 변화만 이전 크기에서 `transform: scale`로 부드럽게 이어 붙입니다(`scaler`).
+ * 폭 측정은 변형의 영향을 받지 않는 `text`에서 하므로 움직이는 동안에도 맞춤 계산이 어긋나지 않습니다.
+ * 감소 모션이면 움직이지 않습니다. 줄어드는 순간 잠깐 커 보이는 글자가 버튼을 침범하지 않게 `box`가 가로로 잘라 냅니다.
+ * 반환한 `box`는 자리를 재는 바깥, `text`는 `em`으로 줄어드는 안쪽, `scaler`는 그 안에서 변형으로 움직이는 겹,
+ * `label`은 줄이지 않는 이름표에 붙입니다.
  */
 function useFitText() {
   const box = useRef<HTMLDivElement>(null);
   const text = useRef<HTMLSpanElement>(null);
+  const scaler = useRef<HTMLSpanElement>(null);
   const label = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
     const boxEl = box.current;
     const textEl = text.current;
+    const scalerEl = scaler.current;
     const labelEl = label.current;
     // 최소 폭은 `min-w-0`인 총액 칸(`box`의 부모)에 걸어야 줄바꿈 판단에 쓰인다.
     const root = boxEl?.parentElement;
-    if (!boxEl || !textEl || !root) return;
+    if (!boxEl || !textEl || !scalerEl || !root) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // 처음 맞출 때는 움직이지 않는다(첫 그리기에서 커졌다 작아지지 않게).
+    let settled = false;
+    // 방금 넘쳐서 줄인 크기. 글자 폭은 크기에 정확히 비례하지 않아(힌팅) 줄인 크기가 자리에 꼭 들어맞으면
+    // 비례 계산이 도로 키우고 다시 넘쳐 줄이는 진동이 생기므로, 같은 자리와 같은 글자에서는 그 크기 이상으로 키우지 않는다.
+    let overflowed: { size: number; available: number; perEm: number } | null = null;
 
     const fit = () => {
       // 소수 오차로 0.01 크기가 한 프레임마다 오르내리지 않게 1px 여유를 둔다(키우면 곧 넘쳐 다시 줄어드는 되먹임).
@@ -47,18 +63,42 @@ function useFitText() {
       const natural = textEl.getBoundingClientRect().width;
       if (available <= 0 || natural === 0) return;
       const current = parseFloat(textEl.style.fontSize) || 1;
-      const next = Math.min(
+      const perEm = natural / current;
+      let next = Math.min(
         1,
         Math.max(MIN_FIT_SCALE, Math.floor((current * available * 100) / natural) / 100),
       );
+      if (next < current) {
+        overflowed = { size: current, available, perEm };
+      } else if (
+        next > current &&
+        overflowed &&
+        next >= overflowed.size &&
+        available <= overflowed.available &&
+        Math.abs(perEm - overflowed.perEm) / overflowed.perEm < 0.005
+      ) {
+        next = current;
+      }
       // 줄인 글자가 다시 폭을 바꿔 관찰자를 되부르므로, 반올림 오차 안의 변화는 무시한다.
-      if (Math.abs(next - current) > 0.005) textEl.style.fontSize = `${next}em`;
+      if (Math.abs(next - current) > 0.005) {
+        textEl.style.fontSize = `${next}em`;
+        if (settled && !reduceMotion.matches) {
+          scalerEl.getAnimations().forEach((animation) => {
+            animation.cancel();
+          });
+          scalerEl.animate([{ transform: `scale(${current / next})` }, { transform: 'scale(1)' }], {
+            duration: FIT_DURATION,
+            easing: FIT_EASING,
+          });
+        }
+      }
       // 이름표는 줄이지 않으므로 최소 폭에 이름표의 폭도 담는다(이름표가 "예상 견적 금 / 액"으로 꺾이지 않게).
       const labelWidth = labelEl?.getBoundingClientRect().width ?? 0;
       root.style.minWidth = `${Math.ceil(Math.max(labelWidth, (natural / current) * MIN_FIT_SCALE)) + 1}px`;
     };
 
     fit();
+    settled = true;
     const observer = new ResizeObserver(fit);
     observer.observe(boxEl);
     observer.observe(textEl);
@@ -68,7 +108,7 @@ function useFitText() {
     };
   }, []);
 
-  return { box, text, label };
+  return { box, text, scaler, label };
 }
 
 function formatWon(amount: number, signed = false) {
@@ -125,8 +165,8 @@ export function PriceBarTotal({
   className,
   ...props
 }: PriceBarTotalProps) {
+  const { box, text, scaler, label: labelRef } = useFitText();
   // 처음 값으로 시작해 첫 그리기는 알리지 않고, 바뀐 금액은 잠시 멈춘 뒤에 알린다.
-  const { box, text, label: labelRef } = useFitText();
   const [announced, setAnnounced] = useState(amount);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -146,9 +186,15 @@ export function PriceBarTotal({
       >
         {label}
       </span>
-      <div ref={box} aria-hidden className="text-title min-w-0 font-semibold tracking-tight">
+      <div
+        ref={box}
+        aria-hidden
+        className="text-title min-w-0 overflow-x-clip font-semibold tracking-tight"
+      >
         <span ref={text} className="inline-block whitespace-nowrap">
-          <AnimatedAmount value={amount} />
+          <span ref={scaler} className="inline-block origin-left">
+            <AnimatedAmount value={amount} />
+          </span>
         </span>
       </div>
       <span role="status" className="sr-only">
