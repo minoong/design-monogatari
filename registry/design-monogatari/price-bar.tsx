@@ -1,6 +1,14 @@
 'use client';
 
-import { type ComponentProps, type ReactNode, useEffect, useId, useState } from 'react';
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { AnimatedAmount } from '@/ui/animated-amount';
 import { cn } from '@/lib/utils';
@@ -9,6 +17,54 @@ const KRW = new Intl.NumberFormat('ko-KR');
 
 /** 총액이 멈춘 뒤 이만큼 기다렸다가 스크린 리더에 알립니다(ms). */
 const ANNOUNCE_DELAY = 500;
+
+/** 총액이 줄어들 수 있는 가장 작은 크기입니다(제목 글자 크기의 절반, 28px 기준 14px). */
+const MIN_FIT_SCALE = 0.5;
+
+/**
+ * 금액이 자리(막대에서 버튼을 뺀 폭)보다 길면 글자를 그 폭에 맞게 줄입니다. 글자 폭은 크기에 비례하므로
+ * 지금 폭과 자리의 비율로 한 번에 구하고(반복 측정 없음), 값이나 자리 폭이 바뀔 때만 다시 잽니다.
+ * 가장 작은 크기로도 자리에 안 들어가는 폭이면 총액 칸의 최소 폭을 그 크기의 글자 폭으로 잡아, 막대가 줄바꿈될 때
+ * 총액이 버튼과 겹치지 않고 자기 줄로 내려가게 합니다(막대가 `flex-wrap`일 때).
+ * 반환한 `box`는 자리를 재는 바깥, `text`는 `em`으로 줄어드는 안쪽에 붙입니다.
+ */
+function useFitText() {
+  const box = useRef<HTMLDivElement>(null);
+  const text = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const boxEl = box.current;
+    const textEl = text.current;
+    // 최소 폭은 `min-w-0`인 총액 칸(`box`의 부모)에 걸어야 줄바꿈 판단에 쓰인다.
+    const root = boxEl?.parentElement;
+    if (!boxEl || !textEl || !root) return;
+
+    const fit = () => {
+      // 소수 오차로 0.01 크기가 한 프레임마다 오르내리지 않게 1px 여유를 둔다(키우면 곧 넘쳐 다시 줄어드는 되먹임).
+      const available = boxEl.clientWidth - 1;
+      const natural = textEl.getBoundingClientRect().width;
+      if (available <= 0 || natural === 0) return;
+      const current = parseFloat(textEl.style.fontSize) || 1;
+      const next = Math.min(
+        1,
+        Math.max(MIN_FIT_SCALE, Math.floor((current * available * 100) / natural) / 100),
+      );
+      // 줄인 글자가 다시 폭을 바꿔 관찰자를 되부르므로, 반올림 오차 안의 변화는 무시한다.
+      if (Math.abs(next - current) > 0.005) textEl.style.fontSize = `${next}em`;
+      root.style.minWidth = `${Math.ceil((natural / current) * MIN_FIT_SCALE) + 1}px`;
+    };
+
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(boxEl);
+    observer.observe(textEl);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  return { box, text };
+}
 
 function formatWon(amount: number, signed = false) {
   const rounded = Math.round(amount);
@@ -65,6 +121,7 @@ export function PriceBarTotal({
   ...props
 }: PriceBarTotalProps) {
   // 처음 값으로 시작해 첫 그리기는 알리지 않고, 바뀐 금액은 잠시 멈춘 뒤에 알린다.
+  const { box, text } = useFitText();
   const [announced, setAnnounced] = useState(amount);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -76,13 +133,15 @@ export function PriceBarTotal({
   }, [amount]);
 
   return (
-    <div className={cn('flex min-w-0 flex-col', className)} {...props}>
+    <div className={cn('flex min-w-0 flex-1 basis-0 flex-col', className)} {...props}>
       <span aria-hidden className="text-muted-foreground text-caption">
         {label}
       </span>
-      <span aria-hidden className="text-title font-semibold tracking-tight">
-        <AnimatedAmount value={amount} />
-      </span>
+      <div ref={box} aria-hidden className="text-title min-w-0 font-semibold tracking-tight">
+        <span ref={text} className="inline-block whitespace-nowrap">
+          <AnimatedAmount value={amount} />
+        </span>
+      </div>
       <span role="status" className="sr-only">
         {label} {formatWon(announced)}
       </span>

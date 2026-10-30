@@ -290,7 +290,7 @@ export function EstimateApp({
 
               <PriceBar
                 aria-label="견적 금액과 단계 이동"
-                className="split:max-lg:flex-wrap split:max-lg:gap-y-2 sticky bottom-0 z-10 mt-auto flex-nowrap gap-x-3 gap-y-0 lg:flex-wrap lg:gap-y-4 lg:px-8 lg:py-5 print:hidden"
+                className="sticky bottom-0 z-10 mt-auto gap-x-3 gap-y-2 lg:gap-y-4 lg:px-8 lg:py-5 print:hidden"
               >
                 {state.step === 'result' ? (
                   <PriceBarTotal
