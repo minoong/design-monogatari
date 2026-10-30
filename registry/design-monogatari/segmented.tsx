@@ -1,6 +1,6 @@
 'use client';
 
-import { animate, useMotionValue, useReducedMotion } from 'motion/react';
+import { animate, type MotionValue, useMotionValue, useReducedMotion } from 'motion/react';
 import * as motion from 'motion/react-client';
 import {
   type ComponentProps,
@@ -58,7 +58,8 @@ export type SegmentedProps = Omit<
   };
 
 const GROUP_CLASSES: Record<SegmentedIndicator, string> = {
-  pill: 'bg-muted rounded-pill p-1',
+  // 다크의 `muted`(#121315)는 카드(`card`, 같은 색) 위에서 트랙이 사라지므로 한 단계 밝은 `secondary-hover`를 쓴다(검은 페이지와 카드 위 모두 보인다).
+  pill: 'bg-muted dark:bg-secondary-hover rounded-pill p-1',
   underline: 'border-border border-b',
   ring: 'gap-1',
 };
@@ -117,25 +118,41 @@ export function Segmented({
     const target = () => targetOf(group, item, indicator);
     const next = target();
     if (!placed.current || reduceMotion) {
-      x.set(next.x);
-      y.set(next.y);
-      width.set(next.w);
-      height.set(next.h);
+      // `set`은 이전 값과의 차이를 속도로 남겨, 효과가 다시 돌 때 같은 자리로 건 스프링이 그 속도를 이어받아 튄다. `jump`는 속도를 지운다.
+      x.jump(next.x);
+      y.jump(next.y);
+      width.jump(next.w);
+      height.jump(next.h);
       placed.current = true;
       setMounted(true);
     } else {
-      void animate(x, next.x, SPRING.settle);
-      void animate(y, next.y, SPRING.settle);
-      void animate(width, next.w, SPRING.settle);
-      void animate(height, next.h, SPRING.settle);
+      // 이미 그 자리인 값은 움직이지 않는다(효과가 값 변화 없이 다시 돌 수 있다).
+      const move = (value: MotionValue<number>, to: number) => {
+        if (Math.abs(value.get() - to) > 0.01) void animate(value, to, SPRING.settle);
+      };
+      move(x, next.x);
+      move(y, next.y);
+      move(width, next.w);
+      move(height, next.h);
     }
-    // 항목이나 그룹의 크기가 바뀌면(창 크기, 글꼴, 글자) 애니메이션 없이 따라간다.
+    // 항목이나 그룹의 크기가 바뀌면(창 크기, 글꼴, 글자) 애니메이션 없이 따라간다. 관찰을 시작하면 크기가 그대로여도 한 번 통지가 오는데,
+    // 그때 `jump`하면 방금 건 이동 애니메이션이 끝나 버리므로 목표가 바뀐 때만 따라간다.
+    let goal = next;
     const observer = new ResizeObserver(() => {
       const resized = target();
-      x.set(resized.x);
-      y.set(resized.y);
-      width.set(resized.w);
-      height.set(resized.h);
+      if (
+        Math.abs(resized.x - goal.x) < 0.5 &&
+        Math.abs(resized.y - goal.y) < 0.5 &&
+        Math.abs(resized.w - goal.w) < 0.5 &&
+        Math.abs(resized.h - goal.h) < 0.5
+      ) {
+        return;
+      }
+      goal = resized;
+      x.jump(resized.x);
+      y.jump(resized.y);
+      width.jump(resized.w);
+      height.jump(resized.h);
     });
     observer.observe(item);
     observer.observe(group);

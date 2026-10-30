@@ -148,18 +148,25 @@ export function ColorSwatchGroup({
     const { x, y } = target();
     ringOpacity.set(1);
     if (!placed.current || reduceMotion) {
-      ringX.set(x);
-      ringY.set(y);
+      // `set`은 이전 값과의 차이를 속도로 남기고, 이 효과가 다시 돌 때(감소 모션 설정이 정해질 때, 호출하는 쪽의 `options`가 새 배열일 때)
+      // 같은 자리로 건 스프링이 그 속도를 이어받아 링이 아래로 튀었다 돌아온다. `jump`는 속도를 지운다.
+      ringX.jump(x);
+      ringY.jump(y);
       placed.current = true;
     } else {
-      void animate(ringX, x, SPRING.settle);
-      void animate(ringY, y, SPRING.settle);
+      // 이미 그 자리면 움직일 게 없다(효과가 값 변화 없이 다시 돌 수 있다).
+      if (Math.abs(ringX.get() - x) > 0.01) void animate(ringX, x, SPRING.settle);
+      if (Math.abs(ringY.get() - y) > 0.01) void animate(ringY, y, SPRING.settle);
     }
-    // 칩이 줄바꿈되는 폭이나 글꼴이 바뀌면 애니메이션 없이 따라간다.
+    // 칩이 줄바꿈되는 폭이나 글꼴이 바뀌면 애니메이션 없이 따라간다. 관찰을 시작하면 크기가 그대로여도 한 번 통지가 오는데,
+    // 그때 `jump`하면 방금 건 이동 애니메이션이 끝나 버리므로 목표가 바뀐 때만 따라간다.
+    let goal = { x, y };
     const observer = new ResizeObserver(() => {
       const next = target();
-      ringX.set(next.x);
-      ringY.set(next.y);
+      if (Math.abs(next.x - goal.x) < 0.5 && Math.abs(next.y - goal.y) < 0.5) return;
+      goal = next;
+      ringX.jump(next.x);
+      ringY.jump(next.y);
     });
     observer.observe(chips);
     observer.observe(row);
