@@ -226,18 +226,24 @@ export function OptionGroup({ legend, children, className, ...props }: OptionGro
     };
     const { y, h } = target();
     if (!placed.current || reduceMotion) {
-      top.set(y);
-      height.set(h);
+      // `set`은 이전 값과의 차이를 속도로 남겨, 효과가 다시 돌 때 같은 자리로 건 스프링이 그 속도를 이어받아 튄다. `jump`는 속도를 지운다.
+      top.jump(y);
+      height.jump(h);
       placed.current = true;
     } else {
-      void animate(top, y, SPRING.settle);
-      void animate(height, h, SPRING.settle);
+      // 이미 그 자리인 값은 움직이지 않는다(효과가 값 변화 없이 다시 돌 수 있다).
+      if (Math.abs(top.get() - y) > 0.01) void animate(top, y, SPRING.settle);
+      if (Math.abs(height.get() - h) > 0.01) void animate(height, h, SPRING.settle);
     }
-    // 행이나 묶음의 크기가 바뀌면(창 크기, 글꼴, 안내 문구) 애니메이션 없이 따라간다.
+    // 행이나 묶음의 크기가 바뀌면(창 크기, 글꼴, 안내 문구) 애니메이션 없이 따라간다. 관찰을 시작하면 크기가 그대로여도 한 번 통지가 오는데,
+    // 그때 `jump`하면 방금 건 이동 애니메이션이 끝나 버리므로 목표가 바뀐 때만 따라간다.
+    let goal = { y, h };
     const observer = new ResizeObserver(() => {
       const next = target();
-      top.set(next.y);
-      height.set(next.h);
+      if (Math.abs(next.y - goal.y) < 0.5 && Math.abs(next.h - goal.h) < 0.5) return;
+      goal = next;
+      top.jump(next.y);
+      height.jump(next.h);
     });
     observer.observe(row);
     observer.observe(rows);
