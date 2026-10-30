@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { Button } from './button';
 import { ArrowLeftIcon } from './icons/arrow-left';
 import { ArrowRightIcon } from './icons/arrow-right';
+import { Input } from './input';
+import { Label } from './label';
 import { PriceBar, PriceBarActions, PriceBarTotal, PriceBreakdown, PriceRow } from './price-bar';
 import { textControls } from './storybook/arg-types';
 
@@ -19,14 +21,6 @@ const meta = {
       },
     },
   },
-  decorators: [
-    (Story) => (
-      // transform이 있는 조상은 fixed 자손의 기준이 되어, 스토리 안에서 막대가 이 틀 아래에 붙는다.
-      <div className="border-border relative h-64 w-full max-w-3xl transform-[translateZ(0)] overflow-hidden rounded-lg border">
-        <Story />
-      </div>
-    ),
-  ],
   argTypes: {
     fixed: { control: 'boolean' },
     ...textControls('aria-label'),
@@ -62,14 +56,16 @@ function PriceBarDemo() {
 }
 
 export const 기본: Story = {
+  decorators: [
+    (Story) => (
+      // transform이 있는 조상은 fixed 자손의 기준이 되어, 스토리 안에서 막대가 이 틀 아래에 붙는다.
+      <div className="border-border relative h-64 w-full max-w-3xl transform-[translateZ(0)] overflow-hidden rounded-lg border">
+        <Story />
+      </div>
+    ),
+  ],
   render: () => <PriceBarDemo />,
 };
-
-const NARROW_AMOUNTS = [
-  { label: '8천만 원대', amount: 82_900_000 },
-  { label: '1억 원대', amount: 129_850_000 },
-  { label: '11억 원대', amount: 1_129_850_000 },
-] as const;
 
 function NarrowBar({ width, amount }: { width: number; amount: number }) {
   return (
@@ -92,47 +88,71 @@ function NarrowBar({ width, amount }: { width: number; amount: number }) {
   );
 }
 
-export const 좁은폭: Story = {
-  name: '좁은 폭에서 글자 줄이기',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '금액이 버튼 옆 자리보다 길면 글자 크기를 줄여 한 줄에 맞춥니다(제목 크기의 절반까지). 그래도 안 들어가는 폭에서는 총액이 자기 줄로 내려갑니다. 금액을 바꿔 두 폭을 비교해 보십시오.',
-      },
-    },
-  },
-  render: () => <NarrowDemo />,
-};
+const MAX_DIGITS = 12;
 
-function NarrowDemo() {
-  const [index, setIndex] = useState(1);
-  const { amount } = NARROW_AMOUNTS[index] ?? NARROW_AMOUNTS[0];
+function TypedAmountDemo() {
+  const [digits, setDigits] = useState('82900000');
+  const amount = Number(digits || '0');
+  const inputId = useId();
 
   return (
-    <div className="flex flex-col gap-3 p-3">
-      <div className="flex flex-wrap gap-2" role="group" aria-label="금액">
-        {NARROW_AMOUNTS.map((item, i) => (
-          <Button
-            key={item.label}
-            size="small"
-            variant={i === index ? 'primary' : 'secondary'}
-            aria-pressed={i === index}
-            onClick={() => {
-              setIndex(i);
-            }}
-          >
-            {item.label}
-          </Button>
-        ))}
+    <div className="flex flex-col gap-4 p-4">
+      <div className="flex max-w-xs flex-col gap-1.5">
+        <Label htmlFor={inputId}>금액(원)</Label>
+        <Input
+          id={inputId}
+          inputMode="numeric"
+          autoComplete="off"
+          value={digits ? new Intl.NumberFormat('ko-KR').format(Number(digits)) : ''}
+          placeholder="숫자를 입력하십시오"
+          onChange={(event) => {
+            setDigits(
+              event.target.value.replace(/\D/g, '').slice(0, MAX_DIGITS).replace(/^0+/, ''),
+            );
+          }}
+        />
       </div>
-      <div className="flex flex-wrap items-start gap-3">
+      <div className="flex flex-wrap items-start gap-4">
         <NarrowBar width={390} amount={amount} />
         <NarrowBar width={320} amount={amount} />
       </div>
     </div>
   );
 }
+
+export const 입력으로줄이기: Story = {
+  name: '숫자를 입력하면 글자가 줄어듭니다',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          '금액을 입력하면 자릿수가 늘수록 총액 글자가 줄어 버튼 옆 한 줄에 맞춥니다(제목 크기의 절반까지). 절반으로도 안 들어가는 폭(320px)에서는 총액이 자기 줄로 내려가 글자가 다시 원래 크기가 됩니다. 두 막대는 같은 금액을 받습니다.',
+      },
+    },
+  },
+  render: () => <TypedAmountDemo />,
+};
+
+export const 폭별비교: Story = {
+  name: '폭별 비교',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          '같은 금액(133,150,000원)을 390px, 360px, 320px 폭의 막대에 넣었습니다. 폭이 좁을수록 글자가 줄다가, 더는 줄일 수 없는 폭에서는 줄바꿈됩니다.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-col gap-4 p-4">
+      <NarrowBar width={390} amount={133_150_000} />
+      <NarrowBar width={360} amount={133_150_000} />
+      <NarrowBar width={320} amount={133_150_000} />
+    </div>
+  ),
+};
 
 export const 항목별금액: Story = {
   name: '항목별 금액',
