@@ -56,10 +56,23 @@ function PriceBarDemo() {
 }
 
 export const 기본: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`fixed` 막대가 화면(여기서는 틀) 아래에 붙은 모습입니다. 왼쪽 버튼으로 패키지를 더하고 빼면 총액이 굴러가며 바뀌고, 본문 위에 얹힌 막대는 그대로 아래에 머뭅니다.',
+      },
+    },
+  },
   decorators: [
     (Story) => (
       // transform이 있는 조상은 fixed 자손의 기준이 되어, 스토리 안에서 막대가 이 틀 아래에 붙는다.
-      <div className="border-border relative h-64 w-full max-w-3xl transform-[translateZ(0)] overflow-hidden rounded-lg border">
+      // 가운데 정렬된 캔버스에서 `w-full`은 내용 폭으로 줄어들므로 폭은 고정으로 주고 좁은 화면에서는 뷰포트에서 캔버스 여백을 뺀 폭까지만 줄인다.
+      <div className="border-border relative h-60 w-160 max-w-[calc(100vw-6rem)] transform-[translateZ(0)] overflow-hidden rounded-lg border max-sm:h-80">
+        <div className="text-muted-foreground p-4 text-sm">
+          <p className="text-foreground font-semibold">견적 본문 영역</p>
+          <p className="mt-1">막대가 아래에 붙습니다.</p>
+        </div>
         <Story />
       </div>
     ),
