@@ -58,7 +58,8 @@ export type SegmentedProps = Omit<
   };
 
 const GROUP_CLASSES: Record<SegmentedIndicator, string> = {
-  pill: 'bg-muted rounded-pill p-1',
+  // 다크의 `muted`(#121315)는 카드(`card`, 같은 색) 위에서 트랙이 사라지므로 한 단계 밝은 `secondary-hover`를 쓴다(검은 페이지와 카드 위 모두 보인다).
+  pill: 'bg-muted dark:bg-secondary-hover rounded-pill p-1',
   underline: 'border-border border-b',
   ring: 'gap-1',
 };
