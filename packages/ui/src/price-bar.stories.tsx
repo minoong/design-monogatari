@@ -1,13 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useId, useState } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 
 import { Button } from './button';
 import { ArrowLeftIcon } from './icons/arrow-left';
 import { ArrowRightIcon } from './icons/arrow-right';
 import { Input } from './input';
 import { Label } from './label';
-import { PriceBar, PriceBarActions, PriceBarTotal, PriceBreakdown, PriceRow } from './price-bar';
+import {
+  PriceBar,
+  PriceBarActions,
+  type PriceBarProps,
+  PriceBarTotal,
+  PriceBreakdown,
+  PriceRow,
+} from './price-bar';
 import { textControls } from './storybook/arg-types';
+
+/** 컨트롤로 바꿔 볼 수 있는 값: 막대 자체의 속성에 총액 칸의 값을 더했다. */
+type PriceBarArgs = PriceBarProps & {
+  amount: number;
+  label: string;
+  note: string;
+};
 
 const meta = {
   title: '컴포넌트/가격 막대',
@@ -17,94 +31,79 @@ const meta = {
     docs: {
       description: {
         component:
-          '`PriceBar`는 견적 총액, 요약 열기 버튼, 이전·다음 버튼을 한 줄에 모은 막대입니다. 총액은 숫자가 굴러가며 바뀌고, 멈춘 뒤 스크린 리더에 "이름 + 금액"이 읽힙니다. `PriceBreakdown`과 `PriceRow`는 항목별 금액 목록입니다. 위치는 호출하는 쪽이 정하고 `fixed`를 주면 화면 아래에 붙습니다.',
+          '`PriceBar`는 견적 총액, 이전·다음 버튼을 한 줄에 모은 막대입니다. 총액은 숫자가 굴러가며 바뀌고, 멈춘 뒤 스크린 리더에 "이름 + 금액"이 읽힙니다. 금액이 버튼 옆 자리보다 길면 글자가 줄어 한 줄에 맞추고, 그래도 안 들어가면 총액이 자기 줄로 내려갑니다. `PriceBreakdown`과 `PriceRow`는 항목별 금액 목록입니다. 위치는 호출하는 쪽이 정하고 `fixed`를 주면 화면 아래에 붙습니다.',
       },
     },
   },
-  argTypes: {
-    fixed: { control: 'boolean' },
-    ...textControls('aria-label'),
+  args: {
+    amount: 82_900_000,
+    label: '예상 견적 금액',
+    note: '취득세와 부대비용 별도',
   },
-} satisfies Meta<typeof PriceBar>;
+  argTypes: {
+    amount: { control: 'number' },
+    // `fixed`는 화면 아래에 붙으므로 따로 둔 `고정` 스토리에서만 다룬다.
+    fixed: { control: false },
+    ...textControls('label', 'note', 'aria-label'),
+  },
+} satisfies Meta<PriceBarArgs>;
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PriceBarArgs>;
 
-const BASE = 82_900_000;
+/** 가운데 정렬된 캔버스에서는 막대가 내용 폭으로 줄어들므로 폭을 준다. 좁은 화면에서는 뷰포트에서 캔버스 여백을 뺀 폭까지만 줄인다. */
+function Stage({ children }: { children: ReactNode }) {
+  return <div className="w-160 max-w-[calc(100vw-6rem)]">{children}</div>;
+}
 
-function PriceBarDemo() {
-  const [packageOn, setPackageOn] = useState(false);
-  const amount = BASE + (packageOn ? 5_000_000 : 0);
-
+function StepButtons() {
   return (
-    <PriceBar fixed>
-      <PriceBarTotal amount={amount} note="취득세와 부대비용 별도" />
-      <PriceBarActions>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            setPackageOn((on) => !on);
-          }}
-        >
-          {packageOn ? '파퓰러 패키지 빼기' : '파퓰러 패키지 더하기'}
-        </Button>
-        <Button variant="primary">다음 단계</Button>
-      </PriceBarActions>
-    </PriceBar>
+    <>
+      <Button variant="secondary">
+        <ArrowLeftIcon data-icon="inline-start" />
+        이전
+      </Button>
+      <Button variant="primary">
+        다음
+        <ArrowRightIcon data-icon="inline-end" />
+      </Button>
+    </>
   );
 }
 
 export const 기본: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '`fixed` 막대가 화면(여기서는 틀) 아래에 붙은 모습입니다. 왼쪽 버튼으로 패키지를 더하고 빼면 총액이 굴러가며 바뀌고, 본문 위에 얹힌 막대는 그대로 아래에 머뭅니다.',
-      },
-    },
-  },
-  decorators: [
-    (Story) => (
-      // transform이 있는 조상은 fixed 자손의 기준이 되어, 스토리 안에서 막대가 이 틀 아래에 붙는다.
-      // 가운데 정렬된 캔버스에서 `w-full`은 내용 폭으로 줄어들므로 폭은 고정으로 주고 좁은 화면에서는 뷰포트에서 캔버스 여백을 뺀 폭까지만 줄인다.
-      <div className="border-border relative h-60 w-160 max-w-[calc(100vw-6rem)] transform-[translateZ(0)] overflow-hidden rounded-lg border max-sm:h-80">
-        <div className="text-muted-foreground p-4 text-sm">
-          <p className="text-foreground font-semibold">견적 본문 영역</p>
-          <p className="mt-1">막대가 아래에 붙습니다.</p>
-        </div>
-        <Story />
-      </div>
-    ),
-  ],
-  render: () => <PriceBarDemo />,
+  render: ({ amount, label, note, ...props }) => (
+    <Stage>
+      <PriceBar {...props} className="border-border rounded-lg border">
+        <PriceBarTotal amount={amount} label={label} note={note || undefined} />
+        <PriceBarActions>
+          <StepButtons />
+        </PriceBarActions>
+      </PriceBar>
+    </Stage>
+  ),
 };
 
-function NarrowBar({ width, amount }: { width: number; amount: number }) {
+const FIT_WIDTHS = [390, 360, 320] as const;
+const MAX_DIGITS = 12;
+
+function FitBar({ width, amount }: { width: number; amount: number }) {
   return (
     <figure className="m-0 max-w-full" style={{ width }}>
       <figcaption className="text-muted-foreground text-caption mb-1">{width}px 폭</figcaption>
       <PriceBar className="border-border gap-x-3 gap-y-2 rounded-lg border">
         <PriceBarTotal amount={amount} />
         <PriceBarActions className="ml-auto flex-nowrap">
-          <Button variant="secondary">
-            <ArrowLeftIcon data-icon="inline-start" />
-            이전
-          </Button>
-          <Button variant="primary">
-            다음
-            <ArrowRightIcon data-icon="inline-end" />
-          </Button>
+          <StepButtons />
         </PriceBarActions>
       </PriceBar>
     </figure>
   );
 }
 
-const MAX_DIGITS = 12;
-
-function TypedAmountDemo() {
-  const [digits, setDigits] = useState('82900000');
+function FitDemo() {
+  const [digits, setDigits] = useState('133150000');
   const amount = Number(digits || '0');
   const inputId = useId();
 
@@ -126,44 +125,56 @@ function TypedAmountDemo() {
         />
       </div>
       <div className="flex flex-wrap items-start gap-4">
-        <NarrowBar width={390} amount={amount} />
-        <NarrowBar width={320} amount={amount} />
+        {FIT_WIDTHS.map((width) => (
+          <FitBar key={width} width={width} amount={amount} />
+        ))}
       </div>
     </div>
   );
 }
 
-export const 입력으로줄이기: Story = {
-  name: '숫자를 입력하면 글자가 줄어듭니다',
+export const 글자맞춤: Story = {
+  name: '글자 맞춤',
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         story:
-          '금액을 입력하면 자릿수가 늘수록 총액 글자가 줄어 버튼 옆 한 줄에 맞춥니다(제목 크기의 절반까지). 절반으로도 안 들어가는 폭(320px)에서는 총액이 자기 줄로 내려가 글자가 다시 원래 크기가 됩니다. 두 막대는 같은 금액을 받습니다.',
+          '금액을 입력하면 같은 금액이 세 폭(390/360/320px)의 막대에 들어갑니다. 자릿수가 늘수록 총액 글자가 버튼 옆 자리에 맞게 줄어들고(제목 크기의 절반까지), 절반으로도 안 들어가는 폭에서는 총액이 자기 줄로 내려가 원래 크기로 돌아옵니다.',
       },
     },
   },
-  render: () => <TypedAmountDemo />,
+  render: () => <FitDemo />,
 };
 
-export const 폭별비교: Story = {
-  name: '폭별 비교',
+export const 고정: Story = {
   parameters: {
-    layout: 'fullscreen',
     docs: {
       description: {
         story:
-          '같은 금액(133,150,000원)을 390px, 360px, 320px 폭의 막대에 넣었습니다. 폭이 좁을수록 글자가 줄다가, 더는 줄일 수 없는 폭에서는 줄바꿈됩니다.',
+          '`fixed`는 막대를 화면 아래에 붙이고 기기의 하단 안전 영역을 비웁니다. 스토리에서는 변환이 있는 틀이 기준이 되어 틀 아래에 붙습니다.',
       },
     },
   },
-  render: () => (
-    <div className="flex flex-col gap-4 p-4">
-      <NarrowBar width={390} amount={133_150_000} />
-      <NarrowBar width={360} amount={133_150_000} />
-      <NarrowBar width={320} amount={133_150_000} />
-    </div>
+  decorators: [
+    (Story) => (
+      // transform이 있는 조상은 fixed 자손의 기준이 되어, 스토리 안에서 막대가 이 틀 아래에 붙는다.
+      <div className="border-border relative h-60 w-160 max-w-[calc(100vw-6rem)] transform-[translateZ(0)] overflow-hidden rounded-lg border max-sm:h-80">
+        <div className="text-muted-foreground p-4 text-sm">
+          <p className="text-foreground font-semibold">견적 본문 영역</p>
+          <p className="mt-1">막대가 아래에 붙습니다.</p>
+        </div>
+        <Story />
+      </div>
+    ),
+  ],
+  render: ({ amount, label, note, ...props }) => (
+    <PriceBar {...props} fixed>
+      <PriceBarTotal amount={amount} label={label} note={note || undefined} />
+      <PriceBarActions>
+        <StepButtons />
+      </PriceBarActions>
+    </PriceBar>
   ),
 };
 

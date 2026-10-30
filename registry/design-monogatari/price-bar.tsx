@@ -26,15 +26,17 @@ const MIN_FIT_SCALE = 0.5;
  * 지금 폭과 자리의 비율로 한 번에 구하고(반복 측정 없음), 값이나 자리 폭이 바뀔 때만 다시 잽니다.
  * 가장 작은 크기로도 자리에 안 들어가는 폭이면 총액 칸의 최소 폭을 그 크기의 글자 폭으로 잡아, 막대가 줄바꿈될 때
  * 총액이 버튼과 겹치지 않고 자기 줄로 내려가게 합니다(막대가 `flex-wrap`일 때).
- * 반환한 `box`는 자리를 재는 바깥, `text`는 `em`으로 줄어드는 안쪽에 붙입니다.
+ * 반환한 `box`는 자리를 재는 바깥, `text`는 `em`으로 줄어드는 안쪽, `label`은 줄이지 않는 이름표에 붙입니다.
  */
 function useFitText() {
   const box = useRef<HTMLDivElement>(null);
   const text = useRef<HTMLSpanElement>(null);
+  const label = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
     const boxEl = box.current;
     const textEl = text.current;
+    const labelEl = label.current;
     // 최소 폭은 `min-w-0`인 총액 칸(`box`의 부모)에 걸어야 줄바꿈 판단에 쓰인다.
     const root = boxEl?.parentElement;
     if (!boxEl || !textEl || !root) return;
@@ -51,19 +53,22 @@ function useFitText() {
       );
       // 줄인 글자가 다시 폭을 바꿔 관찰자를 되부르므로, 반올림 오차 안의 변화는 무시한다.
       if (Math.abs(next - current) > 0.005) textEl.style.fontSize = `${next}em`;
-      root.style.minWidth = `${Math.ceil((natural / current) * MIN_FIT_SCALE) + 1}px`;
+      // 이름표는 줄이지 않으므로 최소 폭에 이름표의 폭도 담는다(이름표가 "예상 견적 금 / 액"으로 꺾이지 않게).
+      const labelWidth = labelEl?.getBoundingClientRect().width ?? 0;
+      root.style.minWidth = `${Math.ceil(Math.max(labelWidth, (natural / current) * MIN_FIT_SCALE)) + 1}px`;
     };
 
     fit();
     const observer = new ResizeObserver(fit);
     observer.observe(boxEl);
     observer.observe(textEl);
+    if (labelEl) observer.observe(labelEl);
     return () => {
       observer.disconnect();
     };
   }, []);
 
-  return { box, text };
+  return { box, text, label };
 }
 
 function formatWon(amount: number, signed = false) {
@@ -121,7 +126,7 @@ export function PriceBarTotal({
   ...props
 }: PriceBarTotalProps) {
   // 처음 값으로 시작해 첫 그리기는 알리지 않고, 바뀐 금액은 잠시 멈춘 뒤에 알린다.
-  const { box, text } = useFitText();
+  const { box, text, label: labelRef } = useFitText();
   const [announced, setAnnounced] = useState(amount);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,7 +139,11 @@ export function PriceBarTotal({
 
   return (
     <div className={cn('flex min-w-0 flex-1 basis-0 flex-col', className)} {...props}>
-      <span aria-hidden className="text-muted-foreground text-caption">
+      <span
+        ref={labelRef}
+        aria-hidden
+        className="text-muted-foreground text-caption self-start whitespace-nowrap"
+      >
         {label}
       </span>
       <div ref={box} aria-hidden className="text-title min-w-0 font-semibold tracking-tight">
