@@ -101,7 +101,7 @@ export function ResultStep({
   const feeColumns: readonly DataTableColumn<FeeRow>[] = [
     {
       key: 'label',
-      header: '등록 지역',
+      header: '지역',
       rowHeader: true,
       cell: (row) => (row.region === selectedRegion ? `${row.label} (선택)` : row.label),
     },

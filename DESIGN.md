@@ -334,7 +334,7 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 ### DataTable
 
-- Generic `DataTable<Row>` with `columns` (`key`, `header`, `cell?`, `numeric?`, `rowHeader?`), `rows`, `getRowKey`, optional `footer`. `caption` is required (`captionHidden` makes it sr-only; the table then also gets `aria-labelledby`). `th scope="col"` / `scope="row"`; numeric columns are right-aligned, `tabular-nums` and never wrap; text cells wrap. The wrapper is a focusable `role="region"` (`tabIndex=0`, named by the caption) that scrolls horizontally when the table overflows (WCAG 1.4.10 data-table exception). A footer cell for a `rowHeader` column without a value renders as `td`. `bg-card border-border rounded-lg`, header `bg-muted`.
+- Generic `DataTable<Row>` with `columns` (`key`, `header`, `cell?`, `numeric?`, `rowHeader?`), `rows`, `getRowKey`, optional `footer`. `caption` is required (`captionHidden` makes it sr-only; the table then also gets `aria-labelledby`). `th scope="col"` / `scope="row"`; numeric columns are right-aligned, `tabular-nums` and never wrap; text cells wrap. The wrapper is a focusable `role="region"` (`tabIndex=0`, named by the caption) that scrolls horizontally when the table overflows (WCAG 1.4.10 data-table exception). A footer cell for a `rowHeader` column without a value renders as `td`. `bg-card border-border rounded-lg`, header `bg-muted`. Cell padding is `px-2` (8px) below `sm` and `px-4` from `sm` up, so a four-column table of amounts (`₩1,065,000`) fits 360px and wider screens without scrolling sideways; narrower screens still scroll inside the focusable wrapper.
 
 ### Skeleton
 
