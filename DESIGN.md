@@ -179,7 +179,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 - **Primary**: `bg-primary text-primary-foreground`. Hover `bg-primary-hover`. Never `bg-foreground` for the default CTA.
 - **Secondary**: ghost — `border-border text-foreground bg-transparent`. Hover parchment / gray-3 wash. Not a blue outline.
 - Primitive: native `<button>` + Radix `Slot` (`asChild`). No hover scale.
-- **Press**: Motion `whileTap` — Button `scale: 0.96`, IconButton `scale: 0.9`. Primary uses a 26% black `dimmer`. Secondary / clear use an 8% `foreground` wash (ink on light, lift on dark). `useReducedMotion()` keeps the wash and skips scale. Do not put Tailwind `transition-*` on the same node as Motion.
+- **Press**: Motion `whileTap` — Button `scale: 0.96`, IconButton `scale: 0.9`. Native inputs (Checkbox, Radio) change colour instead (CSS, 180ms, no scale). Primary uses a 26% black `dimmer`. Secondary / clear use an 8% `foreground` wash (ink on light, lift on dark). `useReducedMotion()` keeps the wash and skips scale. Do not put Tailwind `transition-*` on the same node as Motion.
 - `radius`: `md` (`rounded-md`) | `lg` (`rounded-lg`, Button default) | `pill` (`rounded-pill`). IconButton default is `md`.
 - **Toggle (`aria-pressed`)**: `secondary` shows the on state as `border-primary` + a 1px `ring-primary`, the same family as OptionRow/PackageRow/ColorSwatchGroup selection. Keep the label fixed and let only `aria-pressed` change (a label that changes length shifts its neighbours); group toggles in `role="group"` with an `aria-label`.
 - `size`: `small` | `medium` | `large` (default) | `xlarge`. `display`: `inline` | `block` | `full`. Same 1px hairline on primary and secondary (`box-border`).
@@ -250,7 +250,7 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 ### Radio
 
 - Native `<input type="radio">` with `appearance-none`: 20px circle, `border-border`; checked = `border-primary` + `bg-primary` with a 4px `background` inset ring so the centre reads as a dot (shape, not colour alone). Forced-colors falls back to the native control.
-- Focus `ring-2 ring-ring ring-offset-2`; invalid `aria-invalid` → destructive ring; disabled `bg-muted` (never opacity).
+- Press: the fill goes one step darker while pressed (`secondary-hover` unchecked, `primary-hover` checked; see Checkbox). Focus `ring-2 ring-ring ring-offset-2`; invalid `aria-invalid` → destructive ring; disabled `bg-muted` (never opacity).
 - Pair with `Label htmlFor`; group with `fieldset` + `legend`. Same `name` gives arrow-key navigation for free.
 - Motion: selecting pops (`animate-select-pop`); when another radio of the group takes over, the selected dot (a `::before` ghost) shrinks away (`animate-select-out`, 0.2s). Driven by `useCheckPhase`; still on first paint and under reduced motion.
 
@@ -304,8 +304,8 @@ Tokens live in `packages/ui/src/lib/motion.ts` (`@repo/ui/motion`, registry item
 
 ### Checkbox
 
-- Native `<input type="checkbox">` with `appearance-none`: 20px, `rounded-md`, `border-border`; checked = `border-primary` + `bg-primary` with a `::after` tick (`border-primary-foreground`, shape not colour). Focus `ring-2 ring-ring ring-offset-2`; invalid → destructive ring; disabled `bg-muted` (never opacity); forced-colors falls back to the native control. No `indeterminate` yet.
-- Motion via `useCheckPhase`: checking pops (`animate-select-pop`, 0.32s); clearing shrinks a `::before` fill and the `::after` tick away (`animate-select-out`, 0.2s). Still on first paint and under reduced motion. Forced-colors hides the pseudo-elements (native control draws itself); a disabled checked tick uses the `background` colour for contrast.
+- Native `<input type="checkbox">` with `appearance-none`: 20px, `rounded-md`, `border-border`; checked = `border-primary` + `bg-primary` with a `::after` tick (`border-primary-foreground`, shape not colour). Focus `ring-2 ring-ring ring-offset-2`; invalid → destructive ring; disabled `bg-muted` (never opacity); forced-colors falls back to the native control. `indeterminate` (a prop that sets the DOM property each render) draws a horizontal bar (`w-2.5`, no rotation) instead of the tick on a `primary` fill, the checked-out ghost animation is skipped while indeterminate (it would hold the dash invisible), disabled → `muted-foreground`, and assistive tech hears "mixed"; the browser clears it on press, so the caller decides the next state in `onChange`.
+- Press feedback: while pressed (`:active`, not disabled) the colour changes over 180ms (`DURATION.fast`, `ease-out-expo`): unchecked → `secondary-hover` (the same wash as `Button` secondary), checked / indeterminate → `primary` mixed 26% with `dimmer` via `color-mix` on fill and border (the same dimmer `Button` primary uses, darker in both themes; the `primary-hover` token is lighter than `primary` in light, so it is not used; a `filter` was avoided because it would also dim the focus ring and tick). Colour, not scale: shrinking the input shrinks its hit area, so a press on its outermost pixel never reached it. The transition is off under reduced motion. Radio does the same. Motion via `useCheckPhase`: checking pops (`animate-select-pop`, 0.32s); clearing shrinks a `::before` fill and the `::after` tick away (`animate-select-out`, 0.2s). Still on first paint and under reduced motion. Forced-colors hides the pseudo-elements (native control draws itself); a disabled checked tick uses the `background` colour for contrast.
 - Pair with `Label htmlFor`; group with `fieldset` + `legend`.
 
 ### Sheet

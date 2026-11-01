@@ -35,9 +35,26 @@ export function Example() {
 
 <ComponentPreview name="checkbox/states" />
 
+### 중간 상태
+
+하위 항목 중 일부만 고르면 "전체 선택"에 체크 표시 대신 가로줄이 보입니다. `indeterminate`로 켜고, 누른 뒤의 상태는 `onChange`에서 정합니다(브라우저가 누르면 중간 상태를 풀고 `checked`를 바꿉니다). 낭독기에는 "일부 선택됨(mixed)"으로 알려집니다. `checked`와 함께 주면 모양이 정해지지 않으니 둘 중 하나만 주십시오. `onChange`에서 상태를 바꾸지 않으면 브라우저가 이미 푼 가로줄이 사라집니다. 하위 항목의 묶음은 `role="group"`과 `aria-labelledby`로 "전체 선택"과 이어 주십시오.
+
+<ComponentPreview name="checkbox/indeterminate" />
+
 ## API 레퍼런스
 
-`<input>`의 모든 속성과 `ref`를 받습니다(`type`은 `checkbox`로 고정입니다). 정의된 prop은 없습니다. 체크 표시는 `::after`로 그리고 지름은 20px입니다. 중간 상태(`indeterminate`)는 아직 지원하지 않습니다.
+`<input>`의 모든 속성과 `ref`를 받습니다(`type`은 `checkbox`로 고정입니다). 체크 표시는 `::after`로 그리고 지름은 20px입니다.
+
+<PropsTable
+  file="packages/ui/src/checkbox.tsx"
+  name="CheckboxProps"
+  include={['indeterminate']}
+  defaults={{ indeterminate: 'false' }}
+  descriptions={{
+    indeterminate:
+      '일부만 선택된 상태입니다. 체크 표시 대신 가로줄이 보이고 낭독기에는 일부 선택됨(mixed)으로 알려집니다. 누르면 브라우저가 이 상태를 풀므로 누른 뒤의 상태는 onChange에서 정하십시오.',
+  }}
+/>
 
 ## 접근성
 
@@ -45,6 +62,8 @@ export function Example() {
 - 그룹의 이름은 `fieldset`과 `legend`로 달아 주십시오.
 - 체크 표시는 체크 모양과 테두리 색이 함께 바뀌어 색에만 기대지 않습니다.
 - 체크하면 0.32초 튀어 오르고, 해제하면 채움과 체크 표시가 0.2초 동안 줄어들며 사라집니다. 처음 그려질 때는 움직이지 않으며 감소 모션이면 꺼집니다.
+- 누르는 동안 색이 바뀝니다(선택 전은 옅은 면 `secondary-hover`, 선택·중간 상태는 `primary`에 `dimmer`를 26% 섞어 어둡게, 180ms). 크기는 그대로입니다. 비활성에는 적용되지 않습니다.
+- 중간 상태(`indeterminate`)는 브라우저의 `indeterminate` 속성으로 켜서 보조 기술에 일부 선택됨(mixed)으로 알려지고, 가로줄 모양이라 색에만 기대지 않습니다.
 - 키보드 포커스는 두 겹 링(`ring-2 ring-ring`, 간격 2px)으로 보입니다. 오류는 `aria-invalid`로 알리고 안내 문구는 `aria-describedby`로 연결하십시오.
 - 고대비(forced-colors) 모드에서는 브라우저 기본 체크박스로 돌아가고, 직접 그린 체크 표시와 채움은 숨깁니다. 비활성이면서 체크된 상자의 체크 표시는 배경색을 써서 대비를 확보합니다.
 - 입력 칸만으로는 지름이 20px라 터치 영역이 24px에 못 미칩니다. 문서 예시처럼 `Label`(`htmlFor`)과 함께 써서 글자까지 눌리게 하십시오.
