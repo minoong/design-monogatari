@@ -67,7 +67,7 @@ export function DataTable<Row>({
           className={cn(
             captionHidden
               ? 'sr-only'
-              : 'border-border text-foreground border-b px-4 py-3 text-left font-semibold',
+              : 'border-border text-foreground border-b px-2 py-3 text-left font-semibold sm:px-4',
           )}
         >
           {caption}
@@ -79,7 +79,7 @@ export function DataTable<Row>({
                 key={column.key}
                 scope="col"
                 className={cn(
-                  'px-4 py-2.5 font-medium wrap-break-word break-keep',
+                  'p-2 font-medium wrap-break-word break-keep sm:px-4 sm:py-2.5',
                   alignment(column),
                 )}
               >
@@ -97,7 +97,7 @@ export function DataTable<Row>({
                     key={column.key}
                     scope="row"
                     className={cn(
-                      'px-4 py-3 font-medium wrap-break-word break-keep',
+                      'px-2 py-3 font-medium wrap-break-word break-keep sm:px-4',
                       alignment(column),
                     )}
                   >
@@ -106,7 +106,10 @@ export function DataTable<Row>({
                 ) : (
                   <td
                     key={column.key}
-                    className={cn('px-4 py-3 wrap-break-word break-keep', alignment(column))}
+                    className={cn(
+                      'px-2 py-3 wrap-break-word break-keep sm:px-4',
+                      alignment(column),
+                    )}
                   >
                     {valueOf(row, column)}
                   </td>
@@ -123,12 +126,15 @@ export function DataTable<Row>({
                   <th
                     key={column.key}
                     scope="row"
-                    className={cn('px-4 py-3 wrap-break-word break-keep', alignment(column))}
+                    className={cn(
+                      'px-2 py-3 wrap-break-word break-keep sm:px-4',
+                      alignment(column),
+                    )}
                   >
                     {footer[column.key]}
                   </th>
                 ) : (
-                  <td key={column.key} className={cn('px-4 py-3', alignment(column))}>
+                  <td key={column.key} className={cn('px-2 py-3 sm:px-4', alignment(column))}>
                     {footer[column.key]}
                   </td>
                 ),
