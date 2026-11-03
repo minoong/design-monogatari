@@ -3,26 +3,16 @@
 import { Button } from '@repo/ui/button';
 import { CopyButton } from '@repo/ui/copy-button';
 import { DataTable, type DataTableColumn } from '@repo/ui/data-table';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@repo/ui/dialog';
 import { DownloadIcon } from '@repo/ui/icons/download';
 import { PrinterIcon } from '@repo/ui/icons/printer';
 import { RotateCCWIcon } from '@repo/ui/icons/rotate-ccw';
-import { XIcon } from '@repo/ui/icons/x';
 import { Label } from '@repo/ui/label';
 import { NativeSelect } from '@repo/ui/native-select';
 import { Notice, NoticeDescription, NoticeTitle } from '@repo/ui/notice';
 import { OptionGroup, OptionRow } from '@repo/ui/option-row';
 import { PriceBreakdown, PriceRow } from '@repo/ui/price-bar';
 import { useToast } from '@repo/ui/toast';
-import { type Dispatch, useId, useRef, useState } from 'react';
+import { type Dispatch, useId } from 'react';
 
 import { CATALOG } from '../model/catalog';
 import { formatWon } from '../model/format';
@@ -68,7 +58,6 @@ export function ResultStep({
 }) {
   const regionId = useId();
   const { toast } = useToast();
-  const [resetOpen, setResetOpen] = useState(false);
 
   /** 지금 구성의 차량 이미지를 PNG 파일로 내려받는다. */
   async function saveImage() {
@@ -94,7 +83,7 @@ export function ResultStep({
     }, 10_000);
     toast({ title: '차량 이미지를 저장했습니다', description: imageName });
   }
-  const resetButtonRef = useRef<HTMLButtonElement>(null);
+
   const steps = explainTax(state.selection, state.quoteOptions);
   const selectedRegion = state.quoteOptions.region;
 
@@ -249,11 +238,10 @@ export function ResultStep({
           차량 이미지 저장
         </Button>
         <Button
-          ref={resetButtonRef}
           className="w-full"
           variant="clear"
           onClick={() => {
-            setResetOpen(true);
+            dispatch({ type: 'reset' });
           }}
         >
           <RotateCCWIcon data-icon="inline-start" />
@@ -273,45 +261,6 @@ export function ResultStep({
         <NoticeTitle>안내</NoticeTitle>
         <NoticeDescription>{DISCLAIMER}</NoticeDescription>
       </Notice>
-
-      <Dialog open={resetOpen} onOpenChange={setResetOpen}>
-        <DialogContent
-          onCloseAutoFocus={(event) => {
-            // 취소나 Esc로 닫으면 눌렀던 버튼으로 돌아간다. 다시 시작해 버튼이 사라졌으면 단계 제목이 초점을 받는다.
-            if (resetButtonRef.current) {
-              event.preventDefault();
-              resetButtonRef.current.focus({ preventScroll: true });
-            }
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>처음부터 다시 견적을 내시겠습니까?</DialogTitle>
-            <DialogDescription>
-              지금까지 고른 선택이 모두 기본값으로 돌아갑니다. 링크를 복사해 두면 이 견적을 다시 열
-              수 있습니다.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button iconMotion="mount" variant="secondary">
-                <XIcon data-icon="inline-start" />
-                취소
-              </Button>
-            </DialogClose>
-            <Button
-              iconMotion="mount"
-              variant="primary"
-              onClick={() => {
-                setResetOpen(false);
-                dispatch({ type: 'reset' });
-              }}
-            >
-              <RotateCCWIcon data-icon="inline-start" />
-              처음부터 다시
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

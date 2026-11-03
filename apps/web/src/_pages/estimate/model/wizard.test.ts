@@ -87,7 +87,27 @@ describe('wizardReducer', () => {
     let state = wizardReducer(start(), set('color', 'blue'));
     state = wizardReducer(state, { type: 'quote-options', options: { region: 'jeju' } });
     state = wizardReducer(state, { type: 'go', step: 'result' });
-    expect(wizardReducer(state, { type: 'reset' })).toEqual(start());
+    expect({ ...wizardReducer(state, { type: 'reset' }), undo: null }).toEqual(start());
+  });
+
+  it('처음부터 다시 한 뒤 실행 취소하면 직전의 선택, 견적 옵션, 단계로 돌아간다', () => {
+    let state = wizardReducer(start(), set('color', 'blue'));
+    state = wizardReducer(state, { type: 'quote-options', options: { region: 'jeju' } });
+    state = wizardReducer(state, { type: 'go', step: 'result' });
+    const reset = wizardReducer(state, { type: 'reset' });
+    expect({ ...reset, undo: null }).toEqual(start());
+    expect(reset.undo).not.toBeNull();
+    expect(wizardReducer(reset, { type: 'undo' })).toEqual({ ...state, undo: null });
+  });
+
+  it('처음부터 다시 한 뒤 다른 동작을 하면 실행 취소가 사라지고 새로 고른 것을 덮어쓰지 않는다', () => {
+    const state = wizardReducer(start(), set('color', 'blue'));
+    const reset = wizardReducer(state, { type: 'reset' });
+    const changed = wizardReducer(reset, set('color', 'blue'));
+    expect(changed.undo).toBeNull();
+    expect(wizardReducer(changed, { type: 'undo' })).toBe(changed);
+    // 단계 이동도 다른 동작이다.
+    expect(wizardReducer(reset, { type: 'go', step: 'wheel' }).undo).toBeNull();
   });
 
   it('단계 이동과 견적 옵션 변경', () => {

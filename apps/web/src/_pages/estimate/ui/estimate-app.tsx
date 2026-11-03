@@ -37,6 +37,7 @@ import { neighborStep, type StepId, STEPS } from '../model/steps';
 import { type WizardAction, wizardReducer, type WizardState } from '../model/wizard';
 import { BlockedDialog, ConfirmChangeDialog, SuggestionDialog } from './change-dialogs';
 import { EstimateHeader } from './estimate-header';
+import { ResetUndoToast } from './reset-undo-toast';
 import { RestoreIssueToast } from './restore-issue-toast';
 import { ResultStep } from './result-step';
 import {
@@ -217,6 +218,7 @@ export function EstimateApp({
   return (
     <ToastProvider viewportClassName="bottom-24 split:max-lg:bottom-36 lg:bottom-48">
       <RestoreIssueToast issueCount={restoreIssueCount} />
+      <ResetUndoToast undo={state.undo} dispatch={dispatch} />
       <div className="bg-background text-foreground tiny:h-auto tiny:min-h-dvh tiny:overflow-visible flex h-dvh flex-col overflow-hidden font-sans print:block print:h-auto print:min-h-0 print:overflow-visible">
         <EstimateHeader
           dispatch={dispatch}
