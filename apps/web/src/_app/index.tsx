@@ -1,5 +1,6 @@
 import './styles/globals.css';
 
+import { TooltipProvider } from '@repo/ui/tooltip';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
@@ -34,7 +35,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {/* 툴팁의 열림 지연은 앱 전체가 같다(마우스를 올리면 0.4초 뒤, 옆으로 옮기면 바로). */}
+          <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@repo/ui/button';
+import { Button, type ButtonProps } from '@repo/ui/button';
 import { cn } from '@repo/ui/cn';
 import { ArrowDownIcon } from '@repo/ui/icons/arrow-down';
 import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
@@ -13,6 +13,7 @@ import { Morph } from '@repo/ui/morph';
 import { Segmented, SegmentedItem } from '@repo/ui/segmented';
 import { Skeleton, SkeletonGroup } from '@repo/ui/skeleton';
 import { SwitchField } from '@repo/ui/switch-field';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/tooltip';
 import { vehicleById } from '@repo/vehicle-3d/vehicles';
 import type { InspectHandle } from '@repo/vehicle-3d/viewer';
 import {
@@ -53,6 +54,31 @@ const VehicleViewer = dynamic(() => import('./vehicle-viewer'), {
   ssr: false,
   loading: () => <StageLoading />,
 });
+
+/**
+ * 차량 위에 겹치는 글자 없는 버튼. 이름은 `aria-label`로 읽히고, 마우스 사용자에게는 같은 말을 툴팁으로 보인다
+ * (터치에서는 열리지 않는다). 비활성이면 툴팁도 열리지 않는다: 확대가 꺼진 이유는 안내 문구가 이미 보여 준다.
+ */
+function StageIconButton({
+  label,
+  side,
+  children,
+  ...props
+}: Omit<ButtonProps, 'aria-label' | 'icon' | 'size' | 'variant'> & {
+  label: string;
+  side: 'top' | 'left';
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button {...props} aria-label={label} icon size="small" variant="clear">
+          {children}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side={side}>{label}</TooltipContent>
+    </Tooltip>
+  );
+}
 
 function StageLoading() {
   return (
@@ -322,36 +348,30 @@ export function VehicleStage({
               <>
                 {/* 버튼 배경이 투명이라 차량 색과 겹치면 안 보인다(확대하면 차체가 화면을 채운다). 선루프 알약과 같은 반투명 판 위에 올린다. */}
                 <div className="bg-background/85 border-border absolute top-3 right-3 z-10 flex flex-col gap-1 rounded-lg border p-1 backdrop-blur-sm">
-                  <Button
-                    aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomIn}`}
+                  <StageIconButton
                     disabled={!ready || inside}
-                    icon
-                    size="small"
-                    variant="clear"
+                    label={`차량 ${CAMERA_CONTROL_LABELS.zoomIn}`}
+                    side="left"
                     onClick={() => inspectRef.current?.zoomIn()}
                   >
                     <MaximizeIcon />
-                  </Button>
-                  <Button
-                    aria-label={`차량 ${CAMERA_CONTROL_LABELS.zoomOut}`}
+                  </StageIconButton>
+                  <StageIconButton
                     disabled={!ready || inside}
-                    icon
-                    size="small"
-                    variant="clear"
+                    label={`차량 ${CAMERA_CONTROL_LABELS.zoomOut}`}
+                    side="left"
                     onClick={() => inspectRef.current?.zoomOut()}
                   >
                     <MinimizeIcon />
-                  </Button>
-                  <Button
-                    aria-label={CAMERA_CONTROL_LABELS.reset}
+                  </StageIconButton>
+                  <StageIconButton
                     disabled={!ready}
-                    icon
-                    size="small"
-                    variant="clear"
+                    label={CAMERA_CONTROL_LABELS.reset}
+                    side="left"
                     onClick={() => inspectRef.current?.reset()}
                   >
                     <RotateCCWIcon />
-                  </Button>
+                  </StageIconButton>
                 </div>
                 {/* 끌기와 두 손가락 벌리기만으로는 손가락 하나로 할 수 없는 사람이 쓸 수 없으므로, 좁은 화면에서도 버튼을 둔다. */}
                 <div
@@ -367,17 +387,15 @@ export function VehicleStage({
                       [ArrowDownIcon, CAMERA_CONTROL_LABELS.rotateDown, 0, 1],
                     ] as const
                   ).map(([Glyph, label, azimuth, polar]) => (
-                    <Button
+                    <StageIconButton
                       key={label}
-                      aria-label={label}
                       disabled={!ready}
-                      icon
-                      size="small"
-                      variant="clear"
+                      label={label}
+                      side="top"
                       onClick={() => inspectRef.current?.rotateBy(azimuth, polar)}
                     >
                       <Glyph />
-                    </Button>
+                    </StageIconButton>
                   ))}
                 </div>
               </>
