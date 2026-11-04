@@ -16,6 +16,8 @@ Next.js estimate app (port **3000**). FSD in `src/` (`_app` + `_pages/estimate`)
 
 처음부터 다시 견적 (result step) resets at once with no confirm dialog and offers 실행 취소 in a toast for 5s: the reducer keeps the pre-reset state in `WizardState.undo`, `ui/reset-undo-toast.tsx` shows the toast while `undo` exists, and any other action clears `undo` (so the toast closes and a later undo can never overwrite a new choice); history uses `replaceState`, so Back is not an undo.
 
+The seven icon-only stage buttons (zoom in/out/reset at the top-right of the car, the four rotate arrows at the bottom-right) go through `StageIconButton` in `ui/vehicle-stage.tsx`, which gives the `aria-label` and the same text as a `Tooltip` (left for the zoom column, top for the rotate row; `TooltipProvider` is in the root layout `_app/index.tsx`). Tooltips never open on touch and a disabled button (inside views, zoom) opens none, so the inside-view note stays visible text.
+
 The result step has a 차량 이미지 저장 button (`ResultStep` `captureImage`, from `VehicleStage` `onCaptureChange` once the model is drawn): a 1920x1080 PNG of the current car (colour, wheel, rim, caliper, sunroof) from a fixed front 3/4 view on a light background, via `InspectHandle.capture`, downloaded as `X5-견적-<색상>.png`. The button is disabled while the model is loading or WebGL is unavailable.
 
 Skill: `.agents/skills/feature-sliced-design/SKILL.md`. Rule: `.claude/rules/fsd-apps.md`.
