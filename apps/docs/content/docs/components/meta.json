@@ -33,6 +33,7 @@
     "switch",
     "switch-field",
     "presence",
-    "morph"
+    "morph",
+    "tooltip"
   ]
 }
