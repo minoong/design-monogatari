@@ -11,6 +11,7 @@ import {
   forwardRef,
   Fragment,
   isValidElement,
+  type MouseEvent,
   type PointerEvent,
   type ReactElement,
   type ReactNode,
@@ -23,18 +24,18 @@ import { cn } from './lib/cn';
 import { SPRING } from './lib/motion';
 
 export const buttonVariants = cva(
-  'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-hidden select-none focus-visible:ring-2 disabled:pointer-events-none **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
+  'focus-visible:ring-ring relative box-border cursor-pointer appearance-none items-center justify-center border border-transparent font-sans text-base leading-5 font-medium whitespace-nowrap outline-hidden select-none focus-visible:ring-2 disabled:pointer-events-none aria-disabled:cursor-not-allowed **:data-icon:inline-flex **:data-icon:shrink-0 **:data-icon:items-center **:data-icon:justify-center forced-colors:aria-disabled:border-dashed forced-colors:aria-disabled:border-[GrayText] forced-colors:aria-disabled:text-[GrayText] [&_svg]:pointer-events-none [&_svg]:block [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         primary:
-          'bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-offset-background disabled:bg-muted disabled:text-muted-foreground focus-visible:ring-offset-2',
+          'bg-primary text-primary-foreground hover:not-aria-disabled:bg-primary-hover focus-visible:ring-offset-background disabled:bg-muted disabled:text-muted-foreground aria-disabled:bg-muted aria-disabled:text-muted-foreground focus-visible:ring-offset-2',
         // 토글로 쓰면(`aria-pressed`) 켜진 상태를 선택 행과 같은 프라이머리 테두리와 링으로 보인다. 켜진 채로 키보드 포커스가 오면
         // 포커스 링(2px)에 배경색 간격(2px)을 두어 켜짐 링(1px)과 한눈에 구분되게 한다(다크에서 둘 다 파랑이라 두께만으로는 구분이 약했다).
         secondary:
-          'border-border text-foreground hover:bg-secondary-hover disabled:bg-muted disabled:text-muted-foreground aria-pressed:border-primary aria-pressed:ring-primary aria-pressed:focus-visible:ring-ring aria-pressed:focus-visible:ring-offset-background bg-transparent aria-pressed:ring-1 aria-pressed:focus-visible:ring-2 aria-pressed:focus-visible:ring-offset-2',
+          'border-border text-foreground hover:not-aria-disabled:bg-secondary-hover disabled:bg-muted disabled:text-muted-foreground aria-disabled:bg-muted aria-disabled:text-muted-foreground aria-pressed:border-primary aria-pressed:ring-primary aria-pressed:focus-visible:ring-ring aria-pressed:focus-visible:ring-offset-background bg-transparent aria-pressed:ring-1 aria-pressed:focus-visible:ring-2 aria-pressed:focus-visible:ring-offset-2',
         clear:
-          'text-foreground hover:bg-secondary-hover disabled:text-muted-foreground bg-transparent',
+          'text-foreground hover:not-aria-disabled:bg-secondary-hover disabled:text-muted-foreground aria-disabled:text-muted-foreground bg-transparent',
       },
       size: {
         small:
@@ -156,6 +157,7 @@ function ButtonLoader() {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
+    'aria-disabled': ariaDisabled,
     asChild = false,
     children,
     className,
@@ -208,7 +210,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     }),
     className,
   );
-  const canPress = !disabled && !loading;
+  // `aria-disabled`는 `disabled`와 달리 포커스와 포인터를 받는다(툴팁으로 이유를 알려 줄 수 있다). 모양은 비활성과 같고
+  // 눌러도 아무 일도 하지 않으며(폼 제출 포함) 누름 효과도 없다.
+  const notActionable = ariaDisabled === true || ariaDisabled === 'true';
+  const canPress = !disabled && !notActionable && !loading;
   const isSolidPress = variant === 'primary';
   const pressVariants = shouldReduceMotion
     ? { rest: { scale: 1 }, pressed: { scale: 1 } }
@@ -217,6 +222,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       : BUTTON_PRESS;
 
   // 키보드로 포커스가 왔을 때도 아이콘이 마우스를 올린 것과 같이 움직인다(마우스로 누른 포커스는 해당하지 않는다).
+  // 로딩 중과 `aria-disabled`일 때는 클릭을 무시한다(키보드 Enter·Space와 폼의 기본 제출 버튼 클릭도 `preventDefault`로 막는다).
+  // `asChild`의 자식(예: `<a href>`)에도 같은 처리기가 붙어 이동하지 않는다.
+  function handleClick(event: MouseEvent<HTMLElement>) {
+    if (notActionable || loading) {
+      event.preventDefault();
+      return;
+    }
+    onClick?.(event as MouseEvent<HTMLButtonElement>);
+  }
+
   function handleFocus(event: FocusEvent<HTMLButtonElement>) {
     onFocus?.(event);
     if (event.currentTarget.matches(':focus-visible')) setFocusVisible(true);
@@ -249,7 +264,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 
   if (asChild) {
     return (
-      <Slot className={classes} ref={ref} onBlur={onBlur} onFocus={onFocus} {...props}>
+      <Slot
+        aria-disabled={ariaDisabled}
+        className={classes}
+        ref={ref}
+        onBlur={onBlur}
+        onClick={handleClick}
+        onFocus={onFocus}
+        {...props}
+      >
         {children}
       </Slot>
     );
@@ -259,6 +282,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     <motion.button
       ref={ref}
       aria-busy={loading || undefined}
+      aria-disabled={ariaDisabled}
       className={cn(classes, loading && 'pointer-events-none')}
       disabled={disabled}
       type={type}
@@ -269,7 +293,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       transition={PRESS_SPRING}
       {...props}
       onBlur={handleBlur}
-      onClick={loading ? undefined : onClick}
+      onClick={handleClick}
       onFocus={handleFocus}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
@@ -279,7 +303,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
           loading ? 'invisible inline-flex items-center justify-center gap-[inherit]' : 'contents'
         }
       >
-        {withIconHover(children, iconMotion === 'mount' ? intro : hovered || focusVisible)}
+        {withIconHover(
+          children,
+          iconMotion === 'mount' ? intro : (hovered || focusVisible) && !notActionable,
+        )}
       </span>
       {canPress ? (
         <motion.span

@@ -206,6 +206,28 @@ export const 비활성화: Story = {
   },
 };
 
+export const 눌러도반응없음: Story = {
+  name: '눌러도 반응 없음 (aria-disabled)',
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          '`disabled`와 모양은 같지만 포커스와 마우스를 받고 클릭만 무시합니다(키보드 Enter·Space와 폼 제출도 막습니다). 왜 안 되는지를 툴팁이나 안내로 보여야 할 때 씁니다. 낭독기에는 비활성 상태로 알려집니다(표현은 낭독기마다 다릅니다). 이유 글을 `aria-describedby`로 이어 두십시오. 고대비 모드에서는 회색 글자와 점선 테두리로 표시됩니다.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap gap-3">
+      {(['primary', 'secondary', 'clear'] as const).map((variant) => (
+        <Button key={variant} aria-disabled variant={variant}>
+          차량 이미지 저장
+        </Button>
+      ))}
+    </div>
+  ),
+};
+
 export const 로딩과비활성화: Story = {
   args: {
     variant: 'primary',

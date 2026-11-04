@@ -77,6 +77,12 @@ export function Example() {
 
 <ComponentPreview name="button/loading" />
 
+### 눌러도 반응 없음 (aria-disabled)
+
+`disabled`는 포커스와 포인터를 받지 않아 툴팁을 붙이거나 키보드로 이유를 알릴 수 없습니다. 이유를 보여야 한다면 `aria-disabled`를 줍니다. 모양은 `disabled`와 같고, 포커스와 마우스는 받되 클릭은 무시합니다(폼 제출도 막습니다). 이유는 화면에 글자로도 함께 보이고, 그 글자에 `id`를 줘 버튼의 `aria-describedby`로 이으십시오(툴팁의 설명은 열려 있는 동안에만 이어지고 터치에서는 열리지 않습니다).
+
+<ComponentPreview name="button/aria-disabled" />
+
 ### 링크로 렌더링
 
 `asChild`를 켜면 `<button>` 대신 자식 요소를 버튼 모양으로 렌더합니다. 이동이 목적이면 `<button>`이 아니라 링크가 맞아서, 이럴 때 씁니다.
@@ -85,7 +91,7 @@ export function Example() {
 
 ## API 레퍼런스
 
-아래는 `Button`이 직접 정의한 props입니다. 그 밖에 `onClick`, `disabled`, `type` 같은 `<button>`의 모든 속성을 그대로 받습니다. 타입 값은 소스에서 읽어 와서 코드와 어긋나지 않습니다.
+아래는 `Button`이 직접 정의한 props입니다. 그 밖에 `onClick`, `disabled`, `aria-disabled`, `type` 같은 `<button>`의 모든 속성을 그대로 받습니다. 타입 값은 소스에서 읽어 와서 코드와 어긋나지 않습니다.
 
 <PropsTable
   file="packages/ui/src/button.tsx"
@@ -116,11 +122,12 @@ export function Example() {
 
 ## 접근성
 
-- 기본 요소가 `<button type="button">`이라서 키보드(Tab, Enter, Space)로 조작하고, 폼 안에서 의도치 않게 제출되지 않습니다.
+- 기본 요소가 `<button type="button">`이라서 키보드(Tab, Enter, Space)로 조작하고, 폼 안에서 의도치 않게 제출되지 않습니다(`type="submit"`을 직접 주면 제출 버튼입니다).
 - 키보드 포커스에서만 링 두 겹이 나타납니다(`focus-visible`). `primary`는 링과 버튼 사이에 배경색 간격이 생깁니다.
 - 토글로 쓰는 버튼은 `aria-pressed`로 상태를 알립니다. `secondary`에서만 켜진 모양(프라이머리 테두리와 링)이 있고, 색만으로 구분하지 않도록 같은 그룹에는 `role="group"`과 `aria-label`을 붙이십시오.
-- `loading` 동안 `aria-busy`가 설정되고 클릭 핸들러가 호출되지 않습니다.
-- `disabled`는 투명도 40%로 흐려지고 포인터 이벤트를 받지 않습니다.
+- `loading` 동안 `aria-busy`가 설정되고, 키보드 Enter·Space를 포함한 클릭이 무시되어 클릭 핸들러가 호출되지 않고 폼도 제출되지 않습니다.
+- `disabled`는 투명도를 쓰지 않고 `muted` 면과 글자색으로 보이며(대비 라이트 4.7:1, 다크 8.9:1), 포커스와 포인터 이벤트를 받지 않습니다.
+- `aria-disabled`는 같은 모양이지만 버튼은 포커스를 받고 낭독기에 비활성 상태로 알려지며(표현은 낭독기마다 다릅니다), 클릭은 키보드를 포함해 무시하고 누름 효과와 아이콘 움직임도 없습니다. 이유를 알릴 때 쓰고, 이유 글을 `aria-describedby`로 이어 초점이 갔을 때 바로 읽히게 하십시오. 고대비 모드에서는 회색 글자와 점선 테두리로 표시됩니다. `asChild`로 만든 링크도 같은 처리기가 붙어 이동하지 않습니다.
 - 누를 때 줄어드는 움직임은 `prefers-reduced-motion`을 켜면 사라집니다.
 - `icon` 버튼과 `asChild`로 만든 아이콘 링크에는 `aria-label`을 직접 달아야 합니다.
 
@@ -128,4 +135,4 @@ export function Example() {
 
 변형은 `class-variance-authority`로 정의합니다. 아래는 `buttonVariants` 선언입니다.
 
-<RepoFile path="packages/ui/src/button.tsx" lines="21-70" />
+<RepoFile path="packages/ui/src/button.tsx" lines="26-79" />

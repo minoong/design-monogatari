@@ -6,3 +6,4 @@
 - Floating-chip alpha varies by file (`bg-background/80`, `/85`, `/95`) across vehicle-stage, stage-notice, inspect-stage.
 - registry:sync only checks leftover relative imports, not `registryDependencies` completeness; icon-button registry item lists unused deps (cn, theme, cva). registry.json descriptions are hand-written and go stale (text-roll "rolls upward").
 - Stepper/Button import `motion` from `motion/react`; Sheet/Dialog/TextRoll/Toast use `motion/react-client` (CLAUDE.md prefers the latter).
+- button.mdx `<RepoFile lines="21-70">` hardcodes buttonVariants line range; goes stale whenever button.tsx grows (check after every button.tsx edit). The Button asChild branch used to drop onClick (found in the aria-disabled review); it now forwards onClick through handleClick, so the aria-disabled/loading click guard also covers asChild children.
