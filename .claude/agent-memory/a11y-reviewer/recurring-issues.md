@@ -28,4 +28,5 @@ metadata:
 - Button `loading` wraps label in `invisible` (visibility:hidden) so the accessible name is empty while loading unless aria-label; Button base uses `outline-none` so ring (box-shadow) vanishes in forced-colors.
 - Estimate panel scroll container and sticky PriceBar have no scroll-padding-bottom (2.4.11); toggle buttons that swap aria-label AND use aria-pressed (vehicle-stage maximize) double-encode state.
 - Switch: `disabled:*`/`disabled:checked:*` (0,2-3,x) beat `forced-colors:*` (0,1-2,x), so disabled thumbs/tracks become Canvas in forced-colors; positioned `before:-inset-y-2.5` hit areas overlap neighbours at gap-3 and steal clicks; Storybook `args.id` shared across stories gives duplicate ids.
+- Tooltip: disabled-button pattern uses `span tabIndex=0` (no role/name/focus ring, hover-only reason, never on touch); Button has `disabled:*` styling only, no `aria-disabled:` styling or press guard. `bg-foreground` pill has no forced-colors border.
 - Motion `whileInView` with `amount: 0.2` never fires for elements taller than 5x viewport; initial opacity 0 is in SSR HTML (invisible without JS/print).
