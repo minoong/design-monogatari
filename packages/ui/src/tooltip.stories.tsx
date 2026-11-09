@@ -152,27 +152,23 @@ export const 비활성버튼: Story = {
     docs: {
       description: {
         story:
-          '비활성 버튼은 포인터와 포커스를 받지 못해 트리거로 쓸 수 없습니다. 임시 방법으로, 포커스를 받는 `span`으로 감싸 그 `span`을 트리거로 씁니다(우리 포커스 링을 직접 줍니다). 터치에서는 말풍선이 열리지 않으므로 이유는 버튼 아래에 글자로도 보입니다.',
+          '`disabled` 버튼은 포커스와 포인터를 받지 못해 트리거로 쓸 수 없습니다. 대신 `aria-disabled`를 준 `Button`을 트리거로 씁니다: 모양은 비활성과 같고 포커스와 마우스를 받으며 클릭은 무시합니다. 터치에서는 말풍선이 열리지 않으므로 이유는 아래에 글자로도 보이고 `aria-describedby`로 버튼에 이어져 있습니다.',
       },
     },
   },
   render: () => (
     <div className="flex flex-col items-start gap-2">
       <Tooltip>
-        <TooltipTrigger asChild>
-          <span
-            className="focus-visible:ring-ring focus-visible:ring-offset-background inline-flex rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
-            /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 비활성 버튼은 포커스를 받지 못해, 감싼 span이 대신 받는다 */
-            tabIndex={0}
-          >
-            <Button disabled variant="secondary">
-              차량 이미지 저장
-            </Button>
-          </span>
+        <TooltipTrigger aria-describedby="story-tooltip-disabled-reason" asChild>
+          <Button aria-disabled variant="secondary">
+            차량 이미지 저장
+          </Button>
         </TooltipTrigger>
         <TooltipContent>차량 모델을 불러오는 중이라 아직 저장할 수 없습니다</TooltipContent>
       </Tooltip>
-      <p className="text-muted-foreground text-caption m-0">차량 모델을 불러오는 중입니다.</p>
+      <p className="text-muted-foreground text-caption m-0" id="story-tooltip-disabled-reason">
+        차량 모델을 불러오는 중입니다.
+      </p>
     </div>
   ),
 };
