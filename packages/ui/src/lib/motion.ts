@@ -31,6 +31,8 @@ export const SPRING = {
   settle: { type: 'spring', stiffness: 460, damping: 40 },
   /** 시트가 제자리나 정해 둔 높이로 돌아올 때(끌었다 놓은 뒤). 눌림보다 느리고 패널보다 빠르다 */
   sheet: { type: 'spring', stiffness: 420, damping: 38 },
+  /** 겹쳐 쌓인 카드가 펼쳐지고 접힐 때. 빠르게 붙고 넘치지 않고 멈춘다(감쇠비 약 0.98, 0.3초 안팎) */
+  fan: { type: 'spring', stiffness: 420, damping: 40 },
   /** 선택 확정 같은 작은 강조. 화면당 하나 이내로 쓴다 */
   bouncy: { type: 'spring', stiffness: 380, damping: 18 },
 } satisfies Record<string, Transition>;
