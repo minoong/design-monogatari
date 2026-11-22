@@ -27,7 +27,7 @@ export function Stage({
   return (
     <figure
       aria-label={caption}
-      className={`${grow ? 'lp-grow' : ''}border-border bg-card relative m-0 overflow-clip rounded-xl border ${className}`}
+      className={`${grow ? 'lp-grow' : ''} border-border bg-card relative m-0 overflow-clip rounded-xl border ${className}`}
     >
       <figcaption
         aria-hidden
