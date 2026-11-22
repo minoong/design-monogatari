@@ -3,4 +3,5 @@
 - [Overlay/feedback issues](overlay-feedback-issues.md) — toast live regions, modal inertness, timer pause bugs, notice status
 - [Segmented control](segmented-issues.md) — forced-colors underline, pill border 1.4:1, disabled opacity, untyped aria-label
 - [Presence/SwitchField](presence-switchfield-issues.md) — usePresence without safeToRemove never removes; reset leaves status word stale
+- [List/listbox](list-issues.md) — plain ul lacks role=list, aria-label type omitted, disabled forced-colors, typeahead Space
 - [Animated icons](animated-icons-issues.md) — IconFrame span breaks `[&>svg]` selectors, Button overrides isHovered

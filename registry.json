@@ -871,6 +871,25 @@
           "target": "@ui/tooltip.tsx"
         }
       ]
+    },
+    {
+      "name": "list",
+      "type": "registry:ui",
+      "title": "List",
+      "description": "List whose items fade in one after another. With selectable it becomes a single-select listbox (arrow keys, Home/End, type-ahead, Enter/Space).",
+      "dependencies": ["clsx", "tailwind-merge", "motion"],
+      "registryDependencies": [
+        "minoong/design-monogatari/cn",
+        "minoong/design-monogatari/motion",
+        "minoong/design-monogatari/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/design-monogatari/list.tsx",
+          "type": "registry:ui",
+          "target": "@ui/list.tsx"
+        }
+      ]
     }
   ]
 }
