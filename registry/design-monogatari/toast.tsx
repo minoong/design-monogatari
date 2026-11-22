@@ -13,7 +13,6 @@ import {
   createContext,
   type CSSProperties,
   type ReactNode,
-  type Ref,
   useCallback,
   useContext,
   useEffect,
@@ -26,6 +25,7 @@ import { Button } from '@/ui/button';
 import { XIcon } from '@/lib/icons/x';
 import { cn } from '@/lib/utils';
 import { DURATION, EASE, SPRING } from '@/lib/motion';
+import { Presence } from '@/ui/presence';
 
 export type ToastOptions = {
   title: ReactNode;
@@ -69,6 +69,11 @@ export type ToastProviderProps = {
   viewportClassName?: string;
   /** 오류 알림을 스크린 리더가 읽을 때 앞에 붙는 말 */
   errorPrefix?: string;
+  /**
+   * 겹쳐 쌓였을 때 맨 앞 알림의 오른쪽 아래에 보이는, 같이 있는 다른 알림 수 문구. `{count}`가 개수로 바뀝니다(꼭 넣으십시오).
+   * 한 줄에 들어가는 짧은 문구여야 하고, 1일 때와 여럿일 때 모두 자연스러워야 합니다(복수형 처리는 없습니다). 기본 "외 {count}건"
+   */
+  moreLabel?: string;
 };
 
 const DEFAULT_DURATION = 5000;
@@ -118,6 +123,7 @@ export function ToastProvider({
   dismissLabel = '알림 닫기',
   viewportClassName,
   errorPrefix = '오류: ',
+  moreLabel = '외 {count}건',
 }: ToastProviderProps) {
   const [items, setItems] = useState<ToastItem[]>([]);
   const counter = useRef(0);
@@ -130,21 +136,11 @@ export function ToastProvider({
   const [pinned, setPinned] = useState(false);
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const expandTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [frontEl, setFrontEl] = useState<HTMLLIElement | null>(null);
   const [frontHeight, setFrontHeight] = useState(0);
   const expanded = hovered || focusWithin || pinned;
   // 자동으로 닫히지 않는 알림(오류, 동작이 있는 알림)은 뒤로 숨으면 무슨 말인지 볼 수 없어 겹치지 않는다. 모두 곧 닫히는 알림일 때만 겹친다.
-  const stacked =
-    items.length > 1 && !expanded && items.every((item) => Number.isFinite(durationOf(item)));
-
-  // 겹쳤을 때 뒤쪽 알림을 맨 앞(가장 새) 알림의 높이에 맞춰 자르려고 그 높이를 잰다.
-  useEffect(() => {
-    if (!frontEl) return;
-    // 관찰을 시작하면 첫 통지가 와서 처음 높이도 여기서 정해진다.
-    const observer = new ResizeObserver(() => setFrontHeight(frontEl.offsetHeight));
-    observer.observe(frontEl);
-    return () => observer.disconnect();
-  }, [frontEl]);
+  const stackable = items.length > 1 && items.every((item) => Number.isFinite(durationOf(item)));
+  const stacked = stackable && !expanded;
 
   useEffect(
     () => () => {
@@ -179,6 +175,19 @@ export function ToastProvider({
   );
 
   const newestId = items.at(-1)?.id;
+
+  // 겹쳤을 때 뒤쪽 알림을 맨 앞(가장 새) 알림의 높이에 맞춰 자르려고 그 높이를 잰다. 요소는 `ref`가 아니라 번호로 찾는다: `motion.li`는 바깥에서
+  // 넘긴 `ref`가 바뀌어도 다시 붙이지 않아, 가장 새 알림이 바뀐 뒤 새 앞 알림이 자기를 알리지 못하고 사라진 요소를 계속 재게 된다.
+  useEffect(() => {
+    const front = newestId
+      ? viewportRef.current?.querySelector<HTMLElement>(`[data-toast-id="${newestId}"]`)
+      : null;
+    if (!front) return;
+    // 관찰을 시작하면 첫 통지가 와서 처음 높이도 여기서 정해진다.
+    const observer = new ResizeObserver(() => setFrontHeight(front.offsetHeight));
+    observer.observe(front);
+    return () => observer.disconnect();
+  }, [newestId]);
 
   useEffect(() => {
     if (!hotkey) return;
@@ -302,9 +311,10 @@ export function ToastProvider({
                   depth={depth}
                   stacked={stacked}
                   expanded={expanded}
-                  liRef={depth === 0 ? setFrontEl : undefined}
                   onDismiss={dismiss}
                   dismissLabel={dismissLabel}
+                  hiddenCount={depth === 0 && stackable ? items.length - 1 : 0}
+                  moreLabel={moreLabel}
                 />
               );
             })}
@@ -320,9 +330,10 @@ function ToastCard({
   depth,
   stacked,
   expanded,
-  liRef,
   onDismiss,
   dismissLabel,
+  hiddenCount,
+  moreLabel,
 }: {
   item: ToastItem;
   /** 가장 새 알림이 0이고, 오래될수록 커진다. */
@@ -331,12 +342,16 @@ function ToastCard({
   stacked: boolean;
   /** 마우스를 올렸거나 포커스가 안에 있어 펼친 상태. 이 동안은 모든 알림의 타이머가 멈춘다. */
   expanded: boolean;
-  liRef?: Ref<HTMLLIElement>;
   onDismiss: (id: string) => void;
   dismissLabel: string;
+  /** 맨 앞 알림에서만 0보다 큽니다: 같이 있는 다른 알림 수. 겹쳐 쌓였을 때만 화면에 보입니다. */
+  hiddenCount: number;
+  moreLabel: string;
 }) {
   const reduceMotion = useReducedMotion();
   const duration = durationOf(item);
+  const [count, setCount] = useState(hiddenCount);
+  if (hiddenCount > 0 && hiddenCount !== count) setCount(hiddenCount);
   const remaining = useRef(duration);
   const startedAt = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -400,7 +415,6 @@ function ToastCard({
 
   return (
     <motion.li
-      ref={liRef}
       // 겹쳤을 때 뒤쪽 카드의 단계 변형(이동·축소)은 쌓임 순서를 따로 만들어, 변형이 없는 앞 카드를 DOM 순서와 상관없이 덮는다.
       // 가장 새 알림이 맨 위에 오도록 깊이에 따라 쌓임 순서를 명시한다.
       style={{ zIndex: Math.max(0, 50 - depth) }}
@@ -535,6 +549,18 @@ function ToastCard({
               <XIcon size={16} />
             </Button>
           </div>
+          {/* 같이 있는 다른 알림 수(맨 앞 알림에만). 겹쳐 있는 동안만 글자 아래에 한 줄이 열려 카드가 그만큼 커지고(`Presence`, 이웃도 함께 움직인다),
+              펼치면 닫힌다. 겹침이 풀린 카드에 빈 띠가 남지 않고, 글자와 카드 가장자리 사이에 여백이 생긴다. 알림 수는 목록 역할이 이미 알리므로
+              화면 전용이다. 닫히는 동안 글자가 "0건"으로 바뀌지 않게 마지막 개수를 붙들어 둔다. */}
+          <Presence show={stacked && hiddenCount > 0} variant="spring" from="up">
+            <p
+              aria-hidden
+              data-stack-count
+              className="text-muted-foreground text-caption pointer-events-none pt-2 text-right whitespace-nowrap"
+            >
+              {moreLabel.replaceAll('{count}', String(count))}
+            </p>
+          </Presence>
         </motion.div>
       </motion.div>
     </motion.li>
