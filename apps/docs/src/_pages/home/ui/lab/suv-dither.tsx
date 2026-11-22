@@ -10,7 +10,14 @@ import { observeTheme, readInk } from './theme-ink';
  * 점을 찍는다(2D 캔버스, 움직임 없음). 테마가 바뀔 때만 다시 찍는다.
  * 어두운 배경에서는 밝은 곳에 점이 몰리고, 밝은 배경에서는 어두운 곳에 몰린다.
  */
-export function SuvDither({ tone }: { tone?: 'light' | 'dark' }) {
+export function SuvDither({
+  tone,
+  wheels = true,
+}: {
+  tone?: 'light' | 'dark';
+  /** false면 바퀴를 빼고 그린다(바퀴를 따로 굴릴 때). */
+  wheels?: boolean;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -23,7 +30,7 @@ export function SuvDither({ tone }: { tone?: 'light' | 'dark' }) {
     map.height = GRID_H;
     const mapCtx = map.getContext('2d', { willReadFrequently: true });
     if (!mapCtx) return;
-    paintSuvMap(mapCtx, GRID_W, GRID_H);
+    paintSuvMap(mapCtx, GRID_W, GRID_H, { wheels });
     const source = mapCtx.getImageData(0, 0, GRID_W, GRID_H).data;
 
     const draw = () => {
@@ -50,7 +57,7 @@ export function SuvDither({ tone }: { tone?: 'light' | 'dark' }) {
 
     draw();
     return observeTheme(draw);
-  }, [tone]);
+  }, [tone, wheels]);
 
   return (
     <canvas

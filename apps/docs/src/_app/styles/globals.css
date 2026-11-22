@@ -192,6 +192,12 @@ body {
       }
     }
 
+    @keyframes lp-wheel {
+      to {
+        rotate: var(--lp-spin, 800deg);
+      }
+    }
+
     @keyframes lp-type {
       from {
         clip-path: inset(0 100% 0 0);
@@ -417,6 +423,17 @@ body {
       animation: lp-cam-iris-far cubic-bezier(0.65, 0, 0.35, 1) both;
       animation-timeline: --lp-cam;
       animation-range: cover 30% cover 62%;
+    }
+  }
+}
+
+/* .lp-wheel: 바퀴가 요소가 화면을 지나가는 동안 `--lp-spin`만큼 돈다(양수는 오른쪽으로 달리는 방향). */
+@utility lp-wheel {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-wheel linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
     }
   }
 }

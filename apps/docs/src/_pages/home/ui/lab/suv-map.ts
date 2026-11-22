@@ -51,7 +51,12 @@ function gradient(
  * SUV의 밝기 지도를 캔버스에 그린다. 디더링은 이 지도를 문턱값과 비교해 점을 찍는다.
  * 위쪽(지붕)이 가장 밝고 아래로 갈수록 어둡고, 어깨선에 가늘고 밝은 띠가 한 줄 지나간다.
  */
-export function paintSuvMap(ctx: CanvasRenderingContext2D, width: number, height: number) {
+export function paintSuvMap(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  { wheels = true }: { wheels?: boolean } = {},
+) {
   ctx.clearRect(0, 0, width, height);
   ctx.save();
   ctx.scale(width / SUV_W, height / SUV_H);
@@ -133,8 +138,8 @@ export function paintSuvMap(ctx: CanvasRenderingContext2D, width: number, height
   ctx.lineTo(rx2, ry);
   ctx.stroke();
 
-  // 바퀴
-  for (const { cx, cy, r } of WHEELS) {
+  // 바퀴(따로 굴릴 때는 그리지 않는다)
+  for (const { cx, cy, r } of wheels ? WHEELS : []) {
     ctx.fillStyle = px(0.06);
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -157,6 +162,62 @@ export function paintSuvMap(ctx: CanvasRenderingContext2D, width: number, height
     ctx.arc(cx, cy, r * 0.16, 0, Math.PI * 2);
     ctx.fill();
   }
+
+  ctx.restore();
+}
+
+/** 바퀴 한 개의 칸 수. 도형 좌표 2가 한 칸이라 지름 80(반지름 40)이 40칸이다. */
+export const WHEEL_CELLS = 40;
+
+/**
+ * 따로 굴리는 바퀴의 밝기 지도. 차체 지도의 바퀴와 같은 모양에, 돌아가는 것이 보이도록 타이어 무늬와
+ * 밸브 표시 하나(대칭이 아닌 점)를 더했다. 5개 살은 72도마다 같아 보여서 이 표시가 없으면 회전이 안 읽힌다.
+ */
+export function paintWheelMap(ctx: CanvasRenderingContext2D, size: number) {
+  ctx.clearRect(0, 0, size, size);
+  ctx.save();
+  ctx.translate(size / 2, size / 2);
+  ctx.scale(size / 80, size / 80);
+
+  ctx.fillStyle = px(0.06);
+  ctx.beginPath();
+  ctx.arc(0, 0, 40, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 타이어 무늬: 가장자리의 짧은 홈 열두 개
+  ctx.strokeStyle = px(0.42);
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let i = 0; i < 12; i += 1) {
+    const a = (i / 12) * Math.PI * 2;
+    ctx.moveTo(Math.cos(a) * 33, Math.sin(a) * 33);
+    ctx.lineTo(Math.cos(a) * 38.5, Math.sin(a) * 38.5);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = px(0.75, 0.9);
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.arc(0, 0, 26.4, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let i = 0; i < 5; i += 1) {
+    const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+    ctx.moveTo(0, 0);
+    ctx.lineTo(Math.cos(a) * 24.8, Math.sin(a) * 24.8);
+  }
+  ctx.stroke();
+  ctx.fillStyle = px(0.9, 1);
+  ctx.beginPath();
+  ctx.arc(0, 0, 6.4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 밸브 표시: 림 바깥쪽의 밝은 점 하나
+  ctx.fillStyle = px(1);
+  ctx.beginPath();
+  ctx.arc(0, -29.5, 3.2, 0, Math.PI * 2);
+  ctx.fill();
 
   ctx.restore();
 }

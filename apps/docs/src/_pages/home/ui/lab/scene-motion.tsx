@@ -2,21 +2,26 @@ import { DURATION } from '@repo/ui/motion';
 import type { CSSProperties } from 'react';
 
 import { Stage } from './stage';
-import { SuvDither } from './suv-dither';
+import { SuvRolling } from './suv-rolling';
 
 const MAX = DURATION.hero;
 
 /**
- * 모션 구역의 장면: 스크롤을 내리면 SUV가 도트 도로 위를 가로지르고 도로는 반대로 흐른다.
+ * 모션 구역의 장면: 스크롤을 내리면 SUV가 도트 도로 위를 가로지르고 도로는 반대로 흐르며, 바퀴가 그만큼 굴러간다.
+ * 숫자는 차 상자 폭 576px(`max-w-xl`) 기준으로 맞췄다: 차는 폭의 ±16%(총 184px) 가고 도로는 320px 흐르므로 바닥이
+ * 차에 대해 504px 지나가고, 바퀴 둘레(반지름 40 도형 단위 ≈ 36px → 226px)로 나누면 약 2.2바퀴(800도)다.
  * 아래에는 움직임 시간 토큰을 길이로 보여 준다. 값은 `@repo/ui/motion`에서 읽는다.
  */
 export function SceneMotion() {
   return (
     <Stage caption="스크롤을 내리면 SUV가 도로 위를 달립니다" file="packages/ui/src/lib/motion.ts">
       <div className="overflow-clip px-4 pt-10 pb-4 md:px-8">
-        <div className="lp-drive" style={{ '--lp-drive': '16%' } as CSSProperties}>
+        <div
+          className="lp-drive"
+          style={{ '--lp-drive': '16%', '--lp-spin': '800deg' } as CSSProperties}
+        >
           <div className="mx-auto w-full max-w-xl" aria-label="달리는 가상의 SUV" role="img">
-            <SuvDither />
+            <SuvRolling />
           </div>
         </div>
         <div
