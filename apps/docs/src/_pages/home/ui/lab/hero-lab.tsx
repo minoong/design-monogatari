@@ -76,9 +76,6 @@ export function HeroLab() {
 
       <div className="mx-auto w-full max-w-6xl px-4 pt-14 md:px-6 md:pt-24">
         <div className="flex max-w-3xl flex-col items-start gap-6 break-keep">
-          <p className="border-primary/40 text-primary dark:text-primary-on-dark m-0 rounded-full border px-3 py-1 font-mono text-xs">
-            점으로 그린 SUV
-          </p>
           <h1
             className="m-0 text-4xl font-medium tracking-tight text-balance md:text-6xl"
             id="lab-hero-title"
