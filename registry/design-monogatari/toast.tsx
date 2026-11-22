@@ -69,6 +69,11 @@ export type ToastProviderProps = {
   viewportClassName?: string;
   /** 오류 알림을 스크린 리더가 읽을 때 앞에 붙는 말 */
   errorPrefix?: string;
+  /**
+   * 겹쳐 쌓였을 때 맨 앞 알림의 오른쪽 아래에 보이는, 같이 있는 다른 알림 수 문구. `{count}`가 개수로 바뀝니다(꼭 넣으십시오).
+   * 한 줄에 들어가는 짧은 문구여야 하고, 1일 때와 여럿일 때 모두 자연스러워야 합니다(복수형 처리는 없습니다). 기본 "외 {count}건"
+   */
+  moreLabel?: string;
 };
 
 const DEFAULT_DURATION = 5000;
@@ -118,6 +123,7 @@ export function ToastProvider({
   dismissLabel = '알림 닫기',
   viewportClassName,
   errorPrefix = '오류: ',
+  moreLabel = '외 {count}건',
 }: ToastProviderProps) {
   const [items, setItems] = useState<ToastItem[]>([]);
   const counter = useRef(0);
@@ -134,8 +140,8 @@ export function ToastProvider({
   const [frontHeight, setFrontHeight] = useState(0);
   const expanded = hovered || focusWithin || pinned;
   // 자동으로 닫히지 않는 알림(오류, 동작이 있는 알림)은 뒤로 숨으면 무슨 말인지 볼 수 없어 겹치지 않는다. 모두 곧 닫히는 알림일 때만 겹친다.
-  const stacked =
-    items.length > 1 && !expanded && items.every((item) => Number.isFinite(durationOf(item)));
+  const stackable = items.length > 1 && items.every((item) => Number.isFinite(durationOf(item)));
+  const stacked = stackable && !expanded;
 
   // 겹쳤을 때 뒤쪽 알림을 맨 앞(가장 새) 알림의 높이에 맞춰 자르려고 그 높이를 잰다.
   useEffect(() => {
@@ -305,6 +311,8 @@ export function ToastProvider({
                   liRef={depth === 0 ? setFrontEl : undefined}
                   onDismiss={dismiss}
                   dismissLabel={dismissLabel}
+                  hiddenCount={depth === 0 && stackable ? items.length - 1 : 0}
+                  moreLabel={moreLabel}
                 />
               );
             })}
@@ -323,6 +331,8 @@ function ToastCard({
   liRef,
   onDismiss,
   dismissLabel,
+  hiddenCount,
+  moreLabel,
 }: {
   item: ToastItem;
   /** 가장 새 알림이 0이고, 오래될수록 커진다. */
@@ -334,6 +344,9 @@ function ToastCard({
   liRef?: Ref<HTMLLIElement>;
   onDismiss: (id: string) => void;
   dismissLabel: string;
+  /** 맨 앞 알림에서만 0보다 큽니다: 같이 있는 다른 알림 수. 겹쳐 쌓였을 때만 화면에 보입니다. */
+  hiddenCount: number;
+  moreLabel: string;
 }) {
   const reduceMotion = useReducedMotion();
   const duration = durationOf(item);
@@ -458,7 +471,7 @@ function ToastCard({
           // 마우스로는 끌지 않는다: 글자를 선택하거나 복사하려는 드래그를 가로채지 않게, 마우스 사용자는 닫기 버튼과 Esc를 쓴다.
           className={cn(
             // 세로 스크롤과 핀치 확대는 브라우저에 남기고 가로 움직임만 가져온다.
-            'bg-card touch-pan-y touch-pinch-zoom rounded-lg border p-4',
+            'bg-card relative touch-pan-y touch-pinch-zoom rounded-lg border p-4',
             stacked && depth > 0 && 'h-full',
             item.variant === 'error' ? 'border-destructive border-2' : 'border-border',
           )}
@@ -535,6 +548,21 @@ function ToastCard({
               <XIcon size={16} />
             </Button>
           </div>
+          {/* 같이 있는 다른 알림 수(맨 앞 알림에만). 카드의 아래 안쪽 여백 띠(16px)에만 놓아 높이도, 뒤쪽 카드의 높이 맞춤도 바뀌지 않는다.
+              `bottom-0.5`의 2px은 14px 글자(줄 높이 1)를 띠 안에 맞추려는 값이다. 겹쳐 있을 때만 보이고, 펼치면 바로 사라지며(100ms)
+              다시 접히기 시작한 뒤 150ms 지나 나타난다. 알림 수는 목록 역할이 이미 알리므로 화면 전용이다. */}
+          {hiddenCount > 0 ? (
+            <span
+              aria-hidden
+              data-stack-count
+              className={cn(
+                'text-muted-foreground text-caption pointer-events-none absolute right-4 bottom-0.5 leading-none whitespace-nowrap transition-opacity motion-reduce:transition-none',
+                stacked ? 'delay-150 duration-200' : 'opacity-0 duration-100',
+              )}
+            >
+              {moreLabel.replaceAll('{count}', String(hiddenCount))}
+            </span>
+          ) : null}
         </motion.div>
       </motion.div>
     </motion.li>
