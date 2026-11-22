@@ -1,34 +1,11 @@
 'use client';
 
 import { Button } from '@repo/ui/button';
-import { Segmented, SegmentedItem } from '@repo/ui/segmented';
 import Link from 'next/link';
-import { type CSSProperties, useCallback, useState } from 'react';
+import type { CSSProperties } from 'react';
 
 import { Accent } from './lab-section';
-import { SuvDither } from './suv-dither';
-import { SuvLattice } from './suv-lattice';
 import { SuvWebgl } from './suv-webgl';
-
-type Variant = 'lattice' | 'dither' | 'webgl';
-
-const VARIANTS: { value: Variant; label: string; note: string }[] = [
-  {
-    value: 'lattice',
-    label: '도트 격자',
-    note: 'SVG 패턴 하나로 그립니다. 자바스크립트가 없고 서버에서 그려져 첫 화면부터 보입니다.',
-  },
-  {
-    value: 'dither',
-    label: '디더링',
-    note: '밝기 지도를 8×8 Bayer 문턱값과 비교해 점을 찍습니다. 2D 캔버스이고 움직이지 않습니다.',
-  },
-  {
-    value: 'webgl',
-    label: 'WebGL 디더링',
-    note: '같은 지도를 셰이더가 찍습니다. 빛 띠가 차체를 쓸고 지나가고, 커서 둘레가 밝아집니다.',
-  },
-];
 
 /** 스크롤 속도를 겹마다 다르게 주는 값. 양수는 천천히(뒤로), 음수는 빠르게(앞으로) 움직인다. */
 function shift(px: number): CSSProperties {
@@ -68,15 +45,8 @@ function Callout({
 /**
  * 랜딩 실험 히어로. 점으로 그린 가상의 SUV와, 겹마다 속도가 다른 스크롤 패럴렉스.
  * 겹은 뒤에서 앞으로: 점 바탕(+60px) → SUV(+34px) → 바닥 점선(+12px) → 설명 표지(−46px).
- * 기본 표현은 WebGL이고, 나머지 둘은 비교용이다.
  */
 export function HeroLab() {
-  const [variant, setVariant] = useState<Variant>('webgl');
-  const [fellBack, setFellBack] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const current = VARIANTS.find((item) => item.value === variant) ?? VARIANTS[0];
-  const onFallback = useCallback(() => setFellBack(true), []);
-
   return (
     <section
       aria-labelledby="lab-hero-title"
@@ -134,11 +104,7 @@ export function HeroLab() {
         <div className="relative mx-auto max-w-5xl" data-lp-stage>
           <div className="lp-drift" style={shift(34)}>
             <div aria-label="점으로 그린 가상의 SUV 옆모습" className="relative" role="img">
-              {variant === 'lattice' ? <SuvLattice /> : null}
-              {variant === 'dither' ? <SuvDither /> : null}
-              {variant === 'webgl' ? (
-                <SuvWebgl key="webgl" paused={paused} onFallback={onFallback} />
-              ) : null}
+              <SuvWebgl />
             </div>
           </div>
 
@@ -157,43 +123,6 @@ export function HeroLab() {
             <Callout below className="top-[75%] left-[75%]" label="20인치 알로이 휠" leader={22} />
             <Callout className="top-[8%] left-[90%]" label="어댑티브 LED 헤드라이트" leader={40} />
           </ul>
-        </div>
-
-        <div className="mt-10 flex flex-col gap-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <Segmented
-              aria-label="도트 표현 방식"
-              className="w-full sm:w-fit"
-              value={variant}
-              onValueChange={(value) => {
-                setFellBack(false);
-                setVariant(value as Variant);
-              }}
-            >
-              {VARIANTS.map((item) => (
-                <SegmentedItem key={item.value} className="flex-1" value={item.value}>
-                  {item.label}
-                </SegmentedItem>
-              ))}
-            </Segmented>
-            {variant === 'webgl' ? (
-              <Button
-                aria-pressed={paused}
-                radius="pill"
-                size="small"
-                variant="secondary"
-                onClick={() => setPaused((value) => !value)}
-              >
-                빛 띠 멈춤
-              </Button>
-            ) : null}
-          </div>
-          <p aria-live="polite" className="text-muted-foreground m-0 max-w-2xl text-sm leading-6">
-            {current?.note}
-            {variant === 'webgl' && fellBack
-              ? ' 이 브라우저에서는 WebGL2를 쓸 수 없어 디더링으로 대신 그렸습니다.'
-              : null}
-          </p>
         </div>
       </div>
     </section>

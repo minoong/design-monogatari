@@ -154,7 +154,7 @@ function createGl(canvas: HTMLCanvasElement): Gl | null {
 /**
  * 표현 ③: WebGL2 디더링. 밝기 지도를 텍스처로 올리고 셰이더가 칸마다 점을 찍는다.
  * 빛 띠가 천천히 차체를 쓸고 지나가며, 커서가 가까우면 그 둘레가 밝아진다.
- * 화면에 보일 때만 그리고(30fps), 감소 모션이거나 `paused`면 한 장만 그린다. WebGL2가 없으면 ②로 바꾼다.
+ * 화면에 보일 때만 그리고(30fps), 감소 모션이면 한 장만 그린다. WebGL2가 없으면 ②로 바꾼다.
  *
  * 프로토타입 예외: 상시 도는 빛 띠와 커서 반응은 `.claude/rules/animation.md`("상태 변화에만 모션,
  * 상시 장식·커서 추적 금지")와 랜딩 모션 구역의 문구("상태가 바뀌는 순간에만")에 어긋난다. 랜딩 히어로와
@@ -164,23 +164,20 @@ function createGl(canvas: HTMLCanvasElement): Gl | null {
 export function SuvWebgl({
   onFallback,
   paint,
-  paused = false,
 }: {
   onFallback?: () => void;
   /** 차체 점에 칠할 CSS 색. 없으면 다른 부분과 같은 잉크색이다. */
   paint?: string | null;
-  /** 빛 띠와 커서 불빛을 멈추고 한 장만 그린다(감소 모션과 같은 경로). */
-  paused?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [failed, setFailed] = useState(false);
-  const live = useRef({ paint: paint ?? null, paused });
+  const live = useRef({ paint: paint ?? null });
   const control = useRef<{ refresh: () => void } | null>(null);
 
   useEffect(() => {
-    live.current = { paint: paint ?? null, paused };
+    live.current = { paint: paint ?? null };
     control.current?.refresh();
-  }, [paint, paused]);
+  }, [paint]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -196,7 +193,7 @@ export function SuvWebgl({
     let last = 0;
     let visible = false;
     let reduced = false;
-    const still = () => reduced || live.current.paused;
+    const still = () => reduced;
     let lightOn = 0;
     let targetOn = 0;
     const light = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
