@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@repo/ui/button';
+import { IconButton } from '@repo/ui/icon-button';
 import { ArrowLeftIcon } from '@repo/ui/icons/arrow-left';
 import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
 import { ReceiptTextIcon } from '@repo/ui/icons/receipt-text';
@@ -136,6 +137,14 @@ export function EstimateApp({
     setTitleRoll({ index: stepIndex, direction: stepIndex > titleRoll.index ? 'up' : 'down' });
   }
   const previous = neighborStep(state.step, -1);
+  // 이전 버튼은 폭에 따라 글자 버튼과 아이콘 버튼 둘 중 하나만 보인다. 같은 동작을 두 곳에 쓰지 않게 묶어 둔다.
+  const previousProps = {
+    disabled: previous === null,
+    variant: 'secondary',
+    onClick: () => {
+      if (previous) dispatch({ type: 'go', step: previous });
+    },
+  } as const;
   const next = neighborStep(state.step, 1);
   const currentLabel = STEPS[stepIndex]?.label ?? '';
   const panelProps = {
@@ -311,13 +320,19 @@ export function EstimateApp({
                   />
                 )}
                 <PriceBarActions className="ml-auto flex-nowrap lg:ml-0 lg:w-full [&>button]:lg:flex-1">
-                  <Button
-                    disabled={previous === null}
-                    variant="secondary"
-                    onClick={() => {
-                      if (previous) dispatch({ type: 'go', step: previous });
-                    }}
-                  >
+                  {/* 320px에서는 라벨 + 글자 두 버튼이 안쪽 폭을 1px 넘어 막대가 두 줄이 됐다. "다음"이 함께 있는 단계에서만 sm 미만에서 이전을 아이콘 버튼으로 줄인다(같은 단계 이동, 이름은 그대로 "이전"). 결과 단계는 버튼이 하나뿐이라 글자 버튼을 그대로 둔다. */}
+                  {next ? (
+                    <IconButton
+                      {...previousProps}
+                      aria-label="이전"
+                      className="sm:hidden"
+                      radius="lg"
+                      size="large"
+                    >
+                      <ArrowLeftIcon />
+                    </IconButton>
+                  ) : null}
+                  <Button {...previousProps} className={next ? 'max-sm:hidden' : undefined}>
                     <ArrowLeftIcon data-icon="inline-start" />
                     이전
                   </Button>
