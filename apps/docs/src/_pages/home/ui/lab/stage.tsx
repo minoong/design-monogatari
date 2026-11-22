@@ -10,6 +10,7 @@ export function Stage({
   caption,
   children,
   className = '',
+  grow = true,
 }: {
   /** 제목 줄에 보이는 파일 이름(예: `color-swatch-group.tsx`) */
   file: string;
@@ -17,11 +18,16 @@ export function Stage({
   caption?: string;
   children: ReactNode;
   className?: string;
+  /**
+   * 화면에 들어올 때 커지는 효과(`lp-grow`). 안에 `getBoundingClientRect`로 위치를 재는 컴포넌트
+   * (`ColorSwatchGroup`의 선택 링 등)가 있으면 끈다: 조상에 `scale`이 걸리면 잰 값이 줄어든 채로 굳는다.
+   */
+  grow?: boolean;
 }) {
   return (
     <figure
       aria-label={caption}
-      className={`lp-grow border-border bg-card relative m-0 overflow-clip rounded-xl border ${className}`}
+      className={`${grow ? 'lp-grow' : ''}border-border bg-card relative m-0 overflow-clip rounded-xl border ${className}`}
     >
       <figcaption
         aria-hidden

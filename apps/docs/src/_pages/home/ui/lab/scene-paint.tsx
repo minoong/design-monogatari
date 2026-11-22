@@ -16,7 +16,11 @@ export function ScenePaint() {
   const item = ESTIMATE_COLORS.find((entry) => entry.value === color) ?? ESTIMATE_COLORS[0];
 
   return (
-    <Stage caption="외장 색상을 고르면 SUV 차체의 점 색이 바뀝니다" file="color-swatch-group.tsx">
+    <Stage
+      caption="외장 색상을 고르면 SUV 차체의 점 색이 바뀝니다"
+      file="color-swatch-group.tsx"
+      grow={false}
+    >
       <div className="grid items-center gap-6 p-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-10 md:p-8">
         <div className="lp-float min-w-0" style={{ '--lp-float': '18px' } as CSSProperties}>
           <ColorSwatchGroup
