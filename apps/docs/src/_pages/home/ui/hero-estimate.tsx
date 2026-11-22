@@ -12,7 +12,7 @@ import { useState } from 'react';
 const BASE_PRICE = 90_000_000;
 
 // 데모용 색과 가격입니다. 실제 차량 정보가 아니며, 컴포넌트는 색을 정하지 않고 `color`로 받습니다.
-const COLORS = [
+export const ESTIMATE_COLORS = [
   {
     value: 'white',
     label: '화이트',
@@ -68,7 +68,7 @@ export function HeroEstimate() {
   const [sunroof, setSunroof] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const colorItem = COLORS.find((item) => item.value === color) ?? COLORS[0];
+  const colorItem = ESTIMATE_COLORS.find((item) => item.value === color) ?? ESTIMATE_COLORS[0];
   const wheelItem = WHEELS.find((item) => item.value === wheel) ?? WHEELS[0];
   const total = BASE_PRICE + colorItem.extra + wheelItem.extra;
 
@@ -78,7 +78,7 @@ export function HeroEstimate() {
         <ColorSwatchGroup
           legend="외장 색상"
           name="landing-color"
-          options={COLORS.map((item) => ({
+          options={ESTIMATE_COLORS.map((item) => ({
             value: item.value,
             label: item.label,
             color: item.color,

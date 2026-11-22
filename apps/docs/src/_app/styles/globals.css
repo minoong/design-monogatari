@@ -102,3 +102,319 @@ body {
 #nd-page .prose :where(table) {
   border-radius: 0.5rem;
 }
+
+/*
+ * 랜딩 스크롤 연출(프로토타입). 자바스크립트 없이 CSS 스크롤 타임라인으로 움직이고, 움직이는 값은
+ * `translate`뿐이다(투명도는 건드리지 않는다). 타임라인을 모르는 브라우저와 감소 모션 설정에서는
+ * 이 블록 전체가 무시되어 모든 요소가 제자리에 가만히 있다.
+ *  - .lp-drift: 문서 스크롤 처음 80svh 동안 `--lp-shift` 만큼 이동한다. 양수는 느리게, 음수는 빠르게.
+ *  - .lp-rise: 화면에 들어오는 동안 `--lp-rise` 위치에서 제자리로 올라온다. `--lp-i`가 클수록 늦게 시작한다.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @keyframes lp-drift {
+      to {
+        translate: 0 var(--lp-shift, 0px);
+      }
+    }
+
+    @keyframes lp-rise {
+      from {
+        translate: 0 var(--lp-rise, 16px);
+      }
+    }
+  }
+}
+
+@utility lp-drift {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-drift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 80svh;
+    }
+  }
+}
+
+@utility lp-rise {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--lp-i, 0) * 6%) entry calc(50% + var(--lp-i, 0) * 12%);
+    }
+  }
+}
+
+/*
+ * 랜딩 장면(프로토타입). 모두 문서 스크롤이나 요소의 화면 진입에 묶인 CSS 타임라인이고, 같은 조건
+ * (감소 모션 아님 + 타임라인 지원)에서만 움직인다. 아닌 환경에서는 장면이 완성된 모습으로 멈춰 있다.
+ *  - .lp-progress: 맨 아래 막대의 진행선. 위치를 보여 주는 표시라 감소 모션에서도 켜 둔다.
+ *  - .lp-drive: SUV가 장면을 가로질러 달린다(좌우 `--lp-drive` 만큼).
+ *  - .lp-road: 도로의 점이 차의 반대 방향으로 흐른다.
+ *  - .lp-type: 명령 줄이 왼쪽부터 찍힌다(`--lp-steps`칸).
+ */
+@keyframes lp-progress {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@utility lp-progress {
+  transform-origin: left center;
+  scale: 0 1;
+
+  @supports (animation-timeline: view()) {
+    animation: lp-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @keyframes lp-drive {
+      from {
+        translate: calc(var(--lp-drive, 12%) * -1) 0;
+      }
+      to {
+        translate: var(--lp-drive, 12%) 0;
+      }
+    }
+
+    @keyframes lp-road {
+      to {
+        background-position-x: var(--lp-road, -240px);
+      }
+    }
+
+    @keyframes lp-type {
+      from {
+        clip-path: inset(0 100% 0 0);
+      }
+      to {
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @keyframes lp-float {
+      from {
+        translate: 0 var(--lp-float, 0px);
+      }
+      to {
+        translate: 0 calc(var(--lp-float, 0px) * -1);
+      }
+    }
+
+    @keyframes lp-grow {
+      from {
+        scale: var(--lp-grow-from, 0.93);
+      }
+      to {
+        scale: 1;
+      }
+    }
+
+    @keyframes lp-cam {
+      from {
+        scale: var(--cam-s0, 5);
+        translate: 7.2% 10.4%;
+      }
+      to {
+        scale: 1;
+        translate: 0 0;
+      }
+    }
+
+    @keyframes lp-cam-far {
+      from {
+        scale: 1.6;
+      }
+      to {
+        scale: 1;
+      }
+    }
+
+    @keyframes lp-cam-copy {
+      from {
+        translate: 0 110%;
+      }
+      to {
+        translate: 0 0;
+      }
+    }
+
+    @keyframes lp-cam-sky {
+      from {
+        background-color: var(--foreground);
+      }
+      to {
+        background-color: var(--background);
+      }
+    }
+
+    @keyframes lp-cam-iris {
+      from {
+        clip-path: circle(0% at 42.8% 39.6%);
+      }
+      to {
+        clip-path: circle(75% at 42.8% 39.6%);
+      }
+    }
+
+    @keyframes lp-cam-iris-far {
+      from {
+        clip-path: circle(0% at 50% 50%);
+      }
+      to {
+        clip-path: circle(100% at 50% 50%);
+      }
+    }
+  }
+}
+
+@utility lp-drive {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-drive linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@utility lp-road {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-road linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@utility lp-type {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-type steps(var(--lp-steps, 40), end) both;
+      animation-timeline: view();
+      animation-range: cover 8% cover 38%;
+    }
+  }
+}
+
+/*
+ *  - .lp-float: 요소가 화면을 지나가는 동안 `--lp-float`만큼 위아래로 어긋난다(양수는 처음에 아래, 끝에 위).
+ *  - .lp-grow: 화면에 들어오는 동안 `--lp-grow-from` 크기에서 제 크기로 커진다.
+ *  - .lp-cam-*: 닫는 구역의 카메라. 구역이 길게 늘어나 있고(`.lp-cam-section`) 무대가 화면에 붙어 있는 동안
+ *    (`.lp-cam-stage`) 같은 타임라인(`--lp-cam`)이 계기판 장면을 차 밖으로 끌어낸다.
+ *    타임라인이 없거나 감소 모션이면 구역은 접혀 완성된 모습(차 전체)으로 보인다.
+ */
+@utility lp-float {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-float linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@utility lp-grow {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-grow linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@utility lp-cam-section {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      min-height: 340svh;
+      view-timeline: --lp-cam block;
+    }
+  }
+}
+
+@utility lp-cam-stage {
+  position: relative;
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      position: sticky;
+      top: 3.5rem;
+    }
+  }
+}
+
+@utility lp-cam {
+  transform-origin: 42.8% 39.6%;
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam cubic-bezier(0.65, 0, 0.35, 1) both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 22% cover 60%;
+    }
+  }
+}
+
+@utility lp-cam-far {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam-far cubic-bezier(0.65, 0, 0.35, 1) both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 22% cover 60%;
+    }
+  }
+}
+
+@utility lp-cam-copy {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam-copy cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 52% cover 68%;
+    }
+  }
+}
+
+/*
+ *  - .lp-cam-sky: 무대 바탕이 어두운 실내(`--foreground`)에서 바깥(`--background`)으로 밝아진다.
+ *  - .lp-cam-iris(-far): 차체와 먼 풍경이 창 한가운데에서 동그랗게 퍼져 나온다.
+ *    시작할 때는 창 안 계기판만 보이고, 물러나면서 바깥이 드러난다.
+ */
+@utility lp-cam-sky {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam-sky linear both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 24% cover 58%;
+    }
+  }
+}
+
+@utility lp-cam-iris {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam-iris cubic-bezier(0.65, 0, 0.35, 1) both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 22% cover 56%;
+    }
+  }
+}
+
+@utility lp-cam-iris-far {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam-iris-far cubic-bezier(0.65, 0, 0.35, 1) both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 30% cover 62%;
+    }
+  }
+}

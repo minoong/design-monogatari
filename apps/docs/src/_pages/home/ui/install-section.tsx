@@ -1,6 +1,6 @@
 import { CopyButton } from '@repo/ui/copy-button';
 
-const STEPS = [
+export const INSTALL_STEPS = [
   {
     title: '프로젝트 준비',
     command: 'pnpm dlx shadcn@latest init -b radix',
@@ -17,7 +17,7 @@ const STEPS = [
 export function InstallSection() {
   return (
     <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-2">
-      {STEPS.map((step, index) => (
+      {INSTALL_STEPS.map((step, index) => (
         <li key={step.title} className="border-border bg-card m-0 min-w-0 rounded-xl border p-5">
           <p className="m-0 mb-3 text-sm font-semibold">
             <span className="text-primary mr-2 font-mono">
