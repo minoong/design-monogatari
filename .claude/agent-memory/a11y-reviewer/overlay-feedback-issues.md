@@ -13,4 +13,5 @@ metadata:
 - role=status inserted with content on mount is not reliably announced; docs overclaim "나중에 나타날 때 읽힙니다".
 - Sheet (handle default true): panel is `touch-none overflow-hidden`, so long content outside SheetBody is clipped with no wheel/touch scroll; touch-none/touch-pan-y also block pinch-zoom (use touch-pinch-zoom); snap heights: only drag changes height, focus into clipped/off-screen part is not auto-expanded; SheetBody has no tabindex/ring (Safari cannot keyboard-scroll text-only body); handle bg-muted-foreground/50 is ~2:1 light.
 - Live status inserted while a Radix modal is exiting is lost (aria-hidden others stays until unmount): StageNotice after accept-suggestion / blocked-dialog alt-trim.
+- Toast stack (feat/ui-toast-stack): region-level focusWithin set on ANY focus (mouse click too) holds all timers; focused li removed with no blur leaves focusWithin stuck; opacity-0 back content with 250ms fade-in delay hides the focused button; `[data-toast]:last-child` can match an exiting AnimatePresence li (use id).
 - Tables with table-fixed inside overflow-hidden wrappers clip long unbroken text instead of scrolling; add wrap-break-word to th too.
