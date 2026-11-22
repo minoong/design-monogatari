@@ -61,7 +61,9 @@ export const 선택: Story = {
         <ListItem value="black">블랙 비건 가죽</ListItem>
         <ListItem value="cognac">코냑 비건 가죽</ListItem>
         <ListItem value="ivory">아이보리 화이트</ListItem>
-        <ListItem value="tartufo">타르투포 (재고 없음)</ListItem>
+        <ListItem value="tartufo" disabled>
+          타르투포 (재고 없음)
+        </ListItem>
       </List>
     </StoryReplay>
   ),
