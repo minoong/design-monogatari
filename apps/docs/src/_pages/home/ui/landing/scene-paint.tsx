@@ -3,7 +3,7 @@
 import { ColorSwatchGroup } from '@repo/ui/color-swatch-group';
 import { type CSSProperties, useState } from 'react';
 
-import { ESTIMATE_COLORS } from '../hero-estimate';
+import { ESTIMATE_COLORS } from '../estimate-colors';
 import { Stage } from './stage';
 import { SuvWebgl } from './suv-webgl';
 

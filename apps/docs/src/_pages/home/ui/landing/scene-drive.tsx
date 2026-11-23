@@ -3,9 +3,9 @@
 import { Button } from '@repo/ui/button';
 import Link from 'next/link';
 
-import { ESTIMATE_COLORS } from '../hero-estimate';
+import { ESTIMATE_COLORS } from '../estimate-colors';
 import { HillsDither } from './hills-dither';
-import { Accent } from './lab-section';
+import { Accent } from './landing-section';
 import { WINDOW_PATHS } from './suv';
 import { SuvCockpit } from './suv-cockpit';
 import { SuvWebgl } from './suv-webgl';
@@ -78,7 +78,7 @@ export function SceneDrive() {
             </h2>
           </div>
           <div className="overflow-clip pb-1">
-            <div className="lp-cam-copy flex flex-wrap gap-3">
+            <div className="lp-cam-links flex flex-wrap gap-3">
               <Button asChild radius="pill" variant="primary">
                 <Link href="/docs">문서 읽기</Link>
               </Button>

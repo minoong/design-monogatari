@@ -4,10 +4,23 @@ import Link from 'next/link';
 
 import { baseOptions } from '@/shared/lib/layout-options';
 
-import { HeroEstimate } from './hero-estimate';
-import { HomeFooter, HomeSections } from './home-sections';
+import { Gallery } from './gallery';
+import { HomeFooter } from './home-footer';
+import { LandingHero } from './landing/landing-hero';
+import { LandingRail } from './landing/landing-rail';
+import { Accent, LandingSection } from './landing/landing-section';
+import { SceneDrive } from './landing/scene-drive';
+import { SceneInstall } from './landing/scene-install';
+import { SceneMotion } from './landing/scene-motion';
+import { ScenePaint } from './landing/scene-paint';
+import { SceneTokens } from './landing/scene-tokens';
+import { MotionSection } from './motion-section';
+import { TokenSection } from './token-section';
 
-/** 소개(랜딩) 페이지. 문서가 아니라 디자인 시스템을 한눈에 보여 주고 각 문서로 보낸다. */
+/**
+ * 소개(랜딩) 페이지. fumadocs.dev처럼 구역마다 전용 스테이지(도트 장면 + 직접 눌러 볼 수 있는 조작)를 두고,
+ * 맨 아래 고정 막대로 구역을 오간다. 문서가 아니라 디자인 시스템을 한눈에 보여 주고 각 문서로 보낸다.
+ */
 export function HomePage() {
   return (
     <HomeLayout
@@ -18,46 +31,82 @@ export function HomePage() {
         { text: 'AI 워크플로', url: '/docs/ai-workflow', active: 'nested-url' },
       ]}
     >
-      <div className="flex flex-col break-keep">
-        <section className="mx-auto w-full max-w-6xl px-4 pt-14 md:px-6 md:pt-24">
-          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <p className="border-primary/40 text-primary m-0 rounded-full border px-3 py-1 font-mono text-xs">
-              자동차 견적 UI를 위한 디자인 시스템
-            </p>
-            <h1 className="m-0 mt-6 text-4xl font-medium tracking-tight text-balance md:text-6xl">
-              차분한 화면, <span className="text-primary">정확한</span> 견적.
-            </h1>
-            <p className="text-muted-foreground mt-6 mb-0 text-base leading-7 text-pretty md:text-lg">
-              Radix, Tailwind CSS v4, Motion으로 만든 디자인 시스템입니다. 서른두 개 컴포넌트를
-              shadcn 명령 한 줄로 프로젝트에 가져가 쓰십시오.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Button asChild radius="pill" variant="primary">
-                <Link href="/docs">시작하기</Link>
-              </Button>
-              <Button asChild radius="pill" variant="secondary">
-                <Link href="/docs/components/button">컴포넌트 보기</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="border-border relative mt-14 overflow-hidden rounded-2xl border bg-[radial-gradient(120%_90%_at_50%_0%,color-mix(in_oklab,var(--color-primary)_20%,transparent),transparent_70%)] p-4 md:p-10">
-            {/* 장식: 아주 옅은 격자가 위쪽에서 아래로 사라진다. 클릭을 가로채지 않고 낭독기에는 숨긴다. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,color-mix(in_oklab,var(--color-foreground)_7%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklab,var(--color-foreground)_7%,transparent)_1px,transparent_1px)] mask-[radial-gradient(80%_70%_at_50%_0%,black,transparent)] bg-size-[32px_32px]"
-            />
-            <div className="relative">
-              <HeroEstimate />
-            </div>
-          </div>
-          <p className="text-muted-foreground mt-3 mb-0 text-center text-xs">
-            위 카드는 실제 컴포넌트입니다. 눌러 보십시오. 가상의 견적 데모이며 BMW와 무관합니다.
-          </p>
-        </section>
+      <div className="flex flex-col pb-9 break-keep">
+        <LandingHero />
 
-        <HomeSections />
+        <LandingSection
+          description="OptionRow와 ColorSwatchGroup 같은 컴포넌트는 고르는 일에만 집중합니다. 색은 호출하는 쪽이 넘기고, 화면은 그 값을 따라갑니다."
+          id="components"
+          side="right"
+          title={
+            <>
+              색을 고르면,
+              <br />
+              <Accent>차가 바뀝니다.</Accent>
+            </>
+          }
+        >
+          <ScenePaint />
+          <Gallery />
+          <div>
+            <Button asChild radius="pill" variant="secondary">
+              <Link href="/docs/components/button">전체 컴포넌트 보기</Link>
+            </Button>
+          </div>
+        </LandingSection>
+
+        <LandingSection
+          description="색, 글자 크기, 모서리는 토큰으로만 정합니다. 아래 두 카드는 같은 구성에 테마 클래스만 다르고, SUV 점도 각자의 토큰 색으로 찍힙니다."
+          id="tokens"
+          side="left"
+          title={
+            <>
+              라이트도 다크도,
+              <br />
+              <Accent>같은 토큰</Accent>입니다.
+            </>
+          }
+        >
+          <SceneTokens />
+          <TokenSection />
+        </LandingSection>
+
+        <LandingSection
+          description="랜딩에서만 쓰는 스크롤 연출입니다. 견적 화면의 컴포넌트는 선택·진입 같은 상태가 바뀔 때만 움직이고, 감소 모션 설정을 따릅니다."
+          id="motion"
+          side="right"
+          title={
+            <>
+              상태가 바뀔 때만,
+              <br />
+              <Accent>움직입니다.</Accent>
+            </>
+          }
+        >
+          <SceneMotion />
+          <MotionSection />
+        </LandingSection>
+
+        <LandingSection
+          description="컴포넌트는 shadcn 레지스트리로 배포합니다. 설치한 뒤에는 프로젝트의 파일이므로 자유롭게 고칠 수 있습니다."
+          id="install"
+          side="left"
+          title={
+            <>
+              명령 두 줄이면,
+              <br />
+              <Accent>내 프로젝트의 파일</Accent>입니다.
+            </>
+          }
+        >
+          <SceneInstall />
+        </LandingSection>
+
+        <SceneDrive />
+
         <HomeFooter />
       </div>
+      <LandingRail />
     </HomeLayout>
   );
 }

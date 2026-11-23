@@ -4,7 +4,7 @@ import { Button } from '@repo/ui/button';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 
-import { Accent } from './lab-section';
+import { Accent } from './landing-section';
 import { SuvWebgl } from './suv-webgl';
 
 /** 스크롤 속도를 겹마다 다르게 주는 값. 양수는 천천히(뒤로), 음수는 빠르게(앞으로) 움직인다. */
@@ -43,13 +43,13 @@ function Callout({
 }
 
 /**
- * 랜딩 실험 히어로. 점으로 그린 가상의 SUV와, 겹마다 속도가 다른 스크롤 패럴렉스.
+ * 랜딩 히어로. 점으로 그린 가상의 SUV와, 겹마다 속도가 다른 스크롤 패럴렉스.
  * 겹은 뒤에서 앞으로: 점 바탕(+60px) → SUV(+34px) → 바닥 점선(+12px) → 설명 표지(−46px).
  */
-export function HeroLab() {
+export function LandingHero() {
   return (
     <section
-      aria-labelledby="lab-hero-title"
+      aria-labelledby="landing-hero-title"
       className="relative isolate scroll-mt-20 overflow-clip"
       id="hero"
     >
@@ -78,7 +78,7 @@ export function HeroLab() {
         <div className="flex max-w-3xl flex-col items-start gap-6 break-keep">
           <h1
             className="m-0 text-4xl font-medium tracking-tight text-balance md:text-6xl"
-            id="lab-hero-title"
+            id="landing-hero-title"
           >
             차분한 화면, <Accent>정확한</Accent> 견적.
           </h1>

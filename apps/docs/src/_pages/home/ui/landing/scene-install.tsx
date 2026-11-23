@@ -1,7 +1,7 @@
 import { CopyButton } from '@repo/ui/copy-button';
 import type { CSSProperties } from 'react';
 
-import { INSTALL_STEPS } from '../install-section';
+import { INSTALL_STEPS } from '../install-steps';
 import { Stage } from './stage';
 
 /**

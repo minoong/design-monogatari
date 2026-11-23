@@ -104,7 +104,7 @@ body {
 }
 
 /*
- * 랜딩 스크롤 연출(프로토타입). 자바스크립트 없이 CSS 스크롤 타임라인으로 움직이고, 움직이는 값은
+ * 랜딩 스크롤 연출. 자바스크립트 없이 CSS 스크롤 타임라인으로 움직이고, 움직이는 값은
  * `translate`뿐이다(투명도는 건드리지 않는다). 타임라인을 모르는 브라우저와 감소 모션 설정에서는
  * 이 블록 전체가 무시되어 모든 요소가 제자리에 가만히 있다.
  *  - .lp-drift: 문서 스크롤 처음 80svh 동안 `--lp-shift` 만큼 이동한다. 양수는 느리게, 음수는 빠르게.
@@ -149,7 +149,7 @@ body {
 }
 
 /*
- * 랜딩 장면(프로토타입). 모두 문서 스크롤이나 요소의 화면 진입에 묶인 CSS 타임라인이고, 같은 조건
+ * 랜딩 장면. 모두 문서 스크롤이나 요소의 화면 진입에 묶인 CSS 타임라인이고, 같은 조건
  * (감소 모션 아님 + 타임라인 지원)에서만 움직인다. 아닌 환경에서는 장면이 완성된 모습으로 멈춰 있다.
  *  - .lp-progress: 맨 아래 막대의 진행선. 위치를 보여 주는 표시라 감소 모션에서도 켜 둔다.
  *  - .lp-drive: SUV가 장면을 가로질러 달린다(좌우 `--lp-drive` 만큼).
@@ -251,6 +251,17 @@ body {
       }
       to {
         translate: 0 0;
+      }
+    }
+
+    @keyframes lp-cam-links {
+      from {
+        translate: 0 110%;
+        visibility: hidden;
+      }
+      to {
+        translate: 0 0;
+        visibility: visible;
       }
     }
 
@@ -434,6 +445,20 @@ body {
       animation: lp-wheel linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+/*
+ *  - .lp-cam-links: 닫는 구역의 버튼 줄. `.lp-cam-copy`와 같이 올라오되 `visibility`가 함께 바뀌어, 올라오기 전에는
+ *    화면에 안 보이는 링크가 Tab 포커스를 받거나 클릭을 가로채지 않는다.
+ */
+@utility lp-cam-links {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: lp-cam-links cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --lp-cam;
+      animation-range: cover 52% cover 68%;
     }
   }
 }
