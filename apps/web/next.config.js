@@ -1,5 +1,20 @@
 /** @type {import('next').NextConfig} */
+/**
+ * 견적 화면은 `/estimate`로 옮겼고 `/`는 인트로다. 예전에 공유한 `/?c=…` 링크가 계속 열리도록, 견적을 담은 쿼리
+ * (`v` `c` `p` `a` `r` `t` `step`)가 하나라도 있으면 `/estimate`로 보낸다. 쿼리는 그대로 넘어간다.
+ * 인트로를 정적으로 두려고 페이지가 아니라 설정에서 처리한다.
+ */
+const ESTIMATE_QUERY_KEYS = ['v', 'c', 'p', 'a', 'r', 't', 'step'];
+
 const nextConfig = {
+  async redirects() {
+    return ESTIMATE_QUERY_KEYS.map((key) => ({
+      source: '/',
+      has: [{ type: 'query', key }],
+      destination: '/estimate',
+      permanent: false,
+    }));
+  },
   async headers() {
     return [
       {

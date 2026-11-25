@@ -7,6 +7,10 @@
     "storybook": {
       "type": "http",
       "url": "http://localhost:6006/mcp"
+    },
+    "shadcn": {
+      "command": "pnpm",
+      "args": ["-C", "apps/web", "dlx", "shadcn@latest", "mcp"]
     }
   }
 }

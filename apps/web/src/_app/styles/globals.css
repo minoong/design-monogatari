@@ -81,3 +81,217 @@ body {
     text-decoration: none;
   }
 }
+
+/*
+ * 인트로의 고정 요소 높이: 머리말 3.5rem, 맨 아래 구역 막대 2.25rem. 좁은 화면에서는 머리말 아래에 차량 칸(46svh)도 고정된다.
+ * 키보드 포커스나 `#` 링크로 스크롤해 온 요소가 이 아래에 가려지지 않도록 문서에 여백을 잡는다(WCAG 2.4.11).
+ * 넓은 화면(`lg`)에서는 차량이 뒤에 깔려 머리말만 남는다.
+ */
+html:has([data-intro-root]) {
+  scroll-padding-top: calc(3.5rem + 46svh + 1rem);
+  scroll-padding-bottom: 3.5rem;
+
+  @media (min-width: 64rem) {
+    scroll-padding-top: 4.5rem;
+  }
+}
+
+/*
+ * 인트로 연출. 자바스크립트 없이 CSS가 움직이고, 움직이는 값은 `translate`뿐이다(투명도는 건드리지 않고, WebGL 캔버스에는 쓰지 않는다).
+ * 스크롤에 묶인 것은 타임라인을 모르는 브라우저와 감소 모션 설정에서 꺼지고 요소가 제자리에 가만히 있다. 시간으로 저절로 도는
+ * 장식은 없고, 시간으로 재생되는 것은 처음 들어올 때 한 번뿐인 `ip-enter`다.
+ *  - .ip-slide: 문서 스크롤 처음 한 화면 동안 가로로 `--ip-dx`만큼 흐른다(히어로 제목의 두 줄이 서로 반대로).
+ *  - (좁은 화면 전용: .ip-float, .ip-rise, .ip-line. 넓은 화면은 아래 고정 장면이 맡는다.)
+ *  - .ip-float: 요소가 화면을 지나가는 동안 `--ip-float`만큼 위아래로 어긋난다. 글과 조작에 다른 값을 주면 둘 사이에 시차가 생긴다.
+ *  - .ip-rise: 화면에 들어오는 동안 `--ip-rise` 아래에서 제자리로 올라온다. `--ip-i`가 클수록 늦게 시작한다.
+ *  - .ip-line: 제목이 마스크(`overflow-clip`) 아래에서 올라온다. 화면에 들어오는 동안 진행된다.
+ *  - .ip-enter: 처음 그려질 때 마스크 아래에서 한 번 올라온다. `--ip-i`가 클수록 늦다.
+ *  - .ip-progress: 맨 아래 막대의 진행선. 위치를 보여 주는 표시라 감소 모션에서도 켜 둔다.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes ip-enter {
+    from {
+      translate: 0 110%;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @keyframes ip-slide {
+      to {
+        translate: var(--ip-dx, 10vw) 0;
+      }
+    }
+
+    @keyframes ip-float {
+      from {
+        translate: 0 var(--ip-float, 48px);
+      }
+      to {
+        translate: 0 calc(var(--ip-float, 48px) * -1);
+      }
+    }
+
+    @keyframes ip-rise {
+      from {
+        translate: var(--ip-rise-x, 0px) var(--ip-rise, 56px);
+      }
+    }
+
+    @keyframes ip-line {
+      from {
+        translate: 0 110%;
+      }
+    }
+  }
+}
+
+@keyframes ip-progress {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@utility ip-enter {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ip-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--ip-i, 0) * 110ms);
+  }
+}
+
+@utility ip-slide {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: ip-slide linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 100svh;
+    }
+  }
+}
+
+@utility ip-float {
+  @media (prefers-reduced-motion: no-preference) and (max-width: 63.999rem) {
+    @supports (animation-timeline: view()) {
+      animation: ip-float linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@utility ip-rise {
+  @media (prefers-reduced-motion: no-preference) and (max-width: 63.999rem) {
+    @supports (animation-timeline: view()) {
+      animation: ip-rise linear both;
+      animation-timeline: view();
+      animation-range: cover calc(6% + var(--ip-i, 0) * 3%) cover calc(30% + var(--ip-i, 0) * 5%);
+    }
+  }
+}
+
+@utility ip-line {
+  @media (prefers-reduced-motion: no-preference) and (max-width: 63.999rem) {
+    @supports (animation-timeline: view()) {
+      animation: ip-line linear both;
+      animation-timeline: view();
+      animation-range: cover 6% cover 28%;
+    }
+  }
+}
+
+@utility ip-progress {
+  transform-origin: left center;
+  scale: 0 1;
+
+  @supports (animation-timeline: view()) {
+    animation: ip-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+/*
+ * 인트로의 고정 장면(넓은 화면 전용). Apple·Polestar 제품 페이지처럼 구역이 길게 늘어나 있고(`.sc`), 무대(`.sc-stage`)가 화면에 붙어
+ * 있는 동안 같은 타임라인(`--sc`)이 장면을 진행시킨다: 큰 문구가 한가운데서 시작해 왼쪽 위로 줄어들고(`.sc-title`), 그다음에 설명과 조작이
+ * 올라온다(`.sc-in`). 처음에 숨어 있는 조작은 `visibility`도 함께 바뀌어 보이기 전에는 포커스가 가지 않는다.
+ * 타임라인을 모르는 브라우저와 감소 모션에서는 이 블록 전체가 무시되어 구역이 평범하게 쌓인 완성된 모습으로 보인다.
+ */
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+  @supports (animation-timeline: view()) {
+    @keyframes sc-title {
+      from {
+        translate: var(--sc-x, 8vw) var(--sc-y, 22svh);
+        scale: 1.7;
+      }
+      to {
+        translate: 0 0;
+        scale: 1;
+      }
+    }
+
+    @keyframes sc-in {
+      from {
+        translate: 0 56px;
+        opacity: 0;
+        visibility: hidden;
+      }
+      to {
+        translate: 0 0;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+@utility sc {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+    @supports (animation-timeline: view()) {
+      display: grid;
+      min-height: 230svh;
+      view-timeline: --sc block;
+    }
+  }
+}
+
+/*
+ * 고정 무대 한 겹. 한 구역에 두 겹(글 겹, 조작 겹)이 같은 칸에 포개져 둘 다 화면에 붙는다. 글과 조작을 한 무대에 넣지 않고 나누는 까닭:
+ * `sticky`는 늘 새 스택 컨텍스트를 만들어서, 그 안의 `mix-blend-mode`가 뒤의 차량 캔버스와 섞이지 못한다. 블렌드는 글 겹 요소
+ * 자신에게 걸어야 캔버스 위에서 동작한다.
+ */
+@utility sc-stage {
+  /* z-index가 먹도록 위치를 정해 둔다. Tailwind의 `relative` 클래스를 같이 쓰면 아래 `sticky`를 덮으므로 여기서만 정한다. */
+  position: relative;
+
+  @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+    @supports (animation-timeline: view()) {
+      position: sticky;
+      top: 3.5rem;
+      grid-area: 1 / 1;
+      height: calc(100svh - 5.75rem);
+    }
+  }
+}
+
+@utility sc-title {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+    @supports (animation-timeline: view()) {
+      animation: sc-title linear both;
+      animation-timeline: --sc;
+      animation-range: contain 0% contain 26%;
+      transform-origin: left top;
+    }
+  }
+}
+
+@utility sc-in {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+    @supports (animation-timeline: view()) {
+      animation: sc-in linear both;
+      animation-timeline: --sc;
+      animation-range: contain calc(22% + var(--sc-i, 0) * 7%) contain
+        calc(40% + var(--sc-i, 0) * 7%);
+    }
+  }
+}

@@ -4,9 +4,10 @@ import { Badge } from '@repo/ui/badge';
 import { Stepper, StepperItem } from '@repo/ui/stepper';
 import type { Dispatch, ReactNode } from 'react';
 
+import { ThemeToggle } from '@/shared/ui/theme-toggle';
+
 import { type StepId, STEPS } from '../model/steps';
 import type { WizardAction } from '../model/wizard';
-import { ThemeToggle } from './theme-toggle';
 
 /**
  * 위쪽 고정 막대. 큰 화면에서는 한 줄(브랜드, 단계, 요약·테마)이고, 좁은 화면에서는 두 줄(브랜드와 도구, 그 아래 단계)이다.

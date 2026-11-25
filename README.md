@@ -6,7 +6,7 @@ Turborepo monorepo for the **design-monogatari** design system and demo apps.
 
 | Name                      | Path                         | Role                                                                                                                                   |
 | ------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `web`                     | `apps/web`                   | Next.js demo (port 3000). FSD in `src/`; Next `app/` re-exports only                                                                   |
+| `web`                     | `apps/web`                   | Next.js demo (port 3000): `/` intro, `/estimate` wizard. FSD in `src/`; Next `app/` re-exports only                                    |
 | `docs`                    | `apps/docs`                  | 디자인 시스템 문서 사이트 (port 3001). Fumadocs, `content/docs/` MDX                                                                   |
 | `@repo/ui`                | `packages/ui`                | React design system (JIT, Tailwind v4) — not FSD slices                                                                                |
 | `@repo/vehicle-3d`        | `packages/vehicle-3d`        | Three.js vehicle viewer (JIT): camera views, paint, interior, brake caliper and sunroof options. The only package that imports `three` |

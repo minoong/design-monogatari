@@ -1,1 +1,1 @@
-export { EstimatePage as default } from '@/_pages/estimate';
+export { IntroPage as default } from '@/_pages/intro';

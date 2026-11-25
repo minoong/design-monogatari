@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/_app/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/_pages/intro/ui/react-bits",
+    "ui": "@/_pages/intro/ui/react-bits",
+    "utils": "@repo/ui/cn",
+    "lib": "@/_pages/intro/ui/react-bits",
+    "hooks": "@/_pages/intro/ui/react-bits"
+  },
+  "registries": {
+    "@react-bits": "https://reactbits.dev/r/{name}.json"
+  }
+}
