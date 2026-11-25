@@ -19,7 +19,6 @@ import {
 } from '@/_pages/estimate/index.model';
 
 import type { IntroSlot } from '../model/intro-selection';
-import Counter from './react-bits/Counter';
 
 /** 옵션 가격을 한 줄로: 0원은 "기본 포함", 그 밖에는 부호를 붙인다. */
 function priceText(price: number) {
@@ -161,14 +160,10 @@ export function IntroColorGroup({
   );
 }
 
-/** 선택 내역과 취득세·부대비용을 더한 총액. 견적 화면의 요약과 같은 계산 결과를 보여 준다. */
+/** 선택 내역과 취득세·부대비용을 더한 총액. 견적 화면의 요약과 같은 계산 결과를 보여 준다(큰 금액은 가격 구역의 제목이 맡는다). */
 export function IntroPrice({ quote }: { quote: Quote }) {
   return (
     <>
-      {/* 큰 금액은 화면용이다. 같은 금액은 아래 내역의 마지막 줄과 `IntroApp`의 상태 영역이 읽어 준다. */}
-      <div aria-hidden className="text-6xl font-semibold tracking-tight">
-        <Counter value={quote.total} prefix="₩" locale="ko-KR" fontSize="1em" fontWeight={600} />
-      </div>
       <PriceBreakdown title="선택 내역">
         {quote.lines.map((line) => {
           const isBase = line.item.slot === 'base';

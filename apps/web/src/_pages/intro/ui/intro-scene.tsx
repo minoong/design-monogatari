@@ -194,7 +194,7 @@ export function SceneAction({ children }: { children: ReactNode }) {
   );
 }
 
-/** 큰 값 한 줄. 선택이 바뀌면 값이 바뀐다(안에 `TextRoll`이나 `SplitFlapText`를 둔다). */
+/** 큰 값 한 줄. 선택이 바뀌면 값이 바뀐다(안에 `TextRoll`을 둔다). */
 export function SceneValue({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="ip-rise flex flex-col gap-1" style={order(3)}>

@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatedAmount } from '@repo/ui/animated-amount';
 import { Badge } from '@repo/ui/badge';
 import { Button } from '@repo/ui/button';
 import { TextRoll } from '@repo/ui/text-roll';
@@ -41,8 +42,6 @@ import {
   IntroPrice,
 } from './intro-sections';
 import { IntroStage } from './intro-stage';
-import Counter from './react-bits/Counter';
-import SplitFlapText from './react-bits/SplitFlapText';
 
 const VEHICLE = vehicleById('x5-web');
 
@@ -171,12 +170,10 @@ export function IntroApp() {
             >
               총 예상 금액
             </span>
-            <Counter
+            <AnimatedAmount
               value={quote.total}
               prefix="₩"
-              locale="ko-KR"
-              fontSize="1.125rem"
-              fontWeight={600}
+              className="text-lg font-semibold tabular-nums"
             />
           </div>
           <Button asChild size="small">
@@ -303,22 +300,9 @@ export function IntroApp() {
           controls={
             <SceneControls>
               <SceneValue label="휠 크기">
-                {/* 숫자 두 자리만 넘기는 판. 한글 글리프가 없는 컴포넌트라 숫자에만 쓰고, 단위는 옆에 일반 글자로 둔다. */}
-                <span className="inline-flex items-baseline gap-3">
-                  <SplitFlapText
-                    text={String(WHEEL_INCH[selection.wheel])}
-                    charset="numeric"
-                    padTo={2}
-                    intro={false}
-                    fontSize="1em"
-                    tileColor="var(--muted)"
-                    textColor="var(--foreground)"
-                    aria-label={`${WHEEL_INCH[selection.wheel]}인치`}
-                  />
-                  <span aria-hidden className="text-muted-foreground text-2xl">
-                    인치
-                  </span>
-                </span>
+                <TextRoll className="tabular-nums" direction={rolls.wheel}>
+                  {`${WHEEL_INCH[selection.wheel]}인치`}
+                </TextRoll>
               </SceneValue>
 
               <IntroChoiceGroup slot="wheel" legend="휠" selection={selection} onChoose={choose} />
@@ -363,15 +347,9 @@ export function IntroApp() {
               title={
                 <>
                   <span className="sr-only">선택한 사양의 총 예상 금액</span>
-                  {/* 큰 숫자가 곧 제목이다. 읽어 주는 글자는 위의 sr-only와 `IntroApp`의 상태 영역이 맡는다. */}
+                  {/* 큰 숫자가 곧 제목이다. 숫자는 굴러가며 바뀌고(`AnimatedAmount`), 읽어 주는 글자는 위의 sr-only와 `IntroApp`의 상태 영역이 맡는다. */}
                   <span aria-hidden className="block text-6xl lg:text-7xl">
-                    <Counter
-                      value={quote.total}
-                      prefix="₩"
-                      locale="ko-KR"
-                      fontSize="1em"
-                      fontWeight={600}
-                    />
+                    <AnimatedAmount value={quote.total} prefix="₩" className="tabular-nums" />
                   </span>
                 </>
               }
@@ -448,7 +426,7 @@ export function IntroApp() {
         </details>
       </footer>
 
-      {/* 총액 변화를 알린다. 화면의 큰 숫자(`Counter`)는 스크린 리더에서 숨겨져 있어서 이 영역이 읽어 준다. */}
+      {/* 총액 변화를 알린다. 화면의 큰 숫자(`AnimatedAmount`)는 스크린 리더에서 숨겨져 있어서 이 영역이 읽어 준다. */}
       <p role="status" className="sr-only">
         총 예상 금액 {formatWon(quote.total)}
       </p>
