@@ -12,11 +12,11 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@fumadocs/base-ui": "16.17.1",
+    "@fumadocs/base-ui": "16.19.7",
     "@repo/ui": "workspace:*",
-    "fumadocs-core": "16.17.1",
-    "fumadocs-mdx": "15.4.7",
-    "fumadocs-typescript": "5.5.1",
+    "fumadocs-core": "16.19.7",
+    "fumadocs-mdx": "15.6.4",
+    "fumadocs-typescript": "5.5.2",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"

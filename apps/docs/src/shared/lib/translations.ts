@@ -2,7 +2,7 @@
  * Fumadocs UI 문구를 한국어로 바꾸는 사전. `RootProvider`의 `i18n.translations`에 넘긴다.
  *
  * 키는 영어 원문 뒤에 쓰이는 자리 표기가 붙은 형태(예: `On this page(table of contents)`)여야 맞는다. 원문만 적으면 어느 문구와도 맞지 않아
- * 영어로 남는다. 라이브러리가 실제로 부르는 키 목록은 `node_modules/@fumadocs/base-ui/dist/.translations/keys.js`에 있다
+ * 영어로 남는다. 라이브러리가 실제로 부르는 키 목록은 `node_modules/@fumadocs/base-ui/dist/.translations/keys.json.js`에 있다
  * (버전을 올리면 이 목록과 다시 맞춘다). 사전에 없는 키는 영어로 남는다.
  */
 export const KO_TRANSLATIONS: Record<string, string> = {
@@ -16,6 +16,11 @@ export const KO_TRANSLATIONS: Record<string, string> = {
   'Open Search(search trigger)(aria-label)': '검색 열기',
   'Close Search(search dialog)(aria-label)': '검색 닫기',
   'No results found(search dialog)': '검색 결과가 없습니다',
+  'Search failed(search dialog)': '검색하지 못했습니다',
+  'Search failed, showing results for {query}(search dialog)':
+    '검색하지 못해 {query}의 결과를 보여 줍니다',
+  // 건너뛰기 링크(키보드로 처음 Tab을 누르면 나온다)
+  'Skip to Content(skip link)': '본문으로 건너뛰기',
   // 쪽 이동과 바닥글
   'Previous Page(pagination)': '이전 문서',
   'Next Page(pagination)': '다음 문서',
@@ -69,6 +74,11 @@ export const KO_TRANSLATIONS: Record<string, string> = {
   'Default(type table)': '기본값',
   'Parameters(type table)': '매개변수',
   'Returns(type table)': '반환값',
+  // 이미지 확대
+  'Close(image zoom)(aria-label)': '닫기',
+  'Image Viewer(image zoom)(aria-label)': '이미지 보기',
+  'Next Image(image zoom)(aria-label)': '다음 이미지',
+  'Previous Image(image zoom)(aria-label)': '이전 이미지',
   // 404
   'Page Not Found(404 not found page)': '페이지를 찾을 수 없습니다',
   'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.(404 not found page)':
