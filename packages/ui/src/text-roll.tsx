@@ -25,13 +25,17 @@ const TRANSITION = { duration: DURATION.base, ease: EASE.outExpo };
  * `below`와 `out`에만 둔다.
  * `custom`은 방향(위 1, 아래 -1)이다. 나가는 글자는 AnimatePresence의 `custom`으로 바뀐 방향을 받는다.
  */
-// 들어오는 글자와 나가는 글자가 같은 거리(한 덩어리의 높이)를 같은 시간과 곡선으로 움직여서, 새 글자가 이전 글자 바로 뒤에 붙는다.
+// 이동 거리는 글자 층 높이의 120%다. 상자는 위아래로 0.1em씩 여유를 두므로 한 줄 글자의 상자 높이가 1.2em인데, 100%만 움직이면 나가는
+// 글자의 아래 0.1em이 상자 위쪽 여유에 끝까지 남고 들어오는 글자의 위 0.1em이 아래쪽 여유에 처음부터 보여서, 전환의 시작과 끝에 글자
+// 조각이 튄다(글자가 클수록 눈에 띈다: 60px에서 6px). 120%면 상자 밖으로 완전히 나가고 들어온다.
+// 들어오는 글자와 나가는 글자는 같은 거리를 같은 시간과 곡선으로 움직여서 둘 사이의 간격은 늘 일정하다.
+const ROLL_TRAVEL = 120;
 const ROLL_VARIANTS: Variants = {
-  below: (direction: number = 1) => ({ opacity: 1, y: `${direction * 100}%` }),
+  below: (direction: number = 1) => ({ opacity: 1, y: `${direction * ROLL_TRAVEL}%` }),
   in: { opacity: 1, y: 0, transition: TRANSITION },
   out: (direction: number = 1) => ({
     opacity: 1,
-    y: `${direction * -100}%`,
+    y: `${direction * -ROLL_TRAVEL}%`,
     transition: TRANSITION,
   }),
 };

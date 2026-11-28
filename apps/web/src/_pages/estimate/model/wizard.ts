@@ -4,7 +4,7 @@ import { createDefaultSelection, resolveSelection } from './resolve';
 import { DEFAULT_STEP, type StepId } from './steps';
 import type { Effect, EstimateState, Intent, QuoteOptions, Resolution, Selection } from './types';
 
-const DEFAULT_OPTIONS: QuoteOptions = { taxType: 'taxable', region: 'seoul' };
+export const DEFAULT_OPTIONS: QuoteOptions = { taxType: 'taxable', region: 'seoul' };
 
 type SuggestionEffect = Extract<Effect, { kind: 'suggestion' }>;
 

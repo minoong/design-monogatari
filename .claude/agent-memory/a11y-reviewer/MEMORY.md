@@ -4,4 +4,5 @@
 - [Segmented control](segmented-issues.md) — forced-colors underline, pill border 1.4:1, disabled opacity, untyped aria-label
 - [Presence/SwitchField](presence-switchfield-issues.md) — usePresence without safeToRemove never removes; reset leaves status word stale
 - [List/listbox](list-issues.md) — plain ul lacks role=list, aria-label type omitted, disabled forced-colors, typeahead Space
+- [Intro page](intro-page-issues.md) — role=img swallows fallback text, stage outside landmarks, mobile price not announced
 - [Animated icons](animated-icons-issues.md) — IconFrame span breaks `[&>svg]` selectors, Button overrides isHovered
