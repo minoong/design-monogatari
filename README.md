@@ -35,7 +35,7 @@ pnpm format           # Prettier write (+ Tailwind class sort)
 pnpm format:check     # Prettier check
 pnpm lint             # ESLint (per package)
 pnpm test             # unit tests (estimate model)
-pnpm verify           # format + lint + types + test + build
+pnpm verify           # format + registry/components/copy checks + lint + types + test + build
 pnpm --filter @repo/ui storybook   # component docs (port 6006, Light/Dark themes)
 ```
 
