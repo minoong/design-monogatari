@@ -235,7 +235,10 @@ Same semantic tokens as light — override values under `.dark`, do not add `dar
 
 - Pin + scrub a viewport panel; map scroll progress to `frames` URLs (consumer-owned). Draw on canvas — do not `setState` per frame.
 - GSAP ScrollTrigger only. Do not put Motion or Tailwind `transition-*` on the canvas.
-- Overlay copy is `children` (accessible). Canvas is `aria-hidden`. `prefers-reduced-motion`: first frame.
+- Overlay copy is `children` (accessible). Canvas is `aria-hidden`. `prefers-reduced-motion`: no pin, no playback, one still at `restingProgress` (default 0, the first frame).
+- `overlay="card"` (default) puts `children` in a translucent card at the bottom; `overlay="none"` gives a bare full-panel layer the consumer lays out. The root exposes the scrub progress as `--sequence-progress` (0–1), so overlay copy can fade or move with scroll through `calc()` instead of per-frame state. The variable is unset under reduced motion and before the script runs, so always give `var(--sequence-progress, …)` a fallback that shows the finished overlay.
+- `smallFrames` (+ `smallQuery`, default below 48rem) swaps in a lighter set on phones; only the first and the resting frame load up front, the rest when the panel is within 1.5 screens. `pinOffset` pins under a sticky bar (panel height shrinks by it), `frameRange` limits the frames to part of the pin so copy can enter before and after, `fit` is `contain` or `cover`; `portraitZoom` (+ `focusY`) enlarges a wide scene on a portrait panel (phones) instead of leaving it small in the middle.
+- `mode="play"`: no pin; plays the frames once over `playSeconds` when the panel first enters (a hero that should not depend on scroll).
 - Not in the shadcn registry.
 
 ### Storybook 3D (not public API)

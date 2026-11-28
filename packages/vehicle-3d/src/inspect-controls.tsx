@@ -45,8 +45,28 @@ export type CaptureOptions = {
   width?: number;
   /** 이미지 높이(px). 기본 1080 */
   height?: number;
-  /** 배경색(CSS 색). 장면은 투명이라 이 색 위에 얹는다. 기본 #f5f5f7 */
-  background?: string;
+  /** 배경색(CSS 색). 장면은 투명이라 이 색 위에 얹는다. 기본 #f5f5f7. `null`이면 투명하게 둔다(미리 렌더하는 프레임용). */
+  background?: string | null;
+  /**
+   * 카메라를 직접 정한다(미리 렌더하는 프레임용). 없으면 차 전체가 들어오는 앞 3/4 시점에 맞춘다. 좌표는 `CAMERA_VIEWS`와 같은
+   * 월드 좌표이고, `fov`는 그 이미지 비율 그대로 쓴다(넓이에 맞춘 보정 없음).
+   */
+  camera?: {
+    position: readonly [number, number, number];
+    target: readonly [number, number, number];
+    fov: number;
+  };
+  /** true면 실내 조명을 켠 채 그린다(카메라가 차 안에 있는 프레임). 기본 false */
+  cabin?: boolean;
+  /**
+   * true면 조명용 스튜디오 환경을 흐리게 배경으로도 그린다. 차 안에서 본 유리 너머가 빈 면 대신 스튜디오로 보인다.
+   * 이때 이미지는 불투명하고 `background`는 쓰이지 않는다. 기본 false
+   */
+  environmentBackground?: boolean;
+  /** 이미지 형식. 기본 `image/png` */
+  type?: 'image/png' | 'image/webp' | 'image/jpeg';
+  /** `image/webp`·`image/jpeg`의 품질(0–1) */
+  quality?: number;
 };
 
 /** `rotateBy` 한 걸음의 각도(라디안, 약 20°) */
@@ -173,13 +193,29 @@ function renderStill(
   scene: Scene,
   liveCamera: Camera,
   cabinLight: PointLight | null,
-  { width = 1920, height = 1080, background = '#f5f5f7' }: CaptureOptions,
+  {
+    width = 1920,
+    height = 1080,
+    background = '#f5f5f7',
+    camera,
+    cabin = false,
+    environmentBackground = false,
+  }: CaptureOptions,
 ): HTMLCanvasElement {
   const pose = poseOf('exterior');
   const aspect = width / height;
-  const still = new PerspectiveCamera(fovForAspect(pose.fov, aspect), aspect, 0.02, 60);
-  const points = vehiclePoints(scene);
-  if (points) {
+  const still = new PerspectiveCamera(
+    camera ? camera.fov : fovForAspect(pose.fov, aspect),
+    aspect,
+    0.02,
+    60,
+  );
+  const points = camera ? null : vehiclePoints(scene);
+  if (camera) {
+    still.position.set(...camera.position);
+    still.lookAt(new Vector3(...camera.target));
+    still.updateMatrixWorld();
+  } else if (points) {
     fitStill(still, points, pose.position.clone().sub(pose.target).normalize());
   } else {
     still.position.copy(pose.position);
@@ -192,6 +228,10 @@ function renderStill(
   const environment = scene.environmentIntensity;
   const light = cabinLight?.intensity ?? 0;
 
+  const sceneBackground = scene.background;
+  const blurriness = scene.backgroundBlurriness;
+  const backgroundIntensity = scene.backgroundIntensity;
+
   const out = document.createElement('canvas');
   out.width = width;
   out.height = height;
@@ -201,15 +241,32 @@ function renderStill(
     gl.setPixelRatio(1);
     gl.setSize(width, height, false);
     // 실내 시점에서 올려 둔 안쪽 조명과 환경광은 바깥에서 보면 과하게 밝다. 바깥 시점의 값으로 그린다.
-    setEnvironmentIntensity(scene, 1);
-    if (cabinLight) cabinLight.intensity = 0;
+    // 실내 프레임(`cabin`)은 화면의 실내 시점과 같은 조명으로 그린다.
+    if (!cabin) {
+      setEnvironmentIntensity(scene, 1);
+      if (cabinLight) cabinLight.intensity = 0;
+    } else {
+      setEnvironmentIntensity(scene, CABIN_LIGHT.environment);
+      if (cabinLight) cabinLight.intensity = CABIN_LIGHT.intensity;
+    }
+    if (environmentBackground && scene.environment) {
+      scene.background = scene.environment;
+      scene.backgroundBlurriness = 0.35;
+      // 조명용 스튜디오는 그대로 보이면 유리 너머가 하얗게 날아간다. 배경으로만 어둡게 그린다.
+      scene.backgroundIntensity = 0.42;
+    }
     gl.render(scene, still);
     if (context) {
-      context.fillStyle = background;
-      context.fillRect(0, 0, width, height);
+      if (background !== null && !environmentBackground) {
+        context.fillStyle = background;
+        context.fillRect(0, 0, width, height);
+      }
       context.drawImage(gl.domElement, 0, 0, width, height);
     }
   } finally {
+    scene.background = sceneBackground;
+    scene.backgroundBlurriness = blurriness;
+    scene.backgroundIntensity = backgroundIntensity;
     gl.setPixelRatio(pixelRatio);
     gl.setSize(size.x, size.y, false);
     setEnvironmentIntensity(scene, environment);
@@ -424,7 +481,7 @@ export function InspectControls({
       capture: (options = {}) =>
         new Promise<Blob | null>((resolve) => {
           const still = renderStill(gl, scene, camera, cabinLightRef.current, options);
-          still.toBlob(resolve, 'image/png');
+          still.toBlob(resolve, options.type ?? 'image/png', options.quality);
         }),
       rotateBy,
       reset: () => {
