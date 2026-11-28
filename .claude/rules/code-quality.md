@@ -14,7 +14,7 @@ pnpm format          # write Prettier (+ Tailwind class sort)
 pnpm format:check    # check only (turbo-cached)
 pnpm lint            # ESLint in each package
 pnpm test            # vitest (apps/web estimate model)
-pnpm verify          # format:check + lint + check-types + test + build
+pnpm verify          # format:check + registry:check + components:check + copy:check + lint + check-types + test + build
 ```
 
 ## Rules of thumb

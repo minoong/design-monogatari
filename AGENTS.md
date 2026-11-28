@@ -28,7 +28,7 @@ Alternative libraries require **AskUserQuestion** + user approval (see `.claude/
 | CLAUDE.md  | repo root + `apps/web`, `apps/docs`, `packages/ui`, `packages/vehicle-3d` | Project instructions. Nested files import their folder's `AGENTS.md`                                              |
 | Rules      | `.claude/rules/*.md`                                                      | Always-on, or scoped with `paths:` frontmatter                                                                    |
 | Agent loop | `.claude/rules/agent-loop.md`                                             | 묻지 말고 실행 — 브랜치, skill, MCP, verify, 머지 pull                                                            |
-| Hooks      | `.claude/settings.json` → `.claude/hooks/`                                | SessionStart context, UI verify loop (PostToolUse / Stop / SubagentStop), docs-consult (PreToolUse nudge)         |
+| Hooks      | `.claude/settings.json` → `.claude/hooks/`                                | SessionStart, UI verify loop (PostToolUse / Stop / SubagentStop), docs-consult·component-check nudges, load log   |
 | Skills     | `.agents/skills/`                                                         | Deep workflows. `.claude/skills/<name>` are symlinks to them                                                      |
 | Subagents  | `.claude/agents/`                                                         | `ui-verifier` (browser checks), `a11y-reviewer` and `design-reviewer` (review), `docs-researcher` (official docs) |
 | MCP        | `.mcp.json`                                                               | `lucide-animated`, `storybook` (needs the dev server). Playwright is defined inline in `ui-verifier` only         |
@@ -87,7 +87,7 @@ Co-located stories: `packages/ui/src/*.stories.tsx`. Foundations: `packages/ui/s
 
 ## Tailwind CSS
 
-- Visual spec: [DESIGN.md](DESIGN.md) — rule `.claude/rules/design.md`, session hook `.claude/settings.json`
+- Visual spec: [DESIGN.md](DESIGN.md) — rule `.claude/rules/design.md`, session hook `.claude/hooks/session-design.mjs`
 - Shared theme: `@repo/ui/styles.css` — design tokens in `@theme`
 - Apps: `@import "@repo/ui/styles.css"` + `@source` for app TSX
 - Class merge: `@repo/ui/cn`
