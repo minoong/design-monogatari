@@ -386,7 +386,7 @@ export function IntroApp() {
       <footer className="border-border bg-background text-muted-foreground text-caption relative z-0 flex flex-col gap-2 border-t px-5 pt-8 pb-20 lg:z-20 lg:px-12">
         <p>비공식 포트폴리오입니다. BMW와 무관하며 가격과 사양은 모두 가상의 값입니다.</p>
         <details>
-          <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none">
+          <summary className="focus-visible:ring-ring cursor-pointer rounded-sm underline underline-offset-2 outline-hidden focus-visible:ring-2">
             3D 모델 출처와 고지
           </summary>
           <div className="mt-2 flex flex-col gap-1">
