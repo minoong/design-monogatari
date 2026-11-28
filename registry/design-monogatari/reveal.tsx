@@ -39,7 +39,7 @@ export function RevealGroup({ stagger = STAGGER.base, ...props }: RevealGroupPro
 }
 
 export type RevealProps = HTMLMotionProps<'div'> & {
-  /** 아래에서 올라오는 거리(px). 감소 모션에서는 0 */
+  /** 아래에서 올라오는 거리(px). 감소 모션에서는 움직임 없이 바로 나타난다. */
   distance?: number;
 };
 
@@ -47,9 +47,10 @@ export type RevealProps = HTMLMotionProps<'div'> & {
 export function Reveal({ distance = 12, ...props }: RevealProps) {
   const reduce = useReducedMotion();
   const inGroup = useContext(RevealGroupContext);
-  const offset = reduce ? 0 : distance;
+  // 서버 렌더에는 감소 모션 설정이 없어서(`null`) 숨은 모습의 위치를 설정에 따라 바꾸면 hydration이 어긋난다. 위치는 늘 같게 두고,
+  // 감소 모션에서는 전환 시간을 없애(`reducedTransition`) 움직임이 보이지 않게 한다.
   const variants = {
-    hidden: { opacity: 0, y: offset },
+    hidden: { opacity: 0, y: distance },
     visible: {
       opacity: 1,
       y: 0,

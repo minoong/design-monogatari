@@ -1,13 +1,15 @@
 ---
 name: intro-page-issues
-description: apps/web intro page (/) a11y findings from first review; patterns likely to recur in web screens
+description: apps/web intro page (/) a11y findings; first review (full-screen car) plus 2026-11-28 stage+sheet redesign review
 metadata:
   type: project
 ---
 
-- role="img" wrapping the 3D stage also wraps fallback text, skeleton label and inside-view note (children of role=img are presentational, so SR loses them). Keep text outside the img.
-- Sticky stage block sits outside any landmark (between header and main); PriceBarTotal live region lives in it and is `hidden` below `split`, so no price announcement on mobile.
-- ColorSwatchGroup `onValueChange` has no arrow-key guard (IntroChoiceGroup has one), so arrow-walking unavailable swatches fires a notice per step.
-- Repeating an identical blocked choice sets the same text into role="status" and is not re-announced.
-- vehicle-3d `prefersReducedMotion()` (inspect-controls.tsx goTo) makes camera view change instant; viewer reads it live.
-- Focus rings via `ring-2 focus-visible:outline-none` (footer summary) vanish in forced-colors.
+- (old design, fixed in the 2026-11-28 redesign) role="img" swallowed fallback text; price status was hidden on mobile. Now the stage keeps text outside role=img and the total role=status is global in IntroApp.
+- Repeating an identical blocked choice sets the same text into role="status" (IntroNoticeSlot) and is not re-announced; notices also never clear, so a blocked notice goes stale after the trim changes.
+- ColorSwatchGroup/IntroChoiceGroup arrow guard exists (useArrowNavigation) - keep it when adding groups.
+- vehicle-3d `prefersReducedMotion()` makes camera view change instant; viewer reads it live. AnimatedAmount uses NumberFlow, TextRoll uses useReducedMotion.
+- Redesign: sticky stage is `h-[42svh]` + header 3.5rem; scroll-padding-top mirrors it (globals.css). On short/400% zoom viewports it eats most of the screen (1.4.10, 2.4.12). Suggest `min(42svh, Npx)` in both places.
+- Redesign: index/hero `#section` links go through Next Link; sections have no tabIndex=-1, so focus may not move to the target (verify in browser).
+- Redesign: focusin -> setActive and window scroll `last` / resize re-observe can override each other (bottom of a tall viewport forces intro-start while focus is in price).
+- Footer `outline-hidden focus-visible:ring-2` is Tailwind v4: forced-colors keeps a transparent outline, so the old "vanishes in forced-colors" note is not accurate for v4.
